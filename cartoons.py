@@ -21,14 +21,14 @@ class CartoonAPI:
                 cartoonJson = await cartoonPage.json()
 
                 episode = str(cartoonJson['Frame']['Episode'])
-                timestamp = cartoonJson['Subtitles'][0]['RepresentativeTimestamp']
+                timestamp = cartoonJson['Subtitles'][0]['StartTimestamp']
 
                 caption = ''
                 for quote in cartoonJson['Subtitles']:
                     caption += quote['Content'] + '\n'
 
                 if gif:
-                    endTimestamp = cartoonJson['Subtitles'][-1]['RepresentativeTimestamp']
+                    endTimestamp = cartoonJson['Subtitles'][-1]['EndTimestamp']
                     gifLink = self.gifUrl.format(episode, timestamp, endTimestamp)
 
                     gifLink += '.gif?b64lines='
