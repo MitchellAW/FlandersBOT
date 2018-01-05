@@ -63,6 +63,3 @@ class CartoonAPI:
         else:
             return 'Error 404. Website may be down.'
 
-#frinkiac = CartoonAPI('simpsons', 'https://frinkiac.com/')
-#print(frinkiac.getRandomCartoon(True))
-
