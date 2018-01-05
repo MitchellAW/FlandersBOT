@@ -12,7 +12,7 @@ The bot also depends entirely on https://frinkiac.com/, https://morbotron.com/ a
 
 Will post a random Simpsons quote with accompanying picture.
 
-### !simpsons <quote to search for>
+### !simpsons [quote to search for]
 
 Searches for a Simpsons quote using all text following the command, grabs the first result and sends the resulting quote with accompanying picture.
 
@@ -20,7 +20,7 @@ Searches for a Simpsons quote using all text following the command, grabs the fi
 
 Will post a random Futurama quote with accompanying picture.
 
-### !futurama <quote to search for>
+### !futurama [quote to search for]
 
 Searches for a Futurama quote using all text following the command, grabs the first result and sends the resulting quote with accompanying picture.
 
@@ -28,6 +28,6 @@ Searches for a Futurama quote using all text following the command, grabs the fi
 
 Will post a random Rick and Morty quote with accompanying picture.
 
-### !rickandmorty <quote to search for>
+### !rickandmorty [quote to search for]
 
 Searches for a Rick and Morty quote using all text following the command, grabs the first result and sends the resulting quote with accompanying picture.
