@@ -1,6 +1,7 @@
 import asyncio
 import config
 import discord
+import commands
 import requests
 
 from cartoons import CartoonAPI
@@ -59,5 +60,9 @@ async def on_message(message):
         # Messages a random Rick and Morty quote with accompanying picture
         elif message.content.startswith('rickandmorty'):
             await client.send_message(message.channel, masterOfAllScience.getRandomCartoonQuote())
+
+        # Sends a personal message containing the commands
+        elif message.content.startswith('help'):
+            await client.send_message(message.author, commands.commandsList)
 
 client.run(config.TOKEN)
