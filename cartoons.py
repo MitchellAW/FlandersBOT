@@ -1,3 +1,5 @@
+import aiohttp
+import asyncio
 import requests
 
 class CartoonAPI:
@@ -12,54 +14,62 @@ class CartoonAPI:
         self.imageUrl = url + 'img/{}/{}.jpg'
         self.gifUrl = url + 'gif/{}/{}/{}'
 
-    def getRandomCartoon(self, gif=False):
-        cartoonPage = requests.get(self.randomUrl)
-        if cartoonPage.status_code == 200:
-            cartoonJson = cartoonPage.json()
+    async def getRandomCartoon(self, gif=False):
+        async with aiohttp.get(self.randomUrl) as cartoonPage:
 
-            episode = str(cartoonJson['Frame']['Episode'])
-            timestamp = cartoonJson['Subtitles'][0]['RepresentativeTimestamp']
+            if cartoonPage.status == 200:
+                cartoonJson = await cartoonPage.json()
 
-            caption = ''
-            for quote in cartoonJson['Subtitles']:
-                caption += quote['Content'] + '\n'
+                episode = str(cartoonJson['Frame']['Episode'])
+                timestamp = cartoonJson['Subtitles'][0]['RepresentativeTimestamp']
 
-            if gif:
-                endTimestamp = cartoonJson['Subtitles'][-1]['RepresentativeTimestamp']
-                videoPage = requests.get(self.gifUrl.format(episode, timestamp, endTimestamp) + '.gif?b64lines=')
-                return videoPage.url + '\n' + caption
+                caption = ''
+                for quote in cartoonJson['Subtitles']:
+                    caption += quote['Content'] + '\n'
 
-            else:
-                return self.imageUrl.format(episode, timestamp) + '\n' + caption
+                if gif:
+                    endTimestamp = cartoonJson['Subtitles'][-1]['RepresentativeTimestamp']
+                    gifLink = self.gifUrl.format(episode, timestamp, endTimestamp)
 
-    def findCartoonQuote(self, messageText):
+                    gifLink += '.gif?b64lines='
+
+                    async with aiohttp.get(gifLink) as videoPage:
+                        return videoPage.url + '\n' + caption
+
+                else:
+                    return self.imageUrl.format(episode, timestamp) + '\n' + caption
+
+    async def findCartoonQuote(self, messageText):
+
         searchText = messageText[(len(self.command) + 1):].replace(' ', '+')
 
         search = self.searchUrl + searchText
-        cartoonSearch = requests.get(search)
 
-        if cartoonSearch.status_code == 200:
-            searchResults = cartoonSearch.json()
-            if len(searchResults) > 0:
-                firstResult = searchResults[0]
+        async with aiohttp.get(search) as cartoonSearch:
 
-                episode = str(firstResult['Episode'])
-                timestamp = str(firstResult['Timestamp'])
+            if cartoonSearch.status == 200:
+                searchResults = await cartoonSearch.json()
+                if len(searchResults) > 0:
+                    firstResult = searchResults[0]
 
-                cartoonCaption = requests.get(self.apiCaptionUrl.format(episode, timestamp))
-                if cartoonCaption.status_code == 200:
-                    caption = ''
-                    for quote in cartoonCaption.json()['Subtitles']:
-                        caption += quote['Content'] + '\n'
+                    episode = str(firstResult['Episode'])
+                    timestamp = str(firstResult['Timestamp'])
 
-                    return self.imageUrl.format(episode, timestamp) + '\n' + caption
+                    async with aiohttp.get(self.apiCaptionUrl.format(episode, timestamp)) as cartoonCaption:
+                        if cartoonCaption.status == 200:
+                            captionJson = await cartoonCaption.json()
+
+                            caption = ''
+                            for quote in captionJson['Subtitles']:
+                                caption += quote['Content'] + '\n'
+
+                            return self.imageUrl.format(episode, timestamp) + '\n' + caption
+
+                        else:
+                            return imageUrl + '\n' + 'Error 404. Website may be down.'
 
                 else:
-                    return imageUrl + '\n' + 'Error 404. Website may be down.'
+                    return 'No results found.'
 
             else:
-                return 'No results found.'
-
-        else:
-            return 'Error 404. Website may be down.'
-
+                return 'Error 404. Website may be down.'
