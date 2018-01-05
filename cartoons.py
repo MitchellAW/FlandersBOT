@@ -10,20 +10,27 @@ class CartoonAPI:
         self.apiCaptionUrl = url + 'api/caption?e={}&t={}'
         self.searchUrl = url + 'api/search?q='
         self.imageUrl = url + 'img/{}/{}.jpg'
+        self.gifUrl = url + 'gif/{}/{}/{}'
 
-    def getRandomCartoonQuote(self):
+    def getRandomCartoon(self, gif=False):
         cartoonPage = requests.get(self.randomUrl)
         if cartoonPage.status_code == 200:
             cartoonJson = cartoonPage.json()
 
             episode = str(cartoonJson['Frame']['Episode'])
-            timestamp = str(cartoonJson['Frame']['Timestamp'])
+            timestamp = cartoonJson['Subtitles'][0]['RepresentativeTimestamp']
 
             caption = ''
             for quote in cartoonJson['Subtitles']:
                 caption += quote['Content'] + '\n'
 
-            return self.imageUrl.format(episode, timestamp) + '\n' + caption
+            if gif:
+                endTimestamp = cartoonJson['Subtitles'][-1]['RepresentativeTimestamp']
+                videoPage = requests.get(self.gifUrl.format(episode, timestamp, endTimestamp) + '.gif?b64lines=')
+                return videoPage.url + '\n' + caption
+
+            else:
+                return self.imageUrl.format(episode, timestamp) + '\n' + caption
 
     def findCartoonQuote(self, messageText):
         searchText = messageText[(len(self.command) + 1):].replace(' ', '+')
@@ -55,3 +62,7 @@ class CartoonAPI:
 
         else:
             return 'Error 404. Website may be down.'
+
+#frinkiac = CartoonAPI('simpsons', 'https://frinkiac.com/')
+#print(frinkiac.getRandomCartoon(True))
+
