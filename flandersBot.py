@@ -61,7 +61,7 @@ async def on_message(message):
         elif message.content.startswith('futurama'):
             await client.send_message(message.channel, await morbotron.getRandomCartoon())
 
-        # Messages a random Simpsons quote with accompanying gif
+        # Messages a random Simpsons quote with a`ccompanying gif
         elif message.content.startswith('rickandmortygif'):
             await client.send_message(message.channel, await masterOfAllScience.getRandomCartoon(True))
 

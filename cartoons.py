@@ -39,10 +39,12 @@ class CartoonAPI:
                 else:
                     return self.imageUrl.format(episode, timestamp) + '\n' + caption
 
+            else:
+                return 'Error 404. Website may be down.'
+
     async def findCartoonQuote(self, messageText):
 
         searchText = messageText[(len(self.command) + 1):].replace(' ', '+')
-
         search = self.searchUrl + searchText
 
         async with aiohttp.get(search) as cartoonSearch:
@@ -73,3 +75,28 @@ class CartoonAPI:
 
             else:
                 return 'Error 404. Website may be down.'
+
+    def encodeCaption(self, captionJson):
+        charCount = 0
+        lineCount = 0
+        caption = ''
+
+        for quote in captionJson['Subtitles']:
+            for word in quote['Content'].split():
+                charCount += len(word)
+
+                if charCount > 21:
+                    lineCount += 1
+                    charCount = len(word) + 1
+                    caption += u'\u000A' + word + ' '
+
+                elif lineCount < 3:
+                    caption += word + ' '
+
+        try:
+            b64Caption = str(base64.b64encode(str.encode(caption)), 'utf-8')
+
+        except TypeError:
+            b64Caption = str(base64.b64encode(str.encode(caption)))
+
+        return b64Caption
