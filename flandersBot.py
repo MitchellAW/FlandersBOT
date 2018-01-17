@@ -1,7 +1,7 @@
 import asyncio
-import commands
 import config
 import discord
+import info
 
 from cartoons import CartoonAPI
 
@@ -23,9 +23,9 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    # If the message author isn't the bot and the message starts with the
-    # command prefix ('!' by default), check if command was executed
-    if message.author.id != config.BOTID and message.content.startswith(config.COMMANDPREFIX):
+    # If the message author isn't this bot/another bot and the message starts
+    # with the command prefix ('!' by default), check if command was executed
+    if message.author.id != config.BOTID and not message.author.bot and message.content.startswith(config.COMMANDPREFIX):
         # Remove prefix and change to lowercase so commands are case-insensitive
         message.content = message.content[1:].lower()
 
@@ -76,6 +76,10 @@ async def on_message(message):
 
         # Sends a personal message containing the commands
         elif message.content.startswith('help'):
-            await client.send_message(message.author, commands.commandsList)
+            await client.send_message(message.author, info.commandsList)
+
+        # Sends a personal message containing information regarding the bot
+        elif message.content.startswith('info'):
+            await client.send_message(message.author, info.botInfo)
 
 client.run(config.TOKEN)
