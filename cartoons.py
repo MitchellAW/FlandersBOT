@@ -97,7 +97,9 @@ class CartoonAPI:
 
                 # Only allow 4 lines of captions to avoid covering the gif
                 if lineCount < 4:
-                    caption += ' ' + word
+                    # Avoiding bug with question marks
+                    # TODO allow for question marks
+                    caption += ' %s' % word.strip('?')
 
                     # Favour ending captions at ends of sentences
                     if '.' in word or '!' in word or '?' in word:
