@@ -48,5 +48,5 @@ Now, there's two exceptions and it gets kinda tricky here...
 
 Framework: Discord.py (version=''' + discord.__version__ + ''')
 Author: Mitch#8293 (Discord)
-Invite URL: <https://discordapp.com/api/oauth2/authorize?client_id=221609683562135553&permissions=0&scope=bot>
+Invite URL: <https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=0>
 GitHub Source: https://github.com/MitchellAW/FlandersBOT''')

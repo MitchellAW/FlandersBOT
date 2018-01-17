@@ -80,6 +80,6 @@ async def on_message(message):
 
         # Sends a personal message containing information regarding the bot
         elif message.content.startswith('info'):
-            await client.send_message(message.author, info.botInfo)
+            await client.send_message(message.author, (info.botInfo + '\nServers: ' + len(client.servers)))
 
 client.run(config.TOKEN)
