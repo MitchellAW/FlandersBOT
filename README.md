@@ -1,7 +1,7 @@
 # FlandersBOT
 A discord bot built in python using the discord.py API with commands surrounding The Simpsons, Futurama and Rick and Morty.
 
-Unlike my other discord bot, FlandersBOT is more specialised and is entirely focused toward providing commands for The Simpsons, Futurama and Rick and Morty quotes/content.
+FlandersBOT is entirely focused toward providing commands for The Simpsons, Futurama and Rick and Morty quotes/content. FlandersBOT uses Frinkiac, Morbotron and Master of All Science to provide commands for both random and searchable Simpsons, Futurama and Rick and Morty images/gifs with their appropriate quotes embedded.
 
 # Requirements
 Requires discord.py to be installed.
