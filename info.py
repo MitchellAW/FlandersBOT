@@ -50,4 +50,4 @@ Framework: Discord.py (version=''' + discord.__version__ + ''')
 Author: Mitch#8293 (Discord)
 Support Server: <https://discord.gg/xMmxMYg>
 Invite URL: <https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=0>
-GitHub Source: https://github.com/MitchellAW/FlandersBOT''')
+GitHub Source: <https://github.com/MitchellAW/FlandersBOT>''')
