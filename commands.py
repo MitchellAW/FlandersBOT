@@ -11,7 +11,7 @@ Will send a personal mesage to the sender with a list of the commands.
 Will post a random Simpsons quote with accompanying picture.
 
 `!simpsons [quote to search for]`
-Searches for a Simpsons quote using all text following the command, grabs the first result and sends the resulting quote with accompanying picture.
+Searches for a Simpsons quote using all text following the command, grabs the first result and sends the resulting quote with accompanying gif.
 
 `!simpsonsgif`
 Will post a random Simpsons quote with accompanying gif.
@@ -20,7 +20,7 @@ Will post a random Simpsons quote with accompanying gif.
 Will post a random Futurama quote with accompanying picture.
 
 `!futurama [quote to search for]`
-Searches for a Futurama quote using all text following the command, grabs the first result and sends the resulting quote with accompanying picture.
+Searches for a Futurama quote using all text following the command, grabs the first result and sends the resulting quote with accompanying gif.
 
 `!futuramagif`
 Will post a random Futurama quote with accompanying gif.
@@ -29,7 +29,7 @@ Will post a random Futurama quote with accompanying gif.
 Will post a random Rick and Morty quote with accompanying picture.
 
 `!rickandmorty [quote to search for]`
-Searches for a Rick and Morty quote using all text following the command, grabs the first result and sends the resulting quote with accompanying picture.
+Searches for a Rick and Morty quote using all text following the command, grabs the first result and sends the resulting quote with accompanying gif.
 
 `!rickandmortygif`
 Will post a random Rick and Morty quote with accompanying gif.
