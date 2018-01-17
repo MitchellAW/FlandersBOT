@@ -8,6 +8,14 @@ Requires discord.py to be installed.
 The bot also depends entirely on https://frinkiac.com/, https://morbotron.com/ and https://masterofallscience.com/ for all of its commands and may fail if the API for these sites change.
 
 ## Commands
+### !info
+
+Will send a personal message to the sender with more information regarding the bot. (Framework, Author, invite URL etc.)
+
+### !help
+
+Will send a personal mesage to the sender with a list of the commands.
+
 ### !simpsons
 
 Will post a random Simpsons quote with accompanying picture.
