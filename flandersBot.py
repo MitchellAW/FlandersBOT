@@ -1,11 +1,10 @@
 import asyncio
+import commands
 import config
 import discord
-import commands
-import requests
 
-from aiohttp import web
 from cartoons import CartoonAPI
+
 
 client = discord.Client()
 
@@ -19,7 +18,8 @@ async def on_ready():
     print('FlandersBOT Logged in.')
     print('Username: ' + str(client.user.name))
     print('Client ID: ' + str(client.user.id))
-    print('Invite URL: ' + 'https://discordapp.com/oauth2/authorize?&client_id=' + client.user.id + '&scope=bot&permissions=0')
+    print(('Invite URL: ' + 'https://discordapp.com/oauth2/authorize?&client_id='
+           + client.user.id + '&scope=bot&permissions=0'))
 
 @client.event
 async def on_message(message):
@@ -42,7 +42,7 @@ async def on_message(message):
         # Searches for a Simpsons quote using all text following the command
         # and sends the full quote with accompanying picture
         elif message.content.startswith('simpsons') and len(message.content) > 9:
-            await client.send_message(message.channel, await frinkiac.findCartoonQuote(message.content))
+            await client.send_message(message.channel, await frinkiac.findCartoonQuote(message.content, True))
 
         # Messages a random Simpsons quote with accompanying picture
         elif message.content.startswith('simpsons'):
@@ -55,7 +55,7 @@ async def on_message(message):
         # Searches for a Futurama quote using all text following the command
         # and sends the full quote with accompanying picture
         elif message.content.startswith('futurama') and len(message.content) > 9:
-            await client.send_message(message.channel, await morbotron.findCartoonQuote(message.content))
+            await client.send_message(message.channel, await morbotron.findCartoonQuote(message.content, True))
 
         # Messages a random Futurama quote with accompanying picture
         elif message.content.startswith('futurama'):
@@ -68,7 +68,7 @@ async def on_message(message):
         # Searches for a Rick and Morty quote using all text following the command
         # and sends the full quote with accompanying picture
         elif message.content.startswith('rickandmorty') and len(message.content) > 12:
-            await client.send_message(message.channel, await masterOfAllScience.findCartoonQuote(message.content))
+            await client.send_message(message.channel, await masterOfAllScience.findCartoonQuote(message.content, True))
 
         # Messages a random Rick and Morty quote with accompanying picture
         elif message.content.startswith('rickandmorty'):
