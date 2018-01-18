@@ -5,7 +5,6 @@ import info
 
 from cartoons import CartoonAPI
 
-
 client = discord.Client()
 
 # Create APIs for simpsons, futurama and rick & morty
@@ -19,15 +18,25 @@ async def on_ready():
     print('Username: ' + str(client.user.name))
     print('Client ID: ' + str(client.user.id))
     print(('Invite URL: ' + 'https://discordapp.com/oauth2/authorize?&client_id='
-           + client.user.id + '&scope=bot&permissions=0'))
+           + client.user.id + '&scope=bot&permissions=19456'))
 
 @client.event
 async def on_message(message):
-    # If the message author isn't this bot/another bot and the message starts
-    # with the command prefix ('!' by default), check if command was executed
-    if message.author.id != config.BOTID and not message.author.bot and message.content.startswith(config.COMMANDPREFIX):
-        # Remove prefix and change to lowercase so commands are case-insensitive
+    prefixFound = False
+    # Allow use of an @mention to the bot as a prefix (Useful if any commands
+    # clash with other bots)
+    if message.content.startswith('<@' + str(config.BOTID) + '>'):
+        prefixFound = True
+        message.content = message.content[22:].lower()
+
+    # Remove prefix and change to lowercase so commands are case-insensitive
+    if message.content.startswith(config.COMMANDPREFIX):
+        prefixFound = True
         message.content = message.content[1:].lower()
+
+    # If corrent prefix and the message author isn't a bot, check if command
+    # was executed
+    if prefixFound and not message.author.bot:
 
         # Shuts the bot down - only usable by the bot owner specified in config
         if message.content.startswith('shutdown') and message.author.id == config.OWNERID:
