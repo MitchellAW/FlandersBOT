@@ -7,6 +7,9 @@ FlandersBOT is entirely focused toward providing commands for The Simpsons, Futu
 Requires discord.py to be installed.
 The bot also depends entirely on https://frinkiac.com/, https://morbotron.com/ and https://masterofallscience.com/ for all of its commands and may fail if the API for these sites change.
 
+# Invite URL
+https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456
+
 # Support Server
 https://discord.gg/xMmxMYg
 
