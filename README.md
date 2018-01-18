@@ -32,6 +32,9 @@ The bot commands can be executed with three methods/prefixes, to minimise clashi
 | rickandmorty [quote to search for] | Searches for a Rick and Morty quote using all text following the command, grabs the first result and sends the resulting quote with accompanying gif. |
 | rickandmortygif | Will post a random Rick and Morty quote with accompanying gif. |
 
+## Preview
+![FlandersBOT](https://media.giphy.com/media/3o7522dwW8Bj5zNez6/giphy.gif)
+
 ## Requirements
 Requires discord.py to be installed.
 The bot also depends entirely on https://frinkiac.com/, https://morbotron.com/ and https://masterofallscience.com/ for all of its commands and may fail if the API for these sites change.
