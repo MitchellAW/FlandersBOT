@@ -15,7 +15,7 @@ The bot commands can be executed with three methods/prefixes, to minimise clashi
 `@FlandersBOT#0680 info`  
 `@FlandersBOT#0680 !info`
 
-*All three examples above are valid ways of executing any command below.*
+*All three examples above are valid methods of executing any command below.*
 
 ## Commands
 | Command | Description |
