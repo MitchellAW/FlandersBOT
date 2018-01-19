@@ -100,7 +100,7 @@ class CartoonAPI:
                     # TODO allow for question marks
                     caption += ' %s' % word.strip('?')
 
-                    if charCount > 20:
+                    if charCount > 18:
                         charCount = 0
                         lineCount += 1
                         caption += '\n'
@@ -110,8 +110,8 @@ class CartoonAPI:
 
     # Favours ending the caption at the latest ends of sentences.
     def shortenCaption(self, caption):
-        for i in range(len(caption) - 1, 0):
-            if '.' == caption[i] or '!' == caption[i] or '?' == caption[i]:
+        for i in range(len(caption) - 1, 0, -1):
+            if caption[i] == '.' or caption[i] == '!' or caption[i] = '?':
                 return caption[:i+1]
 
         return caption
