@@ -9,24 +9,25 @@ FlandersBOT provides commands for The Simpsons, Futurama and Rick and Morty quot
 To add FlandersBOT to your own discord server, [Click Here](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456)
 
 ## Usage:
-The bot commands can be executed using several different methods/prefixes, to minimise clashing with other discord bots. The command can be prefixed with ned and a space `ned `, an @mention to the bot followed by a space `@FlandersBOT#0680 ` and some variations of diddly and doodly for when you really want to flaunt those Flanders-isms.
+The bot commands can be executed using several different methods/prefixes, to minimise clashing with other discord bots. The command can be prefixed with ned and a space ("ned "), an @mention to the bot followed by a space ("@FlandersBOT#0680 ") and some variations of diddly and doodly for when you really want to flaunt those Flanders-isms.
 
-**For example:**
+**Usage Examples:**
 
-`ned info`
-`@FlandersBOT#0680 info`
-`diddly info`
-`doodly info`
-`diddly-info`
+`ned info`  
+`@FlandersBOT#0680 info`  
+`diddly info`  
+`doodly info`  
+`diddly-info`  
 `doodly-info`
 
-*Both examples above are valid methods of executing any command below.*
+*All examples above are valid methods of executing any command below.*
 
 ## Commands
 | Command | Description |
 | --- | --- |
 | info | Will send a personal message to the sender with more information   regarding the bot. (Framework, Author, invite URL etc.) |
 | help | Will send a personal mesage to the sender with a list of the commands. |
+| prefix | Will post the prefixes this bot uses. |
 | simpsons | Will post a random Simpsons quote with accompanying picture. |
 | simpsons [quote to search for] | Searches for a Simpsons quote using all text following the command, grabs the first result and sends the resulting quote with accompanying gif. |
 | simpsonsgif | Will post a random Simpsons quote with accompanying gif. |
