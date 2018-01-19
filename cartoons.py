@@ -98,7 +98,7 @@ class CartoonAPI:
                 if lineCount < 4:
                     # Avoiding bug with question marks
                     # TODO allow for question marks
-                    caption += ' %s' % word.strip('?')
+                    caption += ' %s' % word.replace('?', '.')
 
                     if charCount > 18:
                         charCount = 0
