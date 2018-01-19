@@ -2,18 +2,13 @@ import asyncio
 import botInfo
 import config
 import discord
+import json
 
 from cartoons import CartoonAPI
 from discord.ext import commands
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or('!'))
 bot.remove_command('help')
-
-# Create APIs for simpsons, futurama and rick & morty
-frinkiac = CartoonAPI('simpsons', 'https://frinkiac.com/')
-morbotron = CartoonAPI('futurama', 'https://morbotron.com/')
-masterOfAllScience = CartoonAPI('rickandmorty',
-                                'https://masterofallscience.com/')
 
 @bot.event
 async def on_ready():
@@ -34,12 +29,16 @@ async def on_message(message):
 # Whispers a description of the bot with author, framework, server count etc.
 @bot.command()
 async def info():
-    await bot.whisper(botInfo.botInfo + '\nServers: ' + str(len(bot.servers)))
+    await bot.whisper(botInfo.botInfo + 'Servers: ' + str(len(bot.servers)))
 
 # Whispers a list of the bot commands
 @bot.command()
 async def help():
     await bot.whisper(botInfo.commandsList)
+
+@bot.command()
+async def prefix():
+    await bot.say('My command prefixes are ! and <@' + bot.user.id + '>')
 
 # Searches for a simpsons quote using message following prefix, messages a gif
 # of first search result. Messages a random simspons image if no search
@@ -89,6 +88,7 @@ async def rickandmorty(*, message : str=None):
 async def rickandmortygif():
     await bot.say(await masterOfAllScience.getRandomCartoon(True))
 
+
 # Shuts the bot down - only usable by the bot owner specified in config
 @bot.command(pass_context=True)
 async def shutdown(ctx):
@@ -96,5 +96,11 @@ async def shutdown(ctx):
         await bot.whisper("Shutting down. Bye!")
         await bot.logout()
         await bot.close()
+
+# Create APIs for simpsons, futurama and rick & morty
+frinkiac = CartoonAPI('simpsons', 'https://frinkiac.com/')
+morbotron = CartoonAPI('futurama', 'https://morbotron.com/')
+masterOfAllScience = CartoonAPI('rickandmorty',
+                                'https://masterofallscience.com/')
 
 bot.run(config.TOKEN)

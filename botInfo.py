@@ -4,6 +4,8 @@ commandsList = '''
 Hi-diddly-ho, neighborino! Here are the commands, shout them out anytime and I'll
 happily oblige! Well, so long as the reverend approves of course.
 
+Usage: ! [command] and <@221609683562135553> [command]
+
 __**COMMANDS**__
 
 `!help`
@@ -46,10 +48,13 @@ Well, If it's clear and yella', you've got juice there, fella.
 If it's tangy and brown, you're in cider town.
 Now, there's two exceptions and it gets kinda tricky here...
 
+Tip: Use !help or <@221609683562135553> help for a full list of commands.
+
 __**INFO**__
 
 Framework: Discord.py (version=''' + discord.__version__ + ''')
-Author: Mitch#8293 (Discord)
+Author: <@210898009242861568> (Discord)
 Support Server: <https://discord.gg/xMmxMYg>
 Invite URL: <https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456>
-GitHub Source: <https://github.com/MitchellAW/FlandersBOT>''')
+GitHub Source: <https://github.com/MitchellAW/FlandersBOT>
+''')
