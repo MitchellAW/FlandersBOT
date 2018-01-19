@@ -1,5 +1,3 @@
-![Flanders](https://MitchellAW.github.io/images/flandersbanner.png)
-
 # FlandersBOT - A bot for sharing your favourite references!
 A discord bot built in python using the discord.py API with commands surrounding The Simpsons, Futurama and Rick and Morty.
 
