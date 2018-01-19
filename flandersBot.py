@@ -1,7 +1,7 @@
 import asyncio
+import botInfo
 import config
 import discord
-import botInfo
 
 from cartoons import CartoonAPI
 from discord.ext import commands
