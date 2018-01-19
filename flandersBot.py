@@ -24,10 +24,11 @@ async def on_ready():
            + 'https://discordapp.com/oauth2/authorize?&client_id='
            + bot.user.id + '&scope=bot&permissions=19456'))
 
-# Prevent bot from replying to other bots
+# Prevent bot from replying to other bots and make commands case-insensitive
 @bot.event
 async def on_message(message):
     if message.author.bot == False:
+        message.content = message.content.lower()
         await bot.process_commands(message)
 
 # Whispers a description of the bot with author, framework, server count etc.

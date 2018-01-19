@@ -43,9 +43,8 @@ class CartoonAPI:
 
     # Generates a cartoon image/gif, with caption embedded into the image/gif,
     # uses first search result returned from messageText
-    async def findCartoonQuote(self, messageText, gif=False):
-        searchText = messageText[(len(self.command) + 1):].replace(' ', '+')
-
+    async def findCartoonQuote(self, searchText, gif=False):
+        searchText = searchText.replace(' ', '+')
         search = self.searchUrl + searchText
 
         async with aiohttp.ClientSession() as session:
