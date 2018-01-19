@@ -9,12 +9,16 @@ FlandersBOT provides commands for The Simpsons, Futurama and Rick and Morty quot
 To add FlandersBOT to your own discord server, [Click Here](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456)
 
 ## Usage:
-The bot commands can be executed using two different methods/prefixes, to minimise clashing with other discord bots. The command can be prefixed with an exclamation point `!` or an @mention to the bot followed by a space `@FlandersBOT#0680 `
+The bot commands can be executed using several different methods/prefixes, to minimise clashing with other discord bots. The command can be prefixed with ned and a space `ned `, an @mention to the bot followed by a space `@FlandersBOT#0680 ` and some variations of diddly and doodly for when you really want to flaunt those Flanders-isms.
 
 **For example:**
 
-`!info`  
-`@FlandersBOT#0680 info`  
+`ned info`
+`@FlandersBOT#0680 info`
+`diddly info`
+`doodly info`
+`diddly-info`
+`doodly-info`
 
 *Both examples above are valid methods of executing any command below.*
 
@@ -47,10 +51,10 @@ If you need any help with FlandersBOT, would like to provide feedback, suggestio
 
 
 ## Credits
-**Creators of [Frinkiac](https://frinkiac.com/), [Morbotron](https://morbotron.com/) and [Master of All Science](https://masterofallscience.com/):**  
-[Paul Kehrer](https://twitter.com/reaperhulk)  
-[Sean Schulte](https://twitter.com/sirsean)  
-[Allie Young](https://twitter.com/seriousallie)   
+**Creators of [Frinkiac](https://frinkiac.com/), [Morbotron](https://morbotron.com/) and [Master of All Science](https://masterofallscience.com/):**
+[Paul Kehrer](https://twitter.com/reaperhulk)
+[Sean Schulte](https://twitter.com/sirsean)
+[Allie Young](https://twitter.com/seriousallie)
 
 
 ![Flanders](https://MitchellAW.github.io/images/flanders.png)

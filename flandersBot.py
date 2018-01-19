@@ -7,7 +7,14 @@ import json
 from cartoons import CartoonAPI
 from discord.ext import commands
 
-bot = commands.Bot(command_prefix=commands.when_mentioned_or('!'))
+async def getPrefix(bot, message):
+    extras = await prefixesFor(message.server)
+    return commands.when_mentioned_or(*extras)(bot, message)
+
+async def prefixesFor(serverID):
+    return ['ned ', 'ned-', 'diddly-', 'doodly-', 'diddly ', 'doodly ']
+
+bot = commands.Bot(command_prefix=getPrefix)
 bot.remove_command('help')
 
 @bot.event
@@ -29,8 +36,8 @@ async def on_message(message):
 # Whispers a description of the bot with author, framework, server count etc.
 @bot.command()
 async def info():
-    await bot.whisper((botInfo.botInfo + 'Currently active in '
-                      + str(len(bot.servers)) + 'servers'))
+    await bot.whisper((botInfo.botInfo + '\n***Currently active in '
+                      + str(len(bot.servers)) + ' servers***'))
 
 # Whispers a list of the bot commands
 @bot.command()
@@ -39,7 +46,9 @@ async def help():
 
 @bot.command()
 async def prefix():
-    await bot.say('My command prefixes are ! and <@' + bot.user.id + '>')
+    await bot.say('My command prefixes are `ned `, <@' + bot.user.id +
+                  '> , `diddly`, `doodly` (all followed by a space) and ' +
+                  ' `diddly-` and `doodly-`')
 
 # Searches for a simpsons quote using message following prefix, messages a gif
 # of first search result. Messages a random simspons image if no search
