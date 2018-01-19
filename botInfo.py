@@ -46,6 +46,8 @@ Well, If it's clear and yella', you've got juice there, fella.
 If it's tangy and brown, you're in cider town.
 Now, there's two exceptions and it gets kinda tricky here...
 
+__**INFO**__
+
 Framework: Discord.py (version=''' + discord.__version__ + ''')
 Author: Mitch#8293 (Discord)
 Support Server: <https://discord.gg/xMmxMYg>
