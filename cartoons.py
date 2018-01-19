@@ -111,7 +111,7 @@ class CartoonAPI:
     # Favours ending the caption at the latest ends of sentences.
     def shortenCaption(self, caption):
         for i in range(len(caption) - 1, 0, -1):
-            if caption[i] == '.' or caption[i] == '!' or caption[i] = '?':
+            if caption[i] == '.' or caption[i] == '!' or caption[i] == '?':
                 return caption[:i+1]
 
         return caption
