@@ -1,6 +1,6 @@
 ![Flanders](https://MitchellAW.github.io/images/flandersbanner.png)
 
-# FlandersBOT
+# FlandersBOT - A bot for sharing your favourite references!
 A discord bot built in python using the discord.py API with commands surrounding The Simpsons, Futurama and Rick and Morty.
 
 FlandersBOT provides commands for The Simpsons, Futurama and Rick and Morty quoting/searching/content. FlandersBOT uses [Frinkiac](https://frinkiac.com/), [Morbotron](https://morbotron.com/) and [Master of All Science](https://masterofallscience.com/) to provide commands for both random and searchable Simpsons, Futurama and Rick and Morty images/gifs with their appropriate quotes embedded.
@@ -42,7 +42,8 @@ The bot also depends entirely on https://frinkiac.com/, https://morbotron.com/ a
 
 ## Support Server
 If you need any help with FlandersBOT, would like to provide feedback, suggestions or have any other questions regarding FlandersBOT, join the FlandersBOT Support Server on discord:  
-https://discord.gg/xMmxMYg
+[<img src="https://discordapp.com/api/guilds/403154226790006784/widget.png?style=shield">](https://discord.gg/xMmxMYg)
+
 
 ## Credits
 **Creators of [Frinkiac](https://frinkiac.com/), [Morbotron](https://morbotron.com/) and [Master of All Science](https://masterofallscience.com/):**  
