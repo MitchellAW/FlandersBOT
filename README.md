@@ -41,7 +41,8 @@ Requires discord.py to be installed.
 The bot also depends entirely on https://frinkiac.com/, https://morbotron.com/ and https://masterofallscience.com/ for all of its commands and may fail if the API for these sites change.
 
 ## Support Server
-If you need any help with FlandersBOT, would like to provide feedback, suggestions or have any other questions regarding FlandersBOT, join the FlandersBOT Support Server on discord:  
+If you need any help with FlandersBOT, would like to provide feedback, suggestions or have any other questions regarding FlandersBOT, join the FlandersBOT Support Server on discord:
+
 [<img src="https://discordapp.com/api/guilds/403154226790006784/widget.png?style=shield">](https://discord.gg/xMmxMYg)
 
 
