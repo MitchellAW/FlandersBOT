@@ -24,6 +24,10 @@ async def on_ready():
            + 'https://discordapp.com/oauth2/authorize?&client_id='
            + bot.user.id + '&scope=bot&permissions=19456'))
 
+@bot.command()
+async def test():
+    await bot.say('!simpsons')
+
 # Whispers a description of the bot with author, framework, server count etc.
 @bot.command()
 async def info():
@@ -90,4 +94,11 @@ async def shutdown(ctx):
         await bot.logout()
         await bot.close()
 
+# Don't allow bot to respond to other bots
+def isNotBot():
+    def predicate(ctx):
+        return not ctx.message.author.bot
+    return commands.check(predicate)
+
+bot.add_check(isNotBot())
 bot.run(config.TOKEN)
