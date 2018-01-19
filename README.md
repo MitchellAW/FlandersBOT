@@ -52,11 +52,11 @@ If you need any help with FlandersBOT, would like to provide feedback, suggestio
 
 
 ## Credits
-**Creators of [Frinkiac](https://frinkiac.com/), [Morbotron](https://morbotron.com/) and [Master of All Science](https://masterofallscience.com/):**
-[Paul Kehrer](https://twitter.com/reaperhulk)
-[Sean Schulte](https://twitter.com/sirsean)
-[Allie Young](https://twitter.com/seriousallie)
-**Source of the higher quality adventures of Ned Flanders**
+**Creators of [Frinkiac](https://frinkiac.com/), [Morbotron](https://morbotron.com/) and [Master of All Science](https://masterofallscience.com/):**  
+[Paul Kehrer](https://twitter.com/reaperhulk)  
+[Sean Schulte](https://twitter.com/sirsean)  
+[Allie Young](https://twitter.com/seriousallie)  
+**Source of the higher quality Adventures of Ned Flanders image**  
 [/u/nmcfaden](https://i.redd.it/3m7txitrcjgy.png)
 
 
