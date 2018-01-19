@@ -27,8 +27,8 @@ async def on_ready():
 # Prevent bot from replying to other bots
 @bot.event
 async def on_message(message):
-    if not message.author.bot:
-        bot.process_commands(message)
+    if message.author.bot == False:
+        await bot.process_commands(message)
 
 # Whispers a description of the bot with author, framework, server count etc.
 @bot.command()
