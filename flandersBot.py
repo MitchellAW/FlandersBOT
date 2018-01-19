@@ -29,7 +29,8 @@ async def on_message(message):
 # Whispers a description of the bot with author, framework, server count etc.
 @bot.command()
 async def info():
-    await bot.whisper(botInfo.botInfo + 'Servers: ' + str(len(bot.servers)))
+    await bot.whisper((botInfo.botInfo + 'Currently active in '
+                      + str(len(bot.servers)) + 'servers'))
 
 # Whispers a list of the bot commands
 @bot.command()
@@ -87,7 +88,6 @@ async def rickandmorty(*, message : str=None):
 @bot.command()
 async def rickandmortygif():
     await bot.say(await masterOfAllScience.getRandomCartoon(True))
-
 
 # Shuts the bot down - only usable by the bot owner specified in config
 @bot.command(pass_context=True)
