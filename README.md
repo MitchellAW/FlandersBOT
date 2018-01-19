@@ -1,3 +1,5 @@
+![Flanders](https://MitchellAW.github.io/images/flandersbanner.png)
+
 # FlandersBOT
 A discord bot built in python using the discord.py API with commands surrounding The Simpsons, Futurama and Rick and Morty.
 
@@ -7,15 +9,14 @@ FlandersBOT provides commands for The Simpsons, Futurama and Rick and Morty quot
 To add FlandersBOT to your own discord server, [Click Here](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456)
 
 ## Usage:
-The bot commands can be executed with three methods/prefixes, to minimise clashing with other discord bots. The command can be prefixed with an exclamation point `!`, an @mention to the bot followed by a space `@FlandersBOT#0680 `, or an @mention to the bot followed by a space and an exclamation point `@FlandersBOT#0680 !`
+The bot commands can be executed using two different methods/prefixes, to minimise clashing with other discord bots. The command can be prefixed with an exclamation point `!` or an @mention to the bot followed by a space `@FlandersBOT#0680 `
 
 **For example:**
 
 `!info`  
 `@FlandersBOT#0680 info`  
-`@FlandersBOT#0680 !info`
 
-*All three examples above are valid methods of executing any command below.*
+*Both examples above are valid methods of executing any command below.*
 
 ## Commands
 | Command | Description |
