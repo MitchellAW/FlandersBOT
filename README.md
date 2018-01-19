@@ -56,6 +56,8 @@ If you need any help with FlandersBOT, would like to provide feedback, suggestio
 [Paul Kehrer](https://twitter.com/reaperhulk)
 [Sean Schulte](https://twitter.com/sirsean)
 [Allie Young](https://twitter.com/seriousallie)
+**Source of the higher quality adventures of Ned Flanders**
+[/u/nmcfaden](https://i.redd.it/3m7txitrcjgy.png)
 
 
 ![Flanders](https://MitchellAW.github.io/images/flanders.png)
