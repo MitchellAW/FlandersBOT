@@ -24,7 +24,8 @@ async def updateServerCount(bot):
     dbPayload = {"server_count"  : len(bot.servers)}
 
     async with aiohttp.ClientSession() as aioClient:
-        resp = await aioClient.post(dbUrl, data=dbPayload, headers=dbHeaders)
+        await aioClient.post(dbUrl, data=dbPayload, headers=dbHeaders)
+
 
 bot = commands.Bot(command_prefix=getPrefix)
 bot.remove_command('help')
