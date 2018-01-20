@@ -1,12 +1,15 @@
 ![Flanders](https://MitchellAW.github.io/images/flanders-banner.png)
 
-# FlandersBOT - A bot for sharing your favourite references!
+<img align="right" src="https://MitchellAW.github.io/images/flanders-circle.png" height="256" width="256"></img>
+# FlandersBOT
+### A bot for sharing your favourite references! 
+
 A discord bot with commands surrounding The Simpsons, Futurama and Rick and Morty.
 
 FlandersBOT provides commands for The Simpsons, Futurama and Rick and Morty quoting/searching/content. FlandersBOT uses [Frinkiac](https://frinkiac.com/), [Morbotron](https://morbotron.com/) and [Master of All Science](https://masterofallscience.com/) to provide commands for both random and searchable Simpsons, Futurama and Rick and Morty images/gifs with their appropriate quotes embedded.
 
 ## Add FlandersBOT to your Discord Server
-To invite FlandersBOT, [click here](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456)
+To invite FlandersBOT to your own discord server and start using it now, [click here](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456)
 
 [![Discord Bots](https://discordbots.org/api/widget/221609683562135553.svg)](https://discordbots.org/bot/221609683562135553)
 
@@ -15,8 +18,8 @@ The bot commands can be executed using several different methods/prefixes, to mi
 
 **Usage Examples:**
 
-`ned info`  
 `@FlandersBOT#0680 info`  
+`ned info`  
 `diddly info`  
 `doodly info`  
 `diddly-info`  
