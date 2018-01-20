@@ -25,8 +25,8 @@ async def updateServerCount(bot):
 
     print('Updating Server Count')
     async with aiohttp.ClientSession() as aioClient:
-        await aioClient.post(dbUrl, data=dbPayload, headers=dbHeaders)
-        print('Server Count Updated')
+        resp = await aioClient.post(dbUrl, data=dbPayload, headers=dbHeaders)
+        print(resp.read())
         await aioClient.close()
 
 
