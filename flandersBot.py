@@ -1,3 +1,4 @@
+import aiohttp
 import asyncio
 import botInfo
 import config
@@ -14,6 +15,16 @@ async def getPrefix(bot, message):
 async def prefixesFor(serverID):
     return ['ned ', 'ned-', 'diddly-', 'doodly-', 'diddly ', 'doodly ']
 
+# Post server count to update count at https://discordbots.org/
+async def updateServerCount(bot):
+    dbUrl = "https://discordbots.org/api/bots/" + bot.user.id + "/stats"
+    dbHeaders = {"Authorization" : config.DBTOKEN}
+    dbPayload = {"server_count"  : len(bot.servers)}
+
+    async with aiohttp.ClientSession() as aioClient:
+        resp = await aioClient.post(dbUrl, data=dbPayload, headers=dbHeaders)
+        print(await resp.text())
+
 bot = commands.Bot(command_prefix=getPrefix)
 bot.remove_command('help')
 
@@ -25,6 +36,16 @@ async def on_ready():
     print(('Invite URL: '
            + 'https://discordapp.com/oauth2/authorize?&client_id='
            + bot.user.id + '&scope=bot&permissions=19456'))
+    print('Currently active in ' + str(len(bot.servers)) + ' servers')
+    await updateServerCount(bot)
+
+@bot.event
+async def on_server_join(server):
+    await updateServerCount(bot)
+
+@bot.event
+async def on_server_remove(server):
+    await updateServerCount(bot)
 
 # Prevent bot from replying to other bots and make commands case-insensitive
 @bot.event
