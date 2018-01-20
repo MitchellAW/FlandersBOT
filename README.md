@@ -15,8 +15,8 @@ The bot commands can be executed using several different methods/prefixes, to mi
 
 **Usage Examples:**
 
-`ned info`  
 `@FlandersBOT#0680 info`  
+`ned info`  
 `diddly info`  
 `doodly info`  
 `diddly-info`  
