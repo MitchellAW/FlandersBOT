@@ -8,10 +8,12 @@ import json
 from cartoons import CartoonAPI
 from discord.ext import commands
 
+# Get the prefixes for the bot
 async def getPrefix(bot, message):
     extras = await prefixesFor(message.server)
     return commands.when_mentioned_or(*extras)(bot, message)
 
+# Get all the prefixes the server can use
 async def prefixesFor(serverID):
     return ['ned ', 'ned-', 'diddly-', 'doodly-', 'diddly ', 'doodly ']
 
@@ -23,7 +25,6 @@ async def updateServerCount(bot):
 
     async with aiohttp.ClientSession() as aioClient:
         resp = await aioClient.post(dbUrl, data=dbPayload, headers=dbHeaders)
-        print(await resp.text())
 
 bot = commands.Bot(command_prefix=getPrefix)
 bot.remove_command('help')
@@ -37,12 +38,15 @@ async def on_ready():
            + 'https://discordapp.com/oauth2/authorize?&client_id='
            + bot.user.id + '&scope=bot&permissions=19456'))
     print('Currently active in ' + str(len(bot.servers)) + ' servers')
+
     await updateServerCount(bot)
 
+# Update server count on join
 @bot.event
 async def on_server_join(server):
     await updateServerCount(bot)
 
+# Update server count on leave
 @bot.event
 async def on_server_remove(server):
     await updateServerCount(bot)
@@ -70,6 +74,36 @@ async def prefix():
     await bot.say('My command prefixes are `ned `, <@' + bot.user.id +
                   '> , `diddly`, `doodly` (all followed by a space) and ' +
                   ' `diddly-` and `doodly-`')
+
+@bot.command()
+async def stats():
+    # Get server count
+    serverCount = len(bot.servers)
+
+    # Count users online in servers
+    totalMembers = 0
+    onlineUsers = 0
+    for server in bot.servers:
+        totalMembers += len(server.members)
+        for member in server.members:
+            if member.status == discord.Status.online:
+                onlineUsers += 1
+
+    # Embed statistics output
+    embed = discord.Embed(colour=discord.Colour(0x44981e))
+
+    embed.set_thumbnail(url="https://images.discordapp.net/avatars/221609683562135553/afc35c7bcaf6dcb1c86a1c715ac955a3.png")
+    embed.set_author(name="FlandersBOT Statistics", url="https://github.com/FlandersBOT", icon_url="https://images.discordapp.net/avatars/221609683562135553/afc35c7bcaf6dcb1c86a1c715ac955a3.png")
+
+    embed.add_field(name="Bot Name", value="FlandersBOT#0680", inline=True)
+    embed.add_field(name="Bot Owner", value="Mitch#8293", inline=True)
+    embed.add_field(name="Total Members", value=str(totalMembers), inline=True)
+    embed.add_field(name="Server Count", value=str(serverCount), inline=True)
+    embed.add_field(name="Online Users", value=str(onlineUsers), inline=True)
+    embed.add_field(name="Online Users per Server", value=str(onlineUsers / serverCount), inline=True)
+
+    # Post statistics
+    await bot.say(embed=embed)
 
 # Searches for a simpsons quote using message following prefix, messages a gif
 # of first search result. Messages a random simspons image if no search
@@ -118,6 +152,14 @@ async def rickandmorty(*, message : str=None):
 @bot.command()
 async def rickandmortygif():
     await bot.say(await masterOfAllScience.getRandomCartoon(True))
+
+@bot.command(pass_context=True)
+async def serverlist(ctx):
+    if ctx.message.author.id == config.OWNERID:
+        serverList = ""
+        for server in bot.servers:
+            serverList += server.name + '\n'
+        await bot.whisper(serverList)
 
 # Shuts the bot down - only usable by the bot owner specified in config
 @bot.command(pass_context=True)
