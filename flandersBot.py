@@ -23,8 +23,11 @@ async def updateServerCount(bot):
     dbHeaders = {"Authorization" : config.DBTOKEN}
     dbPayload = {"server_count"  : len(bot.servers)}
 
+    print('Updating Server Count')
     async with aiohttp.ClientSession() as aioClient:
         await aioClient.post(dbUrl, data=dbPayload, headers=dbHeaders)
+        print('Server Count Updated')
+        aioClient.close()
 
 
 bot = commands.Bot(command_prefix=getPrefix)
