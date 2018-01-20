@@ -91,6 +91,8 @@ async def stats():
             if member.status == discord.Status.online:
                 onlineUsers += 1
 
+    averageOnline = round((onlineUsers / serverCount), 2)
+
     # Embed statistics output
     embed = discord.Embed(colour=discord.Colour(0x44981e))
 
@@ -102,7 +104,7 @@ async def stats():
     embed.add_field(name="Total Members", value=str(totalMembers), inline=True)
     embed.add_field(name="Server Count", value=str(serverCount), inline=True)
     embed.add_field(name="Online Users", value=str(onlineUsers), inline=True)
-    embed.add_field(name="Online Users per Server", value=str(onlineUsers / serverCount), inline=True)
+    embed.add_field(name="Online Users per Server", value=str(averageOnline), inline=True)
 
     # Post statistics
     await bot.say(embed=embed)
