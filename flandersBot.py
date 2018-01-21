@@ -52,6 +52,9 @@ async def updateServerCount(bot):
         resp = await aioClient.post(dbUrl, data=dbPayload, headers=dbHeaders)
         print(await resp.text())
 
+    await bot.change_presence(game=discord.Game(name='ned help | {} servers'.format(len(bot.servers)), type=0))
+
+
 bot = commands.Bot(command_prefix=getPrefix)
 bot.remove_command('help')
 
@@ -64,8 +67,8 @@ async def on_ready():
            + 'https://discordapp.com/oauth2/authorize?&client_id='
            + bot.user.id + '&scope=bot&permissions=19456'))
     print('Currently active in ' + str(len(bot.servers)) + ' servers')
-
     await updateServerCount(bot)
+
 
 # Update server count on join
 @bot.event
@@ -99,7 +102,6 @@ async def help():
 @bot.command(pass_context=True)
 async def prefix(ctx):
     serverPrefixes = await prefixesFor(ctx.message.server)
-
     if len(serverPrefixes) > 5:
         await bot.say('This servers prefixes are: `ned`, `diddly`, `doodly`,' +
                       ' `diddly-`, `doodly-` and `' + serverPrefixes[-1] + '`.' )
@@ -231,6 +233,7 @@ async def setprefix(ctx, *, message : str):
                 serverList.close()
                 await bot.say('This servers custom prefix changed to `' + message + '`.')
 
+# Sends a list of the servers the bot is active in - usable by the bot owner
 @bot.command(pass_context=True)
 async def serverlist(ctx):
     if ctx.message.author.id == config.OWNERID:
@@ -239,11 +242,16 @@ async def serverlist(ctx):
             serverList += server.name + '\n'
         await bot.whisper(serverList)
 
-# Shuts the bot down - only usable by the bot owner specified in config
+# Sets the bot's status / presence - usable by the bot owner
+@bot.command(pass_context=True)
+async def status(ctx, *, message : str):
+    if ctx.message.author.id == config.OWNERID:
+        await bot.change_presence(game=discord.Game(name=message, type=0))
+
+# Shuts the bot down - usable by the bot owner
 @bot.command(pass_context=True)
 async def shutdown(ctx):
     if ctx.message.author.id == config.OWNERID:
-        await bot.whisper("Shutting down. Bye!")
         await bot.logout()
         await bot.close()
 
