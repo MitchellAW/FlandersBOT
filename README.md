@@ -33,6 +33,8 @@ The bot commands can be executed using several different methods/prefixes, to mi
 | info | Will send a personal message to the sender with more information   regarding the bot. (Framework, Author, invite URL etc.) |
 | help | Will send a personal mesage to the sender with a list of the commands. |
 | prefix | Will post the prefixes this bot uses. |
+| setprefix [prefix] | Sets a prefix the bot will respond to on your server (Limit: 1 per server) |
+| stats | Will post some of the bot's statistics. |
 | simpsons | Will post a random Simpsons quote with accompanying picture. |
 | simpsons [quote to search for] | Searches for a Simpsons quote using all text following the command, grabs the first result and sends the resulting quote with accompanying gif. |
 | simpsonsgif | Will post a random Simpsons quote with accompanying gif. |
