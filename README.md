@@ -11,6 +11,9 @@ FlandersBOT provides commands for The Simpsons, Futurama and Rick and Morty quot
 ## Add FlandersBOT to your Discord Server
 To invite FlandersBOT to your own discord server and start using it now, [click here](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456)
 
+Thanks to https://discordbots.org/ for listing FlandersBOT!  
+_If you like FlandersBOT, help the bot grow by upvoting it below!_
+
 [![Discord Bots](https://discordbots.org/api/widget/221609683562135553.svg)](https://discordbots.org/bot/221609683562135553)
 
 ## Usage
