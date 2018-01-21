@@ -16,7 +16,9 @@ __**COMMANDS**__
 
 **help** - Will send this list of commands.
 **info** - Will send a personal message with more information about the bot.
-**prefix** - Will post the prefixes this bot uses.
+**prefix** - Will post the prefixes I respond to on your server.
+**setprefix [prefix]** - Sets a prefix I will respond to on your server.
+**stats** - Will post some of my statist-diddly-istics.
 
 **simpsons** - Will post a random Simpsons moment with caption.
 **simpsons [quote]** - Searches for a Simpsons gif using the quote.
