@@ -65,7 +65,7 @@ async def on_ready():
            + bot.user.id + '&scope=bot&permissions=19456'))
     print('Currently active in ' + str(len(bot.servers)) + ' servers')
 
-    #await updateServerCount(bot)
+    await updateServerCount(bot)
 
 # Update server count on join
 @bot.event
