@@ -52,8 +52,7 @@ async def updateServerCount(bot):
         resp = await aioClient.post(dbUrl, data=dbPayload, headers=dbHeaders)
         print(await resp.text())
 
-    await bot.change_presence(game=discord.Game(name='ned help | {} servers'.format(len(bot.servers)), type=0))
-
+    await bot.change_presence(game=discord.Game(name='ned help | {} servers'.format(len(bot.servers)), type=0), afk=True)
 
 bot = commands.Bot(command_prefix=getPrefix)
 bot.remove_command('help')
@@ -66,9 +65,9 @@ async def on_ready():
     print(('Invite URL: '
            + 'https://discordapp.com/oauth2/authorize?&client_id='
            + bot.user.id + '&scope=bot&permissions=19456'))
-    print('Currently active in ' + str(len(bot.servers)) + ' servers')
-    await updateServerCount(bot)
 
+    await bot.change_presence(game=discord.Game(name='ned help | {} servers'.format(len(bot.servers)), type=0))
+    await updateServerCount(bot)
 
 # Update server count on join
 @bot.event
@@ -86,6 +85,11 @@ async def on_message(message):
     if message.author.bot == False:
         message.content = message.content.lower()
         await bot.process_commands(message)
+
+# Commands error handler, not doing anything at the moment
+@bot.event
+async def on_command_error(ctx, error):
+    print('command error')
 
 # Whispers a description of the bot with author, framework, server count etc.
 @bot.command()
@@ -193,15 +197,17 @@ async def rickandmortygif():
 
 # Allows for a single custom prefix per-server
 @bot.command(pass_context=True)
-async def setprefix(ctx, *, message : str):
+@commands.has_permissions(manage_server=True)
+async def setprefix(ctx, *, message : str=None):
     serverIndex = findServer(ctx.message.server)
 
     # Only allow custom prefixes in servers
     if ctx.message.server == None:
         await bot.say('Custom prefixes are for servers only.')
 
-    elif ctx.message.server.owner != ctx.message.author:
-        await bot.say('Custom prefixes can only be changed by the server owner.')
+    # Require entering a prefix
+    if message == None:
+        await bot.say('You did not provide a prefix. Usage: `ned setprefix !`')
 
     # Limit prefix to 10 characters, may increase
     elif len(message) > 10:
