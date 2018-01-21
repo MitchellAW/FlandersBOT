@@ -28,22 +28,22 @@ The bot commands can be executed using several different methods/prefixes, to mi
 *All examples above are valid methods of executing any command below.*
 
 ## Commands
-| Command | Description |
+| **Command** | **Description** |
 | --- | --- |
-| info | Will send a personal message to the sender with more information   regarding the bot. (Framework, Author, invite URL etc.) |
-| help | Will send a personal mesage to the sender with a list of the commands. |
-| prefix | Will post the prefixes this bot uses. |
-| setprefix [prefix] | Sets a prefix the bot will respond to on your server (Requires: Server Owner, Limit: 1 per server) |
-| stats | Will post some of the bot's statistics. |
-| simpsons | Will post a random Simpsons quote with accompanying picture. |
-| simpsons [quote to search for] | Searches for a Simpsons quote using all text following the command, grabs the first result and sends the resulting quote with accompanying gif. |
-| simpsonsgif | Will post a random Simpsons quote with accompanying gif. |
-| futurama | Will post a random Futurama quote with accompanying picture. |
-| futurama [quote to search for] | Searches for a Futurama quote using all text following the command, grabs the first result and sends the resulting quote with accompanying gif. |
-| futuramagif | Will post a random Futurama quote with accompanying gif. |
-| rickandmorty | Will post a random Rick and Morty quote with accompanying picture. |
-| rickandmorty [quote to search for] | Searches for a Rick and Morty quote using all text following the command, grabs the first result and sends the resulting quote with accompanying gif. |
-| rickandmortygif | Will post a random Rick and Morty quote with accompanying gif. |
+| **info** | Will send a personal message to the sender with more information   regarding the bot. (Framework, Author, invite URL etc.) |
+| **help** | Will send a personal mesage to the sender with a list of the commands. |
+| **prefix** | Will post the prefixes this bot uses. |
+| **setprefix [prefix]** | Sets a prefix the bot will respond to on your server (Requires: Server Owner, Limit: 1 per server) |
+| **stats** | Will post some of the bot's statistics. |
+| **simpsons** | Will post a random Simpsons quote with accompanying picture. |
+| **simpsons [quote]** | Searches for a Simpsons quote using all text following the command, grabs the first result and sends the resulting quote with accompanying gif. |
+| **simpsonsgif** | Will post a random Simpsons quote with accompanying gif. |
+| **futurama** | Will post a random Futurama quote with accompanying picture. |
+| **futurama [quote]** | Searches for a Futurama quote using all text following the command, grabs the first result and sends the resulting quote with accompanying gif. |
+| **futuramagif** | Will post a random Futurama quote with accompanying gif. |
+| **rickandmorty** | Will post a random Rick and Morty quote with accompanying picture. |
+| **rickandmorty [quote]** | Searches for a Rick and Morty quote using all text following the command, grabs the first result and sends the resulting quote with accompanying gif. |
+| **rickandmortygif** | Will post a random Rick and Morty quote with accompanying gif. |
 
 ## Preview
 ![FlandersBOT](https://media.giphy.com/media/3o7522dwW8Bj5zNez6/giphy.gif)
