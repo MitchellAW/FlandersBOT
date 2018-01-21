@@ -8,14 +8,39 @@ import json
 from cartoons import CartoonAPI
 from discord.ext import commands
 
+# Find the index of the server in prefixes.json
+def findServer(server):
+    if server == None:
+        return -1
+
+    with open('prefixes.json', 'r') as serverList:
+        data = json.load(serverList)
+        for i in range(len(data)):
+            if data[i]['serverID'] == server.id:
+                serverList.close()
+                return i
+
+        serverList.close()
+    return -1
+
 # Get the prefixes for the bot
 async def getPrefix(bot, message):
     extras = await prefixesFor(message.server)
     return commands.when_mentioned_or(*extras)(bot, message)
 
 # Get all the prefixes the server can use
-async def prefixesFor(serverID):
-    return ['ned ', 'ned-', 'diddly-', 'doodly-', 'diddly ', 'doodly ']
+async def prefixesFor(server):
+    serverIndex = findServer(server)
+    if serverIndex == -1:
+        return ['ned ', 'diddly-', 'doodly-', 'diddly ', 'doodly ']
+
+    else:
+        with open('prefixes.json', 'r') as serverList:
+            serverData = json.load(serverList)
+            serverList.close()
+
+        customPrefix = serverData[serverIndex]['prefix']
+        return ['ned ', 'diddly-', 'doodly-', 'diddly ', 'doodly', customPrefix]
 
 # Post server count to update count at https://discordbots.org/
 async def updateServerCount(bot):
@@ -26,7 +51,6 @@ async def updateServerCount(bot):
     async with aiohttp.ClientSession() as aioClient:
         resp = await aioClient.post(dbUrl, data=dbPayload, headers=dbHeaders)
         print(await resp.text())
-
 
 bot = commands.Bot(command_prefix=getPrefix)
 bot.remove_command('help')
@@ -41,7 +65,7 @@ async def on_ready():
            + bot.user.id + '&scope=bot&permissions=19456'))
     print('Currently active in ' + str(len(bot.servers)) + ' servers')
 
-    await updateServerCount(bot)
+    #await updateServerCount(bot)
 
 # Update server count on join
 @bot.event
@@ -71,12 +95,20 @@ async def info():
 async def help():
     await bot.whisper(botInfo.commandsList)
 
-@bot.command()
-async def prefix():
-    await bot.say('My command prefixes are `ned `, <@' + bot.user.id +
-                  '> , `diddly`, `doodly` (all followed by a space) and ' +
-                  ' `diddly-` and `doodly-`')
+# Display the prefixes used on the current server
+@bot.command(pass_context=True)
+async def prefix(ctx):
+    serverPrefixes = await prefixesFor(ctx.message.server)
 
+    if len(serverPrefixes) > 5:
+        await bot.say('This servers prefixes are: `ned`, `diddly`, `doodly`,' +
+                      ' `diddly-`, `doodly-` and `' + serverPrefixes[-1] + '`.' )
+
+    else:
+        await bot.say('This servers prefixes are `ned`, `diddly`, `doodly`,' +
+                      ' `diddly-` and `doodly-`.')
+
+# Display statistics for the bot
 @bot.command()
 async def stats():
     # Get server count
@@ -156,6 +188,48 @@ async def rickandmorty(*, message : str=None):
 @bot.command()
 async def rickandmortygif():
     await bot.say(await masterOfAllScience.getRandomCartoon(True))
+
+# Allows for a single custom prefix per-server
+@bot.command(pass_context=True)
+async def setprefix(ctx, *, message : str):
+    serverIndex = findServer(ctx.message.server)
+
+    # Only allow custom prefixes in servers
+    if ctx.message.server == None:
+        await bot.say('Custom prefixes are for servers only.')
+
+    elif ctx.message.server.owner != ctx.message.author:
+        await bot.say('Custom prefixes can only be changed by the server owner.')
+
+    # Limit prefix to 10 characters, may increase
+    elif len(message) > 10:
+        await bot.say('Custom server prefix too long (Max 10 characters).')
+
+    else:
+        # Write the new custom prefix
+        with open('prefixes.json', 'r') as serverList:
+            data = json.load(serverList)
+            serverList.close()
+
+        # Add a new custom server prefix if one doesn't already exist
+        if serverIndex == -1:
+            data.append({'serverID':ctx.message.server.id, 'prefix':message})
+            with open('prefixes.json', 'w') as serverList:
+                json.dump(data, serverList, indent=4)
+                serverList.close()
+                await bot.say('Custom prefix `' + message + '` added to this server.')
+
+        # Declare if it is already that prefix
+        elif data[serverIndex]['prefix'] == message:
+            await bot.say('This servers custom prefix is already `' + message + '`.')
+
+        # Modify the current prefix to the new one
+        else:
+            data[serverIndex]['prefix'] = message
+            with open('prefixes.json', 'w') as serverList:
+                json.dump(data, serverList, indent=4)
+                serverList.close()
+                await bot.say('This servers custom prefix changed to `' + message + '`.')
 
 @bot.command(pass_context=True)
 async def serverlist(ctx):
