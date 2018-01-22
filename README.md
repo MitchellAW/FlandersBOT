@@ -1,6 +1,5 @@
 ![Flanders](https://MitchellAW.github.io/images/flanders-banner.png)
 
-<img align="right" src="https://MitchellAW.github.io/images/flanders-circle.png" height="256" width="256"></img>
 # FlandersBOT
 ### A bot for sharing your favourite references! 
 
@@ -8,13 +7,19 @@ A discord bot with commands surrounding The Simpsons, Futurama and Rick and Mort
 
 FlandersBOT provides commands for The Simpsons, Futurama and Rick and Morty quoting/searching/content. FlandersBOT uses [Frinkiac](https://frinkiac.com/), [Morbotron](https://morbotron.com/) and [Master of All Science](https://masterofallscience.com/) to provide commands for both random and searchable Simpsons, Futurama and Rick and Morty images/gifs with their appropriate quotes embedded.
 
+<img align="right" src="https://MitchellAW.github.io/images/flanders-circle.png" height="256" width="256"></img>
 ## Add FlandersBOT to your Discord Server
 To invite FlandersBOT to your own discord server and start using it now, [click here](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456)
+
+Thanks to https://discordbots.org/ for listing FlandersBOT!  
+If you like FlandersBOT, help the bot grow by upvoting it below!
 
 [![Discord Bots](https://discordbots.org/api/widget/221609683562135553.svg)](https://discordbots.org/bot/221609683562135553)
 
 ## Usage
-The bot commands can be executed using several different methods/prefixes, to minimise clashing with other discord bots. The command can be prefixed with ned and a space ("ned "), an @mention to the bot followed by a space ("@FlandersBOT#0680 ") and some variations of diddly and doodly for when you really want to flaunt those Flanders-isms.
+The bot commands can be executed using several different methods/prefixes, to minimise clashing with other discord bots. Any command can be prefixed with an @mention, ned or diddly/doodly when you really want to flaunt those Flanders-isms.
+
+If you're not a fan of any of these prefixes, you can add a new prefix to your server using the setprefix command.
 
 **Usage Examples:**
 
