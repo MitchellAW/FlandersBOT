@@ -1,11 +1,11 @@
 import aiohttp
+import asyncio
 
 from base64 import b64encode
 
 class CartoonAPI:
-    def __init__(self, command, url):
+    def __init__(self, url):
         self.url = url
-        self.command = command
         self.randomUrl = self.url + 'api/random'
         self.captionUrl = self.url + 'api/caption?e={}&t={}'
         self.searchUrl = self.url + 'api/search?q='
@@ -16,7 +16,7 @@ class CartoonAPI:
     # image/gif, chooses jpg by default
     async def getRandomCartoon(self, gif=False):
         async with aiohttp.ClientSession() as session:
-            async with session.get(self.randomUrl) as cartoonPage:
+            async with session.get(self.randomUrl, timeout=30) as cartoonPage:
 
                 if cartoonPage.status == 200:
                     cartoonJson = await cartoonPage.json()
@@ -48,7 +48,7 @@ class CartoonAPI:
         search = self.searchUrl + searchText
 
         async with aiohttp.ClientSession() as session:
-            async with session.get(search) as cartoonSearch:
+            async with session.get(search, timeout=15) as cartoonSearch:
                 if cartoonSearch.status == 200:
                     searchResults = await cartoonSearch.json()
 
@@ -58,30 +58,35 @@ class CartoonAPI:
                         episode = str(firstResult['Episode'])
                         timestamp = str(firstResult['Timestamp'])
 
-                        async with session.get(self.captionUrl.format(episode, timestamp)) as caption:
-                            if caption.status == 200:
-                                cartoonJson = await caption.json()
-
-                                if gif:
-                                    timestamp = cartoonJson['Subtitles'][0]['StartTimestamp']
-
-                                    if len(cartoonJson['Subtitles']) < 2:
-                                        endTimestamp = cartoonJson['Subtitles'][0]['EndTimestamp']
-
-                                    else:
-                                        endTimestamp = cartoonJson['Subtitles'][1]['EndTimestamp']
-
-                                    return self.gifUrl.format(episode, timestamp, endTimestamp, self.encodeCaption(cartoonJson))
-
-                                else:
-                                    timestamp = cartoonJson['Frame']['Timestamp']
-                                    return self.imageUrl.format(episode, timestamp, self.encodeCaption(cartoonJson))
-
                     else:
                         return 'No search results found.'
 
                 else:
                     return 'Error 404. {} may be down.'.format(self.url)
+
+            async with session.get(self.captionUrl.format(episode, timestamp), timeout=15) as caption:
+                if caption.status == 200:
+                    cartoonJson = await caption.json()
+
+                    if gif:
+                        timestamp = cartoonJson['Subtitles'][0]['StartTimestamp']
+
+                        if len(cartoonJson['Subtitles']) < 2:
+                            endTimestamp = cartoonJson['Subtitles'][0]['EndTimestamp']
+
+                        else:
+                            endTimestamp = cartoonJson['Subtitles'][1]['EndTimestamp']
+
+                        return self.gifUrl.format(episode, timestamp, endTimestamp, self.encodeCaption(cartoonJson))
+
+                    else:
+                        timestamp = cartoonJson['Frame']['Timestamp']
+                        return self.imageUrl.format(episode, timestamp, self.encodeCaption(cartoonJson))
+
+                else:
+                    return 'Error 404. {} may be down.'.format(self.url)
+
+
 
     # Loop through all words of the subtitles, add them to the caption and then
     # return the caption encoded in base64 for use in the url

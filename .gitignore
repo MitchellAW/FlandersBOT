@@ -1,3 +1,6 @@
 __pycache__/
+cogs/__pycache__/
+cogs/api/__pycache__/
 config.py
 prefixes.json
+
