@@ -28,8 +28,7 @@ async def updateServerCount(bot):
     await bot.change_presence(game=status, afk=True)
 
 startupExtensions = [
-    'cogs.general', 'cogs.simpsons', 'cogs.futurama', 'cogs.rickandmorty'
-    ]
+    'cogs.general', 'cogs.simpsons', 'cogs.futurama', 'cogs.rickandmorty'    ]
 
 bot = commands.Bot(command_prefix=getPrefix)
 bot.remove_command('help')
@@ -66,9 +65,12 @@ async def on_message(message):
 
 # Commands error handler, not doing anything at the moment
 @bot.event
-async def on_command_error(ctx, error):
+async def on_command_error(error, ctx):
     if error == asyncio.TimeoutError:
         await bot.say("Error. No API Response.")
+
+    else:
+        print(error)
 
 # Load an extension
 @bot.command()

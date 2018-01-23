@@ -5,6 +5,8 @@ import json
 import prefixes
 
 from discord.ext import commands
+from discord.ext.commands.cooldowns import BucketType
+
 
 class General():
     def __init__(self, bot):
@@ -23,6 +25,7 @@ class General():
 
     # Display the prefixes used on the current server
     @commands.command(pass_context=True)
+    @commands.cooldown(1, 3, BucketType.channel)
     async def prefix(self, ctx):
         serverPrefixes = await prefixes.prefixesFor(ctx.message.server)
         if len(serverPrefixes) > 5:
@@ -37,15 +40,16 @@ class General():
     # Allows for a single custom prefix per-server
     @commands.command(pass_context=True)
     @commands.has_permissions(manage_server=True)
+    @commands.cooldown(3, 60)
     async def setprefix(self, ctx, *, message : str=None):
         serverIndex = prefixes.findServer(ctx.message.server)
 
         # Only allow custom prefixes in servers
-        if ctx.message.server == None:
+        if ctx.message.server is None:
             await self.bot.say('Custom prefixes are for servers only.')
 
         # Require entering a prefix
-        if message == None:
+        if message is None:
             await self.bot.say('You did not provide a new prefix.')
 
         # Limit prefix to 10 characters, may increase
@@ -105,7 +109,9 @@ class General():
 
     # Display statistics for the bot
     @commands.command()
+    @commands.cooldown(1, 3, BucketType.channel)
     async def stats(self):
+
         # Get server count
         serverCount = len(self.bot.servers)
 

@@ -2,6 +2,7 @@ import discord
 
 from cogs.api.cartoons import CartoonAPI
 from discord.ext import commands
+from discord.ext.commands.cooldowns import BucketType
 
 class Futurama():
     def __init__(self, bot):
@@ -9,8 +10,9 @@ class Futurama():
         self.morbotron = CartoonAPI('https://morbotron.com/')
 
     @commands.command()
+    @commands.cooldown(1, 3, BucketType.channel)
     async def futurama(self, *, message : str=None):
-        if message == None:
+        if message is None:
             await self.bot.say(await self.morbotron.getRandomCartoon())
 
         else:
@@ -19,6 +21,7 @@ class Futurama():
 
     # Messages a random simpsons quote with accomanying gif
     @commands.command()
+    @commands.cooldown(1, 3, BucketType.channel)
     async def futuramagif(self, ):
         await self.bot.say(await self.morbotron.getRandomCartoon(True))
 
