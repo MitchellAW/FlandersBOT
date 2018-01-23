@@ -40,7 +40,7 @@ class General():
     # Allows for a single custom prefix per-server
     @commands.command(pass_context=True)
     @commands.has_permissions(manage_server=True)
-    @commands.cooldown(3, 60)
+    @commands.cooldown(3, 60, BucketType.server)
     async def setprefix(self, ctx, *, message : str=None):
         serverIndex = prefixes.findServer(ctx.message.server)
 
