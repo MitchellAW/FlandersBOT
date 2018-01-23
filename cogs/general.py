@@ -7,7 +7,6 @@ import prefixes
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
-
 class General():
     def __init__(self, bot):
         self.bot = bot
@@ -22,6 +21,22 @@ class General():
     @commands.command()
     async def help(self, ctx):
         await ctx.author.send(botInfo.commandsList)
+
+    # Sends the feedback to the feedback channel of support server
+    @commands.command()
+    async def feedback(self, ctx, *, message : str):
+        feedbackChannel = self.bot.get_channel(403688189627465730)
+        #await feedbackChannel.send("Feedback from " + str(ctx.author.mention) +
+                                   #":\n```" + message + '```')
+
+        embed = discord.Embed(title="Feedback from: " + str(ctx.author.mention),
+                              colour=discord.Colour(0x44981e),
+                              description="```" + message + "```")
+
+        embed.set_author(name=ctx.message.author.name,
+                         icon_url=ctx.message.author.avatar_url)
+
+        await feedbackChannel.send(embed=embed)
 
     # Display the prefixes used on the current guild
     @commands.command()

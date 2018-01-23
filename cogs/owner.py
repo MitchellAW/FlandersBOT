@@ -1,3 +1,4 @@
+import aiohttp
 import settings.config
 import discord
 
@@ -7,6 +8,16 @@ class Owner():
 
     def __init__(self, bot):
         self.bot = bot
+
+    # Change the bot's avatar
+    @commands.command()
+    async def avatar(self, ctx, avatarUrl):
+        if ctx.message.author.id == settings.config.OWNERID:
+            async with aiohttp.ClientSession() as aioClient:
+                async with aioClient.get(avatarUrl) as resp:
+                    newAvatar = await resp.read()
+                    await self.bot.user.edit(avatar=newAvatar)
+                    await ctx.send('Avatar changed!')
 
     # Change the bot's status/presence
     @commands.command()
