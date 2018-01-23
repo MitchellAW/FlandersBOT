@@ -38,7 +38,8 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
 | **info** | Will send a personal message to the sender with more information   regarding the bot. (Framework, Author, invite URL etc.) |
 | **help** | Will send a personal mesage to the sender with a list of the commands. |
 | **prefix** | Will post the prefixes this bot uses. |
-| **setprefix [prefix]** | Sets a prefix the bot will respond to on your server (Requires: Server Owner, Limit: 1 per server) |
+| **setprefix [prefix]** | Sets a prefix the bot will respond to on your server (Requires: Manage Server, Limit: 1 per server) |
+| **feedback [message]** | Posts the feedback message directly to the feedback channel in the FlandersBOT support server.
 | **stats** | Will post some of the bot's statistics. |
 | **simpsons** | Will post a random Simpsons quote with accompanying picture. |
 | **simpsons [search quote]** | Searches for a Simpsons quote using all text following the command, grabs the first result and sends the resulting quote with accompanying gif. |
@@ -70,6 +71,5 @@ If you need any help with FlandersBOT, would like to provide feedback, suggestio
 [Allie Young](https://twitter.com/seriousallie)  
 **Source of the higher quality Adventures of Ned Flanders image**  
 [/u/nmcfaden](https://i.redd.it/3m7txitrcjgy.png)
-
 
 ![Flanders](https://MitchellAW.github.io/images/flanders.png)
