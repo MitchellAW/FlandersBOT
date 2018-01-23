@@ -63,11 +63,12 @@ async def on_message(message):
     if message.author.bot == False:
         await bot.process_commands(message)
 
-# Commands error handler, not doing anything at the moment
+# Commands error handler, only handles cooldowns at the moment
 @bot.event
 async def on_command_error(error, ctx):
-    if error == asyncio.TimeoutError:
-        await bot.say("Error. No API Response.")
+
+    if isinstance(error, commands.CommandOnCooldown):
+       await bot.send_message(ctx.message.channel, 'Command on cooldown. :hourglass: Slow down.')
 
     else:
         print(error)
