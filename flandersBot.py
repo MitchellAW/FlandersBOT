@@ -28,7 +28,7 @@ async def updateServerCount(bot):
     await bot.change_presence(game=status, afk=True)
 
 startupExtensions = [
-    'cogs.general', 'cogs.simpsons', 'cogs.futurama', 'cogs.rickandmorty'    ]
+    'cogs.general', 'cogs.simpsons', 'cogs.futurama', 'cogs.rickandmorty']
 
 bot = commands.Bot(command_prefix=getPrefix)
 bot.remove_command('help')
