@@ -12,96 +12,96 @@ class General():
     def __init__(self, bot):
         self.bot = bot
 
-    # Whispers a description of the bot with author, framework, server count etc.
+    # Whispers a description of the bot with author, framework, guild count etc.
     @commands.command()
-    async def info(self):
-        await self.bot.whisper((botInfo.botInfo + '\n***Currently active in '
-                          + str(len(self.bot.servers)) + ' servers***'))
+    async def info(self, ctx):
+        await ctx.author.send((botInfo.botInfo + '\n***Currently active in '
+                          + str(len(self.bot.guilds)) + ' servers***'))
 
     # Whispers a list of the bot commands
     @commands.command()
-    async def help(self):
-        await self.bot.whisper(botInfo.commandsList)
+    async def help(self, ctx):
+        await ctx.author.send(botInfo.commandsList)
 
-    # Display the prefixes used on the current server
-    @commands.command(pass_context=True)
+    # Display the prefixes used on the current guild
+    @commands.command()
     @commands.cooldown(1, 3, BucketType.channel)
     async def prefix(self, ctx):
-        serverPrefixes = await prefixes.prefixesFor(ctx.message.server)
-        if len(serverPrefixes) > 5:
-            await self.bot.say('This servers prefixes are: `ned`, `diddly`,' +
+        guildPrefixes = await prefixes.prefixesFor(ctx.message.guild)
+        if len(guildPrefixes) > 5:
+            await ctx.send('This servers prefixes are: `ned`, `diddly`,' +
                                ' `doodly`,' + ' `diddly-`, `doodly-` and `' +
-                               serverPrefixes[-1] + '`.' )
+                               guildPrefixes[-1] + '`.' )
 
         else:
-            await self.bot.say('This servers prefixes are `ned`, `diddly`, ' +
+            await ctx.send('This servers prefixes are `ned`, `diddly`, ' +
                                '`doodly`,' + ' `diddly-` and `doodly-`.')
 
-    # Allows for a single custom prefix per-server
-    @commands.command(pass_context=True)
-    @commands.has_permissions(manage_server=True)
-    @commands.cooldown(3, 60, BucketType.server)
+    # Allows for a single custom prefix per-guild
+    @commands.command()
+    @commands.has_permissions(manage_guild=True)
+    @commands.cooldown(3, 60, BucketType.guild)
     async def setprefix(self, ctx, *, message : str=None):
-        serverIndex = prefixes.findServer(ctx.message.server)
+        guildIndex = prefixes.findGuild(ctx.message.guild)
 
-        # Only allow custom prefixes in servers
-        if ctx.message.server is None:
-            await self.bot.say('Custom prefixes are for servers only.')
+        # Only allow custom prefixes in guilds
+        if ctx.message.guild is None:
+            await ctx.send('Custom prefixes are for servers only.')
 
         # Require entering a prefix
         if message is None:
-            await self.bot.say('You did not provide a new prefix.')
+            await ctx.send('You did not provide a new prefix.')
 
         # Limit prefix to 10 characters, may increase
         elif len(message) > 10:
-            await self.bot.say('Custom server prefix too long (Max 10 chars).')
+            await ctx.send('Custom server prefix too long (Max 10 chars).')
 
         else:
             # Write the new custom prefix
-            with open('prefixes.json', 'r') as serverList:
-                data = json.load(serverList)
-                serverList.close()
+            with open('prefixes.json', 'r') as guildList:
+                data = json.load(guildList)
+                guildList.close()
 
             # Declare if it is already that prefix
-            if data[serverIndex]['prefix'] == message:
-                await self.bot.say('This servers custom prefix is already `' +
+            if data[guildIndex]['prefix'] == message:
+                await ctx.send('This server custom prefix is already `' +
                                    message + '`.')
 
             else:
-                # Add a new custom server prefix if one doesn't already exist
-                if serverIndex == -1:
-                    data.append({'serverID':ctx.message.server.id,
+                # Add a new custom guild prefix if one doesn't already exist
+                if guildIndex == -1:
+                    data.append({'guildID':ctx.message.guild.id,
                                 'prefix':message})
 
                 # Otherwise, modify the current prefix to the new one
                 else:
-                    data[serverIndex]['prefix'] = message
+                    data[guildIndex]['prefix'] = message
 
                 # Write the new prefix to the file
-                with open('prefixes.json', 'w') as serverList:
-                    json.dump(data, serverList, indent=4)
-                    serverList.close()
-                    await self.bot.say('This servers custom prefix changed to `'
+                with open('prefixes.json', 'w') as guildList:
+                    json.dump(data, guildList, indent=4)
+                    guildList.close()
+                    await ctx.send('This servers custom prefix changed to `'
                                        + message + '`.')
 
 
-    @commands.command(pass_context=True)
+    @commands.command()
     async def status(self, ctx, *, message : str):
         if ctx.message.author.id == settings.config.OWNERID:
             await self.bot.change_presence(game=discord.Game(name=message,
                                                              type=0))
 
-    # Sends a list of the servers the bot is active in - usable by the bot owner
-    @commands.command(pass_context=True)
+    # Sends a list of the guilds the bot is active in - usable by the bot owner
+    @commands.command()
     async def serverlist(self, ctx):
         if ctx.message.author.id == settings.config.OWNERID:
-            serverList = ""
-            for server in self.bot.servers:
-                serverList += server.name + '\n'
-            await self.bot.whisper(serverList)
+            guildList = ""
+            for guild in self.bot.guilds:
+                guildList += guild.name + '\n'
+            await ctx.author.send(guildList)
 
     # Shuts the bot down - usable by the bot owner
-    @commands.command(pass_context=True)
+    @commands.command()
     async def shutdown(self, ctx):
         if ctx.message.author.id == settings.config.OWNERID:
             await self.bot.logout()
@@ -110,21 +110,21 @@ class General():
     # Display statistics for the bot
     @commands.command()
     @commands.cooldown(1, 3, BucketType.channel)
-    async def stats(self):
+    async def stats(self, ctx):
 
-        # Get server count
-        serverCount = len(self.bot.servers)
+        # Get guild count
+        guildCount = len(self.bot.guilds)
 
-        # Count users online in servers
+        # Count users online in guilds
         totalMembers = 0
         onlineUsers = 0
-        for server in self.bot.servers:
-            totalMembers += len(server.members)
-            for member in server.members:
+        for guild in self.bot.guilds:
+            totalMembers += len(guild.members)
+            for member in guild.members:
                 if member.status == discord.Status.online:
                     onlineUsers += 1
 
-        averageOnline = round((onlineUsers / serverCount), 2)
+        averageOnline = round((onlineUsers / guildCount), 2)
 
         # Embed statistics output
         embed = discord.Embed(colour=discord.Colour(0x44981e))
@@ -133,12 +133,12 @@ class General():
         embed.add_field(name="Bot Name", value="FlandersBOT#0680", inline=True)
         embed.add_field(name="Bot Owner", value="Mitch#8293", inline=True)
         embed.add_field(name="Total Members", value=str(totalMembers), inline=True)
-        embed.add_field(name="Server Count", value=str(serverCount), inline=True)
+        embed.add_field(name="guild Count", value=str(guildCount), inline=True)
         embed.add_field(name="Online Users", value=str(onlineUsers), inline=True)
-        embed.add_field(name="Online Users per Server", value=str(averageOnline), inline=True)
+        embed.add_field(name="Online Users per guild", value=str(averageOnline), inline=True)
 
         # Post statistics
-        await self.bot.say(embed=embed)
+        await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(General(bot))

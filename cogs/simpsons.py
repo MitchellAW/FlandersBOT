@@ -11,19 +11,19 @@ class Simpsons():
 
     @commands.command()
     @commands.cooldown(1, 3, BucketType.channel)
-    async def simpsons(self, *, message : str=None):
+    async def simpsons(self, ctx, *, message : str=None):
         if message is None:
-            await self.bot.say(await self.frinkiac.getRandomCartoon())
+            await ctx.send(await self.frinkiac.getRandomCartoon())
 
         else:
-            await self.bot.say(await self.frinkiac.findCartoonQuote(message,
+            await ctx.send(await self.frinkiac.findCartoonQuote(message,
                                                                     True))
 
     # Messages a random simpsons quote with accomanying gif
     @commands.command()
     @commands.cooldown(1, 3, BucketType.channel)
-    async def simpsonsgif(self):
-        await self.bot.say(await self.frinkiac.getRandomCartoon(True))
+    async def simpsonsgif(self, ctx):
+        await ctx.send(await self.frinkiac.getRandomCartoon(True))
 
 def setup(bot):
     bot.add_cog(Simpsons(bot))

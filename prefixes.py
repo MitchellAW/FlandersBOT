@@ -2,31 +2,31 @@ import asyncio
 import discord
 import json
 
-# Find the index of the server in prefixes.json
-def findServer(server):
-    if server == None:
+# Find the index of the guild in prefixes.json
+def findGuild(guild):
+    if guild == None:
         return -1
 
-    with open('prefixes.json', 'r') as serverList:
-        data = json.load(serverList)
+    with open('prefixes.json', 'r') as guildList:
+        data = json.load(guildList)
         for i in range(len(data)):
-            if data[i]['serverID'] == server.id:
-                serverList.close()
+            if data[i]['guildID'] == guild.id:
+                guildList.close()
                 return i
 
-        serverList.close()
+        guildList.close()
     return -1
 
-# Get all the prefixes the server can use
-async def prefixesFor(server):
-    serverIndex = findServer(server)
-    if serverIndex == -1:
+# Get all the prefixes the guild can use
+async def prefixesFor(guild):
+    guildIndex = findGuild(guild)
+    if guildIndex == -1:
         return ['ned ', 'diddly-', 'doodly-', 'diddly ', 'doodly ']
 
     else:
-        with open('prefixes.json', 'r') as serverList:
-            serverData = json.load(serverList)
-            serverList.close()
+        with open('prefixes.json', 'r') as guildList:
+            guildData = json.load(guildList)
+            guildList.close()
 
-        customPrefix = serverData[serverIndex]['prefix']
+        customPrefix = guildData[guildIndex]['prefix']
         return ['ned ', 'diddly-', 'doodly-', 'diddly ', 'doodly', customPrefix]

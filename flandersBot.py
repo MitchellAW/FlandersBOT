@@ -9,21 +9,21 @@ from discord.ext import commands
 
 # Get the prefixes for the bot
 async def getPrefix(bot, message):
-    extras = await prefixes.prefixesFor(message.server)
+    extras = await prefixes.prefixesFor(message.guild)
     return commands.when_mentioned_or(*extras)(bot, message)
 
-# Post server count to update count at https://discordbots.org/
-async def updateServerCount(bot):
-    dbUrl = "https://discordbots.org/api/bots/" + bot.user.id + "/stats"
+# Post guild count to update count at https://discordbots.org/
+async def updateGuildCount(bot):
+    dbUrl = "https://discordbots.org/api/bots/" + str(bot.user.id) + "/stats"
     dbHeaders = {"Authorization" : settings.config.DBTOKEN}
-    dbPayload = {"server_count"  : len(bot.servers)}
+    dbPayload = {"server_count"  : len(bot.guilds)}
 
     async with aiohttp.ClientSession() as aioClient:
         resp = await aioClient.post(dbUrl, data=dbPayload, headers=dbHeaders)
         print(await resp.text())
 
     status = discord.Game(name='ned help | {} servers'.
-                          format(len(bot.servers)), type=0)
+                          format(len(bot.guilds)), type=0)
 
     await bot.change_presence(game=status, afk=True)
 
@@ -41,34 +41,33 @@ async def on_ready():
     print('Client ID: ' + str(bot.user.id))
     print(('Invite URL: '
            + 'https://discordapp.com/oauth2/authorize?&client_id='
-           + bot.user.id + '&scope=bot&permissions=19456'))
-    status = discord.Game(name='ned help | {} servers'.
-                          format(len(bot.servers)), type=0)
-    await bot.change_presence(game=status)
-    await updateServerCount(bot)
+           + str(bot.user.id) + '&scope=bot&permissions=19456'))
 
-# Update server count on join
-@bot.event
-async def on_server_join(server):
-    await updateServerCount(bot)
+    await updateGuildCount(bot)
 
-# Update server count on leave
+# Update guild count on join
 @bot.event
-async def on_server_remove(server):
-    await updateServerCount(bot)
+async def on_guild_join(guild):
+    await updateguildCount(bot)
+
+# Update guild count on leave
+@bot.event
+async def on_guild_remove(guild):
+    await updateguildCount(bot)
 
 # Prevent bot from replying to other bots
 @bot.event
 async def on_message(message):
     if message.author.bot == False:
-        await bot.process_commands(message)
+        ctx = await bot.get_context(message)
+        await bot.invoke(ctx)
 
 # Commands error handler, only handles cooldowns at the moment
 @bot.event
-async def on_command_error(error, ctx):
+async def on_command_error(ctx, error):
 
     if isinstance(error, commands.CommandOnCooldown):
-       await bot.send_message(ctx.message.channel, ':hourglass: Command on cooldown. Slow diddly-ding-dong down.')
+       await ctx.send(':hourglass: Command on cooldown. Slow diddly-ding-dong down.')
 
     else:
         print(error)

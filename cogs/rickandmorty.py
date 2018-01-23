@@ -11,20 +11,20 @@ class RickAndMorty():
 
     @commands.command()
     @commands.cooldown(1, 3, BucketType.channel)
-    async def rickandmorty(self, *, message : str=None):
+    async def rickandmorty(self, ctx, *, message : str=None):
         if message is None:
-            await self.bot.say(await self.masterOfAllScience.
+            await ctx.send(await self.masterOfAllScience.
                                getRandomCartoon())
 
         else:
-            await self.bot.say(await self.masterOfAllScience.
+            await ctx.send(await self.masterOfAllScience.
                                findCartoonQuote(message, True))
 
     # Messages a random simpsons quote with accomanying gif
     @commands.command()
     @commands.cooldown(1, 3, BucketType.channel)
-    async def rickandmortygif(self):
-        await self.bot.say(await self.masterOfAllScience.getRandomCartoon(True))
+    async def rickandmortygif(self, ctx):
+        await ctx.send(await self.masterOfAllScience.getRandomCartoon(True))
 
 def setup(bot):
     bot.add_cog(RickAndMorty(bot))
