@@ -68,7 +68,7 @@ async def on_message(message):
 async def on_command_error(error, ctx):
 
     if isinstance(error, commands.CommandOnCooldown):
-       await bot.send_message(ctx.message.channel, 'Command on cooldown. :hourglass: Slow down.')
+       await bot.send_message(ctx.message.channel, ':hourglass: Command on cooldown. Slow diddly-ding-dong down.')
 
     else:
         print(error)
