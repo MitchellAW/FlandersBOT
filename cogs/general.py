@@ -122,7 +122,7 @@ class General():
         # Embed statistics output
         embed = discord.Embed(colour=discord.Colour(0x44981e))
         embed.set_thumbnail(url='https://images.discordapp.net/avatars/221609683562135553/afc35c7bcaf6dcb1c86a1c715ac955a3.png')
-        embed.set_author(name='FlandersBOT Statistics', url='https://github.com/FlandersBOT", icon_url="https://images.discordapp.net/avatars/221609683562135553/afc35c7bcaf6dcb1c86a1c715ac955a3.png')
+        embed.set_author(name='FlandersBOT Statistics', url='https://github.com/FlandersBOT', icon_url='https://images.discordapp.net/avatars/221609683562135553/afc35c7bcaf6dcb1c86a1c715ac955a3.png')
         embed.add_field(name='Bot Name', value='FlandersBOT#0680', inline=True)
         embed.add_field(name='Bot Owner', value='Mitch#8293', inline=True)
         embed.add_field(name='Total Members', value=str(totalMembers), inline=True)
