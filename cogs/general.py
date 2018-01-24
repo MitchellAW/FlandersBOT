@@ -29,9 +29,10 @@ class General():
         #await feedbackChannel.send("Feedback from " + str(ctx.author.mention) +
                                    #":\n```" + message + '```')
 
-        embed = discord.Embed(title="Feedback from: " + str(ctx.author.mention),
+        embed = discord.Embed(title='Feedback from: ' + str(ctx.author) + ' (' +
+                              str(ctx.author.id) + ')',
                               colour=discord.Colour(0x44981e),
-                              description="```" + message + "```")
+                              description='```' + message + '```')
 
         embed.set_author(name=ctx.message.author.name,
                          icon_url=ctx.message.author.avatar_url)
@@ -120,14 +121,14 @@ class General():
 
         # Embed statistics output
         embed = discord.Embed(colour=discord.Colour(0x44981e))
-        embed.set_thumbnail(url="https://images.discordapp.net/avatars/221609683562135553/afc35c7bcaf6dcb1c86a1c715ac955a3.png")
-        embed.set_author(name="FlandersBOT Statistics", url="https://github.com/FlandersBOT", icon_url="https://images.discordapp.net/avatars/221609683562135553/afc35c7bcaf6dcb1c86a1c715ac955a3.png")
-        embed.add_field(name="Bot Name", value="FlandersBOT#0680", inline=True)
-        embed.add_field(name="Bot Owner", value="Mitch#8293", inline=True)
-        embed.add_field(name="Total Members", value=str(totalMembers), inline=True)
-        embed.add_field(name="guild Count", value=str(guildCount), inline=True)
-        embed.add_field(name="Online Users", value=str(onlineUsers), inline=True)
-        embed.add_field(name="Online Users per guild", value=str(averageOnline), inline=True)
+        embed.set_thumbnail(url='https://images.discordapp.net/avatars/221609683562135553/afc35c7bcaf6dcb1c86a1c715ac955a3.png')
+        embed.set_author(name='FlandersBOT Statistics', url='https://github.com/FlandersBOT", icon_url="https://images.discordapp.net/avatars/221609683562135553/afc35c7bcaf6dcb1c86a1c715ac955a3.png')
+        embed.add_field(name='Bot Name', value='FlandersBOT#0680', inline=True)
+        embed.add_field(name='Bot Owner', value='Mitch#8293', inline=True)
+        embed.add_field(name='Total Members', value=str(totalMembers), inline=True)
+        embed.add_field(name='Server Count', value=str(guildCount), inline=True)
+        embed.add_field(name='Online Users', value=str(onlineUsers), inline=True)
+        embed.add_field(name='Online Users Per Server', value=str(averageOnline), inline=True)
 
         # Post statistics
         await ctx.send(embed=embed)

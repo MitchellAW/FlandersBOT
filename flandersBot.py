@@ -4,7 +4,7 @@ import botInfo
 import discord
 import prefixes
 import settings.config
-
+guild
 from discord.ext import commands
 
 # Get the prefixes for the bot
@@ -50,12 +50,12 @@ async def on_ready():
 # Update guild count on join
 @bot.event
 async def on_guild_join(guild):
-    await updateguildCount(bot)
+    await updateGuildCount(bot)
 
 # Update guild count on leave
 @bot.event
 async def on_guild_remove(guild):
-    await updateguildCount(bot)
+    await updateGuildCount(bot)
 
 # Prevent bot from replying to other bots
 @bot.event
