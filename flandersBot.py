@@ -4,7 +4,7 @@ import botInfo
 import discord
 import prefixes
 import settings.config
-guild
+
 from discord.ext import commands
 
 # Get the prefixes for the bot
