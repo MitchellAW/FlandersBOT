@@ -69,8 +69,9 @@ async def on_message(message):
 async def on_command_error(ctx, error):
 
     if isinstance(error, commands.CommandOnCooldown):
-       await ctx.send(':hourglass: Command on cooldown. ' +
-                      'Slow diddly-ding-dong down.')
+        timeLeft = round(error.retry_after, 2)
+        await ctx.send(':hourglass: Command on cooldown. ' +
+                       'Slow diddly-ding-dong down. (' + str(timeLeft) +'s)')
 
     else:
         print(error)

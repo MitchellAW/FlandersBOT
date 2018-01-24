@@ -12,25 +12,36 @@ class General():
         self.bot = bot
 
     # Whispers a description of the bot with author, framework, guild count etc.
+    # If user has DMs disabled, send the message in the channel
     @commands.command()
+    @commands.cooldown(1, 3, BucketType.user)
     async def info(self, ctx):
-        await ctx.author.send((botInfo.botInfo + '\n***Currently active in '
-                          + str(len(self.bot.guilds)) + ' servers***'))
+        try:
+            await ctx.author.send(botInfo.botInfo + '\n***Currently active in '
+                              + str(len(self.bot.guilds)) + ' servers***')
 
-    # Whispers a list of the bot commands
+        except discord.Forbidden:
+            await ctx.send(botInfo.botInfo + '\n***Currently active in '
+                              + str(len(self.bot.guilds)) + ' servers***')
+
+    # Whispers a list of the bot commands, If the user has DMs disabled,
+    # sends the message in the channel
     @commands.command()
+    @commands.cooldown(1, 3, BucketType.user)
     async def help(self, ctx):
-        await ctx.author.send(botInfo.commandsList)
+        try:
+            await ctx.author.send(botInfo.commandsList)
+
+        except:
+            await ctx.send(botInfo.commandList)
 
     # Sends the feedback to the feedback channel of support server
     @commands.command()
+    @commands.cooldown(2, 600, BucketType.user)
     async def feedback(self, ctx, *, message : str):
         feedbackChannel = self.bot.get_channel(403688189627465730)
-        #await feedbackChannel.send("Feedback from " + str(ctx.author.mention) +
-                                   #":\n```" + message + '```')
-
-        embed = discord.Embed(title='Feedback from: ' + str(ctx.author) + ' (' +
-                              str(ctx.author.id) + ')',
+        embed = discord.Embed(title='📫 Feedback from: ' + str(ctx.author) +
+                              ' (' + str(ctx.author.id) + ')',
                               colour=discord.Colour(0x44981e),
                               description='```' + message + '```')
 
