@@ -1,4 +1,4 @@
-![Flanders](https://MitchellAW.github.io/images/flanders-banner.png)
+![Flanders](https://MitchellAW.github.io/images/flanders-bannerBOT.png)
 
 # FlandersBOT
 ### A bot for sharing your favourite references! 
