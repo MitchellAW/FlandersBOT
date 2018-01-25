@@ -30,7 +30,7 @@ async def updateGuildCount(bot):
 
 startupExtensions = [
     'cogs.general', 'cogs.simpsons', 'cogs.futurama', 'cogs.rickandmorty',
-    'cogs.owner'
+    'cogs.owner', 'cogs.trivia'
     ]
 
 bot = commands.Bot(command_prefix=getPrefix)
