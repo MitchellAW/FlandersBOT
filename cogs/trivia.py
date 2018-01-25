@@ -102,7 +102,6 @@ class Trivia():
     @commands.command()
     async def simpsonstrivia(self, ctx):
         if ctx.channel.id not in self.channelsPlaying:
-            await ctx.send('')
             await self.trivia(ctx, 'simpsonsTrivia.json', discord.Colour(0xffef06))
 
     # Starts a game of trivia using the futurama trivia questions
