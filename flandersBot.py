@@ -1,6 +1,7 @@
 import aiohttp
 import asyncio
 import botInfo
+import datetime
 import discord
 import prefixes
 import settings.config
@@ -38,6 +39,7 @@ bot.remove_command('help')
 # Print bot information once bot has started
 @bot.event
 async def on_ready():
+    bot.uptime = datetime.datetime.utcnow()
     print('FlandersBOT Logged in.')
     print('Username: ' + str(bot.user.name))
     print('Client ID: ' + str(bot.user.id))
@@ -67,7 +69,6 @@ async def on_message(message):
 # Commands error handler, only handles cooldowns at the moment
 @bot.event
 async def on_command_error(ctx, error):
-
     if isinstance(error, commands.CommandOnCooldown):
         timeLeft = round(error.retry_after, 2)
         await ctx.send(':hourglass: Command on cooldown. ' +

@@ -1,5 +1,6 @@
 import botInfo
 import settings.config
+import datetime
 import discord
 import json
 import prefixes
@@ -10,6 +11,22 @@ from discord.ext.commands.cooldowns import BucketType
 class General():
     def __init__(self, bot):
         self.bot = bot
+
+    # Get the uptime of the bot. In a full description format by default.
+    def getUptime(self, full=True):
+        currentTime = datetime.datetime.utcnow()
+        delta = currentTime - self.bot.uptime
+        hours, remainder = divmod(int(delta.total_seconds()), 3600)
+        minutes, seconds = divmod(remainder, 60)
+        days, hours = divmod(hours, 24)
+
+        if full:
+            return ('{} days, {} hours, {} minutes, and {} seconds'.
+                  format(days, hours, minutes, seconds))
+
+        else:
+            return ('{}d {}h {}m {}s'.
+                  format(days, hours, minutes, seconds))
 
     # Whispers a description of the bot with author, framework, guild count etc.
     # If user has DMs disabled, send the message in the channel
@@ -140,9 +157,17 @@ class General():
         embed.add_field(name='Server Count', value=str(guildCount), inline=True)
         embed.add_field(name='Online Users', value=str(onlineUsers), inline=True)
         embed.add_field(name='Online Users Per Server', value=str(averageOnline), inline=True)
+        embed.add_field(name='Uptime', value=self.getUptime(False), inline=True)
 
         # Post statistics
         await ctx.send(embed=embed)
+
+    # Posts the bots uptime to the channel
+    @commands.command()
+    @commands.cooldown(1, 3, BucketType.user)
+    async def uptime(self, ctx):
+        await ctx.send('🔌 Uptime: **' + self.getUptime() + '**')
+
 
 def setup(bot):
     bot.add_cog(General(bot))
