@@ -71,7 +71,8 @@ class General():
     @commands.command()
     @commands.cooldown(1, 3, BucketType.channel)
     async def prefix(self, ctx):
-        guildPrefixes = await prefixes.prefixesFor(ctx.message.guild)
+        guildPrefixes = await prefixes.prefixesFor(ctx.message.guild,
+                                                   self.bot.prefixData)
         if len(guildPrefixes) > 5:
             await ctx.send('This servers prefixes are: `ned`, `diddly`,' +
                                ' `doodly`,' + ' `diddly-`, `doodly-` and `' +
@@ -85,48 +86,39 @@ class General():
     @commands.command()
     @commands.has_permissions(manage_guild=True)
     @commands.cooldown(3, 60, BucketType.guild)
-    async def setprefix(self, ctx, *, message : str=None):
-        guildIndex = prefixes.findGuild(ctx.message.guild)
+    async def setprefix(self, ctx, *, newPrefix : str=None):
+        guildIndex = prefixes.findGuild(ctx.message.guild, self.bot.prefixData)
 
         # Only allow custom prefixes in guilds
         if ctx.message.guild is None:
             await ctx.send('Custom prefixes are for servers only.')
 
         # Require entering a prefix
-        if message is None:
+        if newPrefix is None:
             await ctx.send('You did not provide a new prefix.')
 
         # Limit prefix to 10 characters, may increase
-        elif len(message) > 10:
+        elif len(newPrefix) > 10:
             await ctx.send('Custom server prefix too long (Max 10 chars).')
 
+        elif self.bot.prefixData[guildIndex]['prefix'] == newPrefix:
+            await ctx.send('This server custom prefix is already `' +
+                               newPrefix + '`.')
+
+        # Add a new custom guild prefix if one doesn't already exist
+        elif guildIndex == -1:
+            self.bot.prefixData.append({'guildID':ctx.message.guild.id,
+                        'prefix':newPrefix})
+            prefixes.writePrefixes(self.bot.prefixData)
+            await ctx.send('This servers custom prefix changed to `'
+                                       + newPrefix + '`.')
+
+        # Otherwise, modify the current prefix to the new one
         else:
-            # Write the new custom prefix
-            with open('prefixes.json', 'r') as guildList:
-                data = json.load(guildList)
-                guildList.close()
-
-            # Declare if it is already that prefix
-            if data[guildIndex]['prefix'] == message:
-                await ctx.send('This server custom prefix is already `' +
-                                   message + '`.')
-
-            else:
-                # Add a new custom guild prefix if one doesn't already exist
-                if guildIndex == -1:
-                    data.append({'guildID':ctx.message.guild.id,
-                                'prefix':message})
-
-                # Otherwise, modify the current prefix to the new one
-                else:
-                    data[guildIndex]['prefix'] = message
-
-                # Write the new prefix to the file
-                with open('prefixes.json', 'w') as guildList:
-                    json.dump(data, guildList, indent=4)
-                    guildList.close()
-                    await ctx.send('This servers custom prefix changed to `'
-                                       + message + '`.')
+            self.bot.prefixData[guildIndex]['prefix'] = newPrefix
+            prefixes.writePrefixes(self.bot.prefixData)
+            await ctx.send('This servers custom prefix changed to `'
+                                       + newPrefix + '`.')
 
     # Display statistics for the bot
     @commands.command()

@@ -10,7 +10,7 @@ from discord.ext import commands
 
 # Get the prefixes for the bot
 async def getPrefix(bot, message):
-    extras = await prefixes.prefixesFor(message.guild)
+    extras = await prefixes.prefixesFor(message.guild, bot.prefixData)
     return commands.when_mentioned_or(*extras)(bot, message)
 
 # Post guild count to update count at https://discordbots.org/
@@ -40,6 +40,7 @@ bot.remove_command('help')
 @bot.event
 async def on_ready():
     bot.uptime = datetime.datetime.utcnow()
+    bot.prefixData = prefixes.readPrefixes()
     print('FlandersBOT Logged in.')
     print('Username: ' + str(bot.user.name))
     print('Client ID: ' + str(bot.user.id))
