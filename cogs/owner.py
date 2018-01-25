@@ -1,4 +1,5 @@
 import aiohttp
+import asyncio
 import settings.config
 import discord
 
@@ -39,9 +40,18 @@ class Owner():
     @commands.command()
     async def shutdown(self, ctx):
         if ctx.message.author.id == settings.config.OWNERID:
-            await self.bot.logout()
-            await self.bot.close()
+            def check(message):
+                return message.content == 'confirm'
 
+            try:
+                await ctx.send('Respond "confirm" to shutdown')
+                response = await self.bot.wait_for('message', check=check,
+                                                   timeout=10)
+                await self.bot.logout()
+                await self.bot.close()
+
+            except asyncio.TimeoutError:
+                pass
 def setup(bot):
     bot.add_cog(Owner(bot))
 
