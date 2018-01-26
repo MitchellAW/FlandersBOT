@@ -32,26 +32,135 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
 
 *All examples above are valid methods of executing any command below.*
 
-## Commands
-| **Command** | **Description** |
-| --- | --- |
-| **info** | Will send a personal message to the sender with more information   regarding the bot. (Framework, Author, invite URL etc.) |
-| **help** | Will send a personal mesage to the sender with a list of the commands. |
-| **prefix** | Will post the prefixes this bot uses. |
-| **setprefix [prefix]** | Sets a prefix the bot will respond to on your server (Requires: Manage Server, Limit: 1 per server) |
-| **feedback [message]** | Posts the feedback message directly to the feedback channel in the FlandersBOT support server.
-| **stats** | Will post some of the bot's statistics. |
-| **simpsons** | Will post a random Simpsons quote with accompanying picture. |
-| **simpsons [search quote]** | Searches for a Simpsons quote using all text following the command, grabs the first result and sends the resulting quote with accompanying gif. |
-| **simpsonsgif** | Will post a random Simpsons quote with accompanying gif. |
-| **simpsonstrivia** | Starts a game of trivia using > 100 simpsons questions *(more coming!)* |
-| **futurama** | Will post a random Futurama quote with accompanying picture. |
-| **futurama [search quote]** | Searches for a Futurama quote using all text following the command, grabs the first result and sends the resulting quote with accompanying gif. |
-| **futuramagif** | Will post a random Futurama quote with accompanying gif. |
-| **futuramatrivia** | Will start a game of trivia using 80 futurama questions *(more coming!)* |
-| **rickandmorty** | Will post a random Rick and Morty quote with accompanying picture. |
-| **rickandmorty [search quote]** | Searches for a Rick and Morty quote using all text following the command, grabs the first result and sends the resulting quote with accompanying gif. |
-| **rickandmortygif** | Will post a random Rick and Morty quote with accompanying gif. |
+# Commands
+
+## General
+
+<div style="overflow-x:auto;">
+  <table width=180 style='table-layout:fixed'>
+    <col width=20>
+ 	<col width=100>
+    <thead>
+      <tr>
+        <th>Command</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tr>
+      <td><b>help</b></td>
+      <td>Will send a personal message with a list of the commands.</td>
+    </tr>
+    <tr>
+      <td><b>info</b></td>
+      <td>Will send a personal message with more information about the bot.</td>
+    </tr>
+    <tr>
+      <td><b>prefix</b></td>
+      <td>Will post the prefixes FlandersBOT responds to on your server.</td>
+    </tr>
+    <tr>
+      <td><b>setprefix [prefix]</b></td>
+      <td>Sets a prefix FlandersBOT will respond to on your server.</td>
+    </tr>
+    <tr>
+      <td><b>feedback</b></td>
+      <td>Send a feedback message or suggestions.</td>
+    </tr>
+    <tr>
+      <td><b>stats</b></td>
+      <td>Will post some of FlandersBOT's statistics.</td>
+    </tr>
+  </table>
+</div>
+
+## Simpsons
+
+<div style="overflow-x:auto;">
+  <table width=180 style='table-layout:fixed'>
+    <col width=20>
+ 	<col width=100>
+    <thead>
+      <tr>
+        <th>Command</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tr>
+      <td><b>simpsons</b></td>
+      <td>Will post a random Simpsons moment with caption.</td>
+    </tr>
+    <tr>
+      <td><b>simpsons [quote]</b></td>
+      <td>Searches for a Simpsons gif using the quote.</td>
+    </tr>
+    <tr>
+      <td><b>simpsonsgif</b></td>
+      <td>Will post a random Simpsons gif with caption.</td>
+    </tr>
+    <tr>
+      <td><b>simpsonstrivia</b></td>
+      <td>Will start a game of trivia using 100+ questions</td>
+    </tr>
+  </table>
+</div>
+
+## Futurama
+
+<div style="overflow-x:auto;">
+  <table width=180 style='table-layout:fixed'>
+    <col width=20>
+ 	<col width=100>
+    <thead>
+      <tr>
+        <th>Command</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tr>
+      <td><b>futurama</b></td>
+      <td>Will post a random Futurama moment with caption.</td>
+    </tr>
+    <tr>
+      <td><b>futurama [quote]</b></td>
+      <td>Searches for a Futurama gif using the quote.</td>
+    </tr>
+    <tr>
+      <td><b>futuramagif</b></td>
+      <td>Will post a random Futurama gif with caption.</td>
+    </tr>
+    <tr>
+      <td><b>futuramatrivia</b></td>
+      <td>Will start a game of trivia using 80+ questions</td>
+    </tr>
+  </table>
+</div>
+
+## Rick and Morty
+
+<div style="overflow-x:auto;">
+  <table width=180 style='table-layout:fixed'>
+    <col width=20>
+ 	<col width=100>
+    <thead>
+      <tr>
+        <th>Command</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tr>
+      <td><b>rickandmorty</b></td>
+      <td>Will post a random Rick and Morty moment with caption.</td>
+    </tr>
+    <tr>
+      <td><b>rickandmorty [quote]</b></td>
+      <td>Searches for a Rick and Morty gif using the quote.</td>
+    </tr>
+    <tr>
+      <td><b>rickandmortygif</b></td>
+      <td>Will post a random Rick and Morty gif with caption.</td>
+    </tr>
+  </table>
+</div>
 
 ## Preview
 ![FlandersBOT](https://media.giphy.com/media/3o7522dwW8Bj5zNez6/giphy.gif)
