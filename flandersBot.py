@@ -41,12 +41,8 @@ bot.remove_command('help')
 async def on_ready():
     bot.uptime = datetime.datetime.utcnow()
     bot.prefixData = prefixes.readPrefixes()
-    print('FlandersBOT Logged in.')
     print('Username: ' + str(bot.user.name))
     print('Client ID: ' + str(bot.user.id))
-    print(('Invite URL: '
-           + 'https://discordapp.com/oauth2/authorize?&client_id='
-           + str(bot.user.id) + '&scope=bot&permissions=19456'))
 
     await updateGuildCount(bot)
 
