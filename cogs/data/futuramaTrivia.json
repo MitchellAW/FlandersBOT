@@ -1,0 +1,322 @@
+[
+    {
+        "question":"What is Fry's first name?",
+        "answers":["Philip", "Frederick", "Yancy"]
+    },
+    {
+        "question":"What does Morbo, the news reporter, call himself?",
+        "answers":["Morbo the Annihilator", "Morbo the Destructor", "Morbo the Destroyer"]
+    },
+    {
+        "question":"What is Bender's 2nd most used word according to episode, 'War is the H-Word'?",
+        "answers":["Dffodil", "Shiny", "Metal"]
+    },
+    {
+        "question":"In 'The Cyber House Rules', how many orphans does Bender adopt?",
+        "answers":["12", "10", "8"]
+    },
+    {
+        "question":"What is Bender's middle name?",
+        "answers":["Bending", "Rodriguez", "Bended"]
+    },
+    {
+        "question":"Hermes' wife, LaBarbara, was once married to who?",
+        "answers":["Barbados Slim", "Trinidad Slim", "Antigua Slim"]
+    },
+    {
+        "question":"What was the PIN for Fry's ATM card? (The price of a cheese pizza and large soda at Panucci's Pizza)",
+        "answers":["1077", "1150", "1089"]
+    },
+    {
+        "question":"What rank does Kif hold in the DOOP?",
+        "answers":["Lieutenant", "Sergeant", "Captain"]
+    },
+    {
+        "question":"What are the names of the two recurring cops, often seen in New New York?",
+        "answers":["Smitty and URL", "Jonesy and ISP", "Brady and Dotcom"]
+    },
+    {
+        "question":"Which product successfully uses a dream advert to market itself to Fry?",
+        "answers":["Lightspeed Briefs", "Bachelor Chow", "Slurm"]
+    },
+    {
+        "question":"What religion does Bender turn to in order to overcome his addiction?",
+        "answers":["Temple of Robotology", "Church of Roboism", "Order of Mechanology"]
+    },
+    {
+        "question":"Which planet is Amy from?",
+        "answers":["Mars", "Earth", "Pluto"]
+    },
+    {
+        "question":"What is the name of Planet Express' janitor",
+        "answers":["Scruffy", "Scrubby", "Scott"]
+    },
+    {
+        "question":"Who is the bending unit similar to Bender?",
+        "answers":["Flexo", "Bendo", "Clamps"]
+    },
+    {
+        "question":"Who is Professor Hubert Farnsworth's arch enemy?",
+        "answers":["Ogden Wernstrom", "Mom", "Albert Einstein"]
+    },
+    {
+        "question":"What species is Leela?",
+        "answers":["Mutant human", "Cyclops", "Human"]
+    },
+    {
+        "question":"What was the name of Fry's dogs?",
+        "answers":["Seymour Asses", "I.C. Wiener", "Buster"]
+    },
+    {
+        "question":"Who's New New York's mayor?",
+        "answers":["C. Randell Poopenmeyer", "Richard Nixon's head", "D. Ed Peenpoopen"]
+    },
+    {
+        "question":"What is the age that the Sunset Squad Robots take people to the Near-Death Star",
+        "answers":["160", "150", "200"]
+    },
+    {
+        "question":"Who is the biological mother of Kiff's children?",
+        "answers":["Leela", "Kiff", "Amy"]
+    },
+    {
+        "question":"What is Bender's super hero alter ego in the episdoe, 'Less Than a Hero'",
+        "answers":["Super King", "The Masked Unit", "Bender the Offender"]
+    },
+    {
+        "question":"What is Leela's fathers name?",
+        "answers":["Turanga Morris", "Turanga Morgan", "Turanga Maurice"]
+    },
+    {
+        "question":"What planet is Lrr the ruler of?",
+        "answers":["Omicron Persei 8", "Cygnus 5", "Decapod 10"]
+    },
+    {
+        "question":"What hit TV show stars Calculon?",
+        "answers":["All My Circuits", "Single Female Lawyer", "Hold My Circuits"]
+    },
+    {
+        "question":"Which of the robots below did not participate in the Ultimate Robot Fighting League?",
+        "answers":["Crushinator", "The Masked Unit", "Destructor"]
+    },
+    {
+        "question":"In which city is the Planet Express headquarters?",
+        "answers":["New New York", "New York", "Old New York"]
+    },
+    {
+        "question":"Which package delivery company do the main characters work for?",
+        "answers":["Planet Express", "Pizza Planet", "Awesome Express"]
+    },
+    {
+        "question":"What sorority did Amy originally belong to?",
+        "answers":["Kappa Kappa Wong", "Phi Kappa Wong", "Zeta Theta Wong"]
+    },
+    {
+        "question":"Who was Fry's roommate in the Institute for Criminally Insane Robots?",
+        "answers":["Malfunctioning Eddie", "Roberto", "Unit 2013"]
+    },
+    {
+        "question":"Which of the following is the first of four Futurama movies?",
+        "answers":["Bender's Big Score", "Bender's Game", "The Beast with a Billion Backs"]
+    },
+    {
+        "question":"What does Bender secretly long to come?",
+        "answers":["A Folk Singer", "A Salsa Dancer", "A Successful Bending Unit"]
+    },
+    {
+        "question":"Which of the following is not one of Mom's three sons?",
+        "answers":["Wayne", "Igner", "Larry"]
+    },
+    {
+        "question":"What planet is the home of the Yarn people?",
+        "answers":["Nylar 4", "Cygnus 5", "Chapek 9"]
+    },
+    {
+        "question":"From which planet did the Slurm soft drink originate?",
+        "answers":["Wormulon", "Amphibios 9", "Stumbos 4"]
+    },
+    {
+        "question":"What is Leela's apartment number?",
+        "answers":["11", "13", "15"]
+    },
+    {
+        "question":"Name the device that Bender and Fry used to find the winning Slurm bottle cap?",
+        "answers":["F-Ray", "X-ray", "Z-ray"]
+    },
+    {
+        "question":"Who was Fry's roommate at Mars University?",
+        "answers":["Guenter", "George", "Gertrude"]
+    },
+    {
+        "question":"What is the name of Zapp Brannigan's ship?",
+        "answers":["Nimbus", "RMS Overkill", "Titanic"]
+    },
+    {
+        "question":"What is Calculon's operating system?",
+        "answers":["Windows Vista", "Windows 98", "Windows XP"]
+    },
+    {
+        "question":"Which sport did Hermes represent Earth for at the Olympics?",
+        "answers":["Limbo", "Blernsball", "Girder Bending"]
+    },
+    {
+        "question":"What did Fry's dad name him after?",
+        "answers":["The Screwdriver", "The Island", "His Grandfather"]
+    },
+    {
+        "question":"Which apartment complex did Fry and Bender share?",
+        "answers":["The Robot Arms", "The Robo-Complex", "Robo-Units"]
+    },
+    {
+        "question":"What does Professor Farnsworth say is strange about Zoidberg?",
+        "answers":["He wears sandals", "He's a doctor", "He eats trash"]
+    },
+    {
+        "question":"What rank is the bureaucrat that runs Cookieville Minimum Security Orphanarium?",
+        "answers":["135", "125", "115"]
+    },
+    {
+        "question":"In 'Parasites Lost' What does Fry eat that had the parasites?",
+        "answers":["Egg Salad Sandwich", "Tuna Sandwich", "Salad"]
+    },
+    {
+        "question":"How much did Fry pay for Ted Danson's skeleton?",
+        "answers":["$10,000", "$30,000", "$300,000"]
+    },
+    {
+        "question":"Which celebration was going on when Fry fell in to the cryogenic chamber and was frozen?",
+        "answers":["New Year's Eve", "Christmas", "Independance Day"]
+    },
+    {
+        "question":"Which of these were not on the checklist of animals the Planet Express crew was supposed to rescue?",
+        "answers":["Nibblonian", "Hermaphlamingo", "Molotov Cockatoo"]
+    },
+    {
+        "question":"Where did Fry meet Bender?",
+        "answers":["Suicide Booth", "In a Bar", "Robot Strip Club"]
+    },
+    {
+        "question":"From what age did Fry say he has wanted a robot for a friend?",
+        "answers":["Six", "Four", "Eight"]
+    },
+    {
+        "question":"What did Zoidberg trade all his stock in Planet Express for?",
+        "answers":["A Sandwich", "An Anchovy", "A Movie Ticket"]
+    },
+    {
+        "question":"What was the first title caption used in the 'Futurama' opening credits?",
+        "answers":["In color", "As seen on TV", "Filmed on Location"]
+    },
+    {
+        "question":"Which of these characters is not voiced by Billy West?",
+        "answers":["Kif Kroker", "Zapp Brannigan", "Dr. Zoidberg"]
+    },
+    {
+        "question":"Where is Fry's first delivery for Planet Express?",
+        "answers":["Luna Park", "Mars University", "Sicily 8"]
+    },
+    {
+        "question":"What planet is at the exact center of the universe?",
+        "answers":["Eternium", "Near Death Star", "Omicron Persei 8"]
+    },
+    {
+        "question":"What language is said to be dead in the English version of the show?",
+        "answers":["French", "Latin", "Spanish"]
+    },
+    {
+        "question":"Who is the only member of the Planet Express crew not to have piloted the Planet Express ship?",
+        "answers":["Dr. Zoidberg", "Amy", "Bender"]
+    },
+    {
+        "question":"What was the name of the movie that Calculon collaborated with Dr. Zoidberg?",
+        "answers":["The Magnificent 3", "All My Circuits: The Movie", "Quizblorg, Quizblorg"]
+    },
+    {
+        "question":"Bachelor Chow, now with ________?",
+        "answers":["Flavor", "Quality", "Raisins"]
+    },
+    {
+        "question":"What is Fry's favourite drink?",
+        "answers":["Slurm", "Beer", "Extreme Walrus Juice"]
+    },
+    {
+        "question":"What species runs the pizzeria in 'A Leela of her Own'?",
+        "answers":["Cygnoids", "Decapodians", "Trisolians"]
+    },
+    {
+        "question":"Which of these is NOT one of Professor Farnsworth's inventions?",
+        "answers":["The Suicide Machine", "The Smell-O-Scope", "The Death Clock"]
+    },
+    {
+        "question":"Which of these is NOT a political party?",
+        "answers":["Whigbots", "Tastycrats", "Bull Space Moose Party"]
+    },
+    {
+        "question":"What does Leela like Bender for?",
+        "answers":["His in your face attitude", "His overinflated ego", "His love for cooking"]
+    },
+    {
+        "question":"Which one of Mom's sons have black hair?",
+        "answers":["Walt", "Larry", "Igner"]
+    },
+    {
+        "question":"Which college did Fry attend while still living in the 20th century?",
+        "answers":["Coney Island Community College", "Mars University", "Rhode Island Community College"]
+    },
+    {
+        "question":"Which of these songs from the 20th century is considered classical music in the future?",
+        "answers":["Baby Got Back ", "Can't Touch This", "Do the Hustle"]
+    },
+    {
+        "question":"What colour is Fry's walking ashtray?",
+        "answers":["Gold", "Red", "Silver"]
+    },
+    {
+        "question":"What did Fry buy Leela for X-mas in 'X-mas Story'?",
+        "answers":["A Bird", "Flowers", ""]
+    },
+    {
+        "question":"In 'Futurestock', how many stocks of Planet Express does Scruffy reveal that he has?",
+        "answers":["40,000", "20,000", "60,000"]
+    },
+    {
+        "question":"What is the name of Fry's new friend and fellow defrostee who becomes CEO of Planet Express?",
+        "answers":["Steve Castle", "", ""]
+    },
+    {
+        "question":"Which of the following is NOT one of the names of Professor Farnsworth's atomic supermen?",
+        "answers":["Gallactico", "Arachnion", "Thorias"]
+    },
+    {
+        "question":"Zoidberg says he lost his medical degree in a ________?",
+        "answers":["Volcano", "Trash Compactor", "Geyser"]
+    },
+    {
+        "question":"What planet is Elzar from?",
+        "answers":["Neptune", "Jupiter", "Saturn"]
+    },
+    {
+        "question":"In the future, what major US city has sunken to the bottom of the ocean?",
+        "answers":["Atlanta", "Sacramento", "Boston"]
+    },
+    {
+        "question":"Which of the following does Fry claim requires graduate school education?",
+        "answers":["Barber", "Taxi Driver", "Janitor"]
+    },
+    {
+        "question":"What is the name of Mayor Poopenmeyer's secretary?",
+        "answers":["Stephanie", "Sarah", "Sophie"]
+    },
+    {
+        "question":"The anchovy tin says 'Angry ________ Anchovies",
+        "answers":["Norwegian", "French", "German"]
+    },
+    {
+        "question":"What is the name of Professor Farnsworth's pet gargoyle?",
+        "answers":["Pazuzu", "Cthulhu", "Anubu"]
+    },
+    {
+        "question":"Which of the following is not one of Bender's punishment levels in Robot Hell?",
+        "answers":["Being melted down", "Being deep fried", "Being rolled up and smoked like a cigar"]
+    }
+]
