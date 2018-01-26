@@ -100,7 +100,7 @@ class Trivia():
             await ctx.send('No trivia questions remaining. Trivia has ended.')
 
     # Starts a game of trivia using the simpsons trivia questions
-    @commands.command()
+    @commands.command(aliases=['Simpsonstrivia', 'SIMPSONSTRIVIA'])
     async def simpsonstrivia(self, ctx):
         if ctx.channel.id not in self.channelsPlaying:
             simpsonsYellow = discord.Colour(0xffef06)
@@ -111,7 +111,7 @@ class Trivia():
                               'w=true')
 
     # Starts a game of trivia using the futurama trivia questions
-    @commands.command()
+    @commands.command(aliases=['Futuramatrivia', 'FUTURAMATRIVIA'])
     async def futuramatrivia(self, ctx):
         if ctx.channel.id not in self.channelsPlaying:
             fryRed = discord.Colour(0x9b2525)
@@ -121,7 +121,7 @@ class Trivia():
                               'rd.gif?raw=true')
 
     # Starts a game of trivia using the rick and morty trivia questions
-    @commands.command()
+    @commands.command(aliases=['Rickandmortytrivia', 'RICKANDMORTYTRIVIA'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def rickandmortytrivia(self, ctx):
         portalGif = ('https://github.com/MitchellAW/MitchellAW.github.io/blo' +

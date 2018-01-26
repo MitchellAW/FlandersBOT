@@ -30,7 +30,7 @@ class General():
 
     # Whispers a description of the bot with author, framework, guild count etc.
     # If user has DMs disabled, send the message in the channel
-    @commands.command()
+    @commands.command(aliases=['Info', 'INFO'])
     @commands.cooldown(1, 3, BucketType.user)
     async def info(self, ctx):
         try:
@@ -43,7 +43,7 @@ class General():
 
     # Whispers a list of the bot commands, If the user has DMs disabled,
     # sends the message in the channel
-    @commands.command()
+    @commands.command(aliases=['Help', 'HELP'])
     @commands.cooldown(1, 3, BucketType.user)
     async def help(self, ctx):
         try:
@@ -53,7 +53,7 @@ class General():
             await ctx.send(botInfo.commandList)
 
     # Sends the feedback to the feedback channel of support server
-    @commands.command()
+    @commands.command(aliases=['Feedback', 'FEEDBACK'])
     @commands.cooldown(2, 600, BucketType.user)
     async def feedback(self, ctx, *, message : str):
         feedbackChannel = self.bot.get_channel(403688189627465730)
@@ -68,7 +68,7 @@ class General():
         await feedbackChannel.send(embed=embed)
 
     # Display the prefixes used on the current guild
-    @commands.command()
+    @commands.command(aliases=['Prefix', 'PREFIX', 'prefixes', 'Prefixes'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def prefix(self, ctx):
         guildPrefixes = await prefixes.prefixesFor(ctx.message.guild,
@@ -83,7 +83,7 @@ class General():
                                '`doodly`,' + ' `diddly-` and `doodly-`.')
 
     # Allows for a single custom prefix per-guild
-    @commands.command()
+    @commands.command(aliases=['Setprefix', 'SETPREFIX'])
     @commands.has_permissions(manage_guild=True)
     @commands.cooldown(3, 60, BucketType.guild)
     async def setprefix(self, ctx, *, newPrefix : str=None):
@@ -121,7 +121,7 @@ class General():
                                        + newPrefix + '`.')
 
     # Display statistics for the bot
-    @commands.command()
+    @commands.command(aliases=['Stats', 'STATS'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def stats(self, ctx):
 
@@ -155,7 +155,7 @@ class General():
         await ctx.send(embed=embed)
 
     # Posts the bots uptime to the channel
-    @commands.command()
+    @commands.command(aliases=['Uptime', 'UPTIME'])
     @commands.cooldown(1, 3, BucketType.user)
     async def uptime(self, ctx):
         await ctx.send('🔌 Uptime: **' + self.getUptime() + '**')
