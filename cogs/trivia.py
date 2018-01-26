@@ -13,9 +13,9 @@ class Trivia():
         self.channelsPlaying = []
 
     # Starts a game of trivia using fileName as the questions file
-    async def trivia(self, ctx, fileName, categoryColour, thumbnailUrl):
+    async def startTrivia(self, ctx, fileName, categoryColour, thumbnailUrl):
         self.channelsPlaying.append(ctx.channel.id)
-        with open(fileName, 'r') as triviaQuestions:
+        with open('cogs/data/' + fileName, 'r') as triviaQuestions:
             triviaData = json.load(triviaQuestions)
             random.shuffle(triviaData)
             triviaQuestions.close()
@@ -32,7 +32,7 @@ class Trivia():
             random.shuffle(answers)
             correctChoice = chr(answers.index(correctAnswer) + 65)
 
-            answerMsg = ('**A:** {}\n**B**: {}\n**C:** {} \n\nSend a letter ' +
+            answerMsg = ('**A:** {}\n**B:** {}\n**C:** {} \n\nSend a letter ' +
                             'below to answer!').format(answers[0],
                             answers[1],
                             answers[2])
@@ -104,7 +104,7 @@ class Trivia():
     async def simpsonstrivia(self, ctx):
         if ctx.channel.id not in self.channelsPlaying:
             simpsonsYellow = discord.Colour(0xffef06)
-            await self.trivia(ctx, 'simpsonsTrivia.json',
+            await self.startTrivia(ctx, 'simpsonsTrivia.json',
                               simpsonsYellow,
                               'https://github.com/MitchellAW/MitchellAW.gith' +
                               'ub.io/blob/master/images/donut-discord.gif?ra' +
@@ -112,14 +112,13 @@ class Trivia():
 
     # Starts a game of trivia using the futurama trivia questions
     @commands.command()
-    @commands.cooldown(1, 3, BucketType.channel)
     async def futuramatrivia(self, ctx):
-        planetExpressLogo = ('https://github.com/MitchellAW/MitchellAW.githu' +
-                             'b.io/blob/master/images/planet-express-discord' +
-                             '.gif?raw=true')
-
-        fryRed = discord.Colour(0x9b2525)
-        await ctx.send('Coming soon!')
+        if ctx.channel.id not in self.channelsPlaying:
+            fryRed = discord.Colour(0x9b2525)
+            await self.startTrivia(ctx, 'futuramaTrivia.json', fryRed,
+                              'https://github.com/MitchellAW/MitchellAW.gith' +
+                              'ub.io/blob/master/images/planet-express-disco' +
+                              'rd.gif?raw=true')
 
     # Starts a game of trivia using the rick and morty trivia questions
     @commands.command()
@@ -127,8 +126,9 @@ class Trivia():
     async def rickandmortytrivia(self, ctx):
         portalGif = ('https://github.com/MitchellAW/MitchellAW.github.io/blo' +
                      'b/master/images/rick-morty-portal.gif?raw=true')
+        rickBlue = disocrd.Colour(0xaad3ea)
+
         await ctx.send('Coming soon!')
-        rickBlue = discord.Colour(0xaad3ea)
 
 def setup(bot):
     bot.add_cog(Trivia(bot))
