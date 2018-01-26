@@ -33,7 +33,9 @@ class Owner():
         if ctx.message.author.id == settings.config.OWNERID:
             guildList = ""
             for guild in self.bot.guilds:
-                guildList += guild.name + ' : ' + str(guild.region) + '\n'
+                guildList += (guild.name + ' : ' + str(guild.region) + ' (' +
+                              str(len(guild.members)) + ')\n')
+
             await ctx.author.send(guildList)
 
     # Shuts the bot down - usable by the bot owner
