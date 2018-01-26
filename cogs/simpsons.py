@@ -9,7 +9,7 @@ class Simpsons():
         self.bot = bot
         self.frinkiac = CartoonAPI('https://frinkiac.com/')
 
-    @commands.command()
+    @commands.command(aliases=['Simpsons', 'SIMPSONS'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def simpsons(self, ctx, *, message : str=None):
         if message is None:
@@ -20,7 +20,7 @@ class Simpsons():
                                                                     True))
 
     # Messages a random simpsons quote with accomanying gif
-    @commands.command()
+    @commands.command(aliases=['Simpsonsgif', 'SIMPSONSGIF'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def simpsonsgif(self, ctx):
         await ctx.send(await self.frinkiac.getRandomCartoon(True))

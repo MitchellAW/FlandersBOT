@@ -9,7 +9,7 @@ class Futurama():
         self.bot = bot
         self.morbotron = CartoonAPI('https://morbotron.com/')
 
-    @commands.command()
+    @commands.command(aliases=['Futurama', 'FUTURAMA'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def futurama(self, ctx, *, message : str=None):
         if message is None:
@@ -20,7 +20,7 @@ class Futurama():
                                                                      True))
 
     # Messages a random simpsons quote with accomanying gif
-    @commands.command()
+    @commands.command(aliases=['Futuramagif', 'FUTURAMAGIF'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def futuramagif(self, ctx):
         await ctx.send(await self.morbotron.getRandomCartoon(True))

@@ -9,7 +9,7 @@ class RickAndMorty():
         self.bot = bot
         self.masterOfAllScience = CartoonAPI('https://masterofallscience.com/')
 
-    @commands.command()
+    @commands.command(aliases=['Rickandmorty', 'RICKANDMORTY'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def rickandmorty(self, ctx, *, message : str=None):
         if message is None:
@@ -21,7 +21,7 @@ class RickAndMorty():
                                findCartoonQuote(message, True))
 
     # Messages a random simpsons quote with accomanying gif
-    @commands.command()
+    @commands.command(aliases=['Rickandmortygif', 'RICKANDMORTYGIF'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def rickandmortygif(self, ctx):
         await ctx.send(await self.masterOfAllScience.getRandomCartoon(True))
