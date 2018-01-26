@@ -24,10 +24,12 @@ __**COMMANDS**__
 **simpsons** - Will post a random Simpsons moment with caption.
 **simpsons [quote]** - Searches for a Simpsons gif using the quote.
 **simpsonsgif** - Will post a random Simpsons gif with caption.
+**simpsonstrivia** - Starts a game of trivia using 100+ Simpsons questions. (More coming)
 
 **futurama** - Will post a random Futurama moment with caption.
 **futurama [quote]** - Searches for a Futurama gif using the quote.
 **futuramagif** - Will post a random Futurama gif with caption.
+**futuramatrivia** - Starts a game of trivia using 80+ Futurama questions. (More coming)
 
 **rickandmorty** - Will post a random Rick and Morty moment with caption.
 **rickandmorty [quote]** - Searches for a Rick and Morty gif using the quote.

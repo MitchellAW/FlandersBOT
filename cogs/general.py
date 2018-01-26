@@ -66,6 +66,8 @@ class General():
                          icon_url=ctx.message.author.avatar_url)
 
         await feedbackChannel.send(embed=embed)
+        await ctx.send('Thanks neighbourino! The feedback has been sent to ' +
+                       ' my support serveroo!')
 
     # Display the prefixes used on the current guild
     @commands.command(aliases=['Prefix', 'PREFIX', 'prefixes', 'Prefixes'])
