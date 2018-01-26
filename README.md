@@ -44,10 +44,11 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
 | **simpsons** | Will post a random Simpsons quote with accompanying picture. |
 | **simpsons [search quote]** | Searches for a Simpsons quote using all text following the command, grabs the first result and sends the resulting quote with accompanying gif. |
 | **simpsonsgif** | Will post a random Simpsons quote with accompanying gif. |
-| **simpsonstrivia** | Starts a game of trivia using > 100 questions (more coming) |
+| **simpsonstrivia** | Starts a game of trivia using > 100 simpsons questions *(more coming!)* |
 | **futurama** | Will post a random Futurama quote with accompanying picture. |
 | **futurama [search quote]** | Searches for a Futurama quote using all text following the command, grabs the first result and sends the resulting quote with accompanying gif. |
 | **futuramagif** | Will post a random Futurama quote with accompanying gif. |
+| **futuramatrivia** | Will start a game of trivia using 80 futurama questions *(more coming!)* |
 | **rickandmorty** | Will post a random Rick and Morty quote with accompanying picture. |
 | **rickandmorty [search quote]** | Searches for a Rick and Morty quote using all text following the command, grabs the first result and sends the resulting quote with accompanying gif. |
 | **rickandmortygif** | Will post a random Rick and Morty quote with accompanying gif. |
