@@ -3,7 +3,6 @@ import discord
 import json
 
 def readPrefixes():
-    print('reading')
     with open('cogs/data/prefixes.json', 'r') as prefixList:
         prefixData = json.load(prefixList)
         prefixList.close()
@@ -12,7 +11,6 @@ def readPrefixes():
 
 # Writes the prefix to prefixes.json
 def writePrefixes(prefixData):
-    print('writing')
     # Write the new prefix to the file
     with open('cogs/data/prefixes.json', 'w') as guildList:
         json.dump(prefixData, guildList, indent=4)
