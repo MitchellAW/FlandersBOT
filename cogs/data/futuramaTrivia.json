@@ -280,10 +280,6 @@
         "answers":["40,000", "20,000", "60,000"]
     },
     {
-        "question":"What is the name of Fry's new friend and fellow defrostee who becomes CEO of Planet Express?",
-        "answers":["Steve Castle", "", ""]
-    },
-    {
         "question":"Which of the following is NOT one of the names of Professor Farnsworth's atomic supermen?",
         "answers":["Gallactico", "Arachnion", "Thorias"]
     },

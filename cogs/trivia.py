@@ -51,7 +51,7 @@ class Trivia():
 
             # Wait for answers from users for 10 secs, storing all answers
             answers = {}
-            endTime = time.time() + 10
+            endTime = time.time() + 15
             try:
                 while time.time() < endTime:
                     message = await self.bot.wait_for('message',
