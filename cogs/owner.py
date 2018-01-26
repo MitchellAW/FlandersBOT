@@ -40,8 +40,10 @@ class Owner():
     @commands.command()
     async def shutdown(self, ctx):
         if ctx.message.author.id == settings.config.OWNERID:
+            # Make confirmation message based on bots username to prevent
+            # myself from shutting wrong bot down.
             def check(message):
-                return message.content == 'confirm'
+                return message.content == self.bot.user.name[:4]
 
             try:
                 await ctx.send('Respond "confirm" to shutdown')
