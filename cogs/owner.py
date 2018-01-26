@@ -46,7 +46,9 @@ class Owner():
                 return message.content == self.bot.user.name[:4]
 
             try:
-                await ctx.send('Respond "confirm" to shutdown')
+                await ctx.send('Respond ' + self.bot.user.name[:4] +
+                               ' to shutdown')
+
                 response = await self.bot.wait_for('message', check=check,
                                                    timeout=10)
                 await self.bot.logout()
