@@ -38,10 +38,10 @@ bot.remove_command('help')
 # Print bot information once bot has started
 @bot.event
 async def on_ready():
-    bot.uptime = datetime.datetime.utcnow()
-    bot.prefixData = prefixes.readPrefixes()
     print('Username: ' + str(bot.user.name))
     print('Client ID: ' + str(bot.user.id))
+    bot.uptime = datetime.datetime.utcnow()
+    bot.prefixData = prefixes.readPrefixes()
     await updateGuildCount(bot)
 
 # Update guild count on join
