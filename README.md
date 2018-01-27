@@ -130,7 +130,7 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
     </tr>
     <tr>
       <td><b>futuramatrivia</b></td>
-      <td>Will start a game of trivia using 80+ questions</td>
+      <td>Will start a game of trivia using 100+ questions</td>
     </tr>
   </table>
 </div>
