@@ -314,5 +314,130 @@
     {
         "question":"Which of the following is not one of Bender's punishment levels in Robot Hell?",
         "answers":["Being melted down", "Being deep fried", "Being rolled up and smoked like a cigar"]
+    },
+    {
+        "question":"What is the name of Leela's pet?",
+        "answers":["Nibbler", "Nibblonian", "Nobbler"]
+    },
+    {
+        "question":"What was Fry's job in 1999?",
+        "answers":["Pizza Delivery Boy", "Newspaper Delivery Boy", "Planet Express' Delivery Boy"]
+    },
+    {
+        "question":"What colour is Fry's hair?",
+        "answers":["Orange", "Black", "Blue"]
+    },
+    {
+        "question":"What company does Dr. Farnsworth run?",
+        "answers":["Planet Express", "Space Express", "Earth Express"]
+    },
+    {
+        "question":"What is the name of Captian Zapp Brannigan's assistant?",
+        "answers":["Kif", "Zif", "Gif"]
+    },
+    {
+        "question":"Bender is, Bending Unit ________?",
+        "answers":["22", "21", "20"]
+    },
+    {
+        "question":"What was Fry's bank account balance in 1999?",
+        "answers":["93 cents", "33 cents", "73 cents"]
+    },
+    {
+        "question":"What did the Professors Smell-O-Scope detect in space?",
+        "answers":["A Ball of Garbage", "A Planet of Cheese", "A Comet"]
+    },
+    {
+        "question":"What was the name of the space cruise ship that was destroyed by a black hole?",
+        "answers":["The Titanic", "The Nimbus", "The Titanic V2"]
+    },
+    {
+        "question":"Why did Fry and Bender enlist in the US army?",
+        "answers":["Military discount for chewing gum", "The Rolling Stones were due to entertain the troops", "They thought it was the queue for the Kwik-E-mart"]
+    },
+    {
+        "question":"Why was Tuesday special to Leela as a child?",
+        "answers":["It was double-soup Tuesday at the Orphinarium", "The Wizard of Oz was on TV every Tuesday", "The prospective parents would visit"]
+    },
+    {
+        "question":"What did Fry and his brother hope to win in the Break-Dancing competition?",
+        "answers":["A pair of authographed parachute pants", "A seven-leafed lucky clover", "Gravity Boots"]
+    },
+    {
+        "question":"Who was the famous uncle of Dr. Zoidberg?",
+        "answers":["Harold Zoid", "Sigmund Zoid", "Zoid Grossman"]
+    },
+    {
+        "question":"How many seasons of Futurama are there?",
+        "answers":["8", "7", "9"]
+    },
+    {
+        "question":"How long has Amy been an intern at Planet Express?",
+        "answers":["12 years", "3 months", "1 year"]
+    },
+    {
+        "question":"What did it say on the pizza box Fry delivers in the first episode?",
+        "answers":["Don't tip the delivery boy", "Fresh, fresh pizza", "Delicious Pizza"]
+    },
+    {
+        "question":"How did Kif get pregnant?",
+        "answers":["He was in love and touched Leela's hand", "He was in love and touched Amy's hand", "He was in love and touched the toilet seat"]
+    },
+    {
+        "question":"What is planet Uranus called in Futurama?",
+        "answers":["Urectum", "Bluto", "Juniper"]
+    },
+    {
+        "question":"In, 'The Farnsworth Parabox', what colour was Universe 1 Bender?",
+        "answers":["Gold", "Pearl", "Silver"]
+    },
+    {
+        "question":"Where was Professor Farnsworth taken in, 'Clone of My Own'?",
+        "answers":["Near-Death Star", "Elderly Island", "Florida"]
+    },
+    {
+        "question":"What is the name of Hermes' son?",
+        "answers":["Dwight", "Hermes Jr.", "Sam"]
+    },
+    {
+        "question":"Which one of these characters is not related to Fry?",
+        "answers":["Scruffy", "Yancy", "Professor Farnsworth"]
+    },
+    {
+        "question":"What beer was Fry holding when he was frozen?",
+        "answers":["Lobrow", "BerAle", "Benderbrew"]
+    },
+    {
+        "question":"What made Bender want to kill himself?",
+        "answers":["Building girders for suicide booths", "He lost his job", "He lost his ability to bend"]
+    },
+    {
+        "question":"What year was Fry born?",
+        "answers":["1974", "1976", "1978"]
+    },
+    {
+        "question":"In 'The Tale of Two Santas', what is the name of the book that Kwanzabot is delivering?",
+        "answers":["What The Hell is Kwanza?", "Who the Hell is Kwanza?", "What is Kwanza About?"]
+    },
+    {
+        "question":"What sport are Phillip and Yancy playing when Phillip finds a seven-leafed clover?",
+        "answers":["Basketball", "Soccer", "They're not playing a sport"]
+    },
+    {
+        "question":"What do the Amazonians say instead of sex?",
+        "answers":["Snu-snu", "Ugh-ugh", "Ooh-ooh"]
+    },
+    {
+        "question":"In 'Godfellas' when Bender becomes a god, what is Bender's single commandment?",
+        "answers":["God needs booze", "Kill all humans", "Up yours"]
+    },
+    {
+        "question":"What was the replacement show for 'All My Circuits' when the robot playing Calculon's child malfunctioned?",
+        "answers":["Everybody Loves Hypnotoad", "Morbo and Friends", "Rumbledy-Hump"]
+    },
+    {
+        "question":"Who purchases the 'human horn' that was harvested from Fry?",
+        "answers":["Lrr", "Elzar", "Glurmo"]
     }
 ]
+
