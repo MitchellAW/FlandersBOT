@@ -66,8 +66,8 @@ class General():
                          icon_url=ctx.message.author.avatar_url)
 
         await feedbackChannel.send(embed=embed)
-        await ctx.send('Thanks neighbourino! The feedback has been sent to ' +
-                       ' my support serveroo!')
+        await ctx.send('Thanks neighbourino! 📫 The feedback has been sent ' +
+                       'to my support serveroo!')
 
     # Display the prefixes used on the current guild
     @commands.command(aliases=['Prefix', 'PREFIX', 'prefixes', 'Prefixes'])
@@ -142,16 +142,28 @@ class General():
         averageOnline = round((onlineUsers / guildCount), 2)
 
         # Embed statistics output
+        iconUrl = ('https://images.discordapp.net/avatars/221609683562135553' +
+                   '/afc35c7bcaf6dcb1c86a1c715ac955a3.png')
         embed = discord.Embed(colour=discord.Colour(0x44981e))
-        embed.set_thumbnail(url='https://images.discordapp.net/avatars/221609683562135553/afc35c7bcaf6dcb1c86a1c715ac955a3.png')
-        embed.set_author(name='FlandersBOT Statistics', url='https://github.com/FlandersBOT', icon_url='https://images.discordapp.net/avatars/221609683562135553/afc35c7bcaf6dcb1c86a1c715ac955a3.png')
-        embed.add_field(name='Bot Name', value='FlandersBOT#0680', inline=True)
-        embed.add_field(name='Bot Owner', value='Mitch#8293', inline=True)
-        embed.add_field(name='Total Members', value=str(totalMembers), inline=True)
-        embed.add_field(name='Server Count', value=str(guildCount), inline=True)
-        embed.add_field(name='Online Users', value=str(onlineUsers), inline=True)
-        embed.add_field(name='Online Users Per Server', value=str(averageOnline), inline=True)
-        embed.add_field(name='Uptime', value=self.getUptime(False), inline=True)
+        embed.set_thumbnail(url=iconUrl)
+
+        embed.set_author(name='FlandersBOT Statistics',
+                         url='https://github.com/FlandersBOT',
+                         icon_url=iconUrl)
+        embed.add_field(name='Bot Name', value='FlandersBOT#0680',
+                        inline=True)
+        embed.add_field(name='Bot Owner', value='Mitch#8293',
+                        inline=True)
+        embed.add_field(name='Total Members', value=str(totalMembers),
+                        inline=True)
+        embed.add_field(name='Server Count', value=str(guildCount),
+                        inline=True)
+        embed.add_field(name='Online Users', value=str(onlineUsers),
+                        inline=True)
+        embed.add_field(name='Online Users Per Server',
+                        value=str(averageOnline), inline=True)
+        embed.add_field(name='Uptime', value=self.getUptime(False),
+                        inline=True)
 
         # Post statistics
         await ctx.send(embed=embed)

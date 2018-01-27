@@ -74,21 +74,26 @@ class Trivia():
             # Check the results of the trivia question
             embed.title = '**Answer**'
             if len(answers) == 0:
-                embed.description = ('**' + correctChoice + ':** ' + correctAnswer +
-                                     '\n\n⚠ **No answers given! Trivia has ended.**')
+                embed.description = ('**' + correctChoice + ':** ' +
+                                     correctAnswer +
+                                     '\n\n⚠ **No answers given! ' +
+                                     'Trivia has ended.**')
                 self.channelsPlaying.remove(ctx.channel.id)
                 stillPlaying = False
 
             elif len(answers) > 0 and correctCount == 0:
-                embed.description = ('**' + correctChoice + ':** ' + correctAnswer +
+                embed.description = ('**' + correctChoice + ':** ' +
+                                     correctAnswer +
                                      '\n\n**No correct answers!**')
 
             elif len(answers) == 1 and correctCount == 1:
-                embed.description = ('**' + correctChoice + ':** ' + correctAnswer +
+                embed.description = ('**' + correctChoice + ':** ' +
+                                     correctAnswer +
                                      '\n\n**Correct!**')
             else:
-                embed.description = ('**' + correctChoice + ':** ' + correctAnswer +
-                                     '\n\n**' + str(correctCount) +
+                embed.description = ('**' + correctChoice + ':** ' +
+                                     correctAnswer + '\n\n**' +
+                                     str(correctCount) +
                                      ' correct answer(s)!**')
                 for key in answers:
                     if answers[key] == correctChoice:

@@ -22,8 +22,8 @@ async def updateGuildCount(bot):
     async with aiohttp.ClientSession() as aioClient:
         resp = await aioClient.post(dbUrl, data=dbPayload, headers=dbHeaders)
 
-    status = discord.Game(name='ned help | {} servers'.
-                          format(len(bot.guilds)), type=0)
+    status = discord.Game(name='ned help | {} servers'.format(len(bot.guilds)),
+                          type=0)
 
     await bot.change_presence(game=status, afk=True)
 
@@ -68,7 +68,6 @@ async def on_command_error(ctx, error):
         timeLeft = round(error.retry_after, 2)
         await ctx.send(':hourglass: Command on cooldown. ' +
                        'Slow diddly-ding-dong down. (' + str(timeLeft) +'s)')
-
     else:
         print(error)
 
