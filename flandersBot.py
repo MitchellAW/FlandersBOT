@@ -72,21 +72,6 @@ async def on_command_error(ctx, error):
     else:
         print(error)
 
-# Load an extension
-@bot.command()
-async def load(extensionName : str):
-    try:
-        bot.load_extension(extensionName)
-
-    except (AttributeError, ImportError) as e:
-        print("py\n{}: {}\n".format(type(e).__name__, str(e)))
-        return
-
-# Unload an extension
-@bot.command()
-async def unload(extensionName : str):
-    bot.unload_extension(extensionName)
-
 # Load all bot cogs
 if __name__ == "__main__":
     for extension in startupExtensions:
