@@ -37,7 +37,6 @@ class Owner():
 
         await ctx.author.send(guildList)
 
-
     # Loads a cog (requires dot path)
     @commands.command()
     @commands.is_owner()
@@ -45,9 +44,9 @@ class Owner():
         try:
             self.bot.load_extension(cog)
         except Exception as e:
-            await ctx.send('Failed to load cog')
+            await ctx.message.add_reaction('❌')
         else:
-            await ctx.send('Cog successfully loaded')
+            await ctx.message.add_reaction('✅')
 
     # Unloads a cog (requires dot path)
     @commands.command()
@@ -56,9 +55,9 @@ class Owner():
         try:
             self.bot.unload_extension(cog)
         except Exception as e:
-            await ctx.send('Failed to unload cog')
+            await ctx.message.add_reaction('❌')
         else:
-            await ctx.send('Cog successfully unloaded')
+            await ctx.message.add_reaction('✅')
 
     # Reloads a cog (requires dot path)
     @commands.command()
@@ -68,9 +67,9 @@ class Owner():
             self.bot.unload_extension(cog)
             self.bot.load_extension(cog)
         except Exception as e:
-            await ctx.send('Failed to reload cog')
+            await ctx.message.add_reaction('❌')
         else:
-            await ctx.send('Cog successfully reloaded')
+            await ctx.message.add_reaction('✅')
 
     # Shuts the bot down - usable by the bot owner - requires confirmation
     @commands.command()
@@ -88,11 +87,13 @@ class Owner():
 
             response = await self.bot.wait_for('message', check=check,
                                                timeout=10)
+            await response.add_reaction('✅')
             await self.bot.logout()
             await self.bot.close()
 
         except asyncio.TimeoutError:
             pass
+
 def setup(bot):
     bot.add_cog(Owner(bot))
 
