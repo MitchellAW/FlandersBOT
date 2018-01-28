@@ -50,7 +50,7 @@ class General():
             await ctx.author.send(botInfo.commandsList)
 
         except:
-            await ctx.send(botInfo.commandList)
+            await ctx.send(botInfo.commandsList)
 
     # Sends the feedback to the feedback channel of support server
     @commands.command(aliases=['Feedback', 'FEEDBACK'])
