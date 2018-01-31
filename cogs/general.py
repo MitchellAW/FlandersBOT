@@ -76,6 +76,13 @@ class General():
         await ctx.send('Thanks neighbourino! 📫 The feedback has been sent ' +
                        'to my support serveroo!')
 
+    # Allow administrators to make ned leave the server
+    @commands.command(aliases=['Leave', 'LEAVE'])
+    @commands.has_permissions(administrator=True)
+    async def leave(self, ctx):
+        await ctx.send('Okilly-dokilly! 👋')
+        await ctx.guild.leave()
+
     # Display the prefixes used on the current guild
     @commands.command(aliases=['Prefix', 'PREFIX', 'prefixes', 'Prefixes'])
     @commands.cooldown(1, 3, BucketType.channel)
