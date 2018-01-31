@@ -76,7 +76,7 @@ class Trivia():
             if len(answers) == 0:
                 embed.description = ('**' + correctChoice + ':** ' +
                                      correctAnswer +
-                                     '\n\n⚠ **No answers given! ' +
+                                     '\n\n⛔ **No answers given! ' +
                                      'Trivia has ended.**')
                 self.channelsPlaying.remove(ctx.channel.id)
                 stillPlaying = False
