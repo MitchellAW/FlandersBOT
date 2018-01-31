@@ -3,10 +3,27 @@ import asyncio
 import botInfo
 import datetime
 import discord
+import json
 import prefixes
 import settings.config
 
 from discord.ext import commands
+
+# Read the command statistics from json file
+def readCommandStats():
+    print('reading')
+    with open('cogs/data/commandStats.json', 'r') as commandCounter:
+        commandStats = json.load(commandCounter)
+        commandCounter.close()
+
+    return commandStats
+
+# Dump the command statistics to json file
+def writeCommandStats(commandStats):
+    print('writing')
+    with open('cogs/data/commandStats.json', 'w') as commandCounter:
+        json.dump(commandStats, commandCounter, indent=4)
+        commandCounter.close()
 
 # Get the prefixes for the bot
 async def getPrefix(bot, message):
@@ -22,7 +39,7 @@ async def updateGuildCount(bot):
     async with aiohttp.ClientSession() as aioClient:
         resp = await aioClient.post(dbUrl, data=dbPayload, headers=dbHeaders)
 
-    status = discord.Game(name='ned help | {} servers'.format(len(bot.guilds)),
+    status = discord.Game(name='Ned help | {} Servers'.format(len(bot.guilds)),
                           type=0)
 
     await bot.change_presence(game=status, afk=True)
@@ -42,6 +59,7 @@ async def on_ready():
     print('Client ID: ' + str(bot.user.id))
     bot.uptime = datetime.datetime.utcnow()
     bot.prefixData = prefixes.readPrefixes()
+    bot.commandStats = readCommandStats()
     await updateGuildCount(bot)
 
 # Update guild count on join
@@ -60,6 +78,18 @@ async def on_message(message):
     if message.author.bot == False:
         ctx = await bot.get_context(message)
         await bot.invoke(ctx)
+
+# Track number of command executed
+@bot.event
+async def on_command(ctx):
+    command = ctx.command.qualified_name
+    if command in bot.commandStats:
+        bot.commandStats[command] += 1
+
+    else:
+        bot.commandStats[command] = 1
+
+    writeCommandStats(bot.commandStats)
 
 # Commands error handler, only handles cooldowns at the moment
 @bot.event
