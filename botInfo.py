@@ -49,4 +49,7 @@ Author: <@210898009242861568> (Discord)
 Support Server: <https://discord.gg/xMmxMYg>
 Invite URL: <https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456>
 GitHub Source: <https://github.com/MitchellAW/FlandersBOT>
+
+If you'd like to hel-diddly-elp me grow in popularity, please upvote me at the link below!
+https://discordbots.org/bot/221609683562135553
 ''')
