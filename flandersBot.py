@@ -11,7 +11,6 @@ from discord.ext import commands
 
 # Read the command statistics from json file
 def readCommandStats():
-    print('reading')
     with open('cogs/data/commandStats.json', 'r') as commandCounter:
         commandStats = json.load(commandCounter)
         commandCounter.close()
@@ -20,7 +19,6 @@ def readCommandStats():
 
 # Dump the command statistics to json file
 def writeCommandStats(commandStats):
-    print('writing')
     with open('cogs/data/commandStats.json', 'w') as commandCounter:
         json.dump(commandStats, commandCounter, indent=4)
         commandCounter.close()
