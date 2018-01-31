@@ -37,6 +37,16 @@ class Owner():
 
         await ctx.author.send(guildList)
 
+    # Get the number of all the commands executed
+    @commands.command()
+    @commands.is_owner()
+    async def commandstats(self, ctx):
+        commandCount = ''
+        for key in self.bot.commandStats:
+            commandCount += key + ': ' + str(self.bot.commandStats[key]) + '\n'
+
+        await ctx.send(commandCount)
+
     # Loads a cog (requires dot path)
     @commands.command()
     @commands.is_owner()
