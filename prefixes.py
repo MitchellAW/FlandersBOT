@@ -31,10 +31,13 @@ def findGuild(guild, prefixData):
 async def prefixesFor(guild, prefixData):
     guildIndex = findGuild(guild, prefixData)
     if guildIndex == -1:
-        return ['ned ', 'ned', 'diddly-', 'doodly-', 'diddly ', 'doodly ']
+        return [
+        'ned ', 'Ned ', 'NED ', 'diddly-', 'doodly-', 'diddly ', 'doodly '
+        ]
 
     else:
         customPrefix = prefixData[guildIndex]['prefix']
         return [
-        'ned ', 'ned', 'diddly-', 'doodly-', 'diddly ', 'doodly', customPrefix
+        'ned ', 'Ned ', 'NED ', 'diddly-', 'doodly-', 'diddly ', 'doodly',
+        customPrefix
         ]
