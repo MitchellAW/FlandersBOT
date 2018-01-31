@@ -73,8 +73,12 @@ class General():
                          icon_url=ctx.message.author.avatar_url)
 
         await feedbackChannel.send(embed=embed)
+        # Thank for feedback and suggest upvote
         await ctx.send('Thanks neighbourino! 📫 The feedback has been sent ' +
-                       'to my support serveroo!')
+                       'to my support serveroo! If you\'d like to hel-diddly' +
+                       '-elp me grow in popularity, please upvote me at the ' +
+                       'link below!\n <https://discordbots.org/bot/221609683' +
+                       '562135553>')
 
     # Allow administrators to make ned leave the server
     @commands.command(aliases=['Leave', 'LEAVE'])
