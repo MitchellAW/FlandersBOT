@@ -94,13 +94,13 @@ class General():
         guildPrefixes = await prefixes.prefixesFor(ctx.message.guild,
                                                    self.bot.prefixData)
         if len(guildPrefixes) > 5:
-            await ctx.send('This servers prefixes are: `ned`, `diddly`,' +
-                               ' `doodly`,' + ' `diddly-`, `doodly-` and `' +
+            await ctx.send('This servers prefixes are: `Ned`, `ned`, `diddly`' +
+                           ', `doodly`,' + ' `diddly-`, `doodly-` and `' +
                                guildPrefixes[-1] + '`.' )
 
         else:
-            await ctx.send('This servers prefixes are `ned`, `diddly`, ' +
-                               '`doodly`,' + ' `diddly-` and `doodly-`.')
+            await ctx.send('This servers prefixes are: `Ned`, `ned`, `diddly`' +
+                           ', `doodly`,' + ' `diddly-` and `doodly-`.')
 
     # Allows for a single custom prefix per-guild
     @commands.command(aliases=['Setprefix', 'SETPREFIX'])
