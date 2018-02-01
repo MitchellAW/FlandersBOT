@@ -37,7 +37,7 @@ async def updateGuildCount(bot):
     async with aiohttp.ClientSession() as aioClient:
         resp = await aioClient.post(dbUrl, data=dbPayload, headers=dbHeaders)
 
-    status = discord.Game(name='Ned help | {} Servers'.format(len(bot.guilds)),
+    status = discord.Game(name=bot.statusFormat.format(len(bot.guilds)),
                           type=0)
 
     await bot.change_presence(game=status, afk=True)
@@ -58,6 +58,7 @@ async def on_ready():
     bot.uptime = datetime.datetime.utcnow()
     bot.prefixData = prefixes.readPrefixes()
     bot.commandStats = readCommandStats()
+    bot.statusFormat = 'Ned help | {} Servers'
     await updateGuildCount(bot)
 
 # Update guild count on join

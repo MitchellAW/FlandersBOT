@@ -24,7 +24,11 @@ class Owner():
     @commands.command()
     @commands.is_owner()
     async def status(self, ctx, *, message : str):
-        await self.bot.change_presence(game=discord.Game(name=message, type=0))
+        newStatus = discord.Game(name=message.format(len(self.bot.guilds)),
+                          type=0)
+
+        await self.bot.change_presence(game=newStatus, afk=True)
+        self.bot.statusFormat = message
 
     # Sends a list of the guilds the bot is active in - usable by the bot owner
     @commands.command()
