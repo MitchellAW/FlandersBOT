@@ -56,9 +56,9 @@ async def on_ready():
     print('Username: ' + str(bot.user.name))
     print('Client ID: ' + str(bot.user.id))
     bot.uptime = datetime.datetime.utcnow()
-    bot.prefixData = prefixes.readPrefixes()
     bot.commandStats = readCommandStats()
     bot.statusFormat = 'Ned help | {} Servers'
+    bot.prefixData = prefixes.readPrefixes()
     await updateGuildCount(bot)
 
 # Update guild count on join
