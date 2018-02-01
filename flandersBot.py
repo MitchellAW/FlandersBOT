@@ -49,6 +49,9 @@ startupExtensions = [
 
 bot = commands.Bot(command_prefix=getPrefix)
 bot.remove_command('help')
+bot.commandStats = readCommandStats()
+bot.statusFormat = 'Ned help | {} Servers'
+bot.prefixData = prefixes.readPrefixes()
 
 # Print bot information once bot has started
 @bot.event
@@ -56,9 +59,6 @@ async def on_ready():
     print('Username: ' + str(bot.user.name))
     print('Client ID: ' + str(bot.user.id))
     bot.uptime = datetime.datetime.utcnow()
-    bot.commandStats = readCommandStats()
-    bot.statusFormat = 'Ned help | {} Servers'
-    bot.prefixData = prefixes.readPrefixes()
     await updateGuildCount(bot)
 
 # Update guild count on join
