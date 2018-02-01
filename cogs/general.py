@@ -159,28 +159,32 @@ class General():
 
         averageOnline = round((onlineUsers / guildCount), 2)
 
-        # Embed statistics output
-        iconUrl = ('https://images.discordapp.net/avatars/221609683562135553' +
-                   '/afc35c7bcaf6dcb1c86a1c715ac955a3.png')
-        embed = discord.Embed(colour=discord.Colour(0x44981e))
-        embed.set_thumbnail(url=iconUrl)
+        # Count number of commands executed
+        commandCount = 0
+        for key in self.bot.commandStats:
+            commandCount += self.bot.commandStats[key]
 
-        embed.set_author(name='FlandersBOT Statistics',
+
+        # Embed statistics output
+        embed = discord.Embed(colour=discord.Colour(0x44981e))
+        embed.set_thumbnail(url=self.bot.user.avatar_url)
+
+        embed.set_author(name=self.bot.user.name + ' Statistics',
                          url='https://github.com/FlandersBOT',
-                         icon_url=iconUrl)
-        embed.add_field(name='Bot Name', value='FlandersBOT#0680',
-                        inline=True)
+                         icon_url=self.bot.user.avatar_url)
         embed.add_field(name='Bot Owner', value='Mitch#8293',
                         inline=True)
-        embed.add_field(name='Total Members', value=str(totalMembers),
-                        inline=True)
         embed.add_field(name='Server Count', value=str(guildCount),
+                        inline=True)
+        embed.add_field(name='Total Members', value=str(totalMembers),
                         inline=True)
         embed.add_field(name='Online Users', value=str(onlineUsers),
                         inline=True)
         embed.add_field(name='Online Users Per Server',
                         value=str(averageOnline), inline=True)
         embed.add_field(name='Uptime', value=self.getUptime(False),
+                        inline=True)
+        embed.add_field(name='Commands Executed', value=str(commandCount),
                         inline=True)
 
         # Post statistics
