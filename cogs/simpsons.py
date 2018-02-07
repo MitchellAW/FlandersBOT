@@ -9,6 +9,12 @@ class Simpsons():
         self.bot = bot
         self.frinkiac = CartoonAPI('https://frinkiac.com/')
 
+    # Generate the gif and send it once the generation completes
+    async def sendGif(self, ctx, gifUrl):
+        sent = await ctx.send('Generating... <a:loading:410316176510418955>')
+        generatedUrl = await self.frinkiac.generateGif(gifUrl)
+        await sent.edit(content=generatedUrl)
+
     @commands.command(aliases=['Simpsons', 'SIMPSONS'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def simpsons(self, ctx, *, message : str=None):
@@ -16,14 +22,19 @@ class Simpsons():
             await ctx.send(await self.frinkiac.getRandomCartoon())
 
         else:
-            await ctx.send(await self.frinkiac.findCartoonQuote(message,
-                                                                    True))
+            gifUrl = await self.frinkiac.findCartoonQuote(message, True)
+            if 'https://' not in gifUrl:
+                await ctx.send(gifUrl)
+
+            else:
+                await self.sendGif(ctx, gifUrl)
 
     # Messages a random simpsons quote with accomanying gif
     @commands.command(aliases=['Simpsonsgif', 'SIMPSONSGIF'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def simpsonsgif(self, ctx):
-        await ctx.send(await self.frinkiac.getRandomCartoon(True))
+        gifUrl = await self.frinkiac.getRandomCartoon(True)
+        await self.sendGif(ctx, gifUrl)
 
 def setup(bot):
     bot.add_cog(Simpsons(bot))

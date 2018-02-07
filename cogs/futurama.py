@@ -9,6 +9,12 @@ class Futurama():
         self.bot = bot
         self.morbotron = CartoonAPI('https://morbotron.com/')
 
+    # Generate the gif and send it once the generation completes
+    async def sendGif(self, ctx, gifUrl):
+        sent = await ctx.send('Generating... <a:loading:410316176510418955>')
+        generatedUrl = await self.morbotron.generateGif(gifUrl)
+        await sent.edit(content=generatedUrl)
+
     @commands.command(aliases=['Futurama', 'FUTURAMA'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def futurama(self, ctx, *, message : str=None):
@@ -16,14 +22,21 @@ class Futurama():
             await ctx.send(await self.morbotron.getRandomCartoon())
 
         else:
-            await ctx.send(await self.morbotron.findCartoonQuote(message,
-                                                                     True))
+            gifUrl = await self.morbotron.findCartoonQuote(message, True)
+            if 'https://' not in gifUrl:
+                await ctx.send(gifUrl)
+
+            else:
+                await self.sendGif(ctx, gifUrl)
+
 
     # Messages a random simpsons quote with accomanying gif
     @commands.command(aliases=['Futuramagif', 'FUTURAMAGIF'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def futuramagif(self, ctx):
-        await ctx.send(await self.morbotron.getRandomCartoon(True))
+        gifUrl = await self.morbotron.getRandomCartoon(True)
+        await self.sendGif(ctx, gifUrl)
+
 
 def setup(bot):
     bot.add_cog(Futurama(bot))
