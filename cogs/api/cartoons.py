@@ -86,8 +86,6 @@ class CartoonAPI:
                 else:
                     return 'Error 404. {} may be down.'.format(self.url)
 
-
-
     # Loop through all words of the subtitles, add them to the caption and then
     # return the caption encoded in base64 for use in the url
     def encodeCaption(self, captionJson):
@@ -102,8 +100,7 @@ class CartoonAPI:
                 # Only allow 4 lines of captions to avoid covering the gif
                 if lineCount < 4:
                     # Avoiding bug with question marks
-                    # TODO allow for question marks
-                    caption += ' %s' % word.replace('?', '.')
+                    caption += ' %s' % word
 
                     if charCount > 18:
                         charCount = 0
@@ -111,7 +108,9 @@ class CartoonAPI:
                         caption += '\n'
 
         caption = self.shortenCaption(caption)
-        return str(b64encode(str.encode(caption)), 'utf-8')
+        encoded = b64encode(str.encode(caption, 'utf-8'), altchars=b'__')
+
+        return encoded.decode('utf-8')
 
     # Favours ending the caption at the latest ends of sentences.
     def shortenCaption(self, caption):
