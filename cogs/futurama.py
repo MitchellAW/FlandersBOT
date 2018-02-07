@@ -1,3 +1,4 @@
+import dbl
 import discord
 
 from cogs.api.cartoons import CartoonAPI
@@ -11,9 +12,14 @@ class Futurama():
 
     # Generate the gif and send it once the generation completes
     async def sendGif(self, ctx, gifUrl):
-        sent = await ctx.send('Generating... <a:loading:410316176510418955>')
-        generatedUrl = await self.morbotron.generateGif(gifUrl)
-        await sent.edit(content=generatedUrl)
+        upvoters = await dbl.getUpvoters()
+        if str(ctx.message.author.id) in upvoters:
+            sent = await ctx.send('Generating... <a:loading:410316176510418955>')
+            generatedUrl = await self.morbotron.generateGif(gifUrl)
+            await sent.edit(content=generatedUrl)
+
+        else:
+            await ctx.send(gifUrl)
 
     @commands.command(aliases=['Futurama', 'FUTURAMA'])
     @commands.cooldown(1, 3, BucketType.channel)
@@ -28,7 +34,6 @@ class Futurama():
 
             else:
                 await self.sendGif(ctx, gifUrl)
-
 
     # Messages a random simpsons quote with accomanying gif
     @commands.command(aliases=['Futuramagif', 'FUTURAMAGIF'])

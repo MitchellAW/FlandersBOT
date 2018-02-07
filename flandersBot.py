@@ -2,6 +2,7 @@ import aiohttp
 import asyncio
 import botInfo
 import datetime
+import dbl
 import discord
 import json
 import prefixes
@@ -28,18 +29,10 @@ async def getPrefix(bot, message):
     extras = await prefixes.prefixesFor(message.guild, bot.prefixData)
     return commands.when_mentioned_or(*extras)(bot, message)
 
-# Post guild count to update count at https://discordbots.org/
-async def updateGuildCount(bot):
-    dbUrl = "https://discordbots.org/api/bots/" + str(bot.user.id) + "/stats"
-    dbHeaders = {"Authorization" : settings.config.DBTOKEN}
-    dbPayload = {"server_count"  : len(bot.guilds)}
-
-    async with aiohttp.ClientSession() as aioClient:
-        resp = await aioClient.post(dbUrl, data=dbPayload, headers=dbHeaders)
-
-    status = discord.Game(name=bot.statusFormat.format(len(bot.guilds)),
-                          type=0)
-
+# Update guild count at discordbots.org and in bots status/presence
+async def updateStatus(bot):
+    await dbl.updateGuildCount(bot)
+    status = discord.Game(name=bot.statusFormat.format(len(bot.guilds)), type=0)
     await bot.change_presence(game=status, afk=True)
 
 startupExtensions = [
@@ -59,17 +52,17 @@ async def on_ready():
     print('Username: ' + str(bot.user.name))
     print('Client ID: ' + str(bot.user.id))
     bot.uptime = datetime.datetime.utcnow()
-    await updateGuildCount(bot)
+    await updateStatus(bot)
 
 # Update guild count on join
 @bot.event
 async def on_guild_join(guild):
-    await updateGuildCount(bot)
+    await updateStatus(bot)
 
 # Update guild count on leave
 @bot.event
 async def on_guild_remove(guild):
-    await updateGuildCount(bot)
+    await updateStatus(bot)
 
 # Prevent bot from replying to other bots
 @bot.event

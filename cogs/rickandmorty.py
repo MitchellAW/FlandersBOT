@@ -1,3 +1,4 @@
+import dbl
 import discord
 
 from cogs.api.cartoons import CartoonAPI
@@ -11,16 +12,20 @@ class RickAndMorty():
 
     # Generate the gif and send it once the generation completes
     async def sendGif(self, ctx, gifUrl):
-        sent = await ctx.send('Generating... <a:loading:410316176510418955>')
-        generatedUrl = await self.masterOfAllScience.generateGif(gifUrl)
-        await sent.edit(content=generatedUrl)
+        upvoters = await dbl.getUpvoters()
+        if str(ctx.message.author.id) in upvoters:
+            sent = await ctx.send('Generating... <a:loading:410316176510418955>')
+            generatedUrl = await self.masterOfAllScience.generateGif(gifUrl)
+            await sent.edit(content=generatedUrl)
+
+        else:
+            await ctx.send(gifUrl)
 
     @commands.command(aliases=['Rickandmorty', 'RICKANDMORTY'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def rickandmorty(self, ctx, *, message : str=None):
         if message is None:
-            await ctx.send(await self.masterOfAllScience.
-                               getRandomCartoon())
+            await ctx.send(await self.masterOfAllScience.getRandomCartoon())
 
         else:
             gifUrl = await self.masterOfAllScience.findCartoonQuote(message, True)
