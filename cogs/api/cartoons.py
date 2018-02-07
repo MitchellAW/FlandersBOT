@@ -108,22 +108,22 @@ class CartoonAPI:
             for word in quote['Content'].split():
                 charCount += len(word) + 1
 
-                # Only allow 4 lines of captions to avoid covering the gif
-                if lineCount < 4:
-                    # Avoiding bug with question marks
+                if charCount < 24 and lineCount < 4:
                     caption += ' %s' % word
 
-                    if charCount > 18:
-                        charCount = 0
-                        lineCount += 1
-                        caption += '\n'
+                elif lineCount < 4:
+                    charCount = len(word) + 1
+                    lineCount += 1
+                    if lineCount < 4:
+                        caption += '\n' + ' %s' % word
+
 
         caption = self.shortenCaption(caption)
         encoded = b64encode(str.encode(caption, 'utf-8'), altchars=b'__')
 
         return encoded.decode('utf-8')
 
-    # Favours ending the caption at the latest ends of sentences.
+    # Favours ending the caption at the latest sentence ending (., !, ?)
     def shortenCaption(self, caption):
         for i in range(len(caption) - 1, 0, -1):
             if caption[i] == '.' or caption[i] == '!' or caption[i] == '?':
