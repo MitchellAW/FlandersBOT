@@ -86,6 +86,17 @@ class CartoonAPI:
                 else:
                     return 'Error 404. {} may be down.'.format(self.url)
 
+    # Generate the gif and get the direct url for embedding
+    async def generateGif(self, gifUrl):
+        async with aiohttp.ClientSession() as session:
+            try:
+                async with session.get(gifUrl, timeout=30) as generator:
+                    if generator.status == 200:
+                        return generator.url
+
+            except asyncio.TimeoutError:
+                return gifUrl
+
     # Loop through all words of the subtitles, add them to the caption and then
     # return the caption encoded in base64 for use in the url
     def encodeCaption(self, captionJson):
