@@ -78,8 +78,8 @@ class Trivia:
             if len(answers) == 0:
                 embed.description = ('**' + correct_choice + ':** ' +
                                      correct_answer +
-                                     '\n\n<:xmark:314349398824058880>' +
-                                     ' **No answers given! Trivia has ended.**')
+                                     '\n\n⛔ **No answers given! Trivia has ' +
+                                     'ended.**')
                 self.channels_playing.remove(ctx.channel.id)
                 still_playing = False
 
