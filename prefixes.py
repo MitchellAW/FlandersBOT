@@ -38,6 +38,6 @@ async def prefixesFor(guild, prefixData):
     else:
         customPrefix = prefixData[guildIndex]['prefix']
         return [
-        'ned ', 'Ned ', 'NED ', 'diddly-', 'doodly-', 'diddly ', 'doodly',
+        'ned ', 'Ned ', 'NED ', 'diddly-', 'doodly-', 'diddly ', 'doodly ',
         customPrefix
         ]
