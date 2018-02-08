@@ -33,7 +33,7 @@ async def get_prefix(bot, message):
 
 # Update guild count at https://discordbots.org and in bots status/presence
 async def update_status(bot):
-    await api.dbl.updateGuildCount(bot)
+    await api.dbl.update_guild_count(bot)
     status = discord.Game(name=bot.status_format.format(len(bot.guilds)),
                           type=0)
     await bot.change_presence(game=status, afk=True)

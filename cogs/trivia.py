@@ -16,10 +16,10 @@ class Trivia:
     async def start_trivia(self, ctx, file_name, category_colour,
                            thumbnail_url):
         self.channels_playing.append(ctx.channel.id)
-        with open('cogs/data/' + file_name, 'r') as triviaQuestions:
-            trivia_data = json.load(triviaQuestions)
+        with open('cogs/data/' + file_name, 'r') as trivia_questions:
+            trivia_data = json.load(trivia_questions)
             random.shuffle(trivia_data)
-            triviaQuestions.close()
+            trivia_questions.close()
 
         still_playing = True
         while still_playing and len(trivia_data) > 0:

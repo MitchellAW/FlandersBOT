@@ -12,7 +12,7 @@ class RickAndMorty:
 
     # Generate the gif and send it once the generation completes
     async def send_gif(self, ctx, gif_url):
-        upvoters = await api.dbl.getUpvoters()
+        upvoters = await api.dbl.get_upvoters()
         if str(ctx.message.author.id) in upvoters:
             sent = await ctx.send('Generating... <a:loading:410316176510418955>')
             generated_url = await self.masterOfAllScience.generate_gif(gif_url)
