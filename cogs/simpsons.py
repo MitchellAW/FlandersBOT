@@ -22,7 +22,7 @@ class Simpsons():
             await ctx.send(gifUrl)
 
     @commands.command(aliases=['Simpsons', 'SIMPSONS'])
-    #@commands.cooldown(1, 3, BucketType.channel)
+    @commands.cooldown(1, 3, BucketType.channel)
     async def simpsons(self, ctx, *, message : str=None):
         if message is None:
             await ctx.send(await self.frinkiac.getRandomCartoon())
@@ -37,7 +37,7 @@ class Simpsons():
 
     # Messages a random simpsons quote with accomanying gif
     @commands.command(aliases=['Simpsonsgif', 'SIMPSONSGIF'])
-    #@commands.cooldown(1, 3, BucketType.channel)
+    @commands.cooldown(1, 3, BucketType.channel)
     async def simpsonsgif(self, ctx):
         upvoters = await dbl.getUpvoters()
         hasUpvoted = str(ctx.message.author.id) in upvoters
