@@ -99,6 +99,12 @@ async def on_command_error(ctx, error):
         time_left = round(error.retry_after, 2)
         await ctx.send(':hourglass: Command on cooldown. ' +
                        'Slow diddly-ding-dong down. (' + str(time_left) + 's)')
+
+    elif isinstance(error, commands.MissingPermissions):
+        await ctx.send('<:xmark:314349398824058880> Sorry neighbour, ' +
+                       'You don\'t have the permissions riddly-required for ' +
+                       'that command-aroo! ')
+
     else:
         print(error)
 

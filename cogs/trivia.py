@@ -78,8 +78,8 @@ class Trivia:
             if len(answers) == 0:
                 embed.description = ('**' + correct_choice + ':** ' +
                                      correct_answer +
-                                     '\n\n⛔ **No answers given! ' +
-                                     'Trivia has ended.**')
+                                     '\n\n<:xmark:314349398824058880>' +
+                                     ' **No answers given! Trivia has ended.**')
                 self.channels_playing.remove(ctx.channel.id)
                 still_playing = False
 
@@ -110,9 +110,9 @@ class Trivia:
     @commands.command(aliases=['Simpsonstrivia', 'SIMPSONSTRIVIA'])
     async def simpsonstrivia(self, ctx):
         if ctx.channel.id not in self.channels_playing:
-            simpsonsYellow = discord.Colour(0xffef06)
+            simpsons_yellow = discord.Colour(0xffef06)
             await self.start_trivia(ctx, 'simpsonsTrivia.json',
-                                    simpsonsYellow,
+                                    simpsons_yellow,
                                     'https://github.com/MitchellAW/MitchellAW' +
                                     '.github.io/blob/master/images/donut-disc' +
                                     'ord.gif?raw=true')
@@ -121,8 +121,8 @@ class Trivia:
     @commands.command(aliases=['Futuramatrivia', 'FUTURAMATRIVIA'])
     async def futuramatrivia(self, ctx):
         if ctx.channel.id not in self.channels_playing:
-            fryRed = discord.Colour(0x9b2525)
-            await self.start_trivia(ctx, 'futuramaTrivia.json', fryRed,
+            fry_red = discord.Colour(0x9b2525)
+            await self.start_trivia(ctx, 'futuramaTrivia.json', fry_red,
                                     'https://github.com/MitchellAW/MitchellAW' +
                                     '.github.io/blob/master/images/planet-exp' +
                                     'ress-discord.gif?raw=true')
@@ -131,7 +131,7 @@ class Trivia:
     @commands.command(aliases=['Rickandmortytrivia', 'RICKANDMORTYTRIVIA'])
     async def rickandmortytrivia(self, ctx):
         portal_gif = ('https://github.com/MitchellAW/MitchellAW.github.io/blo' +
-                     'b/master/images/rick-morty-portal.gif?raw=true')
+                      'b/master/images/rick-morty-portal.gif?raw=true')
         rick_blue = discord.Colour(0xaad3ea)
 
 
