@@ -1,39 +1,41 @@
-import asyncio
 import datetime
 import json
 
-import aiohttp
 import discord
 from discord.ext import commands
 
 import api.dbl
-import botInfo
 import prefixes
 import settings.config
 
-# Read the command statistics from json file
-def readCommandStats():
-    with open('cogs/data/commandStats.json', 'r') as commandCounter:
-        commandStats = json.load(commandCounter)
-        commandCounter.close()
 
-    return commandStats
+# Read the command statistics from json file
+def read_command_stats():
+    with open('cogs/data/commandStats.json', 'r') as command_counter:
+        command_stats = json.load(command_counter)
+        command_counter.close()
+
+    return command_stats
+
 
 # Dump the command statistics to json file
-def writeCommandStats(commandStats):
-    with open('cogs/data/commandStats.json', 'w') as commandCounter:
-        json.dump(commandStats, commandCounter, indent=4)
-        commandCounter.close()
+def write_command_stats(command_stats):
+    with open('cogs/data/commandStats.json', 'w') as command_counter:
+        json.dump(command_stats, command_counter, indent=4)
+        command_counter.close()
+
 
 # Get the prefixes for the bot
-async def getPrefix(bot, message):
-    extras = await prefixes.prefixesFor(message.guild, bot.prefixData)
+async def get_prefix(bot, message):
+    extras = await prefixes.prefixes_for(message.guild, bot.prefix_data)
     return commands.when_mentioned_or(*extras)(bot, message)
 
-# Update guild count at discordbots.org and in bots status/presence
-async def updateStatus(bot):
+
+# Update guild count at https://discordbots.org and in bots status/presence
+async def update_status(bot):
     await api.dbl.updateGuildCount(bot)
-    status = discord.Game(name=bot.statusFormat.format(len(bot.guilds)), type=0)
+    status = discord.Game(name=bot.status_format.format(len(bot.guilds)),
+                          type=0)
     await bot.change_presence(game=status, afk=True)
 
 startupExtensions = [
@@ -41,11 +43,12 @@ startupExtensions = [
     'cogs.owner', 'cogs.trivia'
     ]
 
-bot = commands.Bot(command_prefix=getPrefix)
+bot = commands.Bot(command_prefix=get_prefix)
 bot.remove_command('help')
-bot.commandStats = readCommandStats()
-bot.statusFormat = 'Ned help | {} Servers'
-bot.prefixData = prefixes.readPrefixes()
+bot.command_stats = read_command_stats()
+bot.status_format = 'Ned help | {} Servers'
+bot.prefix_data = prefixes.read_prefixes()
+
 
 # Print bot information once bot has started
 @bot.event
@@ -53,44 +56,49 @@ async def on_ready():
     print('Username: ' + str(bot.user.name))
     print('Client ID: ' + str(bot.user.id))
     bot.uptime = datetime.datetime.utcnow()
-    await updateStatus(bot)
+    await update_status(bot)
+
 
 # Update guild count on join
 @bot.event
 async def on_guild_join(guild):
-    await updateStatus(bot)
+    await update_status(bot)
+
 
 # Update guild count on leave
 @bot.event
 async def on_guild_remove(guild):
-    await updateStatus(bot)
+    await update_status(bot)
+
 
 # Prevent bot from replying to other bots
 @bot.event
 async def on_message(message):
-    if message.author.bot == False:
+    if not message.author.bot:
         ctx = await bot.get_context(message)
         await bot.invoke(ctx)
+
 
 # Track number of command executed
 @bot.event
 async def on_command(ctx):
     command = ctx.command.qualified_name
-    if command in bot.commandStats:
-        bot.commandStats[command] += 1
+    if command in bot.command_stats:
+        bot.command_stats[command] += 1
 
     else:
-        bot.commandStats[command] = 1
+        bot.command_stats[command] = 1
 
-    writeCommandStats(bot.commandStats)
+    write_command_stats(bot.command_stats)
+
 
 # Commands error handler, only handles cooldowns at the moment
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown):
-        timeLeft = round(error.retry_after, 2)
+        time_left = round(error.retry_after, 2)
         await ctx.send(':hourglass: Command on cooldown. ' +
-                       'Slow diddly-ding-dong down. (' + str(timeLeft) +'s)')
+                       'Slow diddly-ding-dong down. (' + str(time_left) + 's)')
     else:
         print(error)
 

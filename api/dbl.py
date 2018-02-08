@@ -1,6 +1,5 @@
 import aiohttp
-import discord
-import json
+
 import settings.config
 
 # Post guild count to update count at https://discordbots.org/

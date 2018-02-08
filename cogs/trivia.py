@@ -5,133 +5,135 @@ import time
 
 import discord
 from discord.ext import commands
-from discord.ext.commands.cooldowns import BucketType
 
-class Trivia():
+
+class Trivia:
     def __init__(self, bot):
         self.bot = bot
-        self.channelsPlaying = []
+        self.channels_playing = []
 
     # Starts a game of trivia using fileName as the questions file
-    async def startTrivia(self, ctx, fileName, categoryColour, thumbnailUrl):
-        self.channelsPlaying.append(ctx.channel.id)
-        with open('cogs/data/' + fileName, 'r') as triviaQuestions:
-            triviaData = json.load(triviaQuestions)
-            random.shuffle(triviaData)
+    async def start_trivia(self, ctx, file_name, category_colour,
+                           thumbnail_url):
+        self.channels_playing.append(ctx.channel.id)
+        with open('cogs/data/' + file_name, 'r') as triviaQuestions:
+            trivia_data = json.load(triviaQuestions)
+            random.shuffle(trivia_data)
             triviaQuestions.close()
 
-        stillPlaying = True
-        while stillPlaying and len(triviaData) > 0:
+        still_playing = True
+        while still_playing and len(trivia_data) > 0:
             # Gather all question information needed
-            questionData = triviaData.pop()
-            question = questionData['question']
-            answers = questionData['answers']
-            correctAnswer = answers[0]
+            question_data = trivia_data.pop()
+            question = question_data['question']
+            answers = question_data['answers']
+            correct_answer = answers[0]
 
             # Shuffle answers, by default correct answer is always first
             random.shuffle(answers)
-            correctChoice = chr(answers.index(correctAnswer) + 65)
+            correct_choice = chr(answers.index(correct_answer) + 65)
 
-            answerMsg = ('**A:** {}\n**B:** {}\n**C:** {} \n\nSend a letter ' +
-                            'below to answer!').format(answers[0],
-                            answers[1],
-                            answers[2])
+            answer_msg = ('**A:** {}\n**B:** {}\n**C:** {} \n\nSend a letter ' +
+                          'below to answer!').format(answers[0],
+                                                     answers[1],
+                                                     answers[2])
 
             embed = discord.Embed(title=question,
-                                  colour=categoryColour,
-                                  description=answerMsg)
-            embed.set_thumbnail(url=thumbnailUrl)
+                                  colour=category_colour,
+                                  description=answer_msg)
+            embed.set_thumbnail(url=thumbnail_url)
 
             # Send the trivia question
             await ctx.send(embed=embed)
 
             # Check for confirming an answer was made (case-insensitive)
-            def isAnswer(message):
+            def is_answer(message):
                 return message.content.upper() in ['A', 'B', 'C']
 
             # Wait for answers from users for 10 secs, storing all answers
             answers = {}
-            endTime = time.time() + 15
+            end_time = time.time() + 15
             try:
-                while time.time() < endTime:
+                while time.time() < end_time:
                     message = await self.bot.wait_for('message',
-                                                      check=isAnswer,
-                                                      timeout=(endTime -
+                                                      check=is_answer,
+                                                      timeout=(end_time -
                                                                time.time()))
 
                     if message.author.id not in answers:
-                        answers.update({message.author:message.content.upper()})
+                        answers.update({message.author:
+                                        message.content.upper()})
 
             except asyncio.TimeoutError:
                 pass
 
             # Count correct answers
-            correctCount = 0
+            correct_count = 0
             for key in answers:
-                if answers[key] == correctChoice:
-                    correctCount += 1
+                if answers[key] == correct_choice:
+                    correct_count += 1
 
             # Check the results of the trivia question
             embed.title = '**Answer**'
             if len(answers) == 0:
-                embed.description = ('**' + correctChoice + ':** ' +
-                                     correctAnswer +
+                embed.description = ('**' + correct_choice + ':** ' +
+                                     correct_answer +
                                      '\n\n⛔ **No answers given! ' +
                                      'Trivia has ended.**')
-                self.channelsPlaying.remove(ctx.channel.id)
-                stillPlaying = False
+                self.channels_playing.remove(ctx.channel.id)
+                still_playing = False
 
-            elif len(answers) > 0 and correctCount == 0:
-                embed.description = ('**' + correctChoice + ':** ' +
-                                     correctAnswer +
+            elif len(answers) > 0 and correct_count == 0:
+                embed.description = ('**' + correct_choice + ':** ' +
+                                     correct_answer +
                                      '\n\n**No correct answers!**')
 
-            elif len(answers) == 1 and correctCount == 1:
-                embed.description = ('**' + correctChoice + ':** ' +
-                                     correctAnswer +
+            elif len(answers) == 1 and correct_count == 1:
+                embed.description = ('**' + correct_choice + ':** ' +
+                                     correct_answer +
                                      '\n\n**Correct!**')
             else:
-                embed.description = ('**' + correctChoice + ':** ' +
-                                     correctAnswer + '\n\n**' +
-                                     str(correctCount) +
+                embed.description = ('**' + correct_choice + ':** ' +
+                                     correct_answer + '\n\n**' +
+                                     str(correct_count) +
                                      ' correct answer(s)!**')
                 for key in answers:
-                    if answers[key] == correctChoice:
+                    if answers[key] == correct_choice:
                         embed.description += '\n' + key.name
 
             await ctx.send(embed=embed)
 
-        if len(triviaData) == 0:
+        if len(trivia_data) == 0:
             await ctx.send('No trivia questions remaining. Trivia has ended.')
 
     # Starts a game of trivia using the simpsons trivia questions
     @commands.command(aliases=['Simpsonstrivia', 'SIMPSONSTRIVIA'])
     async def simpsonstrivia(self, ctx):
-        if ctx.channel.id not in self.channelsPlaying:
+        if ctx.channel.id not in self.channels_playing:
             simpsonsYellow = discord.Colour(0xffef06)
-            await self.startTrivia(ctx, 'simpsonsTrivia.json',
-                              simpsonsYellow,
-                              'https://github.com/MitchellAW/MitchellAW.gith' +
-                              'ub.io/blob/master/images/donut-discord.gif?ra' +
-                              'w=true')
+            await self.start_trivia(ctx, 'simpsonsTrivia.json',
+                                    simpsonsYellow,
+                                    'https://github.com/MitchellAW/MitchellAW' +
+                                    '.github.io/blob/master/images/donut-disc' +
+                                    'ord.gif?raw=true')
 
     # Starts a game of trivia using the futurama trivia questions
     @commands.command(aliases=['Futuramatrivia', 'FUTURAMATRIVIA'])
     async def futuramatrivia(self, ctx):
-        if ctx.channel.id not in self.channelsPlaying:
+        if ctx.channel.id not in self.channels_playing:
             fryRed = discord.Colour(0x9b2525)
-            await self.startTrivia(ctx, 'futuramaTrivia.json', fryRed,
-                              'https://github.com/MitchellAW/MitchellAW.gith' +
-                              'ub.io/blob/master/images/planet-express-disco' +
-                              'rd.gif?raw=true')
+            await self.start_trivia(ctx, 'futuramaTrivia.json', fryRed,
+                                    'https://github.com/MitchellAW/MitchellAW' +
+                                    '.github.io/blob/master/images/planet-exp' +
+                                    'ress-discord.gif?raw=true')
 
     # Starts a game of trivia using the rick and morty trivia questions
     @commands.command(aliases=['Rickandmortytrivia', 'RICKANDMORTYTRIVIA'])
-    #@commands.cooldown(1, 3, BucketType.channel)
     async def rickandmortytrivia(self, ctx):
-        portalGif = ('https://github.com/MitchellAW/MitchellAW.github.io/blo' +
+        portal_gif = ('https://github.com/MitchellAW/MitchellAW.github.io/blo' +
                      'b/master/images/rick-morty-portal.gif?raw=true')
-        rickBlue = discord.Colour(0xaad3ea)
+        rick_blue = discord.Colour(0xaad3ea)
+
 
 def setup(bot):
     bot.add_cog(Trivia(bot))

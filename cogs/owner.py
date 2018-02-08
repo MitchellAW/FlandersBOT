@@ -6,51 +6,51 @@ from discord.ext import commands
 
 import settings.config
 
-class Owner():
 
+class Owner:
     def __init__(self, bot):
         self.bot = bot
 
     # Change the bot's avatar
     @commands.command()
     @commands.is_owner()
-    async def avatar(self, ctx, avatarUrl):
+    async def avatar(self, ctx, avatar_url):
         async with aiohttp.ClientSession() as aioClient:
-            async with aioClient.get(avatarUrl) as resp:
-                newAvatar = await resp.read()
-                await self.bot.user.edit(avatar=newAvatar)
+            async with aioClient.get(avatar_url) as resp:
+                new_avatar = await resp.read()
+                await self.bot.user.edit(avatar=new_avatar)
                 await ctx.send('Avatar changed!')
 
     # Change the bot's status/presence
     @commands.command()
     @commands.is_owner()
-    async def status(self, ctx, *, message : str):
-        newStatus = discord.Game(name=message.format(len(self.bot.guilds)),
-                          type=0)
+    async def status(self, ctx, *, message: str):
+        new_status = discord.Game(name=message.format(len(self.bot.guilds)),
+                                  type=0)
 
-        await self.bot.change_presence(game=newStatus, afk=True)
+        await self.bot.change_presence(game=new_status, afk=True)
         self.bot.statusFormat = message
 
     # Sends a list of the guilds the bot is active in - usable by the bot owner
     @commands.command()
     @commands.is_owner()
     async def serverlist(self, ctx):
-        guildList = ""
+        guild_list = ""
         for guild in self.bot.guilds:
-            guildList += (guild.name + ' : ' + str(guild.region) + ' (' +
-                          str(len(guild.members)) + ')\n')
+            guild_list += (guild.name + ' : ' + str(guild.region) + ' (' +
+                           str(len(guild.members)) + ')\n')
 
-        await ctx.author.send(guildList)
+        await ctx.author.send(guild_list)
 
     # Get the number of all the commands executed
     @commands.command()
     @commands.is_owner()
     async def commandstats(self, ctx):
-        commandCount = ''
+        command_count = ''
         for key in self.bot.commandStats:
-            commandCount += key + ': ' + str(self.bot.commandStats[key]) + '\n'
+            command_count += key + ': ' + str(self.bot.commandStats[key]) + '\n'
 
-        await ctx.send(commandCount)
+        await ctx.send(command_count)
 
     # Loads a cog (requires dot path)
     @commands.command()
@@ -109,6 +109,6 @@ class Owner():
         except asyncio.TimeoutError:
             pass
 
+
 def setup(bot):
     bot.add_cog(Owner(bot))
-

@@ -1,5 +1,4 @@
 import datetime
-import json
 
 import discord
 from discord.ext import commands
@@ -7,27 +6,27 @@ from discord.ext.commands.cooldowns import BucketType
 
 import botInfo
 import prefixes
-import settings.config
 
-class General():
+
+class General:
     def __init__(self, bot):
         self.bot = bot
 
     # Get the uptime of the bot. In a full description format by default.
-    def getUptime(self, full=True):
-        currentTime = datetime.datetime.utcnow()
-        delta = currentTime - self.bot.uptime
+    def get_uptime(self, full=True):
+        current_time = datetime.datetime.utcnow()
+        delta = current_time - self.bot.uptime
         hours, remainder = divmod(int(delta.total_seconds()), 3600)
         minutes, seconds = divmod(remainder, 60)
         days, hours = divmod(hours, 24)
 
         if full:
             return ('{} days, {} hours, {} minutes, and {} seconds'.
-                  format(days, hours, minutes, seconds))
+                    format(days, hours, minutes, seconds))
 
         else:
             return ('{}d {}h {}m {}s'.
-                  format(days, hours, minutes, seconds))
+                    format(days, hours, minutes, seconds))
 
     # Check the latency of the bot
     @commands.command(aliases=['Ping', 'PING'])
@@ -43,11 +42,11 @@ class General():
     async def info(self, ctx):
         try:
             await ctx.author.send(botInfo.botInfo + '\n***Currently active in '
-                              + str(len(self.bot.guilds)) + ' servers***')
+                                  + str(len(self.bot.guilds)) + ' servers***')
 
         except discord.Forbidden:
             await ctx.send(botInfo.botInfo + '\n***Currently active in '
-                              + str(len(self.bot.guilds)) + ' servers***')
+                           + str(len(self.bot.guilds)) + ' servers***')
 
     # Whispers a list of the bot commands, If the user has DMs disabled,
     # sends the message in the channel
@@ -63,8 +62,8 @@ class General():
     # Sends the feedback to the feedback channel of support server
     @commands.command(aliases=['Feedback', 'FEEDBACK'])
     @commands.cooldown(2, 600, BucketType.user)
-    async def feedback(self, ctx, *, message : str):
-        feedbackChannel = self.bot.get_channel(403688189627465730)
+    async def feedback(self, ctx, *, message: str):
+        feedback_channel = self.bot.get_channel(403688189627465730)
         embed = discord.Embed(title='📫 Feedback from: ' + str(ctx.author) +
                               ' (' + str(ctx.author.id) + ')',
                               colour=discord.Colour(0x44981e),
@@ -73,7 +72,7 @@ class General():
         embed.set_author(name=ctx.message.author.name,
                          icon_url=ctx.message.author.avatar_url)
 
-        await feedbackChannel.send(embed=embed)
+        await feedback_channel.send(embed=embed)
         # Thank for feedback and suggest upvote
         await ctx.send('Thanks neighbourino! 📫 The feedback has been sent ' +
                        'to my support serveroo! If you\'d like to hel-diddly' +
@@ -92,12 +91,12 @@ class General():
     @commands.command(aliases=['Prefix', 'PREFIX', 'prefixes', 'Prefixes'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def prefix(self, ctx):
-        guildPrefixes = await prefixes.prefixesFor(ctx.message.guild,
-                                                   self.bot.prefixData)
-        if len(guildPrefixes) > 5:
+        guild_prefixes = await prefixes.prefixes_for(ctx.message.guild,
+                                                     self.bot.prefix_data)
+        if len(guild_prefixes) > 5:
             await ctx.send('This servers prefixes are: `Ned`, `ned`, `diddly`' +
                            ', `doodly`,' + ' `diddly-`, `doodly-` and `' +
-                               guildPrefixes[-1] + '`.' )
+                           guild_prefixes[-1] + '`.')
 
         else:
             await ctx.send('This servers prefixes are: `Ned`, `ned`, `diddly`' +
@@ -107,64 +106,63 @@ class General():
     @commands.command(aliases=['Setprefix', 'SETPREFIX'])
     @commands.has_permissions(manage_guild=True)
     @commands.cooldown(3, 60, BucketType.guild)
-    async def setprefix(self, ctx, *, newPrefix : str=None):
-        guildIndex = prefixes.findGuild(ctx.message.guild, self.bot.prefixData)
+    async def setprefix(self, ctx, *, new_prefix: str=None):
+        guild_index = prefixes.find_guild(ctx.message.guild,
+                                          self.bot.prefix_data)
 
         # Only allow custom prefixes in guilds
         if ctx.message.guild is None:
             await ctx.send('Custom prefixes are for servers only.')
 
         # Require entering a prefix
-        if newPrefix is None:
+        if new_prefix is None:
             await ctx.send('You did not provide a new prefix.')
 
         # Limit prefix to 10 characters, may increase
-        elif len(newPrefix) > 10:
+        elif len(new_prefix) > 10:
             await ctx.send('Custom server prefix too long (Max 10 chars).')
 
-        elif self.bot.prefixData[guildIndex]['prefix'] == newPrefix:
+        elif self.bot.prefix_data[guild_index]['prefix'] == new_prefix:
             await ctx.send('This server custom prefix is already `' +
-                               newPrefix + '`.')
+                           new_prefix + '`.')
 
         # Add a new custom guild prefix if one doesn't already exist
-        elif guildIndex == -1:
-            self.bot.prefixData.append({'guildID':ctx.message.guild.id,
-                        'prefix':newPrefix})
-            prefixes.writePrefixes(self.bot.prefixData)
+        elif guild_index == -1:
+            self.bot.prefix_data.append({'guildID': ctx.message.guild.id,
+                                        'prefix': new_prefix})
+            prefixes.write_prefixes(self.bot.prefix_data)
             await ctx.send('This servers custom prefix changed to `'
-                                       + newPrefix + '`.')
+                           + new_prefix + '`.')
 
         # Otherwise, modify the current prefix to the new one
         else:
-            self.bot.prefixData[guildIndex]['prefix'] = newPrefix
-            prefixes.writePrefixes(self.bot.prefixData)
+            self.bot.prefix_data[guild_index]['prefix'] = new_prefix
+            prefixes.write_prefixes(self.bot.prefix_data)
             await ctx.send('This servers custom prefix changed to `'
-                                       + newPrefix + '`.')
+                           + new_prefix + '`.')
 
     # Display statistics for the bot
     @commands.command(aliases=['Stats', 'STATS'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def stats(self, ctx):
-
         # Get guild count
-        guildCount = len(self.bot.guilds)
+        guild_count = len(self.bot.guilds)
 
         # Count users online in guilds
-        totalMembers = 0
-        onlineUsers = 0
+        total_members = 0
+        online_users = 0
         for guild in self.bot.guilds:
-            totalMembers += len(guild.members)
+            total_members += len(guild.members)
             for member in guild.members:
                 if member.status == discord.Status.online:
-                    onlineUsers += 1
+                    online_users += 1
 
-        averageOnline = round((onlineUsers / guildCount), 2)
+        average_online = round((online_users / guild_count), 2)
 
         # Count number of commands executed
-        commandCount = 0
-        for key in self.bot.commandStats:
-            commandCount += self.bot.commandStats[key]
-
+        command_count = 0
+        for key in self.bot.command_stats:
+            command_count += self.bot.command_stats[key]
 
         # Embed statistics output
         embed = discord.Embed(colour=discord.Colour(0x44981e))
@@ -175,17 +173,17 @@ class General():
                          icon_url=self.bot.user.avatar_url)
         embed.add_field(name='Bot Owner', value='Mitch#8293',
                         inline=True)
-        embed.add_field(name='Server Count', value=str(guildCount),
+        embed.add_field(name='Server Count', value=str(guild_count),
                         inline=True)
-        embed.add_field(name='Total Members', value=str(totalMembers),
+        embed.add_field(name='Total Members', value=str(total_members),
                         inline=True)
-        embed.add_field(name='Online Users', value=str(onlineUsers),
+        embed.add_field(name='Online Users', value=str(online_users),
                         inline=True)
         embed.add_field(name='Online Users Per Server',
-                        value=str(averageOnline), inline=True)
-        embed.add_field(name='Uptime', value=self.getUptime(False),
+                        value=str(average_online), inline=True)
+        embed.add_field(name='Uptime', value=self.get_uptime(False),
                         inline=True)
-        embed.add_field(name='Commands Executed', value=str(commandCount),
+        embed.add_field(name='Commands Executed', value=str(command_count),
                         inline=True)
 
         # Post statistics
@@ -195,7 +193,7 @@ class General():
     @commands.command(aliases=['Uptime', 'UPTIME'])
     @commands.cooldown(1, 3, BucketType.user)
     async def uptime(self, ctx):
-        await ctx.send('🔌 Uptime: **' + self.getUptime() + '**')
+        await ctx.send('🔌 Uptime: **' + self.get_uptime() + '**')
 
 
 def setup(bot):
