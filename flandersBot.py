@@ -1,14 +1,15 @@
-import aiohttp
 import asyncio
-import botInfo
 import datetime
-import dbl
-import discord
 import json
+
+import aiohttp
+import discord
+from discord.ext import commands
+
+import api.dbl
+import botInfo
 import prefixes
 import settings.config
-
-from discord.ext import commands
 
 # Read the command statistics from json file
 def readCommandStats():
@@ -31,7 +32,7 @@ async def getPrefix(bot, message):
 
 # Update guild count at discordbots.org and in bots status/presence
 async def updateStatus(bot):
-    await dbl.updateGuildCount(bot)
+    await api.dbl.updateGuildCount(bot)
     status = discord.Game(name=bot.statusFormat.format(len(bot.guilds)), type=0)
     await bot.change_presence(game=status, afk=True)
 

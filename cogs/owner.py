@@ -1,9 +1,10 @@
-import aiohttp
 import asyncio
-import settings.config
-import discord
 
+import aiohttp
+import discord
 from discord.ext import commands
+
+import settings.config
 
 class Owner():
 

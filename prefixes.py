@@ -1,6 +1,7 @@
 import asyncio
-import discord
 import json
+
+import discord
 
 def readPrefixes():
     with open('cogs/data/prefixes.json', 'r') as prefixList:

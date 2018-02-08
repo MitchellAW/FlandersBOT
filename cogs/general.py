@@ -1,12 +1,13 @@
-import botInfo
-import settings.config
 import datetime
-import discord
 import json
-import prefixes
 
+import discord
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
+
+import botInfo
+import prefixes
+import settings.config
 
 class General():
     def __init__(self, bot):
