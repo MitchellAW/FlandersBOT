@@ -38,7 +38,7 @@ async def update_status(bot):
                           type=0)
     await bot.change_presence(game=status, afk=True)
 
-startupExtensions = [
+startup_extensions = [
     'cogs.general', 'cogs.simpsons', 'cogs.futurama', 'cogs.rickandmorty',
     'cogs.owner', 'cogs.trivia'
     ]
@@ -110,7 +110,7 @@ async def on_command_error(ctx, error):
 
 # Load all bot cogs
 if __name__ == "__main__":
-    for extension in startupExtensions:
+    for extension in startup_extensions:
         try:
             bot.load_extension(extension)
         except Exception as e:
