@@ -127,13 +127,11 @@ class Trivia():
 
     # Starts a game of trivia using the rick and morty trivia questions
     @commands.command(aliases=['Rickandmortytrivia', 'RICKANDMORTYTRIVIA'])
-    @commands.cooldown(1, 3, BucketType.channel)
+    #@commands.cooldown(1, 3, BucketType.channel)
     async def rickandmortytrivia(self, ctx):
         portalGif = ('https://github.com/MitchellAW/MitchellAW.github.io/blo' +
                      'b/master/images/rick-morty-portal.gif?raw=true')
-        rickBlue = disocrd.Colour(0xaad3ea)
-
-        await ctx.send('Coming soon!')
+        rickBlue = discord.Colour(0xaad3ea)
 
 def setup(bot):
     bot.add_cog(Trivia(bot))
