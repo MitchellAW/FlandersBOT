@@ -101,8 +101,8 @@ async def on_command_error(ctx, error):
                        'Slow diddly-ding-dong down. (' + str(time_left) + 's)')
 
     elif isinstance(error, commands.MissingPermissions):
-        await ctx.send('<:xmark:314349398824058880> Sorry neighbour, ' +
-                       'You don\'t have the permissions riddly-required for ' +
+        await ctx.send('<:xmark:314349398824058880> Sorry, you don\'t have ' +
+                       'the permissions riddly-required for ' +
                        'that command-aroo! ')
 
     else:
