@@ -1,7 +1,7 @@
-import aiohttp
 import asyncio
-
 from base64 import b64encode
+
+import aiohttp
 
 class CartoonAPI:
     def __init__(self, url):
