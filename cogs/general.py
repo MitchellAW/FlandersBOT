@@ -56,7 +56,7 @@ class General:
         try:
             await ctx.author.send(botInfo.commandsList)
 
-        except:
+        except discord.Forbidden:
             await ctx.send(botInfo.commandsList)
 
     # Sends the feedback to the feedback channel of support server
