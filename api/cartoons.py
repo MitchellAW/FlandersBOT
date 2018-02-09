@@ -7,20 +7,20 @@ import aiohttp
 class CartoonAPI:
     def __init__(self, url):
         self.url = url
-        self.randomUrl = self.url + 'api/random'
-        self.captionUrl = self.url + 'api/caption?e={}&t={}'
-        self.searchUrl = self.url + 'api/search?q='
-        self.imageUrl = self.url + 'meme/{}/{}.jpg?b64lines={}'
-        self.gifUrl = self.url + 'gif/{}/{}/{}.gif?b64lines={}'
+        self.random_url = self.url + 'api/random'
+        self.caption_url = self.url + 'api/caption?e={}&t={}'
+        self.search_url = self.url + 'api/search?q='
+        self.image_url = self.url + 'meme/{}/{}.jpg?b64lines={}'
+        self.gif_url = self.url + 'gif/{}/{}/{}.gif?b64lines={}'
 
     # Generates a random cartoon image/gif, with caption embedded into the
     # image/gif, chooses jpg by default
     async def get_random_cartoon(self, gif=False):
         async with aiohttp.ClientSession() as session:
-            async with session.get(self.randomUrl, timeout=30) as cartoonPage:
+            async with session.get(self.random_url, timeout=30) as cartoon_page:
 
-                if cartoonPage.status == 200:
-                    cartoon_json = await cartoonPage.json()
+                if cartoon_page.status == 200:
+                    cartoon_json = await cartoon_page.json()
 
                     episode = str(cartoon_json['Episode']['Key'])
 
@@ -36,15 +36,15 @@ class CartoonAPI:
                             end_timestamp = (cartoon_json['Subtitles'][1][
                                 'EndTimestamp'])
 
-                        return self.gifUrl.format(episode, timestamp,
-                                                  end_timestamp,
-                                                  self.encode_caption(
+                        return self.gif_url.format(episode, timestamp,
+                                                   end_timestamp,
+                                                   self.encode_caption(
                                                       cartoon_json))
 
                     else:
                         timestamp = cartoon_json['Frame']['Timestamp']
-                        return self.imageUrl.format(episode, timestamp,
-                                                    self.encode_caption(
+                        return self.image_url.format(episode, timestamp,
+                                                     self.encode_caption(
                                                         cartoon_json))
 
                 else:
@@ -54,12 +54,12 @@ class CartoonAPI:
     # uses first search result returned from messageText
     async def find_cartoon_quote(self, search_text, gif=False):
         search_text = search_text.replace(' ', '+')
-        search = self.searchUrl + search_text
+        search = self.search_url + search_text
 
         async with aiohttp.ClientSession() as session:
-            async with session.get(search, timeout=15) as cartoonSearch:
-                if cartoonSearch.status == 200:
-                    search_results = await cartoonSearch.json()
+            async with session.get(search, timeout=15) as cartoon_search:
+                if cartoon_search.status == 200:
+                    search_results = await cartoon_search.json()
 
                     if len(search_results) > 0:
                         first_result = search_results[0]
@@ -73,7 +73,7 @@ class CartoonAPI:
                 else:
                     return 'Error 404. {} may be down.'.format(self.url)
 
-            async with session.get(self.captionUrl.format(episode, timestamp),
+            async with session.get(self.caption_url.format(episode, timestamp),
                                    timeout=15) as caption:
                 if caption.status == 200:
                     cartoon_json = await caption.json()
@@ -90,15 +90,15 @@ class CartoonAPI:
                             end_timestamp = (cartoon_json['Subtitles'][1][
                                 'EndTimestamp'])
 
-                        return self.gifUrl.format(episode, timestamp,
-                                                  end_timestamp,
-                                                  self.encode_caption(
+                        return self.gif_url.format(episode, timestamp,
+                                                   end_timestamp,
+                                                   self.encode_caption(
                                                       cartoon_json))
 
                     else:
                         timestamp = cartoon_json['Frame']['Timestamp']
-                        return self.imageUrl.format(episode, timestamp,
-                                                    self.encode_caption(
+                        return self.image_url.format(episode, timestamp,
+                                                     self.encode_caption(
                                                         cartoon_json))
 
                 else:
