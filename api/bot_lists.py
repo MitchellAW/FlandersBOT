@@ -11,10 +11,11 @@ async def update_guild_count(bot, api_url, token):
     payload = {"server_count": len(bot.guilds)}
 
     async with aiohttp.ClientSession() as aio_client:
-        resp = await aio_client.post(api_url, data=payload,
-                                     json=payload, headers=headers)
-        print(await resp.text())
+        if 'bots.discord.pw' in api_url:
+            await aio_client.post(api_url, json=payload, headers=headers)
 
+        else:
+            await aio_client.post(api_url, data=payload, headers=headers)
 
 # Get a list of user IDs who have upvoted FlandersBOT
 async def get_upvoters():
