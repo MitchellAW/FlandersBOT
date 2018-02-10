@@ -81,7 +81,8 @@ class Trivia:
                                      correct_answer +
                                      '\n\n⛔ **No answers given! Trivia has ' +
                                      'ended.**')
-                self.channels_playing.remove(ctx.channel.id)
+                if ctx.channel.id in self.channels_playing:
+                    self.channels_playing.remove(ctx.channel.id)
                 still_playing = False
 
             elif len(answers) > 0 and correct_count == 0:
