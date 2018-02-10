@@ -19,7 +19,7 @@ If you like FlandersBOT, help the bot grow by upvoting it below!
 ## Usage
 The bot commands can be executed using several different methods/prefixes, to minimise clashing with other discord bots. Any command can be prefixed with an @mention, ned or diddly/doodly when you really want to flaunt those Flanders-isms.
 
-If you're not a fan of any of these prefixes, you can add a new prefix to your server using the setprefix command.
+If you're not a fan of any of these prefixes, you can add a new prefix to your server using the setprefix command. (Requires Manage Server Pemissions)
 
 **Usage Examples:**
 
@@ -60,7 +60,7 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
     </tr>
     <tr>
       <td><b>setprefix [prefix]</b></td>
-      <td>Sets a prefix FlandersBOT will respond to on your server.</td>
+      <td>Sets a prefix FlandersBOT will respond to on your server. (Manage Server Pemissions)</td>
     </tr>
     <tr>
       <td><b>feedback</b></td>
