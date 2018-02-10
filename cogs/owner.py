@@ -37,8 +37,8 @@ class Owner:
     @commands.is_owner()
     async def commandstats(self, ctx):
         command_count = ''
-        for key in self.bot.commandStats:
-            command_count += (key + ': ' + str(self.bot.commandtats[key]) +
+        for key in self.bot.command_stats:
+            command_count += (key + ': ' + str(self.bot.command_stats[key]) +
                               '\n')
 
         await ctx.send(command_count)
