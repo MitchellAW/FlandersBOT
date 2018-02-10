@@ -146,7 +146,7 @@ class Trivia:
                            'permissions uses the forcestop command.')
 
     @commands.command(aliases=['Forcestop', 'FORCESTOP', 'ForceStop'])
-    @commands.has_permissions(manage_guil=True)
+    @commands.has_permissions(manage_guild=True)
     async def forcestop(self, ctx):
         if ctx.channel.id in self.channels_playing:
             self.channels_playing.remove(ctx.channel.id)
