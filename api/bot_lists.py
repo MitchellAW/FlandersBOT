@@ -3,14 +3,16 @@ import aiohttp
 import settings.config
 
 
-# Post guild count to update count at https://discordbots.org/
+# Post guild count to update count for either discordbots.org or bots.discord.pw
 async def update_guild_count(bot, api_url, token):
-    api_url = api_url + 'api/bots/' + str(bot.user.id) + '/stats'
+    api_url += 'api/bots/' + str(bot.user.id) + '/stats'
+    print(api_url)
     headers = {"Authorization": token}
     payload = {"server_count": len(bot.guilds)}
 
     async with aiohttp.ClientSession() as aio_client:
-        await aio_client.post(api_url, data=payload, headers=headers)
+        resp = await aio_client.post(api_url, data=payload, headers=headers)
+        print(str(resp))
 
 
 # Get a list of user IDs who have upvoted FlandersBOT
