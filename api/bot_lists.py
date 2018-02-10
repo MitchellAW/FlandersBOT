@@ -4,19 +4,19 @@ import settings.config
 
 
 # Post guild count to update count at https://discordbots.org/
-async def update_guild_count(bot):
-    db_url = "https://discordbots.org/api/bots/" + str(bot.user.id) + "/stats"
-    db_headers = {"Authorization" : settings.config.DBTOKEN}
-    db_payload = {"server_count": len(bot.guilds)}
+async def update_guild_count(bot, api_url, token):
+    api_url = api_url + 'api/bots/' + str(bot.user.id) + '/stats'
+    headers = {"Authorization": token}
+    payload = {"server_count": len(bot.guilds)}
 
     async with aiohttp.ClientSession() as aio_client:
-        await aio_client.post(db_url, data=db_payload, headers=db_headers)
+        await aio_client.post(api_url, data=payload, headers=headers)
 
 
 # Get a list of user IDs who have upvoted FlandersBOT
 async def get_upvoters():
     async with aiohttp.ClientSession() as aio_client:
-        db_headers = {"Authorization" : settings.config.DBTOKEN}
+        db_headers = {"Authorization" : settings.config.DB_TOKEN}
         resp = await aio_client.get('https://discordbots.org/api/bots/2216096' +
                                     '83562135553/votes?onlyids=true',
                                     headers=db_headers)

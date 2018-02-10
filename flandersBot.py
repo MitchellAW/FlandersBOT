@@ -4,7 +4,7 @@ import json
 import discord
 from discord.ext import commands
 
-import api.dbl
+import api.bot_lists
 import prefixes
 import settings.config
 
@@ -33,7 +33,10 @@ async def get_prefix(bot, message):
 
 # Update guild count at https://discordbots.org and in bots status/presence
 async def update_status(bot):
-    await api.dbl.update_guild_count(bot)
+    await api.bot_lists.update_guild_count(bot, 'https://bots.discord.pw/',
+                                           settings.config.BD_TOKEN)
+    await api.bot_lists.update_guild_count(bot, 'https://discordbots.org/',
+                                           settings.config.DB_TOKEN)
     status = discord.Game(name=bot.status_format.format(len(bot.guilds)),
                           type=0)
     await bot.change_presence(game=status, afk=True)
@@ -100,10 +103,11 @@ async def on_command_error(ctx, error):
         await ctx.send(':hourglass: Command on cooldown. ' +
                        'Slow diddly-ding-dong down. (' + str(time_left) + 's)')
 
-    elif isinstance(error, commands.MissingPermissions):
-        await ctx.send('<:xmark:314349398824058880> Sorry, you don\'t have ' +
-                       'the permissions riddly-required for ' +
-                       'that command-aroo! ')
+    elif isinstance(error, commands.MissingPermissions) and \
+            ctx.command.qualified_name is not 'forcestop':
+            await ctx.send('<:xmark:411718670482407424> Sorry, you don\'t have '
+                           'the permissions riddly-required for ' +
+                           'that command-aroo! ')
 
     else:
         print(error)
