@@ -141,7 +141,7 @@ class Trivia:
     @commands.cooldown(1, 3, BucketType.channel)
     async def stop(self, ctx):
         if ctx.channel.id in self.channels_playing:
-            ctx.send('The game of trivia will end once nobody answers a '
+            await ctx.send('The game of trivia will end once nobody answers a '
                      'question.')
 
 
