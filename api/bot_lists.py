@@ -12,7 +12,7 @@ async def update_guild_count(bot, api_url, token):
 
     async with aiohttp.ClientSession() as aio_client:
         resp = await aio_client.post(api_url, data=payload, headers=headers)
-        print(str(resp))
+        print(await resp.text())
 
 
 # Get a list of user IDs who have upvoted FlandersBOT
