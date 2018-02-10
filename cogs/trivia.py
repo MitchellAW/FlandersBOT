@@ -5,6 +5,7 @@ import time
 
 import discord
 from discord.ext import commands
+from discord.ext.commands import BucketType
 
 
 class Trivia:
@@ -133,6 +134,15 @@ class Trivia:
         portal_gif = ('https://github.com/MitchellAW/MitchellAW.github.io/blo' +
                       'b/master/images/rick-morty-portal.gif?raw=true')
         rick_blue = discord.Colour(0xaad3ea)
+
+    # Provide an explanation for how trivia games end for users trying to use
+    # a stop command
+    @commands.command(aliases=['Stop', 'STOP'])
+    @commands.cooldown(1, 3, BucketType.channel)
+    async def stop(self, ctx):
+        if ctx.channel.id in self.channels_playing:
+            ctx.send('The game of trivia will end once nobody answers a '
+                     'question.')
 
 
 def setup(bot):
