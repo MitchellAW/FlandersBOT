@@ -1,7 +1,7 @@
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
-import api.dbl
+import api.bot_lists
 from api.cartoons import CartoonAPI
 
 
@@ -12,7 +12,7 @@ class RickAndMorty:
 
     # Generate the gif and send it once the generation completes
     async def send_gif(self, ctx, gif_url):
-        upvoters = await api.dbl.get_upvoters()
+        upvoters = await api.bot_lists.get_upvoters()
         if str(ctx.message.author.id) in upvoters:
             sent = await ctx.send('Generating... <a:loading:410316176510418955>')
             generated_url = await self.masterOfAllScience.generate_gif(gif_url)

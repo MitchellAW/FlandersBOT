@@ -85,7 +85,7 @@ class Owner:
         # myself from shutting wrong bot down.
         def check(message):
             return (message.content == self.bot.user.name[:4] and
-                    message.author.id == settings.config.OWNERID)
+                    message.author.id == settings.config.OWNER_ID)
 
         try:
             await ctx.send('Respond ' + self.bot.user.name[:4] +

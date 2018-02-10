@@ -141,8 +141,16 @@ class Trivia:
     @commands.cooldown(1, 3, BucketType.channel)
     async def stop(self, ctx):
         if ctx.channel.id in self.channels_playing:
-            await ctx.send('The game of trivia will end once nobody answers a '
-                     'question.')
+            await ctx.send('The game of trivia will end once nobody answers a' +
+                           ' question or a member with manage server ' +
+                           'permissions uses the forcestop command.')
+
+    @commands.command(aliases=['Forcestop', 'FORCESTOP', 'ForceStop'])
+    @commands.has_permissions(manage_guil=True)
+    async def forcestop(self, ctx):
+        if ctx.channel.id in self.channels_playing:
+            self.channels_playing.remove(ctx.channel.id)
+            await ctx.send('Trivia has ended')
 
 
 def setup(bot):
