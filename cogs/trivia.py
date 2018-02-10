@@ -145,6 +145,7 @@ class Trivia:
                            ' question or a member with manage server ' +
                            'permissions uses the forcestop command.')
 
+    # Allow users with manage server permissions to force trivia games to stop
     @commands.command(aliases=['Forcestop', 'FORCESTOP', 'ForceStop'])
     @commands.has_permissions(manage_guild=True)
     async def forcestop(self, ctx):
