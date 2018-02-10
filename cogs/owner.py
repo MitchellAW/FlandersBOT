@@ -30,17 +30,7 @@ class Owner:
 
         await self.bot.change_presence(game=new_status, afk=True)
         self.bot.statusFormat = message
-
-    # Sends a list of the guilds the bot is active in - usable by the bot owner
-    @commands.command()
-    @commands.is_owner()
-    async def serverlist(self, ctx):
-        guild_list = ""
-        for guild in self.bot.guilds:
-            guild_list += (guild.name + ' : ' + str(guild.region) + ' (' +
-                           str(len(guild.members)) + ')\n')
-
-        await ctx.author.send(guild_list)
+        await ctx.send('Status changed!')
 
     # Get the number of all the commands executed
     @commands.command()
@@ -48,7 +38,8 @@ class Owner:
     async def commandstats(self, ctx):
         command_count = ''
         for key in self.bot.commandStats:
-            command_count += key + ': ' + str(self.bot.commandStats[key]) + '\n'
+            command_count += (key + ': ' + str(self.bot.commandtats[key]) +
+                              '\n')
 
         await ctx.send(command_count)
 
