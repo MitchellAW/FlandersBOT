@@ -101,7 +101,8 @@ async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown):
         time_left = round(error.retry_after, 2)
         await ctx.send(':hourglass: Command on cooldown. ' +
-                       'Slow diddly-ding-dong down. (' + str(time_left) + 's)')
+                       'Slow diddly-ding-dong down. (' + str(time_left) + 's)',
+                       delete_after=error.retry_after)
 
     elif isinstance(error, commands.MissingPermissions) and \
             ctx.command.qualified_name is not 'forcestop':
