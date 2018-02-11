@@ -21,7 +21,8 @@ class RickAndMorty:
         else:
             await ctx.send(gif_url)
 
-    @commands.command(aliases=['Rickandmorty', 'RICKANDMORTY'])
+    @commands.command(aliases=['Rickandmorty', 'RickAndMorty', 'RICKANDMORTY',
+                               'ram', 'Ram', 'RAM'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def rickandmorty(self, ctx, *, message: str=None):
         if message is None:
@@ -36,7 +37,9 @@ class RickAndMorty:
                 await self.send_gif(ctx, gif_url)
 
     # Messages a random simpsons quote with accomanying gif
-    @commands.command(aliases=['Rickandmortygif', 'RICKANDMORTYGIF'])
+    @commands.command(aliases=['Rickandmortygif', 'RickAndMortyGif',
+                               'RICKANDMORTYGIF', 'ramgif',
+                               'Ramgif', 'RamGif', 'RAMGIF'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def rickandmortygif(self, ctx):
         gif_url = await self.masterOfAllScience.get_random_cartoon(True)
