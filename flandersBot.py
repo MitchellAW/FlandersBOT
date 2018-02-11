@@ -43,7 +43,7 @@ async def update_status(bot):
 
 startup_extensions = [
     'cogs.general', 'cogs.simpsons', 'cogs.futurama', 'cogs.rickandmorty',
-    'cogs.owner', 'cogs.trivia'
+    'cogs.thirtyrock', 'cogs.westwing', 'cogs.owner', 'cogs.trivia'
     ]
 
 bot = commands.Bot(command_prefix=get_prefix)
