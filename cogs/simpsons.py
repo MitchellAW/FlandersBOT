@@ -36,7 +36,7 @@ class Simpsons:
                 await self.send_gif(ctx, gif_url)
 
     # Messages a random simpsons quote with accomanying gif
-    @commands.command(aliases=['Simpsonsgif', 'SIMPSONSGIF'])
+    @commands.command(aliases=['Simpsonsgif', 'SimpsonsGif', 'SIMPSONSGIF'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def simpsonsgif(self, ctx):
         gif_url = await self.frinkiac.get_random_cartoon(True)
