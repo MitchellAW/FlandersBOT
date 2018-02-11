@@ -28,4 +28,5 @@ async def get_upvoters():
             upvoters = await resp.json()
             return upvoters
 
-    return []
+        else:
+            return []
