@@ -80,6 +80,7 @@ class General:
 
     # Message the benefits of voting and provide link to upvote at
     @commands.command(aliases=['Vote', 'VOTE', 'upvote', 'Upvote', 'UPVOTE'])
+    @commands.cooldown(1, 3, BucketType.user)
     async def vote(self, ctx):
         await ctx.send('If you vote for me using the link below, it will '
                        'hel-diddly-elp me grow in popularity, and as a thanks, '
@@ -89,21 +90,23 @@ class General:
 
     # DM user with an invite link for the bot
     @commands.command(aliases=['Invite', 'INVITE'])
+    @commands.cooldown(1, 3, BucketType.user)
     async def invite(self, ctx):
         try:
             await ctx.author.send('You can add me to your own server using '
                                   'the link below:\n'
-                                  'https://discordapp.com/oauth2/authorize?'
+                                  '<https://discordapp.com/oauth2/authorize?'
                                   'client_id=221609683562135553&scope=bot&'
-                                  'permissions=19456')
+                                  'permissions=19456>')
 
         except discord.Forbidden:
             ctx.send('You can add me to your own server using the link below:\n'
-                     'https://discordapp.com/oauth2/authorize?client_id='
-                     '221609683562135553&scope=bot&permissions=19456')
+                     '<https://discordapp.com/oauth2/authorize?client_id='
+                     '221609683562135553&scope=bot&permissions=19456>')
 
     # Display information regarding the last update
     @commands.command(aliases=['Update', 'UPDATE'])
+    @commands.cooldown(1, 3, BucketType.user)
     async def update(self, ctx):
         await ctx.send('**Ever had trouble with gifs not always '
                        'diddly-ding-dong displaying in discord?**\nWell now '
