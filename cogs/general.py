@@ -76,9 +76,41 @@ class General:
         # Thank for feedback and suggest upvote
         await ctx.send('Thanks neighbourino! 📫 The feedback has been sent ' +
                        'to my support serveroo! If you\'d like to hel-diddly' +
-                       '-elp me grow in popularity, please upvote me at the ' +
-                       'link below!\n <https://discordbots.org/bot/221609683' +
-                       '562135553>')
+                       '-elp me grow in popularity, try `ned upvote`')
+
+    # Message the benefits of upvoting and provide link to upvote at
+    @commands.command(aliases=['Upvote', 'UPVOTE'])
+    async def upvote(self, ctx):
+        await ctx.send('If you upvote me at the link below, it will '
+                       'hel-diddly-elp me grow in popularity, and as a thanks, '
+                       'I will generate all gifs for you, so they will '
+                       'embed-diddly-ed more often!\n'
+                       '<https://discordbots.org/bot/221609683562135553>')
+
+    # DM user with an invite link for the bot
+    @commands.command(aliases=['Invite', 'INVITE'])
+    async def invite(self, ctx):
+        try:
+            await ctx.author.send('You can add me to your own server using '
+                                  'the link below:\n'
+                                  'https://discordapp.com/oauth2/authorize?'
+                                  'client_id=221609683562135553&scope=bot&'
+                                  'permissions=19456')
+
+        except discord.Forbidden:
+            ctx.send('You can add me to your own server using the link below:\n'
+                     'https://discordapp.com/oauth2/authorize?client_id='
+                     '221609683562135553&scope=bot&permissions=19456')
+
+    # Display information regarding the last update
+    @commands.command(aliases=['Update', 'UPDATE'])
+    async def update(self, ctx):
+        await ctx.send('**Ever had trouble with gifs not always '
+                       'diddly-ding-dong displaying in discord?**\nWell now '
+                       'if you upvote me at the link below, I will generate '
+                       'all gifs for you, so that they will embed-diddly-ed '
+                       'more often!\n'
+                       '<https://discordbots.org/bot/221609683562135553>')
 
     # Allow administrators to make ned leave the server
     @commands.command(aliases=['Leave', 'LEAVE'])
