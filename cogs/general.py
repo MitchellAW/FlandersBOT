@@ -73,19 +73,19 @@ class General:
                          icon_url=ctx.message.author.avatar_url)
 
         await feedback_channel.send(embed=embed)
-        # Thank for feedback and suggest upvote
+        # Thank for feedback and suggest vote
         await ctx.send('Thanks neighbourino! 📫 The feedback has been sent ' +
                        'to my support serveroo! If you\'d like to hel-diddly' +
-                       '-elp me grow in popularity, try `ned upvote`')
+                       '-elp me grow in popularity, try `ned vote`')
 
-    # Message the benefits of upvoting and provide link to upvote at
-    @commands.command(aliases=['Upvote', 'UPVOTE'])
-    async def upvote(self, ctx):
-        await ctx.send('If you upvote me at the link below, it will '
+    # Message the benefits of voting and provide link to upvote at
+    @commands.command(aliases=['Vote', 'VOTE', 'upvote', 'Upvote', 'UPVOTE'])
+    async def vote(self, ctx):
+        await ctx.send('If you vote for me using the link below, it will '
                        'hel-diddly-elp me grow in popularity, and as a thanks, '
                        'I will generate all gifs for you, so they will '
                        'embed-diddly-ed more often!\n'
-                       '<https://discordbots.org/bot/221609683562135553>')
+                       '<https://discordbots.org/bot/221609683562135553/vote>')
 
     # DM user with an invite link for the bot
     @commands.command(aliases=['Invite', 'INVITE'])
@@ -107,10 +107,10 @@ class General:
     async def update(self, ctx):
         await ctx.send('**Ever had trouble with gifs not always '
                        'diddly-ding-dong displaying in discord?**\nWell now '
-                       'if you upvote me at the link below, I will generate '
-                       'all gifs for you, so that they will embed-diddly-ed '
-                       'more often!\n'
-                       '<https://discordbots.org/bot/221609683562135553>')
+                       'if you vote for me using the link below, I will '
+                       'generate all gifs for you, so that they will  '
+                       'embed-diddly-ed more often!\n'
+                       '<https://discordbots.org/bot/221609683562135553/vote>')
 
     # Allow administrators to make ned leave the server
     @commands.command(aliases=['Leave', 'LEAVE'])
