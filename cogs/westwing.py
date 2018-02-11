@@ -35,7 +35,7 @@ class WestWing:
             else:
                 await self.send_gif(ctx, gif_url)
 
-    # Messages a random simpsons quote with accomanying gif
+    # Messages a random west wing quote with accomanying gif
     @commands.command(aliases=['Westwinggif', 'WestWingGif', 'WESTWINGGIF'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def westwinggif(self, ctx):

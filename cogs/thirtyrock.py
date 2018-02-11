@@ -35,7 +35,7 @@ class ThirtyRock:
             else:
                 await self.send_gif(ctx, gif_url)
 
-    # Messages a random simpsons quote with accomanying gif
+    # Messages a random 30 rock quote with accomanying gif
     @commands.command(aliases=['30rockgif', '30RockGif', '30ROCKGIF'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def thirtyrockgif(self, ctx):
