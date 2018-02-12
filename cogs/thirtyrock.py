@@ -12,14 +12,9 @@ class ThirtyRock:
 
     # Generate the gif and send it once the generation completes
     async def send_gif(self, ctx, gif_url):
-        upvoters = await api.bot_lists.get_upvoters()
-        if str(ctx.message.author.id) in upvoters:
-            sent = await ctx.send('Generating... <a:loading:410316176510418955>')
-            generated_url = await self.thirty_rock.generate_gif(gif_url)
-            await sent.edit(content=generated_url)
-
-        else:
-            await ctx.send(gif_url)
+        sent = await ctx.send('Generating... <a:loading:410316176510418955>')
+        generated_url = await self.thirty_rock.generate_gif(gif_url)
+        await sent.edit(content=generated_url)
 
     @commands.command(aliases=['30rock', '30Rock', '30ROCK'])
     @commands.cooldown(1, 3, BucketType.channel)

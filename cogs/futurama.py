@@ -11,15 +11,10 @@ class Futurama:
         self.morbotron = CartoonAPI('https://morbotron.com/')
 
     # Generate the gif and send it once the generation completes
-    async def send_gif(self, ctx, gifUrl):
-        upvoters = await api.bot_lists.get_upvoters()
-        if str(ctx.message.author.id) in upvoters:
-            sent = await ctx.send('Generating... <a:loading:410316176510418955>')
-            generated_url = await self.morbotron.generate_gif(gifUrl)
-            await sent.edit(content=generated_url)
-
-        else:
-            await ctx.send(gifUrl)
+    async def send_gif(self, ctx, gif_url):
+        sent = await ctx.send('Generating... <a:loading:410316176510418955>')
+        generated_url = await self.morbotron.generate_gif(gif_url)
+        await sent.edit(content=generated_url)
 
     @commands.command(aliases=['Futurama', 'FUTURAMA'])
     @commands.cooldown(1, 3, BucketType.channel)

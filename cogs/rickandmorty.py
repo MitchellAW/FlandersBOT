@@ -12,14 +12,9 @@ class RickAndMorty:
 
     # Generate the gif and send it once the generation completes
     async def send_gif(self, ctx, gif_url):
-        upvoters = await api.bot_lists.get_upvoters()
-        if str(ctx.message.author.id) in upvoters:
-            sent = await ctx.send('Generating... <a:loading:410316176510418955>')
-            generated_url = await self.masterOfAllScience.generate_gif(gif_url)
-            await sent.edit(content=generated_url)
-
-        else:
-            await ctx.send(gif_url)
+        sent = await ctx.send('Generating... <a:loading:410316176510418955>')
+        generated_url = await self.masterOfAllScience.generate_gif(gif_url)
+        await sent.edit(content=generated_url)
 
     @commands.command(aliases=['Rickandmorty', 'RickAndMorty', 'RICKANDMORTY',
                                'ram', 'Ram', 'RAM'])
@@ -29,7 +24,8 @@ class RickAndMorty:
             await ctx.send(await self.masterOfAllScience.get_random_cartoon())
 
         else:
-            gif_url = await self.masterOfAllScience.find_cartoon_quote(message, True)
+            gif_url = await self.masterOfAllScience.find_cartoon_quote(message,
+                                                                       True)
             if 'https://' not in gif_url:
                 await ctx.send(gif_url)
 
