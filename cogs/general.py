@@ -109,7 +109,7 @@ class General:
         await ctx.send('**Ever had trouble with my gifs not always '
                        'diddly-ding-dong displaying in discord?**\nWell now '
                        'I will generate all my gifs for you, so that they '
-                       'will embed-diddly-ed more often!\nIf you experience any'
+                       'will embed-diddly-ed more often! If you experience any'
                        ' issues with this, please use `ned feedback [feedback '
                        'here]`')
 
