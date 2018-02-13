@@ -29,7 +29,7 @@ class Owner:
                                   type=0)
 
         await self.bot.change_presence(game=new_status, afk=True)
-        self.bot.statusFormat = message
+        self.bot.status_format = message
         await ctx.send('Status changed!')
 
     # Get the number of all the commands executed
