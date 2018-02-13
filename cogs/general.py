@@ -83,9 +83,7 @@ class General:
     @commands.cooldown(1, 3, BucketType.user)
     async def vote(self, ctx):
         await ctx.send('If you vote for me using the link below, it will '
-                       'hel-diddly-elp me grow in popularity, and as a thanks, '
-                       'I will generate all gifs for you, so they will '
-                       'embed-diddly-ed more often!\n'
+                       'hel-diddly-elp me grow in popularity!\n'
                        '<https://discordbots.org/bot/221609683562135553/vote>')
 
     # DM user with an invite link for the bot
@@ -110,10 +108,10 @@ class General:
     async def update(self, ctx):
         await ctx.send('**Ever had trouble with gifs not always '
                        'diddly-ding-dong displaying in discord?**\nWell now '
-                       'if you vote for me using the link below, I will '
-                       'generate all gifs for you, so that they will  '
-                       'embed-diddly-ed more often!\n'
-                       '<https://discordbots.org/bot/221609683562135553/vote>')
+                       'I will generate all gifs for you, so that they will  '
+                       'embed-diddly-ed more often!\nIf you experience any '
+                       'issues with this, please use `ned feedback [feedback '
+                       'here]`')
 
     # Allow administrators to make ned leave the server
     @commands.command(aliases=['Leave', 'LEAVE'])

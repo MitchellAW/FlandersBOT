@@ -41,9 +41,6 @@ __**COMMANDS**__
 **rickandmortygif** - Will post a random Rick and Morty gif with caption.
 
 **For Example:** `ned info`, `diddly help`, `doodly-simpsons`
-
-**Having trouble with gifs not always diddly-ding-dong-displaying in discord?**
-Try using `ned vote` for some help!
 '''
 
 botInfo = ('''Hi-diddly-ho, neighborino! I hear you wanted some 
@@ -61,9 +58,5 @@ Invite URL: <https://discordapp.com/oauth2/authorize?client_id
 =221609683562135553&scope=bot&permissions=19456>
 GitHub Source: <https://github.com/MitchellAW/FlandersBOT>
 
-**Having trouble with gifs not always diddly-ding-dong-displaying in discord?**
-If you vote for me using the link below, it will hel-diddly-elp me grow in 
-popularity, and as a thanks, I will generate all gifs for you, so they will 
-embed-diddly-ed more often!
-<https://discordbots.org/bot/221609683562135553/vote>
+If you'd like to hel-diddly-elp me grow in popularity, use `ned vote`
 ''')
