@@ -94,13 +94,13 @@ class General:
             await ctx.author.send('You can add me to your own server using '
                                   'the link below:\n'
                                   '<https://discordapp.com/oauth2/authorize?'
-                                  'client_id=221609683562135553&scope=bot&'
-                                  'permissions=19456>')
+                                  'client_id=' + str(self.bot.user.id) +
+                                  '&scope=bot&permissions=19456>')
 
         except discord.Forbidden:
             ctx.send('You can add me to your own server using the link below:\n'
-                     '<https://discordapp.com/oauth2/authorize?client_id='
-                     '221609683562135553&scope=bot&permissions=19456>')
+                     '<https://discordapp.com/oauth2/authorize?client_id=' +
+                     str(self.bot.user.id) + '&scope=bot&permissions=19456>')
 
     # Display information regarding the last update
     @commands.command(aliases=['Update', 'UPDATE'])
@@ -124,7 +124,7 @@ class General:
     @commands.command(aliases=['Prefix', 'PREFIX', 'prefixes', 'Prefixes'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def prefix(self, ctx):
-        guild_prefixes = await prefixes.prefixes_for(ctx.message.guild,
+        guild_prefixes = prefixes.prefixes_for(ctx.message.guild,
                                                      self.bot.prefix_data)
         if len(guild_prefixes) > 5:
             await ctx.send('This servers prefixes are: `Ned`, `ned`, `diddly`' +

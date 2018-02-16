@@ -9,117 +9,111 @@ import prefixes
 import settings.config
 
 
-# Read the command statistics from json file
-def read_command_stats():
-    with open('cogs/data/commandStats.json', 'r') as command_counter:
-        command_stats = json.load(command_counter)
-        command_counter.close()
-
-    return command_stats
-
-
-# Dump the command statistics to json file
-def write_command_stats(command_stats):
-    with open('cogs/data/commandStats.json', 'w') as command_counter:
-        json.dump(command_stats, command_counter, indent=4)
-        command_counter.close()
-
-
 # Get the prefixes for the bot
-async def get_prefix(bot, message):
-    extras = await prefixes.prefixes_for(message.guild, bot.prefix_data)
+def get_prefix(bot, message):
+    extras = prefixes.prefixes_for(message.guild, bot.prefix_data)
     return commands.when_mentioned_or(*extras)(bot, message)
 
-
-# Update guild count at https://discordbots.org and in bots status/presence
-async def update_status(bot):
-    await api.bot_lists.update_guild_count(bot, 'https://bots.discord.pw/',
-                                           settings.config.BD_TOKEN)
-    await api.bot_lists.update_guild_count(bot, 'https://discordbots.org/',
-                                           settings.config.DB_TOKEN)
-    status = discord.Game(name=bot.status_format.format(len(bot.guilds)),
-                          type=0)
-    await bot.change_presence(game=status, afk=False)
 
 startup_extensions = [
     'cogs.general', 'cogs.simpsons', 'cogs.futurama', 'cogs.rickandmorty',
     'cogs.thirtyrock', 'cogs.westwing', 'cogs.owner', 'cogs.trivia'
     ]
 
-bot = commands.Bot(command_prefix=get_prefix)
-bot.remove_command('help')
-bot.command_stats = read_command_stats()
-bot.status_format = 'Ned help | {} Servers'
-bot.prefix_data = prefixes.read_prefixes()
+
+class FlandersBOT(commands.Bot):
+    def __init__(self):
+        super().__init__(command_prefix=get_prefix)
+
+        self.remove_command('help')
+        self.command_stats = self.read_command_stats()
+        self.status_format = 'Ned help | {} Servers'
+        self.prefix_data = prefixes.read_prefixes()
+        self.uptime = datetime.datetime.utcnow()
+
+        for extension in startup_extensions:
+            try:
+                self.load_extension(extension)
+            except Exception as e:
+                exc = '{}: {}'.format(type(e).__name__, e)
+                print('Failed to load extension {}\n{}'.format(extension, exc))
+
+    # Print bot information once bot has started
+    async def on_ready(self):
+        print('Username: ' + str(self.user.name))
+        print('Client ID: ' + str(self.user.id))
+        await self.update_status()
+        if not hasattr(self, 'uptime'):
+            self.uptime = datetime.datetime.utcnow()
+
+    # Update guild count on join
+    async def on_guild_join(self, guild):
+        await self.update_status()
+
+    # Update guild count on leave
+    async def on_guild_remove(self, guild):
+        await self.update_status()
+
+    # Prevent bot from replying to other bots
+    async def on_message(self, message):
+        if not message.author.bot:
+            ctx = await self.get_context(message)
+            await self.invoke(ctx)
+
+    # Track number of command executed
+    async def on_command(self, ctx):
+        command = ctx.command.qualified_name
+        if command in self.command_stats:
+            self.command_stats[command] += 1
+
+        else:
+            self.command_stats[command] = 1
+
+        self.write_command_stats(self.command_stats)
+
+    # Commands error handler, only handles cooldowns at the moment
+    async def on_command_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            time_left = round(error.retry_after, 2)
+            await ctx.send(':hourglass: Command on cooldown. Slow '
+                           'diddly-ding-dong down. (' + str(time_left) + 's)',
+                           delete_after=max(error.retry_after, 1))
+
+        elif isinstance(error, commands.MissingPermissions) and \
+                ctx.command.qualified_name is not 'forcestop':
+                await ctx.send('<:xmark:411718670482407424> Sorry, '
+                               'you don\'t have the permissions '
+                               'riddly-required for that command-aroo! ')
+
+        else:
+            print(error)
+
+    # Update guild count at https://discordbots.org and in bots status/presence
+    async def update_status(self):
+        await api.bot_lists.update_guild_count(self, 'https://bots.discord.pw/',
+                                               settings.config.BD_TOKEN)
+        await api.bot_lists.update_guild_count(self, 'https://discordbots.org/',
+                                               settings.config.DB_TOKEN)
+        status = discord.Game(name=self.status_format.format(len(self.guilds)),
+                              type=0)
+        await self.change_presence(game=status, afk=False)
+
+    # Read the command statistics from json file
+    @staticmethod
+    def read_command_stats():
+        with open('cogs/data/commandStats.json', 'r') as command_counter:
+            command_stats = json.load(command_counter)
+            command_counter.close()
+
+        return command_stats
+
+    # Dump the command statistics to json file
+    @staticmethod
+    def write_command_stats(command_stats):
+        with open('cogs/data/commandStats.json', 'w') as command_counter:
+            json.dump(command_stats, command_counter, indent=4)
+            command_counter.close()
 
 
-# Print bot information once bot has started
-@bot.event
-async def on_ready():
-    print('Username: ' + str(bot.user.name))
-    print('Client ID: ' + str(bot.user.id))
-    bot.uptime = datetime.datetime.utcnow()
-    await update_status(bot)
-
-
-# Update guild count on join
-@bot.event
-async def on_guild_join(guild):
-    await update_status(bot)
-
-
-# Update guild count on leave
-@bot.event
-async def on_guild_remove(guild):
-    await update_status(bot)
-
-
-# Prevent bot from replying to other bots
-@bot.event
-async def on_message(message):
-    if not message.author.bot:
-        ctx = await bot.get_context(message)
-        await bot.invoke(ctx)
-
-
-# Track number of command executed
-@bot.event
-async def on_command(ctx):
-    command = ctx.command.qualified_name
-    if command in bot.command_stats:
-        bot.command_stats[command] += 1
-
-    else:
-        bot.command_stats[command] = 1
-
-    write_command_stats(bot.command_stats)
-
-
-# Commands error handler, only handles cooldowns at the moment
-@bot.event
-async def on_command_error(ctx, error):
-    if isinstance(error, commands.CommandOnCooldown):
-        time_left = round(error.retry_after, 2)
-        await ctx.send(':hourglass: Command on cooldown. ' +
-                       'Slow diddly-ding-dong down. (' + str(time_left) + 's)',
-                       delete_after=max(error.retry_after, 1))
-
-    elif isinstance(error, commands.MissingPermissions) and \
-            ctx.command.qualified_name is not 'forcestop':
-            await ctx.send('<:xmark:411718670482407424> Sorry, you don\'t have '
-                           'the permissions riddly-required for ' +
-                           'that command-aroo! ')
-
-    else:
-        print(error)
-
-# Load all bot cogs
-if __name__ == "__main__":
-    for extension in startup_extensions:
-        try:
-            bot.load_extension(extension)
-        except Exception as e:
-            exc = '{}: {}'.format(type(e).__name__, e)
-            print('Failed to load extension {}\n{}'.format(extension, exc))
-
-    bot.run(settings.config.TOKEN)
+bot = FlandersBOT()
+bot.run(settings.config.TOKEN)

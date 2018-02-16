@@ -30,7 +30,7 @@ def find_guild(guild, prefix_data):
 
 
 # Get all the prefixes the guild can use
-async def prefixes_for(guild, prefix_data):
+def prefixes_for(guild, prefix_data):
     guild_index = find_guild(guild, prefix_data)
     if guild_index == -1:
         return [
