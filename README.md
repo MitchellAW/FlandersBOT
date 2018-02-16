@@ -14,8 +14,6 @@ To invite FlandersBOT to your own discord server and start using it now, [click 
 
 Thanks to https://discordbots.org/ for listing FlandersBOT!  
 If you like FlandersBOT, help the bot grow by voting [here](https://discordbots.org/bot/221609683562135553/vote)
-and enjoying the benefits! If you vote for FlandersBOT, all gifs will be generated for you, so they will
-embed more often!
 
 
 [![Discord Bots](https://discordbots.org/api/widget/221609683562135553.svg)](https://discordbots.org/bot/221609683562135553)
