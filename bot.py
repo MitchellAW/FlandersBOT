@@ -39,7 +39,7 @@ async def update_status(bot):
                                            settings.config.DB_TOKEN)
     status = discord.Game(name=bot.status_format.format(len(bot.guilds)),
                           type=0)
-    await bot.change_presence(game=status, afk=True)
+    await bot.change_presence(game=status, afk=False)
 
 startup_extensions = [
     'cogs.general', 'cogs.simpsons', 'cogs.futurama', 'cogs.rickandmorty',
