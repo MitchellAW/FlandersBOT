@@ -13,6 +13,31 @@ class CartoonAPI:
         self.image_url = self.url + 'meme/{}/{}.jpg?b64lines={}'
         self.gif_url = self.url + 'gif/{}/{}/{}.gif?b64lines={}'
 
+    # Post a random moment
+    async def post_image(self, ctx, search_terms=None):
+        if search_terms is None:
+            await ctx.send(await self.get_random_cartoon())
+
+        else:
+            await ctx.send(await self.search_cartoon(search_terms, False))
+
+    # Post generating message, generate gif then post generated Url
+    async def post_gif(self, ctx, search_terms=None):
+        if search_terms is None:
+            gif_url = await self.get_random_cartoon(True)
+
+        else:
+            gif_url = await self.search_cartoon(search_terms, True)
+
+        if 'https://' not in gif_url:
+            await ctx.send(gif_url)
+
+        else:
+            sent = await ctx.send('Generating... '
+                                  '<a:loading:410316176510418955>')
+            generated_url = await self.generate_gif(gif_url)
+            await sent.edit(content=generated_url)
+
     # Generates a random cartoon image/gif, with caption embedded into the
     # image/gif, chooses jpg by default
     async def get_random_cartoon(self, gif=False):
@@ -52,7 +77,7 @@ class CartoonAPI:
 
     # Generates a cartoon image/gif, with caption embedded into the image/gif,
     # uses first search result returned from messageText
-    async def find_cartoon_quote(self, search_text, gif=False):
+    async def search_cartoon(self, search_text, gif=False):
         search_text = search_text.replace(' ', '+')
         search = self.search_url + search_text
 

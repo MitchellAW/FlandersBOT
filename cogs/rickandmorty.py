@@ -9,36 +9,25 @@ class RickAndMorty:
         self.bot = bot
         self.masterOfAllScience = CartoonAPI('https://masterofallscience.com/')
 
-    # Generate the gif and send it once the generation completes
-    async def send_gif(self, ctx, gif_url):
-        sent = await ctx.send('Generating... <a:loading:410316176510418955>')
-        generated_url = await self.masterOfAllScience.generate_gif(gif_url)
-        await sent.edit(content=generated_url)
-
+    # Messages a random R & M quote with img if no search terms are given,
+    # Otherwise, search for R & M quote using search terms and post gif
     @commands.command(aliases=['Rickandmorty', 'RickAndMorty', 'RICKANDMORTY',
                                'ram', 'Ram', 'RAM'])
     @commands.cooldown(1, 3, BucketType.channel)
-    async def rickandmorty(self, ctx, *, message: str=None):
-        if message is None:
-            await ctx.send(await self.masterOfAllScience.get_random_cartoon())
+    async def rickandmorty(self, ctx, *, search_terms: str=None):
+        if search_terms is None:
+            await self.masterOfAllScience.post_image(ctx)
 
         else:
-            gif_url = await self.masterOfAllScience.find_cartoon_quote(message,
-                                                                       True)
-            if 'https://' not in gif_url:
-                await ctx.send(gif_url)
+            await self.masterOfAllScience.post_gif(ctx, search_terms)
 
-            else:
-                await self.send_gif(ctx, gif_url)
-
-    # Messages a random simpsons quote with accomanying gif
+    # Messages a random rick and morty quote with accomanying gif
     @commands.command(aliases=['Rickandmortygif', 'RickAndMortyGif',
                                'RICKANDMORTYGIF', 'ramgif',
                                'Ramgif', 'RamGif', 'RAMGIF'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def rickandmortygif(self, ctx):
-        gif_url = await self.masterOfAllScience.get_random_cartoon(True)
-        await self.send_gif(ctx, gif_url)
+        await self.masterOfAllScience.post_gif(ctx)
 
 
 def setup(bot):

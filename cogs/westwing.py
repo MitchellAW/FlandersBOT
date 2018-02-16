@@ -9,32 +9,22 @@ class WestWing:
         self.bot = bot
         self.west_wing = CartoonAPI('https://capitalbeat.us/')
 
-    # Generate the gif and send it once the generation completes
-    async def send_gif(self, ctx, gif_url):
-        sent = await ctx.send('Generating... <a:loading:410316176510418955>')
-        generated_url = await self.west_wing.generate_gif(gif_url)
-        await sent.edit(content=generated_url)
-
+    # Messages a random West Wing quote with img if no search terms are given,
+    # Otherwise, search for West Wing quote using search terms and post gif
     @commands.command(aliases=['Westwing', 'WestWing', 'WESTWING'])
     @commands.cooldown(1, 3, BucketType.channel)
-    async def westwing(self, ctx, *, message: str=None):
-        if message is None:
-            await ctx.send(await self.west_wing.get_random_cartoon())
+    async def westwing(self, ctx, *, search_terms: str=None):
+        if search_terms is None:
+            await self.west_wing.post_image(ctx)
 
         else:
-            gif_url = await self.west_wing.find_cartoon_quote(message, True)
-            if 'https://' not in gif_url:
-                await ctx.send(gif_url)
+            await self.west_wing.post_gif(ctx, search_terms)
 
-            else:
-                await self.send_gif(ctx, gif_url)
-
-    # Messages a random west wing quote with accomanying gif
+    # Messages a random West Wing quote with accomanying gif
     @commands.command(aliases=['Westwinggif', 'WestWingGif', 'WESTWINGGIF'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def westwinggif(self, ctx):
-        gif_url = await self.west_wing.get_random_cartoon(True)
-        await self.send_gif(ctx, gif_url)
+        await self.west_wing.post_gif(ctx)
 
 
 def setup(bot):
