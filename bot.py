@@ -15,6 +15,7 @@ def get_prefix(bot, message):
     return commands.when_mentioned_or(*extras)(bot, message)
 
 
+# All cogs that will be loaded on bots startup
 startup_extensions = [
     'cogs.general', 'cogs.simpsons', 'cogs.futurama', 'cogs.rickandmorty',
     'cogs.thirtyrock', 'cogs.westwing', 'cogs.owner', 'cogs.trivia'
@@ -38,7 +39,7 @@ class FlandersBOT(commands.Bot):
                 exc = '{}: {}'.format(type(e).__name__, e)
                 print('Failed to load extension {}\n{}'.format(extension, exc))
 
-    # Print bot information once bot has started
+    # Print bot information, update status and set uptime when bot is ready
     async def on_ready(self):
         print('Username: ' + str(self.user.name))
         print('Client ID: ' + str(self.user.id))
