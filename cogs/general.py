@@ -11,6 +11,7 @@ import prefixes
 class General:
     def __init__(self, bot):
         self.bot = bot
+        self.FEEDBACK_CHANNEL = 403688189627465730
 
     # Get the uptime of the bot. In a full description format by default.
     def get_uptime(self, full=True):
@@ -63,7 +64,7 @@ class General:
     @commands.command(aliases=['Feedback', 'FEEDBACK'])
     @commands.cooldown(2, 600, BucketType.user)
     async def feedback(self, ctx, *, message: str):
-        feedback_channel = self.bot.get_channel(403688189627465730)
+        feedback_channel = self.bot.get_channel(self.FEEDBACK_CHANNEL)
         embed = discord.Embed(title='📫 Feedback from: ' + str(ctx.author) +
                               ' (' + str(ctx.author.id) + ')',
                               colour=discord.Colour(0x44981e),
