@@ -168,7 +168,7 @@ class CartoonAPI:
     async def generate_gif(gif_url):
         async with aiohttp.ClientSession() as session:
             try:
-                async with session.get(gif_url, timeout=30) as generator:
+                async with session.get(gif_url, timeout=10) as generator:
                     if generator.status == 200:
                         return generator.url
 
