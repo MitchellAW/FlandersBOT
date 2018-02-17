@@ -13,7 +13,7 @@ class Futurama:
     # Otherwise, search for Futurama quote using search terms and post gif
     @commands.command(aliases=['Futurama', 'FUTURAMA'])
     @commands.cooldown(1, 3, BucketType.channel)
-    async def futurama(self, ctx, *, search_terms : str=None):
+    async def futurama(self, ctx, *, search_terms: str=None):
         if search_terms is None:
             await self.morbotron.post_image(ctx)
 
