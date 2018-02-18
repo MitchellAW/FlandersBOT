@@ -10,7 +10,7 @@ class CartoonAPI:
         self.random_url = self.url + 'api/random'
         self.caption_url = self.url + 'api/caption?e={}&t={}'
         self.search_url = self.url + 'api/search?q='
-        self.image_url = self.url + 'meme/{}/{}.jpg?b64lines={}'
+        self.img_url = self.url + 'meme/{}/{}.jpg?b64lines={}'
         self.gif_url = self.url + 'gif/{}/{}/{}.gif?b64lines={}'
 
     # Post a random moment
@@ -61,16 +61,16 @@ class CartoonAPI:
                             end_timestamp = (cartoon_json['Subtitles'][1][
                                 'EndTimestamp'])
 
+                        caption = self.json_to_caption(cartoon_json)
                         return self.gif_url.format(episode, timestamp,
                                                    end_timestamp,
-                                                   self.encode_caption(
-                                                      cartoon_json))
+                                                   self.encode_caption(caption))
 
                     else:
                         timestamp = cartoon_json['Frame']['Timestamp']
-                        return self.image_url.format(episode, timestamp,
-                                                     self.encode_caption(
-                                                        cartoon_json))
+                        caption = self.json_to_caption(cartoon_json)
+                        return self.img_url.format(episode, timestamp,
+                                                   self.encode_caption(caption))
 
                 else:
                     return 'Error 404. {} may be down.'.format(self.url)
@@ -115,44 +115,52 @@ class CartoonAPI:
                             end_timestamp = (cartoon_json['Subtitles'][1][
                                 'EndTimestamp'])
 
+                        caption = self.json_to_caption(cartoon_json)
                         return self.gif_url.format(episode, timestamp,
                                                    end_timestamp,
-                                                   self.encode_caption(
-                                                      cartoon_json))
+                                                   self.encode_caption(caption))
 
                     else:
                         timestamp = cartoon_json['Frame']['Timestamp']
-                        return self.image_url.format(episode, timestamp,
-                                                     self.encode_caption(
-                                                        cartoon_json))
+                        caption = self.json_to_caption(cartoon_json)
+                        return self.img_url.format(episode, timestamp,
+                                                   self.encode_caption(caption))
 
                 else:
                     return 'Error 404. {} may be down.'.format(self.url)
 
     # Loop through all words of the subtitles, add them to the caption and then
     # return the caption encoded in base64 for use in the url
-    def encode_caption(self, caption_json):
+    def encode_caption(self, caption):
         char_count = 0
         line_count = 0
-        caption = ''
+        formatted_caption = ''
 
-        for quote in caption_json['Subtitles']:
-            for word in quote['Content'].split():
-                char_count += len(word) + 1
+        for word in caption.split():
+            char_count += len(word) + 1
 
-                if char_count < 24 and line_count < 4:
-                    caption += ' %s' % word
+            if char_count < 24 and line_count < 4:
+                formatted_caption += ' %s' % word
 
-                elif line_count < 4:
-                    char_count = len(word) + 1
-                    line_count += 1
-                    if line_count < 4:
-                        caption += '\n' + ' %s' % word
+            elif line_count < 4:
+                char_count = len(word) + 1
+                line_count += 1
+                if line_count < 4:
+                    formatted_caption += '\n' + ' %s' % word
 
-        caption = self.shorten_caption(caption)
+        caption = self.shorten_caption(formatted_caption)
         encoded = b64encode(str.encode(caption, 'utf-8'), altchars=b'__')
 
         return encoded.decode('utf-8')
+
+    # Take caption json file and convert it to the caption for encoding
+    @staticmethod
+    def json_to_caption(cartoon_json):
+        caption = ''
+        for quote in cartoon_json['Subtitles']:
+            caption += quote['Content'] + ' '
+
+        return caption
 
     # Favours ending the caption at the latest sentence ending (., !, ?)
     @staticmethod
