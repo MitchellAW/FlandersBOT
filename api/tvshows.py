@@ -132,20 +132,40 @@ class Moment:
         self.api = api
         self.json = json
         self.episode = self.json['Episode']['Key']
-        self.caption = self.api.json_to_caption(self.json)
-        self.b64_caption = self.api.encode_caption(self.caption)
         self.img_url = self.api.url + 'meme/{}/{}.jpg?b64lines={}'
         self.gif_url = self.api.url + 'gif/{}/{}/{}.gif?b64lines={}'
 
+        # Initalise full caption + b64 encoded caption
+        self.caption = self.api.json_to_caption(self.json)
+        self.b64_caption = self.api.encode_caption(self.caption)
+
+        # Initalise timestamps for image and gif format
+        self.frame_timestamp = self.json['Frame']['Timestamp']
+        self.start_timestamp = self.json['Subtitles'][0]['StartTimestamp']
+        index = min(len(self.json['Subtitles']), 1) - 1
+        self.end_timestamp = self.json['Subtitles'][index]['EndTimestamp']
+
+    # Gets the episode for this moment
     def get_episode(self):
         return self.episode
 
+    # Will get the image url for this moment captioned with subtitles
     def get_image_url(self):
-        timestamp = self.json['Frame']['Timestamp']
-        return self.img_url.format(self.episode, timestamp, self.b64_caption)
+        return self.img_url.format(self.episode, self.frame_timestamp,
+                                   self.b64_caption)
 
+    # Will get the gif url for this moment captioned with subtitles
     def get_gif_url(self):
-        start = self.json['Subtitles'][0]['StartTimestamp']
-        index = min(len(self.json['Subtitles']), 1) - 1
-        end = self.json['Subtitles'][index]['EndTimestamp']
-        return self.gif_url.format(self.episode, start, end, self.b64_caption)
+        return self.gif_url.format(self.episode, self.start_timestamp,
+                                   self.end_timestamp, self.b64_caption)
+
+    # Will get the image url for this moment captioned with a custom caption
+    def get_custom_image_url(self, custom_caption):
+        return self.img_url.format(self.episode, self.frame_timestamp,
+                                   self.api.encode_caption(custom_caption))
+
+    # Will get the gif url for this moment captioned with a custom caption
+    def get_custom_gif_url(self, custom_caption):
+        return self.gif_url.format(self.episode, self.start_timestamp,
+                                   self.end_timestamp,
+                                   self.api.encode_caption(custom_caption))
