@@ -168,7 +168,7 @@ class Moment:
         # Initalise timestamps for image and gif format
         self.frame_timestamp = self.json['Frame']['Timestamp']
         self.start_timestamp = self.json['Subtitles'][0]['StartTimestamp']
-        index = min(len(self.json['Subtitles']), 1) - 1
+        index = min(len(self.json['Subtitles']), 2) - 1
         self.end_timestamp = self.json['Subtitles'][index]['EndTimestamp']
 
     # Gets the episode for this moment
