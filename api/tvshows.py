@@ -48,6 +48,22 @@ class TVShowAPI:
             generated_url = await self.generate_gif(gif_url)
             await sent.edit(content=generated_url)
 
+    # Ask user to post a custom caption, take custom caption and generate
+    # custom gif, then delete request for caption and post custom gif
+    async def post_custom_gif(self, ctx, bot, search_text=None):
+        first = await ctx.send('Please post the caption you would like to use',
+                               delete_after=30)
+        try:
+            def check(message):
+                return message.author == ctx.message.author
+
+            resp = await bot.wait_for('message', check=check, timeout=30)
+            await first.delete()
+            await self.post_gif(ctx, search_text, resp.content)
+
+        except asyncio.TimeoutError:
+            pass
+
     # Gets a TV Show moment using episode and timestamp
     async def get_moment(self, episode, timestamp):
         caption_url = self.api_caption_url.format(episode, timestamp)

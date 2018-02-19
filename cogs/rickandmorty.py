@@ -29,6 +29,14 @@ class RickAndMorty:
     async def rickandmortygif(self, ctx):
         await self.masterOfAllScience.post_gif(ctx)
 
+    # Allows for custom captions to go with the gif that's searched for
+    @commands.command(aliases=['rmmeme', 'RMmeme', 'RMMeme', 'RMMEME',
+                               'Rickandmortymeme', 'RickAndMortyMeme',
+                               'RICKANDMORTYMEME'])
+    async def rickandmortymeme(self, ctx, *, search_terms: str):
+        await self.masterOfAllScience.post_custom_gif(ctx, self.bot,
+                                                      search_terms)
+
 
 def setup(bot):
     bot.add_cog(RickAndMorty(bot))

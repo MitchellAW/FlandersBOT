@@ -26,6 +26,12 @@ class Futurama:
     async def futuramagif(self, ctx):
         await self.morbotron.post_gif(ctx)
 
+    # Allows for custom captions to go with the gif that's searched for
+    @commands.command(aliases=['fmeme', 'Fmeme', 'FMeme', 'FMEME',
+                               'Futuramameme', 'FuturamaMeme', 'FUTURAMAMEME'])
+    async def futuramameme(self, ctx, *, search_terms: str):
+        await self.morbotron.post_custom_gif(ctx, self.bot, search_terms)
+
 
 def setup(bot):
     bot.add_cog(Futurama(bot))
