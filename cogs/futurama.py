@@ -1,13 +1,13 @@
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
-from api.cartoons import CartoonAPI
+from api.tvshows import TVShowAPI
 
 
 class Futurama:
     def __init__(self, bot):
         self.bot = bot
-        self.morbotron = CartoonAPI('https://morbotron.com/')
+        self.morbotron = TVShowAPI('https://morbotron.com/')
 
     # Messages a random Futurama quote with img if no search terms are given,
     # Otherwise, search for Futurama quote using search terms and post gif
@@ -29,4 +29,3 @@ class Futurama:
 
 def setup(bot):
     bot.add_cog(Futurama(bot))
-

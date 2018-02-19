@@ -1,13 +1,13 @@
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
-from api.cartoons import CartoonAPI
+from api.tvshows import TVShowAPI
 
 
 class ThirtyRock:
     def __init__(self, bot):
         self.bot = bot
-        self.thirty_rock = CartoonAPI('https://goodgodlemon.com/')
+        self.thirty_rock = TVShowAPI('https://goodgodlemon.com/')
 
     # Messages a random 30 Rock quote with img if no search terms are given,
     # Otherwise, search for 30 Rock quote using search terms and post gif
@@ -29,4 +29,3 @@ class ThirtyRock:
 
 def setup(bot):
     bot.add_cog(ThirtyRock(bot))
-

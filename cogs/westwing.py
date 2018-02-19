@@ -1,13 +1,13 @@
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
-from api.cartoons import CartoonAPI
+from api.tvshows import TVShowAPI
 
 
 class WestWing:
     def __init__(self, bot):
         self.bot = bot
-        self.west_wing = CartoonAPI('https://capitalbeat.us/')
+        self.west_wing = TVShowAPI('https://capitalbeat.us/')
 
     # Messages a random West Wing quote with img if no search terms are given,
     # Otherwise, search for West Wing quote using search terms and post gif
