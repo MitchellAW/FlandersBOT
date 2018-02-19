@@ -13,7 +13,7 @@ class TVShowAPI:
         self.search_url = self.url + 'api/search?q='
 
     # Post a random moment
-    async def post_image(self, ctx, search_text=None):
+    async def post_image(self, ctx, search_text=None, custom_caption=None):
         if search_text is None:
             moment = await self.get_random_moment()
 
@@ -21,10 +21,15 @@ class TVShowAPI:
             moment = await self.search_for_moment(search_text)
 
         if moment is not None:
-            await ctx.send(moment.get_image_url())
+
+            if custom_caption is None:
+                await ctx.send(moment.get_image_url())
+
+            else:
+                await ctx.send(moment.get_custom_image_url(custom_caption))
 
     # Post generating message, generate gif then post generated Url
-    async def post_gif(self, ctx, search_text=None):
+    async def post_gif(self, ctx, search_text=None, custom_caption=None):
         if search_text is None:
             moment = await self.get_random_moment()
 
@@ -32,7 +37,12 @@ class TVShowAPI:
             moment = await self.search_for_moment(search_text)
 
         if moment is not None:
-            gif_url = moment.get_gif_url()
+            if custom_caption is None:
+                gif_url = moment.get_gif_url()
+
+            else:
+                gif_url = moment.get_custom_gif_url(custom_caption)
+
             sent = await ctx.send(f'Generating {moment.get_episode()}... '
                                   '<a:loading:410316176510418955>')
             generated_url = await self.generate_gif(gif_url)
