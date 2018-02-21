@@ -17,7 +17,7 @@ class TVShowCog:
             moment = await self.api.search_for_moment(search_text)
 
         if moment is not None:
-            await ctx.send(moment.get_image_url(caption))
+            await ctx.send(moment.get_meme_url(caption))
 
     # Post generating message, generate gif then post generated Url
     async def post_gif(self, ctx, search_text=None, caption=None):
@@ -29,8 +29,7 @@ class TVShowCog:
 
         if moment is not None:
             gif_url = await moment.get_gif_url(caption)
-            episode = moment.get_episode()
-            sent = await ctx.send('Generating {}... '.format(episode) +
+            sent = await ctx.send('Generating {}... '.format(moment.get_key()) +
                                   '<a:loading:410316176510418955>')
 
             generated_url = await self.api.generate_gif(gif_url)
