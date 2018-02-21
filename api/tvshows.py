@@ -11,67 +11,15 @@ class TVShowAPI:
         self.random_url = self.url + 'api/random'
         self.api_caption_url = self.url + 'api/caption?e={}&t={}'
         self.search_url = self.url + 'api/search?q='
-
-    # Post a random moment
-    async def post_image(self, ctx, search_text=None, custom_caption=None):
-        if search_text is None:
-            moment = await self.get_random_moment()
-
-        else:
-            moment = await self.search_for_moment(search_text)
-
-        if moment is not None:
-
-            if custom_caption is None:
-                await ctx.send(moment.get_image_url())
-
-            else:
-                await ctx.send(moment.get_custom_image_url(custom_caption))
-
-    # Post generating message, generate gif then post generated Url
-    async def post_gif(self, ctx, search_text=None, custom_caption=None):
-        if search_text is None:
-            moment = await self.get_random_moment()
-
-        else:
-            moment = await self.search_for_moment(search_text)
-
-        if moment is not None:
-            if custom_caption is None:
-                gif_url = moment.get_gif_url()
-
-            else:
-                gif_url = moment.get_custom_gif_url(custom_caption)
-
-            sent = await ctx.send(f'Generating {moment.get_episode()}... '
-                                  '<a:loading:410316176510418955>')
-            generated_url = await self.generate_gif(gif_url)
-            await sent.edit(content=generated_url)
-
-    # Ask user to post a custom caption, take custom caption and generate
-    # custom gif, then delete request for caption and post custom gif
-    async def post_custom_gif(self, ctx, bot, search_text=None):
-        first = await ctx.send('Please post the caption you would like to use',
-                               delete_after=30)
-        try:
-            def check(message):
-                return message.author == ctx.message.author
-
-            resp = await bot.wait_for('message', check=check, timeout=30)
-            await first.delete()
-            await self.post_gif(ctx, search_text, resp.content)
-
-        except asyncio.TimeoutError:
-            pass
+        self.frames_url = self.url + 'api/frames/{}/{}/{}/{}'
 
     # Gets a TV Show moment using episode and timestamp
     async def get_moment(self, episode, timestamp):
         caption_url = self.api_caption_url.format(episode, timestamp)
         async with aiohttp.ClientSession() as session:
-            async with session.get(caption_url, timeout=15) as moment:
-                if moment.status == 200:
-                    moment_json = await moment.json()
-                    return Moment(self, moment_json)
+            async with session.get(caption_url, timeout=15) as moment_page:
+                if moment_page.status == 200:
+                    return Moment(self, await moment_page.json())
 
     # Gets a random TV Show moment
     async def get_random_moment(self):
@@ -79,24 +27,29 @@ class TVShowAPI:
             async with session.get(self.random_url, timeout=15) as moment_page:
 
                 if moment_page.status == 200:
-                    moment_json = await moment_page.json()
-                    return Moment(self, moment_json)
+                    return Moment(self, await moment_page.json())
 
     # Searches for a TV Show moment and uses the first search result
     async def search_for_moment(self, search_text):
-        search_text = search_text.replace(' ', '+')
-        search = self.search_url + search_text
+        search = self.search_url + search_text.replace(' ', '+')
 
         async with aiohttp.ClientSession() as session:
-            async with session.get(search, timeout=15) as moment_search:
-                if moment_search.status == 200:
-                    search_results = await moment_search.json()
+            async with session.get(search, timeout=15) as moment_page:
+                if moment_page.status == 200:
+                    search_results = await moment_page.json()
 
                     if len(search_results) > 0:
                         first_result = search_results[0]
-                        episode = first_result['Episode']
-                        timestamp = first_result['Timestamp']
-                        return await self.get_moment(episode, timestamp)
+                        return await self.get_moment(first_result['Episode'],
+                                                     first_result['Timestamp'])
+
+    # Will get all valid frames before and after timestamp for the episode
+    async def get_frames(self, episode, timestamp, before, after):
+        frames_url = self.frames_url.format(episode, timestamp, before, after)
+        async with aiohttp.ClientSession() as session:
+            async with session.get(frames_url, timeout=15) as frames_page:
+                if frames_page.status == 200:
+                    return await frames_page.json()
 
     # Loop through all words of the subtitles, add them to the caption and then
     # return the caption encoded in base64 for use in the url
@@ -145,53 +98,64 @@ class TVShowAPI:
     async def generate_gif(gif_url):
         async with aiohttp.ClientSession() as session:
             try:
-                async with session.get(gif_url, timeout=10) as generator:
+                async with session.get(gif_url, timeout=15) as generator:
                     if generator.status == 200:
                         return generator.url
 
+            # If gif fails to generate before timeout, return original url
             except asyncio.TimeoutError:
                 return gif_url
 
 
 class Moment:
-    def __init__(self, api, json):
+    def __init__(self, api: TVShowAPI, json):
         self.api = api
         self.json = json
         self.episode = self.json['Episode']['Key']
+        self.title = self.json['Episode']['Title']
         self.img_url = self.api.url + 'meme/{}/{}.jpg?b64lines={}'
         self.gif_url = self.api.url + 'gif/{}/{}/{}.gif?b64lines={}'
 
         # Initalise full caption + b64 encoded caption
         self.caption = self.api.json_to_caption(self.json)
-        self.b64_caption = self.api.encode_caption(self.caption)
 
-        # Initalise timestamps for image and gif format
-        self.frame_timestamp = self.json['Frame']['Timestamp']
-        self.start_timestamp = self.json['Subtitles'][0]['StartTimestamp']
-        index = min(len(self.json['Subtitles']), 2) - 1
-        self.end_timestamp = self.json['Subtitles'][index]['EndTimestamp']
+        # Initalise timestamp of episode
+        self.timestamp = self.json['Frame']['Timestamp']
 
-    # Gets the episode for this moment
+    # Gets the episode for the moment
     def get_episode(self):
         return self.episode
 
-    # Will get the image url for this moment captioned with subtitles
-    def get_image_url(self):
-        return self.img_url.format(self.episode, self.frame_timestamp,
-                                   self.b64_caption)
+    # Gets the title of the episode for the moment
+    def get_title(self):
+        return self.title
 
-    # Will get the gif url for this moment captioned with subtitles
-    def get_gif_url(self):
-        return self.gif_url.format(self.episode, self.start_timestamp,
-                                   self.end_timestamp, self.b64_caption)
+    # Gets the timestamp of the frame for the moment
+    def get_timestamp(self):
+        return self.timestamp
 
-    # Will get the image url for this moment captioned with a custom caption
-    def get_custom_image_url(self, custom_caption):
-        return self.img_url.format(self.episode, self.frame_timestamp,
-                                   self.api.encode_caption(custom_caption))
+    # Gets the API used to generate the moment
+    def get_api(self):
+        return self.api
 
-    # Will get the gif url for this moment captioned with a custom caption
-    def get_custom_gif_url(self, custom_caption):
-        return self.gif_url.format(self.episode, self.start_timestamp,
-                                   self.end_timestamp,
-                                   self.api.encode_caption(custom_caption))
+    # Gets the image url for the moment captioned with subtitles
+    def get_image_url(self, caption=None):
+        if caption is None:
+            caption = self.caption
+
+        return self.img_url.format(self.episode, self.timestamp,
+                                   self.api.encode_caption(caption))
+
+    # Gets the gif url for the moment captioned with subtitles, defaults gif
+    # length to < ~7500ms, before + after must not exceed 10,000ms (10 sec.)
+    async def get_gif_url(self, caption=None, before=3500, after=3500):
+        if caption is None:
+            caption = self.caption
+
+        # Get start and end frame numbers for gif
+        frames = await self.api.get_frames(self.episode, self.timestamp,
+                                           int(before), int(after))
+        start = frames[0]['Timestamp']
+        end = frames[-1]['Timestamp']
+        return self.gif_url.format(self.episode, start, end,
+                                   self.api.encode_caption(caption))

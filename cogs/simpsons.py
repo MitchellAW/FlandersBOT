@@ -1,13 +1,12 @@
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
-from api.tvshows import TVShowAPI
+from cogs.tvshow import TVShowCog
 
 
-class Simpsons:
+class Simpsons(TVShowCog):
     def __init__(self, bot):
-        self.bot = bot
-        self.frinkiac = TVShowAPI('https://frinkiac.com/')
+        super().__init__(bot, 'https://frinkiac.com/')
 
     # Messages a random Simpsons quote with img if no search terms are given,
     # Otherwise, search for Simpsons quote using search terms and post gif
@@ -15,22 +14,22 @@ class Simpsons:
     @commands.cooldown(1, 3, BucketType.channel)
     async def simpsons(self, ctx, *, search_terms: str=None):
         if search_terms is None:
-            await self.frinkiac.post_image(ctx)
+            await self.post_image(ctx)
 
         else:
-            await self.frinkiac.post_gif(ctx, search_terms)
+            await self.post_gif(ctx, search_terms)
 
     # Messages a random simpsons quote with accomanying gif
     @commands.command(aliases=['Simpsonsgif', 'SimpsonsGif', 'SIMPSONSGIF'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def simpsonsgif(self, ctx):
-        await self.frinkiac.post_gif(ctx)
+        await self.post_gif(ctx)
 
     # Allows for custom captions to go with the gif that's searched for
     @commands.command(aliases=['smeme', 'Smeme', 'SMEME', 'SimpsonsMEME',
                                'SimpsonsMeme', 'SIMPSONSMEME'])
     async def simpsonsmeme(self, ctx, *, search_terms: str):
-        await self.frinkiac.post_custom_gif(ctx, self.bot, search_terms)
+        await self.post_custom_gif(ctx, search_terms)
 
 
 def setup(bot):
