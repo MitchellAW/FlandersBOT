@@ -147,8 +147,8 @@ class Moment:
                                    self.api.encode_caption(caption))
 
     # Gets the gif url for the moment captioned with subtitles, defaults gif
-    # length to < ~7500ms, before + after must not exceed 10,000ms (10 sec.)
-    async def get_gif_url(self, caption=None, before=3500, after=3500):
+    # length to < ~7000ms, before + after must not exceed 10,000ms (10 sec.)
+    async def get_gif_url(self, caption=None, before=3000, after=4000):
         if caption is None:
             caption = self.caption
 
