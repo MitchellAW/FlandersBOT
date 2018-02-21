@@ -173,6 +173,13 @@ class Moment:
     def get_timestamp(self):
         return self.timestamp
 
+    # Gets a readable timestamp for the moment in format (mm:ss)
+    def get_real_timestamp(self):
+        seconds = int(self.timestamp / 1000)
+        minutes = int(seconds / 60)
+        seconds -= int(minutes * 60)
+        return '({}:{:02d})'.format(minutes, seconds)
+
     # Gets the direct image url for the moment without any caption
     def get_image_url(self):
         return self.image_url.format(self.key, self.timestamp)
