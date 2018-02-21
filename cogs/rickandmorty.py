@@ -32,6 +32,7 @@ class RickAndMorty(TVShowCog):
     @commands.command(aliases=['rmmeme', 'RMmeme', 'RMMeme', 'RMMEME',
                                'Rickandmortymeme', 'RickAndMortyMeme',
                                'RICKANDMORTYMEME'])
+    @commands.cooldown(1, 3, BucketType.channel)
     async def rickandmortymeme(self, ctx, *, search_terms: str):
         await self.post_custom_gif(ctx, search_terms)
 

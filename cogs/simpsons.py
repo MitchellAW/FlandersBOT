@@ -28,6 +28,7 @@ class Simpsons(TVShowCog):
     # Allows for custom captions to go with the gif that's searched for
     @commands.command(aliases=['smeme', 'Smeme', 'SMEME', 'SimpsonsMEME',
                                'SimpsonsMeme', 'SIMPSONSMEME'])
+    @commands.cooldown(1, 3, BucketType.channel)
     async def simpsonsmeme(self, ctx, *, search_terms: str):
         await self.post_custom_gif(ctx, search_terms)
 

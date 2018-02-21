@@ -28,6 +28,7 @@ class Futurama(TVShowCog):
     # Allows for custom captions to go with the gif that's searched for
     @commands.command(aliases=['fmeme', 'Fmeme', 'FMeme', 'FMEME',
                                'Futuramameme', 'FuturamaMeme', 'FUTURAMAMEME'])
+    @commands.cooldown(1, 3, BucketType.channel)
     async def futuramameme(self, ctx, *, search_terms: str):
         await self.post_custom_gif(ctx, search_terms)
 
