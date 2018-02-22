@@ -12,6 +12,8 @@ class CompuGlobalAPI:
         self.api_caption_url = self.url + 'api/caption?e={}&t={}'
         self.search_url = self.url + 'api/search?q='
         self.frames_url = self.url + 'api/frames/{}/{}/{}/{}'
+        self.nearby_url = self.url + 'api/nearby?e={}&t={}'
+        self.episode_url = self.url + 'api/episode/{}/{}/{}'
 
     # Gets a TV Show moment using episode and timestamp
     async def get_moment(self, episode, timestamp):
@@ -21,7 +23,7 @@ class CompuGlobalAPI:
                 if moment_page.status == 200:
                     return Moment(self, await moment_page.json())
 
-    # Gets a random TV Show moment
+    # Gets a random TV Show moment (episode and timestamp)
     async def get_random_moment(self):
         async with aiohttp.ClientSession() as session:
             async with session.get(self.random_url, timeout=15) as moment_page:
@@ -29,7 +31,7 @@ class CompuGlobalAPI:
                 if moment_page.status == 200:
                     return Moment(self, await moment_page.json())
 
-    # Searches for a TV Show moment and uses the first search result
+    # Gets the first search result for a TV Show moment using search_text
     async def search_for_moment(self, search_text):
         search = self.search_url + search_text.replace(' ', '+')
 
@@ -43,7 +45,7 @@ class CompuGlobalAPI:
                         return await self.get_moment(first_result['Episode'],
                                                      first_result['Timestamp'])
 
-    # Will get all valid frames before and after timestamp for the episode
+    # Gets all valid frames before and after timestamp for the episode
     async def get_frames(self, episode, timestamp, before, after):
         frames_url = self.frames_url.format(episode, timestamp, before, after)
         async with aiohttp.ClientSession() as session:
@@ -137,8 +139,9 @@ class CapitalBeatUs(CompuGlobalAPI):
         super().__init__('https://capitalbeat.us/')
 
 
+# A moment of a TV Show (episode and timestamp) generated using CompuGlobalAPI
 class Moment:
-    def __init__(self, api: CompuGlobalAPI, json):
+    def __init__(self, api: CompuGlobalAPI, json: dict):
         self.api = api
         self.json = json
 
