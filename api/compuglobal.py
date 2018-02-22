@@ -158,7 +158,7 @@ class Moment:
         self.json = json
 
         # Inititalise Episode Information
-        self.key = self.json['Episode']['Key']
+        self.episode_key = self.json['Episode']['Key']
         self.episode = self.json['Episode']['EpisodeNumber']
         self.season = self.json['Episode']['Season']
         self.title = self.json['Episode']['Title']
@@ -183,14 +183,14 @@ class Moment:
 
     # Gets the direct image url for the moment without any caption
     def get_image_url(self):
-        return self.image_url.format(self.key, self.timestamp)
+        return self.image_url.format(self.episode_key, self.timestamp)
 
     # Gets the meme url for the moment captioned with subtitles
     def get_meme_url(self, caption=None):
         if caption is None:
             caption = self.caption
 
-        return self.meme_url.format(self.key, self.timestamp,
+        return self.meme_url.format(self.episode_key, self.timestamp,
                                     self.api.encode_caption(caption))
 
     # Gets the gif url for the moment captioned with subtitles, defaults gif
@@ -200,9 +200,9 @@ class Moment:
             caption = self.caption
 
         # Get start and end frame numbers for gif
-        frames = await self.api.get_frames(self.key, self.timestamp,
+        frames = await self.api.get_frames(self.episode_key, self.timestamp,
                                            int(before), int(after))
         start = frames[0]['Timestamp']
         end = frames[-1]['Timestamp']
-        return self.gif_url.format(self.key, start, end,
+        return self.gif_url.format(self.episode_key, start, end,
                                    self.api.encode_caption(caption))
