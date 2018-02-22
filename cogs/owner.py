@@ -12,7 +12,7 @@ class Owner:
         self.bot = bot
 
     # Change the bot's avatar
-    @commands.command()
+    @commands.command(hidden=True)
     @commands.is_owner()
     async def avatar(self, ctx, avatar_url):
         async with aiohttp.ClientSession() as aioClient:
@@ -22,7 +22,7 @@ class Owner:
                 await ctx.send('Avatar changed!')
 
     # Change the bot's status/presence
-    @commands.command()
+    @commands.command(hidden=True)
     @commands.is_owner()
     async def status(self, ctx, *, message: str):
         new_status = discord.Game(name=message.format(len(self.bot.guilds)),
@@ -33,7 +33,7 @@ class Owner:
         await ctx.send('Status changed!')
 
     # Get the number of all the commands executed
-    @commands.command()
+    @commands.command(hidden=True)
     @commands.is_owner()
     async def commandstats(self, ctx):
         command_count = ''
@@ -44,7 +44,7 @@ class Owner:
         await ctx.send(command_count)
 
     # Loads a cog (requires dot path)
-    @commands.command()
+    @commands.command(hidden=True)
     @commands.is_owner()
     async def load(self, ctx, *, cog: str):
         try:
@@ -55,7 +55,7 @@ class Owner:
             await ctx.message.add_reaction('✅')
 
     # Unloads a cog (requires dot path)
-    @commands.command()
+    @commands.command(hidden=True)
     @commands.is_owner()
     async def unload(self, ctx, *, cog: str):
         try:
@@ -66,7 +66,7 @@ class Owner:
             await ctx.message.add_reaction('✅')
 
     # Reloads a cog (requires dot path)
-    @commands.command()
+    @commands.command(hidden=True)
     @commands.is_owner()
     async def reload(self, ctx, *, cog: str):
         try:
@@ -78,7 +78,7 @@ class Owner:
             await ctx.message.add_reaction('✅')
 
     # Shuts the bot down - usable by the bot owner - requires confirmation
-    @commands.command()
+    @commands.command(hidden=True)
     @commands.is_owner()
     async def shutdown(self, ctx):
         # Make confirmation message based on bots username to prevent

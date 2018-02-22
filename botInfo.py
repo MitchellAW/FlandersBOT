@@ -2,14 +2,11 @@ import discord
 
 commandsList = '''
 Hi-diddly-ho, neighborino! Here are the commands, shout them out anytime and
-I'll happily oblige! Well, so long as the reverend approves of course.
+I'll happily oblige!
 
 __**COMMAND PREFIXES**__
 
 ned, diddly, doodly
-
-*For a full description, visit:*
-<https://github.com/MitchellAW/FlandersBOT/blob/master/README.md#usage>
 
 __**COMMANDS**__
 
@@ -22,7 +19,7 @@ __**COMMANDS**__
 **setprefix [prefix]** - Sets a prefix I will respond to on your server.
 **feedback [message]** - Send a feedback message or suggestions.
 **invite** - Will post an invite link for me to join your server.
-**vote** - Will post the benefits of voting for me and a link to vote.
+**source** - Will post a link to my github repository.
 **update** - Will post the highlights of my last major update.
 **stats** - Will post some of my statist-diddly-istics.
 
@@ -35,6 +32,14 @@ __**COMMANDS**__
 **futurama [quote]** - Searches for a Futurama gif using the quote.
 **futuramagif** - Will post a random Futurama gif with caption.
 **futuramatrivia** - Starts a game of trivia using 100+ Futurama questions.
+
+**rickandmorty** - Will post a random Rick and Morty moment with caption.
+**rickandmorty [quote]** - Searches for a Rick and Morty gif using the quote.
+**rickandmortygif** - Will post a random Rick and Morty gif with caption.
+
+**rickandmorty** - Will post a random Rick and Morty moment with caption.
+**rickandmorty [quote]** - Searches for a Rick and Morty gif using the quote.
+**rickandmortygif** - Will post a random Rick and Morty gif with caption.
 
 **rickandmorty** - Will post a random Rick and Morty moment with caption.
 **rickandmorty [quote]** - Searches for a Rick and Morty gif using the quote.
