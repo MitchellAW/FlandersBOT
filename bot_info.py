@@ -26,8 +26,7 @@ I'll happily oblige! Well, so long as the reverend approves of course.
 
 **TV SHOWS**
 
-**help tvshows** - Will post a list of commands for all currently supported''' +
-                 ''' TV shows.
+**tvshows** - Will post a list of commands for all currently supported TV shows.
 
 *I currently support commands for The Simpsons, Futurama, Rick and Morty, 
 30 Rock and West Wing.*
