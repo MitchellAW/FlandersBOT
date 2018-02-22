@@ -27,7 +27,7 @@ class TVShowCog:
 
         if moment is not None:
             gif_url = await moment.get_gif_url(caption)
-            sent = await ctx.send('Generating {}... '.format(moment.get_key()) +
+            sent = await ctx.send('Generating {}... '.format(moment.key) +
                                   '<a:loading:410316176510418955>')
 
             generated_url = await self.api.generate_gif(gif_url)

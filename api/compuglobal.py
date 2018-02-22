@@ -174,50 +174,6 @@ class Moment:
         self.meme_url = self.api.url + 'meme/{}/{}.jpg?b64lines={}'
         self.gif_url = self.api.url + 'gif/{}/{}/{}.gif?b64lines={}'
 
-    # Gets the API used to generate the moment
-    def get_api(self):
-        return self.api
-
-    # Gets dictionary for the moment's original info
-    def get_json(self):
-        return self.json
-
-    # Gets the episode key for the moment (S04E12)
-    def get_key(self):
-        return self.key
-
-    # Gets the episode number for the moment
-    def get_episode(self):
-        return self.episode
-
-    # Gets the season number for the moment
-    def get_season(self):
-        return self.season
-
-    # Gets the title of the episode
-    def get_title(self):
-        return self.title
-
-    # Gets the director of the episode
-    def get_director(self):
-        return self.director
-
-    # Gets the writer(s) of the episode
-    def get_writer(self):
-        return self.writer
-
-    # Gets the original air date of the episode
-    def get_original_air_date(self):
-        return self.original_air_date
-
-    # Gets the wiki url for the episode
-    def get_wiki_url(self):
-        return self.wiki_url
-
-    # Gets the timestamp of the frame for the moment
-    def get_timestamp(self):
-        return self.timestamp
-
     # Gets a readable timestamp for the moment in format (mm:ss)
     def get_real_timestamp(self):
         seconds = int(self.timestamp / 1000)
