@@ -5,6 +5,7 @@ import discord
 from discord.ext import commands
 
 import api.bot_lists
+import api.compuglobal
 import prefixes
 import settings.config
 
@@ -72,7 +73,7 @@ class FlandersBOT(commands.Bot):
 
         self.write_command_stats(self.command_stats)
 
-    # Commands error handler, only handles cooldowns at the moment
+    # Commands error handler
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             time_left = round(error.retry_after, 2)
@@ -85,6 +86,12 @@ class FlandersBOT(commands.Bot):
                 await ctx.send('<:xmark:411718670482407424> Sorry, '
                                'you don\'t have the permissions '
                                'riddly-required for that command-aroo! ')
+
+        elif isinstance(error, api.compuglobal.APIPageStatusError):
+            await ctx.send(error)
+
+        elif isinstance(error, api.compuglobal.NoSearchResultsFound):
+            await ctx.send(error)
 
         else:
             print(error)

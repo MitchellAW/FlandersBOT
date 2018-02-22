@@ -2,9 +2,22 @@ import asyncio
 from base64 import b64encode
 
 import aiohttp
+from discord.ext import commands
 
 
-# TODO: Re-implement error messages
+# Raised when no search results are found
+class NoSearchResultsFound(commands.CommandError):
+    def __init__(self):
+        super().__init__('No search results found.')
+
+
+# Raised when page status 404s etc.
+class APIPageStatusError(commands.CommandError):
+    def __init__(self, page_status, url):
+        super().__init__('Error {}. {} may be down.'.format(page_status, url))
+
+
+# API Used for getting all TV Show moments
 class CompuGlobalAPI:
     def __init__(self, url):
         self.URL = url
@@ -35,6 +48,9 @@ class CompuGlobalAPI:
                 if moment_page.status == 200:
                     return Moment(self, await moment_page.json())
 
+                else:
+                    raise APIPageStatusError(moment_page.status, self.URL)
+
     # Gets a random TV Show moment (episode and timestamp)
     async def get_random_moment(self):
         async with aiohttp.ClientSession() as session:
@@ -42,6 +58,9 @@ class CompuGlobalAPI:
 
                 if moment_page.status == 200:
                     return Moment(self, await moment_page.json())
+
+                else:
+                    raise APIPageStatusError(moment_page.status, self.URL)
 
     # Gets the first search result for a TV Show moment using search_text
     async def search_for_moment(self, search_text):
@@ -57,6 +76,12 @@ class CompuGlobalAPI:
                         return await self.get_moment(first_result['Episode'],
                                                      first_result['Timestamp'])
 
+                    else:
+                        raise NoSearchResultsFound()
+
+                else:
+                    raise APIPageStatusError(moment_page.status, self.URL)
+
     # Gets all valid frames before and after timestamp for the episode
     async def get_frames(self, episode, timestamp, before, after):
         frames_url = self.frames_url.format(episode, timestamp, before, after)
@@ -64,6 +89,9 @@ class CompuGlobalAPI:
             async with session.get(frames_url, timeout=15) as frames_page:
                 if frames_page.status == 200:
                     return await frames_page.json()
+
+                else:
+                    raise APIPageStatusError(frames_page.status, self.URL)
 
     # Loop through all words of the subtitles, add them to the caption and then
     # return the caption encoded in base64 for use in the url
@@ -108,13 +136,15 @@ class CompuGlobalAPI:
         return caption
 
     # Generate the gif and get the direct url for embedding
-    @staticmethod
-    async def generate_gif(gif_url):
+    async def generate_gif(self, gif_url):
         async with aiohttp.ClientSession() as session:
             try:
                 async with session.get(gif_url, timeout=15) as generator:
                     if generator.status == 200:
                         return generator.url
+
+                    else:
+                        raise APIPageStatusError(generator.status, self.URL)
 
             # If gif fails to generate before timeout, return original url
             except asyncio.TimeoutError:
