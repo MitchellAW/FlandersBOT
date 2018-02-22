@@ -8,11 +8,23 @@ import aiohttp
 class CompuGlobalAPI:
     def __init__(self, url):
         self.url = url
+
+        # Gets random screencap with caption info
         self.random_url = self.url + 'api/random'
+
+        # Gets caption using episode and timestamp (e = episode, t = timestamp)
         self.api_caption_url = self.url + 'api/caption?e={}&t={}'
+
+        # Searches for screencap (q = search query)
         self.search_url = self.url + 'api/search?q='
+
+        # Gets frames before & after timestamp (episode/timestamp/before/after)
         self.frames_url = self.url + 'api/frames/{}/{}/{}/{}'
+
+        # Gets all frames nearby (e = episode, t = timestamp)
         self.nearby_url = self.url + 'api/nearby?e={}&t={}'
+
+        # Gets episode info and subtitles (episode/start/end)
         self.episode_url = self.url + 'api/episode/{}/{}/{}'
 
     # Gets a TV Show moment using episode and timestamp
