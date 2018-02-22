@@ -107,6 +107,36 @@ class TVShowAPI:
                 return gif_url
 
 
+# Simpsons Meme/GIF generator API
+class Frinkiac(TVShowAPI):
+    def __init__(self):
+        super().__init__('https://frinkiac.com/')
+
+
+# Futurama Meme/GIF generator API
+class Morbotron(TVShowAPI):
+    def __init__(self):
+        super().__init__('https://morbotron.com/')
+
+
+# Rick and Morty Meme/GIF generator API
+class MasterOfAllScience(TVShowAPI):
+    def __init__(self):
+        super().__init__('https://masterofallscience.com/')
+
+
+# 30 Rock Meme/GIF generator API
+class GoodGodLemon(TVShowAPI):
+    def __init__(self):
+        super().__init__('https://goodgodlemon.com/')
+
+
+# West Wing Meme/GIF generator API
+class CapitalBeatUs(TVShowAPI):
+    def __init__(self):
+        super().__init__('https://capitalbeat.us/')
+
+
 class Moment:
     def __init__(self, api: TVShowAPI, json):
         self.api = api

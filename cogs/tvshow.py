@@ -1,12 +1,10 @@
 import asyncio
 
-from api.tvshows import TVShowAPI
-
 
 class TVShowCog:
-    def __init__(self, bot, api_url):
+    def __init__(self, bot, api):
         self.bot = bot
-        self.api = TVShowAPI(api_url)
+        self.api = api
 
     # Post a random moment
     async def post_image(self, ctx, search_text=None, caption=None):

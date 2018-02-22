@@ -1,12 +1,13 @@
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
+from api.tvshows import CapitalBeatUs
 from cogs.tvshow import TVShowCog
 
 
 class WestWing(TVShowCog):
     def __init__(self, bot):
-        super().__init__(bot, 'https://capitalbeat.us/')
+        super().__init__(bot, CapitalBeatUs())
 
     # Messages a random West Wing quote with img if no search terms are given,
     # Otherwise, search for West Wing quote using search terms and post gif
@@ -28,4 +29,3 @@ class WestWing(TVShowCog):
 
 def setup(bot):
     bot.add_cog(WestWing(bot))
-

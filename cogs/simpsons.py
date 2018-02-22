@@ -1,12 +1,13 @@
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
+from api.tvshows import Frinkiac
 from cogs.tvshow import TVShowCog
 
 
 class Simpsons(TVShowCog):
     def __init__(self, bot):
-        super().__init__(bot, 'https://frinkiac.com/')
+        super().__init__(bot, Frinkiac())
 
     # Messages a random Simpsons quote with img if no search terms are given,
     # Otherwise, search for Simpsons quote using search terms and post gif

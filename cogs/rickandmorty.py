@@ -1,12 +1,13 @@
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
+from api.tvshows import MasterOfAllScience
 from cogs.tvshow import TVShowCog
 
 
 class RickAndMorty(TVShowCog):
     def __init__(self, bot):
-        super().__init__(bot, 'https://masterofallscience.com/')
+        super().__init__(bot, MasterOfAllScience())
 
     # Messages a random R & M quote with img if no search terms are given,
     # Otherwise, search for R & M quote using search terms and post gif

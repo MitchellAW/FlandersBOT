@@ -1,12 +1,13 @@
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
+from api.tvshows import GoodGodLemon
 from cogs.tvshow import TVShowCog
 
 
 class ThirtyRock(TVShowCog):
     def __init__(self, bot):
-        super().__init__(bot, 'https://goodgodlemon.com/')
+        super().__init__(bot, GoodGodLemon())
 
     # Messages a random 30 Rock quote with img if no search terms are given,
     # Otherwise, search for 30 Rock quote using search terms and post gif
