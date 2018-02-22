@@ -66,6 +66,13 @@ class General:
         elif category.lower() == 'tvshows' or category.lower() == 'tv shows':
             await self.dm_author(ctx, bot_info.tv_shows)
 
+    # Whispers a list of help commands for all tv shows
+    @commands.command(aliases=['Tvshows', 'TVshows', 'TVShows', 'TVSHOWS',
+                               'tv', 'TV'])
+    @commands.cooldown(1, 3, BucketType.user)
+    async def tvshows(self, ctx):
+        await self.dm_author(ctx, bot_info.tv_shows)
+
     # Sends the feedback to the feedback channel of support server
     @commands.command(aliases=['Feedback', 'FEEDBACK'])
     @commands.cooldown(2, 600, BucketType.user)
