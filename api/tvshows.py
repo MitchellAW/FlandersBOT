@@ -125,7 +125,7 @@ class Moment:
 
         # Initalise caption and urls
         self.caption = self.api.json_to_caption(self.json)
-        self.img_url = self.api.url + 'img/{}/{}.jpg'
+        self.image_url = self.api.url + 'img/{}/{}.jpg'
         self.meme_url = self.api.url + 'meme/{}/{}.jpg?b64lines={}'
         self.gif_url = self.api.url + 'gif/{}/{}/{}.gif?b64lines={}'
 
