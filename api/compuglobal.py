@@ -7,29 +7,29 @@ import aiohttp
 # TODO: Re-implement error messages
 class CompuGlobalAPI:
     def __init__(self, url):
-        self.url = url
+        self.URL = url
 
         # Gets random screencap with caption info
-        self.random_url = self.url + 'api/random'
+        self.random_url = self.URL + 'api/random'
 
         # Gets caption using episode and timestamp (e = episode, t = timestamp)
-        self.api_caption_url = self.url + 'api/caption?e={}&t={}'
+        self.caption_url = self.URL + 'api/caption?e={}&t={}'
 
         # Searches for screencap (q = search query)
-        self.search_url = self.url + 'api/search?q='
+        self.search_url = self.URL + 'api/search?q='
 
         # Gets frames before & after timestamp (episode/timestamp/before/after)
-        self.frames_url = self.url + 'api/frames/{}/{}/{}/{}'
+        self.frames_url = self.URL + 'api/frames/{}/{}/{}/{}'
 
         # Gets all frames nearby (e = episode, t = timestamp)
-        self.nearby_url = self.url + 'api/nearby?e={}&t={}'
+        self.nearby_url = self.URL + 'api/nearby?e={}&t={}'
 
-        # Gets episode info and subtitles (episode/start/end)
-        self.episode_url = self.url + 'api/episode/{}/{}/{}'
+        # Gets episode info and subtitles from start to end (episode/start/end)
+        self.episode_url = self.URL + 'api/episode/{}/{}/{}'
 
     # Gets a TV Show moment using episode and timestamp
     async def get_moment(self, episode, timestamp):
-        caption_url = self.api_caption_url.format(episode, timestamp)
+        caption_url = self.caption_url.format(episode, timestamp)
         async with aiohttp.ClientSession() as session:
             async with session.get(caption_url, timeout=15) as moment_page:
                 if moment_page.status == 200:
@@ -170,9 +170,9 @@ class Moment:
 
         # Initalise caption and urls
         self.caption = self.api.json_to_caption(self.json)
-        self.image_url = self.api.url + 'img/{}/{}.jpg'
-        self.meme_url = self.api.url + 'meme/{}/{}.jpg?b64lines={}'
-        self.gif_url = self.api.url + 'gif/{}/{}/{}.gif?b64lines={}'
+        self.image_url = self.api.URL + 'img/{}/{}.jpg'
+        self.meme_url = self.api.URL + 'meme/{}/{}.jpg?b64lines={}'
+        self.gif_url = self.api.URL + 'gif/{}/{}/{}.gif?b64lines={}'
 
     # Gets a readable timestamp for the moment in format (mm:ss)
     def get_real_timestamp(self):
