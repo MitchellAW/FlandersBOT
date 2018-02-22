@@ -131,12 +131,10 @@ class General:
     @commands.command(aliases=['Update', 'UPDATE'])
     @commands.cooldown(1, 3, BucketType.user)
     async def update(self, ctx):
-        await ctx.send('**Ever had trouble with my gifs not always '
-                       'diddly-ding-dong displaying in discord?**\nWell now '
-                       'I will generate all my gifs for you, so that they '
-                       'will embed-diddly-ed more often! If you experience any'
-                       ' issues with this, please use `ned feedback [feedback '
-                       'here]`')
+        await ctx.send('I now support 30 Rock and West Wing! Use `ned tvshows`'
+                       'for information on how to use them. If you experience '
+                       'any issues with this, please use `ned feedback ['
+                       'feedback here]`')
 
     # Allow administrators to make ned leave the server
     @commands.command(aliases=['Leave', 'LEAVE'])
