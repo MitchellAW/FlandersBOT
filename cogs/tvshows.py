@@ -36,9 +36,8 @@ class TVShowCog:
     # Ask user to post a custom caption, take custom caption and generate
     # custom gif, then delete request for caption and post custom gif
     async def post_custom_gif(self, ctx, search_text=None):
-        first = await ctx.send(
-            'Please post the caption you would like to use',
-            delete_after=30)
+        first = await ctx.send('Please post the caption you would like to use',
+                               delete_after=30)
         try:
             def check(message):
                 return message.author == ctx.message.author
