@@ -106,6 +106,14 @@ class General:
                            str(self.bot.user.id) +
                            '&scope=bot&permissions=19456>')
 
+    # Sends url to FlandersBOT github repo
+    @commands.command(aliases=['Source', 'SOURCE', 'github', 'Github',
+                               'GitHub', 'GITHUB', 'repo', 'Repo', 'REPO'])
+    @commands.cooldown(1, 3, BucketType.user)
+    async def source(self, ctx):
+        await ctx.send('Github Repo Source: '
+                       '<https://github.com/MitchellAW/FlandersBOT>')
+
     # Display information regarding the last update
     @commands.command(aliases=['Update', 'UPDATE'])
     @commands.cooldown(1, 3, BucketType.user)
