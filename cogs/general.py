@@ -68,7 +68,7 @@ class General:
 
     # Whispers a list of help commands for all tv shows
     @commands.command(aliases=['Tvshows', 'TVshows', 'TVShows', 'TVSHOWS',
-                               'tv', 'TV'])
+                               'tv', 'TV', 'Tv'])
     @commands.cooldown(1, 3, BucketType.user)
     async def tvshows(self, ctx):
         await self.dm_author(ctx, bot_info.tv_shows)
