@@ -32,6 +32,7 @@ class FlandersBOT(commands.Bot):
         self.status_format = 'Ned help | {} Servers'
         self.prefix_data = prefixes.read_prefixes()
         self.uptime = datetime.datetime.utcnow()
+        self.LOGGING_CHANNEL = 415700137302818836
 
         for extension in startup_extensions:
             try:
@@ -75,6 +76,7 @@ class FlandersBOT(commands.Bot):
 
     # Commands error handler
     async def on_command_error(self, ctx, error):
+        logging = self.get_channel(self.LOGGING_CHANNEL)
         if isinstance(error, commands.CommandOnCooldown):
             time_left = round(error.retry_after, 2)
             await ctx.send(':hourglass: Command on cooldown. Slow '
@@ -90,13 +92,18 @@ class FlandersBOT(commands.Bot):
         elif isinstance(error, commands.NoPrivateMessage):
             await ctx.send(error)
 
+        elif isinstance(error, commands.CommandNotFound):
+            pass
+
         elif isinstance(error, api.compuglobal.APIPageStatusError):
+            await logging.send(error)
             await ctx.send(error)
 
         elif isinstance(error, api.compuglobal.NoSearchResultsFound):
             await ctx.send(error)
 
         else:
+            await logging.send(error)
             print(error)
 
     # Update guild count at https://discordbots.org and in bots status/presence
