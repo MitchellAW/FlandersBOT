@@ -1,6 +1,6 @@
 import discord
 
-commandsList = ('''
+commands_list = ('''
 Hi-diddly-ho, neighborino! Here are the commands, shout them out anytime and
 I'll happily oblige! Well, so long as the reverend approves of course.
 
@@ -27,7 +27,7 @@ I'll happily oblige! Well, so long as the reverend approves of course.
 **TV SHOWS**
 
 **help tvshows** - Will post a list of commands for all currently supported''' +
-                ''' TV shows.
+                 ''' TV shows.
 
 *I currently support commands for The Simpsons, Futurama, Rick and Morty, 
 30 Rock and West Wing.*
@@ -58,7 +58,7 @@ tv_shows = '''
 **For Example:** `ned info`, `diddly help`, `doodly-simpsons`
 '''
 
-botInfo = ('''Hi-diddly-ho, neighborino! I hear you wanted some 
+bot_info = ('''Hi-diddly-ho, neighborino! I hear you wanted some 
 mor-diddly-ore information...
 Well, If it's clear and yella', you've got juice there, fella. If it's tangy 
 and brown, you're in cider town.
@@ -70,7 +70,7 @@ Framework: Discord.py (version=''' + discord.__version__ + ''')
 Author: <@210898009242861568> (Discord)
 Support Server: <https://discord.gg/xMmxMYg>
 Invite URL: <https://discordapp.com/oauth2/authorize?client_id=''' +
-           '''221609683562135553&scope=bot&permissions=19456>
+            '''221609683562135553&scope=bot&permissions=19456>
 GitHub Source: <https://github.com/MitchellAW/FlandersBOT>
 If you'd like to hel-diddly-elp me grow in popularity, use `ned vote`
 ''')

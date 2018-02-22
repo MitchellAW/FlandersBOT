@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
-import botInfo
+import bot_info
 import prefixes
 
 
@@ -50,7 +50,7 @@ class General:
     @commands.command(aliases=['Info', 'INFO'])
     @commands.cooldown(1, 3, BucketType.user)
     async def info(self, ctx):
-        self.dm_author(ctx, botInfo.botInfo + '\n***Currently active in ' +
+        self.dm_author(ctx, bot_info.bot_info + '\n***Currently active in ' +
                        str(len(self.bot.guilds)) + 'servers***')
 
     # Whispers a list of the bot commands, If the user has DMs disabled,
@@ -60,11 +60,11 @@ class General:
     async def help(self, ctx, *, category: str=None):
         # Post general help commands
         if category is None:
-            await self.dm_author(ctx, botInfo.commandsList)
+            await self.dm_author(ctx, bot_info.commands_list)
 
         # Post help commands for all tv shows
         elif category.lower() == 'tvshows' or category.lower() == 'tv shows':
-            await self.dm_author(ctx, botInfo.tv_shows)
+            await self.dm_author(ctx, bot_info.tv_shows)
 
     # Sends the feedback to the feedback channel of support server
     @commands.command(aliases=['Feedback', 'FEEDBACK'])
