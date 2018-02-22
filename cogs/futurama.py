@@ -1,7 +1,7 @@
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
-from api.tvshows import Morbotron
+from api.compuglobal import Morbotron
 from cogs.tvshow import TVShowCog
 
 

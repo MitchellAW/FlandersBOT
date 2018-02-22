@@ -5,7 +5,7 @@ import aiohttp
 
 
 # TODO: Re-implement error messages
-class TVShowAPI:
+class CompuGlobalAPI:
     def __init__(self, url):
         self.url = url
         self.random_url = self.url + 'api/random'
@@ -108,37 +108,37 @@ class TVShowAPI:
 
 
 # Simpsons Meme/GIF generator API
-class Frinkiac(TVShowAPI):
+class Frinkiac(CompuGlobalAPI):
     def __init__(self):
         super().__init__('https://frinkiac.com/')
 
 
 # Futurama Meme/GIF generator API
-class Morbotron(TVShowAPI):
+class Morbotron(CompuGlobalAPI):
     def __init__(self):
         super().__init__('https://morbotron.com/')
 
 
 # Rick and Morty Meme/GIF generator API
-class MasterOfAllScience(TVShowAPI):
+class MasterOfAllScience(CompuGlobalAPI):
     def __init__(self):
         super().__init__('https://masterofallscience.com/')
 
 
 # 30 Rock Meme/GIF generator API
-class GoodGodLemon(TVShowAPI):
+class GoodGodLemon(CompuGlobalAPI):
     def __init__(self):
         super().__init__('https://goodgodlemon.com/')
 
 
 # West Wing Meme/GIF generator API
-class CapitalBeatUs(TVShowAPI):
+class CapitalBeatUs(CompuGlobalAPI):
     def __init__(self):
         super().__init__('https://capitalbeat.us/')
 
 
 class Moment:
-    def __init__(self, api: TVShowAPI, json):
+    def __init__(self, api: CompuGlobalAPI, json):
         self.api = api
         self.json = json
 

@@ -1,7 +1,7 @@
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
-from api.tvshows import GoodGodLemon
+from api.compuglobal import GoodGodLemon
 from cogs.tvshow import TVShowCog
 
 

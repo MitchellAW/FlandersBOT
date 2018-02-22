@@ -1,7 +1,7 @@
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
-from api.tvshows import MasterOfAllScience
+from api.compuglobal import MasterOfAllScience
 from cogs.tvshow import TVShowCog
 
 

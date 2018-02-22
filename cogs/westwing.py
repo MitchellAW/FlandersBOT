@@ -1,7 +1,7 @@
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
-from api.tvshows import CapitalBeatUs
+from api.compuglobal import CapitalBeatUs
 from cogs.tvshow import TVShowCog
 
 
