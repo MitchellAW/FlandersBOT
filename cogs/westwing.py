@@ -2,7 +2,7 @@ from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
 from api.compuglobal import CapitalBeatUs
-from cogs.tvshow import TVShowCog
+from cogs.tvshows import TVShowCog
 
 
 class WestWing(TVShowCog):
