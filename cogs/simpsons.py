@@ -9,22 +9,13 @@ class Simpsons(TVShowCog):
     def __init__(self, bot):
         super().__init__(bot, Frinkiac())
 
-    # Messages a random Simpsons quote with img if no search terms are given,
+    # Messages a random Simpsons quote with gif if no search terms are given,
     # Otherwise, search for Simpsons quote using search terms and post gif
-    @commands.command(aliases=['Simpsons', 'SIMPSONS'])
+    @commands.command(aliases=['Simpsons', 'SIMPSONS', 'simpsonsgif',
+                               'Simpsonsgif', 'SimpsonsGif', 'SIMPSONSGIF'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def simpsons(self, ctx, *, search_terms: str=None):
-        if search_terms is None:
-            await self.post_image(ctx)
-
-        else:
-            await self.post_gif(ctx, search_terms)
-
-    # Messages a random simpsons quote with accomanying gif
-    @commands.command(aliases=['Simpsonsgif', 'SimpsonsGif', 'SIMPSONSGIF'])
-    @commands.cooldown(1, 3, BucketType.channel)
-    async def simpsonsgif(self, ctx):
-        await self.post_gif(ctx)
+        await self.post_gif(ctx, search_terms)
 
     # Allows for custom captions to go with the gif that's searched for
     @commands.command(aliases=['smeme', 'Smeme', 'SMEME', 'SimpsonsMEME',

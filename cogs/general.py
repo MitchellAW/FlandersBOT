@@ -29,6 +29,15 @@ class General:
             return ('{}d {}h {}m {}s'.
                     format(days, hours, minutes, seconds))
 
+    # Try to send a DM to author, otherwise post in channel
+    @staticmethod
+    async def dm_author(ctx, message):
+        try:
+            await ctx.author.send(message)
+
+        except discord.Forbidden:
+            await ctx.send(message)
+
     # Check the latency of the bot
     @commands.command(aliases=['Ping', 'PING'])
     @commands.cooldown(1, 3, BucketType.channel)
@@ -41,24 +50,21 @@ class General:
     @commands.command(aliases=['Info', 'INFO'])
     @commands.cooldown(1, 3, BucketType.user)
     async def info(self, ctx):
-        try:
-            await ctx.author.send(botInfo.botInfo + '\n***Currently active in '
-                                  + str(len(self.bot.guilds)) + ' servers***')
-
-        except discord.Forbidden:
-            await ctx.send(botInfo.botInfo + '\n***Currently active in '
-                           + str(len(self.bot.guilds)) + ' servers***')
+        self.dm_author(ctx, botInfo.botInfo + '\n***Currently active in ' +
+                       str(len(self.bot.guilds)) + 'servers***')
 
     # Whispers a list of the bot commands, If the user has DMs disabled,
     # sends the message in the channel
     @commands.command(aliases=['Help', 'HELP'])
     @commands.cooldown(1, 3, BucketType.user)
-    async def help(self, ctx):
-        try:
-            await ctx.author.send(botInfo.commandsList)
+    async def help(self, ctx, *, category: str=None):
+        # Post general help commands
+        if category is None:
+            await self.dm_author(ctx, botInfo.commandsList)
 
-        except discord.Forbidden:
-            await ctx.send(botInfo.commandsList)
+        # Post help commands for all tv shows
+        elif category.lower() == 'tvshows' or category.lower() == 'tv shows':
+            await self.dm_author(ctx, botInfo.tv_shows)
 
     # Sends the feedback to the feedback channel of support server
     @commands.command(aliases=['Feedback', 'FEEDBACK'])

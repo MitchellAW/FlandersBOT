@@ -9,22 +9,12 @@ class Futurama(TVShowCog):
     def __init__(self, bot):
         super().__init__(bot, Morbotron())
 
-    # Messages a random Futurama quote with img if no search terms are given,
+    # Messages a random Futurama quote with gif if no search terms are given,
     # Otherwise, search for Futurama quote using search terms and post gif
     @commands.command(aliases=['Futurama', 'FUTURAMA'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def futurama(self, ctx, *, search_terms: str=None):
-        if search_terms is None:
-            await self.post_image(ctx)
-
-        else:
-            await self.post_gif(ctx, search_terms)
-
-    # Messages a random Futurama quote with accomanying gif
-    @commands.command(aliases=['Futuramagif', 'FUTURAMAGIF'])
-    @commands.cooldown(1, 3, BucketType.channel)
-    async def futuramagif(self, ctx):
-        await self.post_gif(ctx)
+        await self.post_gif(ctx, search_terms)
 
     # Allows for custom captions to go with the gif that's searched for
     @commands.command(aliases=['fmeme', 'Fmeme', 'FMeme', 'FMEME',
