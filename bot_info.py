@@ -31,7 +31,7 @@ I'll happily oblige! Well, so long as the reverend approves of course.
 *I currently support commands for The Simpsons, Futurama, Rick and Morty, 
 30 Rock and West Wing.*
 
-**For Example:** `ned info`, `diddly help tvshows`, `doodly-simpsons`
+**For Example:** `ned tv shows`, `diddly info`, `doodly-simpsons`
 ''')
 
 tv_shows = '''
@@ -54,7 +54,7 @@ tv_shows = '''
 **westwing** - Will post a random West Wing gif with caption.
 **westwing [quote]** - Searches for a West Wing gif using the quote.
 
-**For Example:** `ned info`, `diddly help`, `doodly-simpsons`
+**For Example:** `ned simpsons`, `diddly rickandmorty`, `doodly-futurama`
 '''
 
 bot_info = ('''Hi-diddly-ho, neighborino! I hear you wanted some 
