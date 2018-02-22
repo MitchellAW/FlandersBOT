@@ -36,7 +36,7 @@ I'll happily oblige! Well, so long as the reverend approves of course.
 ''')
 
 tv_shows = '''
-**TV SHOW COMMANDS**
+**TV SHOWS**
 
 **simpsons** - Will post a random Simpsons gif with caption.
 **simpsons [quote]** - Searches for a Simpsons gif using the quote.
