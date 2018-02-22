@@ -14,6 +14,7 @@ class Simpsons(TVShowCog):
     @commands.command(aliases=['Simpsons', 'SIMPSONS', 'simpsonsgif',
                                'Simpsonsgif', 'SimpsonsGif', 'SIMPSONSGIF'])
     @commands.cooldown(1, 3, BucketType.channel)
+    @commands.guild_only()
     async def simpsons(self, ctx, *, search_terms: str=None):
         await self.post_gif(ctx, search_terms)
 
@@ -21,6 +22,7 @@ class Simpsons(TVShowCog):
     @commands.command(aliases=['smeme', 'Smeme', 'SMEME', 'SimpsonsMEME',
                                'SimpsonsMeme', 'SIMPSONSMEME'])
     @commands.cooldown(1, 3, BucketType.channel)
+    @commands.guild_only()
     async def simpsonsmeme(self, ctx, *, search_terms: str):
         await self.post_custom_gif(ctx, search_terms)
 

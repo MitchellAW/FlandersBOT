@@ -50,8 +50,8 @@ class General:
     @commands.command(aliases=['Info', 'INFO'])
     @commands.cooldown(1, 3, BucketType.user)
     async def info(self, ctx):
-        self.dm_author(ctx, bot_info.bot_info + '\n***Currently active in ' +
-                       str(len(self.bot.guilds)) + 'servers***')
+        await self.dm_author(ctx, bot_info.bot_info + '\n***Currently active '
+                             'in ' + str(len(self.bot.guilds)) + 'servers***')
 
     # Whispers a list of the bot commands, If the user has DMs disabled,
     # sends the message in the channel
@@ -140,6 +140,7 @@ class General:
 
     # Allow administrators to make ned leave the server
     @commands.command(aliases=['Leave', 'LEAVE'])
+    @commands.guild_only()
     @commands.has_permissions(administrator=True)
     async def leave(self, ctx):
         await ctx.send('Okilly-dokilly! 👋')
@@ -162,6 +163,7 @@ class General:
 
     # Allows for a single custom prefix per-guild
     @commands.command(aliases=['Setprefix', 'SETPREFIX'])
+    @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     @commands.cooldown(3, 60, BucketType.guild)
     async def setprefix(self, ctx, *, new_prefix: str=None):

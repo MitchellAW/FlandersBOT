@@ -13,6 +13,7 @@ class Futurama(TVShowCog):
     # Otherwise, search for Futurama quote using search terms and post gif
     @commands.command(aliases=['Futurama', 'FUTURAMA'])
     @commands.cooldown(1, 3, BucketType.channel)
+    @commands.guild_only()
     async def futurama(self, ctx, *, search_terms: str=None):
         await self.post_gif(ctx, search_terms)
 
@@ -20,6 +21,7 @@ class Futurama(TVShowCog):
     @commands.command(aliases=['fmeme', 'Fmeme', 'FMeme', 'FMEME',
                                'Futuramameme', 'FuturamaMeme', 'FUTURAMAMEME'])
     @commands.cooldown(1, 3, BucketType.channel)
+    @commands.guild_only()
     async def futuramameme(self, ctx, *, search_terms: str):
         await self.post_custom_gif(ctx, search_terms)
 

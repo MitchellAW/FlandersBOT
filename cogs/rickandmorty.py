@@ -17,6 +17,7 @@ class RickAndMorty(TVShowCog):
                                'RICKANDMORTYGIF', 'ramgif', 'Ramgif',
                                'RamGif', 'RAMGIF'])
     @commands.cooldown(1, 3, BucketType.channel)
+    @commands.guild_only()
     async def rickandmorty(self, ctx, *, search_terms: str=None):
         await self.post_gif(ctx, search_terms)
 
@@ -25,6 +26,7 @@ class RickAndMorty(TVShowCog):
                                'Rickandmortymeme', 'RickAndMortyMeme',
                                'RICKANDMORTYMEME'])
     @commands.cooldown(1, 3, BucketType.channel)
+    @commands.guild_only()
     async def rickandmortymeme(self, ctx, *, search_terms: str):
         await self.post_custom_gif(ctx, search_terms)
 

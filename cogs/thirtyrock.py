@@ -14,6 +14,7 @@ class ThirtyRock(TVShowCog):
     @commands.command(aliases=['30rock', '30Rock', '30ROCK', '30rockgif',
                                '30Rockgif', '30RockGif', '30ROCKGIF'])
     @commands.cooldown(1, 3, BucketType.channel)
+    @commands.guild_only()
     async def thirtyrock(self, ctx, *, search_terms: str=None):
         await self.post_gif(ctx, search_terms)
 

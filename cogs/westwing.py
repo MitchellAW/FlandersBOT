@@ -15,6 +15,7 @@ class WestWing(TVShowCog):
                                'westwinggif', 'Westwinggif', 'WestWingGif',
                                'WESTWINGGIF'])
     @commands.cooldown(1, 3, BucketType.channel)
+    @commands.guild_only()
     async def westwing(self, ctx, *, search_terms: str=None):
         await self.post_gif(ctx, search_terms)
 

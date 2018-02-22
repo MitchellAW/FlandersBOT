@@ -87,6 +87,9 @@ class FlandersBOT(commands.Bot):
                                'you don\'t have the permissions '
                                'riddly-required for that command-aroo! ')
 
+        elif isinstance(error, commands.NoPrivateMessage):
+            await ctx.send(error)
+
         elif isinstance(error, api.compuglobal.APIPageStatusError):
             await ctx.send(error)
 
