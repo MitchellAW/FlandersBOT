@@ -212,7 +212,7 @@ class Moment:
         if value == '':
             value = None
 
-        return value
+        return value.replace('\n', '')
 
     # Gets a readable timestamp for the moment in format (mm:ss)
     def get_real_timestamp(self):
