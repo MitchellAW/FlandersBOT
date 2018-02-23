@@ -38,6 +38,32 @@ class General:
         except discord.Forbidden:
             await ctx.send(message)
 
+    # Get all episode information of the last moment that was posted in the
+    # channel
+    @commands.command(aliases=['Epinfo', 'EpInfo', 'EPINFO'])
+    @commands.cooldown(1, 3, BucketType.channel)
+    async def epinfo(self, ctx):
+        if ctx.channel.id in self.bot.cached_moments:
+            moment = self.bot.cached_moments[ctx.channel.id]
+            embed = discord.Embed(title=moment.api.title + ': ' + moment.title,
+                                  colour=discord.Colour(0x44981e))
+            embed.add_field(name='Episode', value=moment.episode_key,
+                            inline=True)
+            embed.add_field(name='Original Air Date',
+                            value=moment.original_air_date, inline=True)
+            embed.add_field(name='Timestamp',
+                            value=moment.get_real_timestamp(), inline=True)
+            embed.add_field(name='Director(s)', value=moment.director,
+                            inline=True)
+            embed.add_field(name='Writer(s)', value=moment.writer, inline=True)
+            if moment.wiki_url is not None:
+                embed.add_field(name='Wiki',
+                                value='[Link]({})'.format(moment.wiki_url))
+            else:
+                embed.add_field(name='Wiki', value='None', inline=True)
+
+            await ctx.send(embed=embed)
+
     # Check the latency of the bot
     @commands.command(aliases=['Ping', 'PING'])
     @commands.cooldown(1, 3, BucketType.channel)

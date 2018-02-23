@@ -15,6 +15,7 @@ class TVShowCog:
             moment = await self.api.search_for_moment(search_text)
 
         if moment is not None:
+            ctx.bot.cached_moments.update({ctx.message.channel.id: moment})
             await ctx.send(moment.get_meme_url(caption))
 
     # Post generating message, generate gif then post generated Url
@@ -26,6 +27,7 @@ class TVShowCog:
             moment = await self.api.search_for_moment(search_text)
 
         if moment is not None:
+            ctx.bot.cached_moments.update({ctx.message.channel.id: moment})
             gif_url = await moment.get_gif_url(caption)
             sent = await ctx.send('Generating {}... '.format(moment.episode_key)
                                   + '<a:loading:410316176510418955>')

@@ -33,6 +33,7 @@ class FlandersBOT(commands.Bot):
         self.prefix_data = prefixes.read_prefixes()
         self.uptime = datetime.datetime.utcnow()
         self.LOGGING_CHANNEL = 415700137302818836
+        self.cached_moments = {}
 
         for extension in startup_extensions:
             try:
