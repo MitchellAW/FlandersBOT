@@ -188,15 +188,16 @@ class Moment:
         self.api = api
         self.json = json
 
-        # Inititalise Episode Information
+        # Inititalise Episode Information, setting title, director, writer
+        # and wiki url to None if they are empty
         self.episode_key = self.json['Episode']['Key']
         self.episode = self.json['Episode']['EpisodeNumber']
         self.season = self.json['Episode']['Season']
-        self.title = self.json['Episode']['Title']
-        self.director = self.json['Episode']['Director']
-        self.writer = self.json['Episode']['Writer']
+        self.title = self.get_value(self.json['Episode']['Title'])
+        self.director = self.get_value(self.json['Episode']['Director'])
+        self.writer = self.get_value(self.json['Episode']['Writer'])
         self.original_air_date = self.json['Episode']['OriginalAirDate']
-        self.wiki_url = self.json['Episode']['WikiLink']
+        self.wiki_url = self.get_value(self.json['Episode']['WikiLink'])
         self.timestamp = self.json['Frame']['Timestamp']
 
         # Initalise caption and urls
@@ -204,6 +205,14 @@ class Moment:
         self.image_url = self.api.URL + 'img/{}/{}.jpg'
         self.meme_url = self.api.URL + 'meme/{}/{}.jpg?b64lines={}'
         self.gif_url = self.api.URL + 'gif/{}/{}/{}.gif?b64lines={}'
+
+    # Returns none if empty string
+    @staticmethod
+    def get_value(value):
+        if value == '':
+            value = None
+
+        return value
 
     # Gets a readable timestamp for the moment in format (mm:ss)
     def get_real_timestamp(self):
