@@ -27,6 +27,7 @@ I'll happily oblige! Well, so long as the reverend approves of course.
 **TV SHOWS**
 
 **tvshows** - Will post a list of commands for all currently supported TV shows.
+**epinfo** - Will post episode information on the last post made in the channel.
 
 *I currently support commands for The Simpsons, Futurama, Rick and Morty, 
 30 Rock and West Wing.*
@@ -53,6 +54,8 @@ tv_shows = '''
 
 **westwing** - Will post a random West Wing gif with caption.
 **westwing [quote]** - Searches for a West Wing gif using the quote.
+
+**epinfo** - Will post episode information on the last post made in the channel.
 
 **For Example:** `ned info`, `diddly help`, `doodly-simpsons`
 '''
