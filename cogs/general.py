@@ -46,7 +46,8 @@ class General:
         if ctx.channel.id in self.bot.cached_moments:
             moment = self.bot.cached_moments[ctx.channel.id]
             embed = discord.Embed(title=moment.api.title + ': ' + moment.title,
-                                  colour=discord.Colour(0x44981e))
+                                  colour=discord.Colour(0x44981e),
+                                  url=moment.wiki_url)
             embed.add_field(name='Episode', value=moment.episode_key,
                             inline=True)
             embed.add_field(name='Original Air Date',
@@ -54,13 +55,8 @@ class General:
             embed.add_field(name='Timestamp',
                             value=moment.get_real_timestamp(), inline=True)
             embed.add_field(name='Director(s)', value=moment.director,
-                            inline=True)
-            embed.add_field(name='Writer(s)', value=moment.writer, inline=True)
-            if moment.wiki_url is not None:
-                embed.add_field(name='Wiki',
-                                value='[Link]({})'.format(moment.wiki_url))
-            else:
-                embed.add_field(name='Wiki', value='None', inline=True)
+                            inline=False)
+            embed.add_field(name='Writer(s)', value=moment.writer, inline=False)
 
             await ctx.send(embed=embed)
 
