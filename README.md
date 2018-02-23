@@ -216,7 +216,10 @@ If you need any help with FlandersBOT, would like to provide feedback, suggestio
 
 
 ## Credits
-**Creators of [Frinkiac](https://frinkiac.com/), [Morbotron](https://morbotron.com/) and [Master of All Science](https://masterofallscience.com/):**  
+**Creators of [Frinkiac](https://frinkiac.com/), [Morbotron](https://morbotron
+.com/), [Master of All Science](https://masterofallscience.com/), [Good
+God Lemon](https://goodgodlemon.com/) and [Capital Beat Us]
+(https://capitalbeat.us/):**
 [Paul Kehrer](https://twitter.com/reaperhulk)  
 [Sean Schulte](https://twitter.com/sirsean)  
 [Allie Young](https://twitter.com/seriousallie)  
