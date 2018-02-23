@@ -210,9 +210,10 @@ class Moment:
     @staticmethod
     def get_value(value):
         if value == '':
-            value = None
+            return None
 
-        return value.replace('\n', '')
+        else:
+            return value.replace('\n', '')
 
     # Gets a readable timestamp for the moment in format (mm:ss)
     def get_real_timestamp(self):
