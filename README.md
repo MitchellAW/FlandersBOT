@@ -72,6 +72,10 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
       <td><b>stats</b></td>
       <td>Will post some of FlandersBOT's statistics.</td>
     </tr>
+    <tr>
+      <td><b>epinfo</b></td>
+      <td>Will post episode information on the last post made in the channel.</td>
+    </tr>
   </table>
 </div>
 
@@ -89,15 +93,11 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
     </thead>
     <tr>
       <td><b>simpsons</b></td>
-      <td>Will post a random Simpsons moment with caption.</td>
+      <td>Will post a random Simpsons gif with caption.</td>
     </tr>
     <tr>
       <td><b>simpsons [quote]</b></td>
       <td>Searches for a Simpsons gif using the quote.</td>
-    </tr>
-    <tr>
-      <td><b>simpsonsgif</b></td>
-      <td>Will post a random Simpsons gif with caption.</td>
     </tr>
     <tr>
       <td><b>simpsonstrivia</b></td>
@@ -120,15 +120,11 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
     </thead>
     <tr>
       <td><b>futurama</b></td>
-      <td>Will post a random Futurama moment with caption.</td>
+      <td>Will post a random Futurama gif with caption.</td>
     </tr>
     <tr>
       <td><b>futurama [quote]</b></td>
       <td>Searches for a Futurama gif using the quote.</td>
-    </tr>
-    <tr>
-      <td><b>futuramagif</b></td>
-      <td>Will post a random Futurama gif with caption.</td>
     </tr>
     <tr>
       <td><b>futuramatrivia</b></td>
@@ -151,15 +147,57 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
     </thead>
     <tr>
       <td><b>rickandmorty</b></td>
-      <td>Will post a random Rick and Morty moment with caption.</td>
+      <td>Will post a random Rick and Morty gif with caption.</td>
     </tr>
     <tr>
       <td><b>rickandmorty [quote]</b></td>
       <td>Searches for a Rick and Morty gif using the quote.</td>
     </tr>
+  </table>
+</div>
+
+## 30 Rock
+
+<div style="overflow-x:auto;">
+  <table width=180 style='table-layout:fixed'>
+    <col width=20>
+ 	<col width=100>
+    <thead>
+      <tr>
+        <th>Command</th>
+        <th>Description</th>
+      </tr>
+    </thead>
     <tr>
-      <td><b>rickandmortygif</b></td>
+      <td><b>30rock</b></td>
       <td>Will post a random Rick and Morty gif with caption.</td>
+    </tr>
+    <tr>
+      <td><b>30rock [quote]</b></td>
+      <td>Searches for a Rick and Morty gif using the quote.</td>
+    </tr>
+  </table>
+</div>
+
+## West Wing
+
+<div style="overflow-x:auto;">
+  <table width=180 style='table-layout:fixed'>
+    <col width=20>
+ 	<col width=100>
+    <thead>
+      <tr>
+        <th>Command</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tr>
+      <td><b>westwing</b></td>
+      <td>Will post a random Rick and Morty gif with caption.</td>
+    </tr>
+    <tr>
+      <td><b>westwing [quote]</b></td>
+      <td>Searches for a Rick and Morty gif using the quote.</td>
     </tr>
   </table>
 </div>
