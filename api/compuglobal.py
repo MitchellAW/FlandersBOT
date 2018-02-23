@@ -19,8 +19,9 @@ class APIPageStatusError(commands.CommandError):
 
 # API Used for getting all TV Show moments
 class CompuGlobalAPI:
-    def __init__(self, url):
+    def __init__(self, url, title):
         self.URL = url
+        self.title = title
 
         # Gets random screencap with caption info
         self.random_url = self.URL + 'api/random'
@@ -154,31 +155,31 @@ class CompuGlobalAPI:
 # Simpsons Meme/GIF generator API
 class Frinkiac(CompuGlobalAPI):
     def __init__(self):
-        super().__init__('https://frinkiac.com/')
+        super().__init__('https://frinkiac.com/', 'The Simpsons')
 
 
 # Futurama Meme/GIF generator API
 class Morbotron(CompuGlobalAPI):
     def __init__(self):
-        super().__init__('https://morbotron.com/')
+        super().__init__('https://morbotron.com/', 'Futurama')
 
 
 # Rick and Morty Meme/GIF generator API
 class MasterOfAllScience(CompuGlobalAPI):
     def __init__(self):
-        super().__init__('https://masterofallscience.com/')
+        super().__init__('https://masterofallscience.com/', 'Rick and Morty')
 
 
 # 30 Rock Meme/GIF generator API
 class GoodGodLemon(CompuGlobalAPI):
     def __init__(self):
-        super().__init__('https://goodgodlemon.com/')
+        super().__init__('https://goodgodlemon.com/', '30 Rock')
 
 
 # West Wing Meme/GIF generator API
 class CapitalBeatUs(CompuGlobalAPI):
     def __init__(self):
-        super().__init__('https://capitalbeat.us/')
+        super().__init__('https://capitalbeat.us/', 'West Wing')
 
 
 # A moment of a TV Show (episode and timestamp) generated using CompuGlobalAPI
@@ -209,7 +210,7 @@ class Moment:
         seconds = int(self.timestamp / 1000)
         minutes = int(seconds / 60)
         seconds -= int(minutes * 60)
-        return '({}:{:02d})'.format(minutes, seconds)
+        return '{}:{:02d}'.format(minutes, seconds)
 
     # Gets the direct image url for the moment without any caption
     def get_image_url(self):
