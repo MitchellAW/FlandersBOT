@@ -13,8 +13,8 @@ class General:
         self.bot = bot
         self.FEEDBACK_CHANNEL = 403688189627465730
 
-    # Get the uptime of the bot. In a full description format by default.
-    def get_uptime(self, full=True):
+    # Get the uptime of the bot. In a short description format by default.
+    def get_uptime(self, full=False):
         current_time = datetime.datetime.utcnow()
         delta = current_time - self.bot.uptime
         hours, remainder = divmod(int(delta.total_seconds()), 3600)
@@ -44,20 +44,21 @@ class General:
     @commands.cooldown(1, 3, BucketType.channel)
     async def epinfo(self, ctx):
         if ctx.channel.id in self.bot.cached_moments:
+            # Get moment and its timestamp
             moment = self.bot.cached_moments[ctx.channel.id]
+            real_timestamp = moment.get_real_timestamp()
+
+            # Create embed for episode information, links to wiki of episode
             embed = discord.Embed(title=moment.api.title + ': ' + moment.title,
                                   colour=discord.Colour(0x44981e),
                                   url=moment.wiki_url)
-            embed.add_field(name='Episode', value=moment.episode_key,
-                            inline=True)
-            embed.add_field(name='Original Air Date',
-                            value=moment.original_air_date, inline=True)
-            embed.add_field(name='Timestamp',
-                            value=moment.get_real_timestamp(), inline=True)
-            embed.add_field(name='Director(s)', value=moment.director,
-                            inline=False)
-            embed.add_field(name='Writer(s)', value=moment.writer, inline=False)
 
+            # Add episode information
+            embed.add_field(name='Episode', value=moment.key, inline=True)
+            embed.add_field(name='Air Date', value=moment.air_date, inline=True)
+            embed.add_field(name='Timestamp', value=real_timestamp, inline=True)
+            embed.add_field(name='Director(s)', value=moment.director)
+            embed.add_field(name='Writer(s)', value=moment.writer)
             await ctx.send(embed=embed)
 
     # Check the latency of the bot
@@ -225,10 +226,7 @@ class General:
     @commands.command(aliases=['Stats', 'STATS'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def stats(self, ctx):
-        # Get guild count
-        guild_count = len(self.bot.guilds)
-
-        # Count users online in guilds
+        # Count users online in guilds and user average
         total_members = 0
         online_users = 0
         for guild in self.bot.guilds:
@@ -236,8 +234,8 @@ class General:
             for member in guild.members:
                 if member.status == discord.Status.online:
                     online_users += 1
-
-        average_online = round((online_users / guild_count), 2)
+        user_average = round((online_users / self.bot.guilds), 2)
+        guild_count = str(self.bot.guilds)
 
         # Count number of commands executed
         command_count = 0
@@ -247,33 +245,25 @@ class General:
         # Embed statistics output
         embed = discord.Embed(colour=discord.Colour(0x44981e))
         embed.set_thumbnail(url=self.bot.user.avatar_url)
-
         embed.set_author(name=self.bot.user.name + ' Statistics',
                          url='https://github.com/FlandersBOT',
                          icon_url=self.bot.user.avatar_url)
-        embed.add_field(name='Bot Owner', value='Mitch#8293',
-                        inline=True)
-        embed.add_field(name='Server Count', value=str(guild_count),
-                        inline=True)
-        embed.add_field(name='Total Members', value=str(total_members),
-                        inline=True)
-        embed.add_field(name='Online Users', value=str(online_users),
-                        inline=True)
-        embed.add_field(name='Online Users Per Server',
-                        value=str(average_online), inline=True)
-        embed.add_field(name='Uptime', value=self.get_uptime(False),
-                        inline=True)
-        embed.add_field(name='Commands Executed', value=str(command_count),
-                        inline=True)
 
-        # Post statistics
+        # Add all statistics
+        embed.add_field(name='Bot Owner', value='Mitch#8293', inline=True)
+        embed.add_field(name='Server Count', value=guild_count, inline=True)
+        embed.add_field(name='Total Members', value=total_members, inline=True)
+        embed.add_field(name='Online Users', value=online_users, inline=True)
+        embed.add_field(name='Average Online', value=user_average, inline=True)
+        embed.add_field(name='Uptime', value=self.get_uptime(), inline=True)
+        embed.add_field(name='Commands Used', value=command_count, inline=True)
         await ctx.send(embed=embed)
 
     # Posts the bots uptime to the channel
     @commands.command(aliases=['Uptime', 'UPTIME'])
     @commands.cooldown(1, 3, BucketType.user)
     async def uptime(self, ctx):
-        await ctx.send('🔌 Uptime: **' + self.get_uptime() + '**')
+        await ctx.send('🔌 Uptime: **' + self.get_uptime(True) + '**')
 
 
 def setup(bot):
