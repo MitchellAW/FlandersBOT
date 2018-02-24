@@ -18,8 +18,9 @@ def get_prefix(bot, message):
 
 # All cogs that will be loaded on bots startup
 startup_extensions = [
-    'cogs.general', 'cogs.simpsons', 'cogs.futurama', 'cogs.rickandmorty',
-    'cogs.thirtyrock', 'cogs.westwing', 'cogs.owner', 'cogs.trivia'
+    'cogs.general', 'cogs.stats', 'cogs.simpsons', 'cogs.futurama',
+    'cogs.rickandmorty', 'cogs.thirtyrock', 'cogs.westwing', 'cogs.owner',
+    'cogs.trivia'
     ]
 
 
