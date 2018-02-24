@@ -231,8 +231,8 @@ class Moment:
         if caption is None:
             caption = self.caption
 
-        return self.meme_url.format(self.key, self.timestamp,
-                                    self.api.encode_caption(caption))
+        b64_caption = self.api.encode_caption(caption)
+        return self.meme_url.format(self.key, self.timestamp, b64_caption)
 
     # Gets the gif url for the moment captioned with subtitles, defaults gif
     # length to < ~7000ms, before + after must not exceed 10,000ms (10 sec.)
@@ -240,10 +240,11 @@ class Moment:
         if caption is None:
             caption = self.caption
 
+        b64_caption = self.api.encode_caption(caption)
+
         # Get start and end frame numbers for gif
         frames = await self.api.get_frames(self.key, self.timestamp,
                                            int(before), int(after))
         start = frames[0]['Timestamp']
         end = frames[-1]['Timestamp']
-        return self.gif_url.format(self.key, start, end,
-                                   self.api.encode_caption(caption))
+        return self.gif_url.format(self.key, start, end, b64_caption)
