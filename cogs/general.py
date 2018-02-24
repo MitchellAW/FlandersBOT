@@ -1,5 +1,3 @@
-import datetime
-
 import discord
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
@@ -13,22 +11,6 @@ class General:
         self.bot = bot
         self.FEEDBACK_CHANNEL = 403688189627465730
 
-    # Get the uptime of the bot. In a short description format by default.
-    def get_uptime(self, full=False):
-        current_time = datetime.datetime.utcnow()
-        delta = current_time - self.bot.uptime
-        hours, remainder = divmod(int(delta.total_seconds()), 3600)
-        minutes, seconds = divmod(remainder, 60)
-        days, hours = divmod(hours, 24)
-
-        if full:
-            return ('{} days, {} hours, {} minutes, and {} seconds'.
-                    format(days, hours, minutes, seconds))
-
-        else:
-            return ('{}d {}h {}m {}s'.
-                    format(days, hours, minutes, seconds))
-
     # Try to send a DM to author, otherwise post in channel
     @staticmethod
     async def dm_author(ctx, message):
@@ -37,36 +19,6 @@ class General:
 
         except discord.Forbidden:
             await ctx.send(message)
-
-    # Get all episode information of the last moment that was posted in the
-    # channel
-    @commands.command(aliases=['Epinfo', 'EpInfo', 'EPINFO'])
-    @commands.cooldown(1, 3, BucketType.channel)
-    async def epinfo(self, ctx):
-        if ctx.channel.id in self.bot.cached_moments:
-            # Get moment and its timestamp
-            moment = self.bot.cached_moments[ctx.channel.id]
-            real_timestamp = moment.get_real_timestamp()
-
-            # Create embed for episode information, links to wiki of episode
-            embed = discord.Embed(title=moment.api.title + ': ' + moment.title,
-                                  colour=discord.Colour(0x44981e),
-                                  url=moment.wiki_url)
-
-            # Add episode information
-            embed.add_field(name='Episode', value=moment.key, inline=True)
-            embed.add_field(name='Air Date', value=moment.air_date, inline=True)
-            embed.add_field(name='Timestamp', value=real_timestamp, inline=True)
-            embed.add_field(name='Director(s)', value=moment.director)
-            embed.add_field(name='Writer(s)', value=moment.writer)
-            await ctx.send(embed=embed)
-
-    # Check the latency of the bot
-    @commands.command(aliases=['Ping', 'PING'])
-    @commands.cooldown(1, 3, BucketType.channel)
-    async def ping(self, ctx):
-        latency = round(self.bot.latency * 1000, 2)
-        await ctx.send('🏓 Latency: ' + str(latency) + 'ms')
 
     # Whispers a description of the bot with author, framework, guild count etc.
     # If user has DMs disabled, send the message in the channel
@@ -127,20 +79,11 @@ class General:
     @commands.command(aliases=['Invite', 'INVITE'])
     @commands.cooldown(1, 3, BucketType.user)
     async def invite(self, ctx):
-        try:
-            await ctx.author.send('You can add me to your own server using '
+        await self.dm_author(ctx, 'You can add me to your own server using '
                                   'the link below:\n'
                                   '<https://discordapp.com/oauth2/authorize?'
                                   'client_id=' + str(self.bot.user.id) +
                                   '&scope=bot&permissions=19456>')
-
-        except discord.Forbidden:
-            await ctx.send('You can add me to your own server using the link '
-                           'below:\n'
-                           '<https://discordapp.com/oauth2/authorize' +
-                           '?client_id=' +
-                           str(self.bot.user.id) +
-                           '&scope=bot&permissions=19456>')
 
     # Sends url to FlandersBOT github repo
     @commands.command(aliases=['Source', 'SOURCE', 'github', 'Github',
@@ -190,11 +133,6 @@ class General:
     async def setprefix(self, ctx, *, new_prefix: str=None):
         guild_index = prefixes.find_guild(ctx.message.guild,
                                           self.bot.prefix_data)
-
-        # Only allow custom prefixes in guilds
-        if ctx.message.guild is None:
-            await ctx.send('Custom prefixes are for servers only.')
-
         # Require entering a prefix
         if new_prefix is None:
             await ctx.send('You did not provide a new prefix.')
@@ -219,51 +157,8 @@ class General:
         else:
             self.bot.prefix_data[guild_index]['prefix'] = new_prefix
             prefixes.write_prefixes(self.bot.prefix_data)
-            await ctx.send('This servers custom prefix changed to `'
-                           + new_prefix + '`.')
-
-    # Display statistics for the bot
-    @commands.command(aliases=['Stats', 'STATS'])
-    @commands.cooldown(1, 3, BucketType.channel)
-    async def stats(self, ctx):
-        # Count users online in guilds and user average
-        total_members = 0
-        online_users = 0
-        for guild in self.bot.guilds:
-            total_members += len(guild.members)
-            for member in guild.members:
-                if member.status == discord.Status.online:
-                    online_users += 1
-        user_average = round((online_users / self.bot.guilds), 2)
-        guild_count = str(self.bot.guilds)
-
-        # Count number of commands executed
-        command_count = 0
-        for key in self.bot.command_stats:
-            command_count += self.bot.command_stats[key]
-
-        # Embed statistics output
-        embed = discord.Embed(colour=discord.Colour(0x44981e))
-        embed.set_thumbnail(url=self.bot.user.avatar_url)
-        embed.set_author(name=self.bot.user.name + ' Statistics',
-                         url='https://github.com/FlandersBOT',
-                         icon_url=self.bot.user.avatar_url)
-
-        # Add all statistics
-        embed.add_field(name='Bot Owner', value='Mitch#8293', inline=True)
-        embed.add_field(name='Server Count', value=guild_count, inline=True)
-        embed.add_field(name='Total Members', value=total_members, inline=True)
-        embed.add_field(name='Online Users', value=online_users, inline=True)
-        embed.add_field(name='Average Online', value=user_average, inline=True)
-        embed.add_field(name='Uptime', value=self.get_uptime(), inline=True)
-        embed.add_field(name='Commands Used', value=command_count, inline=True)
-        await ctx.send(embed=embed)
-
-    # Posts the bots uptime to the channel
-    @commands.command(aliases=['Uptime', 'UPTIME'])
-    @commands.cooldown(1, 3, BucketType.user)
-    async def uptime(self, ctx):
-        await ctx.send('🔌 Uptime: **' + self.get_uptime(True) + '**')
+            await ctx.send('This servers custom prefix changed to `' +
+                           new_prefix + '`.')
 
 
 def setup(bot):
