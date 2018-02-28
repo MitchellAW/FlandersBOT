@@ -4,19 +4,17 @@ import settings.config
 
 
 # Post guild count to update count for either discordbots.org or bots.discord.pw
-async def update_guild_count(bot, api_url, token):
-    api_url += 'api/bots/' + str(bot.user.id) + '/stats'
+async def update_guild_count(bot, url, token):
+    url += 'api/bots/' + str(bot.user.id) + '/stats'
     headers = {"Authorization": token}
     payload = {"server_count": len(bot.guilds)}
 
-    async with aiohttp.ClientSession() as aio_client:
-        if 'bots.discord.pw' in api_url:
-            await aio_client.post(api_url, json=payload, headers=headers,
-                                  timeout=10)
+    async with aiohttp.ClientSession() as session:
+        if 'bots.discord.pw' in url:
+            await session.post(url, json=payload, headers=headers, timeout=15)
 
         else:
-            await aio_client.post(api_url, data=payload, headers=headers,
-                                  timeout=10)
+            await session.post(url, data=payload, headers=headers, timeout=15)
 
 
 # Get a list of user IDs who have upvoted FlandersBOT
