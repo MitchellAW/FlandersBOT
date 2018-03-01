@@ -96,7 +96,7 @@ class CompuGlobalAPI:
 
     # Loop through all words of the subtitles, add them to the caption and then
     # return the caption encoded in base64 for use in the url
-    def encode_caption(self, caption, shorten=True):
+    def encode_caption(self, caption):
         char_count = 0
         line_count = 0
         formatted_caption = ''
@@ -113,10 +113,7 @@ class CompuGlobalAPI:
                 if line_count < 4:
                     formatted_caption += '\n' + ' ' + word
 
-        caption = formatted_caption
-        if shorten:
-            caption = self.shorten_caption(caption)
-
+        caption = self.shorten_caption(formatted_caption)
         encoded = b64encode(str.encode(caption, 'utf-8'), altchars=b'__')
 
         return encoded.decode('utf-8')
