@@ -140,12 +140,12 @@ class CompuGlobalAPI:
     async def generate_gif(self, gif_url):
         async with aiohttp.ClientSession() as session:
             try:
-                async with session.get(gif_url, timeout=15) as generator:
-                    if generator.status == 200:
-                        return generator.url
+                async with session.get(gif_url, timeout=15) as gif_maker:
+                    if gif_maker.status == 200:
+                        return gif_maker.url
 
                     else:
-                        raise APIPageStatusError(generator.status, self.URL)
+                        raise APIPageStatusError(gif_maker.status, self.URL)
 
             # If gif fails to generate before timeout, return original url
             except asyncio.TimeoutError:
@@ -206,6 +206,7 @@ class Screencap:
         self.image_url = self.api.URL + 'img/{}/{}.jpg'
         self.meme_url = self.api.URL + 'meme/{}/{}.jpg?b64lines={}'
         self.gif_url = self.api.URL + 'gif/{}/{}/{}.gif?b64lines={}'
+        self.mp4_url = self.api.URL + 'mp4/{}/{}/{}.mp4?b64lines={}'
 
     # Returns none if empty string
     @staticmethod
