@@ -76,8 +76,8 @@ class Stats:
             for member in guild.members:
                 if member.status == discord.Status.online:
                     online_users += 1
-        user_average = round((online_users / self.bot.guilds), 2)
-        guild_count = str(self.bot.guilds)
+        user_average = round((online_users / len(self.bot.guilds)), 2)
+        guild_count = str(len(self.bot.guilds))
 
         # Count number of commands executed
         command_count = 0
