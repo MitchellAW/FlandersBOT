@@ -96,7 +96,7 @@ class CompuGlobalAPI:
 
     # Loop through all words of the subtitles, add them to the caption and then
     # return the caption encoded in base64 for use in the url
-    def encode_caption(self, caption):
+    def encode_caption(self, caption, shorten=True):
         char_count = 0
         line_count = 0
         formatted_caption = ''
@@ -113,7 +113,10 @@ class CompuGlobalAPI:
                 if line_count < 4:
                     formatted_caption += '\n' + ' ' + word
 
-        caption = self.shorten_caption(formatted_caption)
+        caption = formatted_caption
+        if shorten:
+            caption = self.shorten_caption(caption)
+
         encoded = b64encode(str.encode(caption, 'utf-8'), altchars=b'__')
 
         return encoded.decode('utf-8')
@@ -180,6 +183,12 @@ class GoodGodLemon(CompuGlobalAPI):
 class CapitalBeatUs(CompuGlobalAPI):
     def __init__(self):
         super().__init__('https://capitalbeat.us/', 'West Wing')
+
+
+# Steamed Hams Meme/GIF generator API
+class FrinkiHams(CompuGlobalAPI):
+    def __init__(self):
+        super().__init__('https://frinkihams.com/', 'Steamed Hams')
 
 
 # A screencap of a TV Show (episode and timestamp) generated using
