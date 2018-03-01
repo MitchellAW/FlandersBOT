@@ -22,15 +22,15 @@ class General:
 
     # Whispers a description of the bot with author, framework, guild count etc.
     # If user has DMs disabled, send the message in the channel
-    @commands.command(aliases=['Info', 'INFO'])
+    @commands.command()
     @commands.cooldown(1, 3, BucketType.user)
     async def info(self, ctx):
         await self.dm_author(ctx, bot_info.bot_info + '\n***Currently active '
-                             'in ' + str(len(self.bot.guilds)) + 'servers***')
+                             'in ' + str(len(self.bot.guilds)) + ' servers***')
 
     # Whispers a list of the bot commands, If the user has DMs disabled,
     # sends the message in the channel
-    @commands.command(aliases=['Help', 'HELP'])
+    @commands.command()
     @commands.cooldown(1, 3, BucketType.user)
     async def help(self, ctx, *, category: str=None):
         # Post general help commands
@@ -42,14 +42,13 @@ class General:
             await self.dm_author(ctx, bot_info.tv_shows)
 
     # Whispers a list of help commands for all tv shows
-    @commands.command(aliases=['Tvshows', 'TVshows', 'TVShows', 'TVSHOWS',
-                               'tv', 'TV', 'Tv'])
+    @commands.command(aliases=['tv'])
     @commands.cooldown(1, 3, BucketType.user)
     async def tvshows(self, ctx):
         await self.dm_author(ctx, bot_info.tv_shows)
 
     # Sends the feedback to the feedback channel of support server
-    @commands.command(aliases=['Feedback', 'FEEDBACK'])
+    @commands.command()
     @commands.cooldown(2, 600, BucketType.user)
     async def feedback(self, ctx, *, message: str):
         feedback_channel = self.bot.get_channel(self.FEEDBACK_CHANNEL)
@@ -68,7 +67,7 @@ class General:
                        '-elp me grow in popularity, try `ned vote`')
 
     # Message the benefits of voting and provide link to upvote at
-    @commands.command(aliases=['Vote', 'VOTE', 'upvote', 'Upvote', 'UPVOTE'])
+    @commands.command(aliases=['upvote'])
     @commands.cooldown(1, 3, BucketType.user)
     async def vote(self, ctx):
         await ctx.send('If you vote for me using the link below, it will '
@@ -76,7 +75,7 @@ class General:
                        '<https://discordbots.org/bot/221609683562135553/vote>')
 
     # DM user with an invite link for the bot
-    @commands.command(aliases=['Invite', 'INVITE'])
+    @commands.command()
     @commands.cooldown(1, 3, BucketType.user)
     async def invite(self, ctx):
         await self.dm_author(ctx, 'You can add me to your own server using '
@@ -86,15 +85,14 @@ class General:
                                   '&scope=bot&permissions=19456>')
 
     # Sends url to FlandersBOT github repo
-    @commands.command(aliases=['Source', 'SOURCE', 'github', 'Github',
-                               'GitHub', 'GITHUB', 'repo', 'Repo', 'REPO'])
+    @commands.command(aliases=['github', 'repo'])
     @commands.cooldown(1, 3, BucketType.user)
     async def source(self, ctx):
         await ctx.send('Github Repo Source: '
                        '<https://github.com/MitchellAW/FlandersBOT>')
 
     # Display information regarding the last update
-    @commands.command(aliases=['Update', 'UPDATE'])
+    @commands.command()
     @commands.cooldown(1, 3, BucketType.user)
     async def update(self, ctx):
         await ctx.send('I now support 30 Rock and West Wing! Use `ned tvshows`'
@@ -103,7 +101,7 @@ class General:
                        'feedback here]`')
 
     # Allow administrators to make ned leave the server
-    @commands.command(aliases=['Leave', 'LEAVE'])
+    @commands.command()
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
     async def leave(self, ctx):
@@ -111,7 +109,7 @@ class General:
         await ctx.guild.leave()
 
     # Display the prefixes used on the current guild
-    @commands.command(aliases=['Prefix', 'PREFIX', 'prefixes', 'Prefixes'])
+    @commands.command(aliases=['prefixes'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def prefix(self, ctx):
         guild_prefixes = prefixes.prefixes_for(ctx.message.guild,
@@ -126,7 +124,7 @@ class General:
                            ', `doodly`,' + ' `diddly-` and `doodly-`.')
 
     # Allows for a single custom prefix per-guild
-    @commands.command(aliases=['Setprefix', 'SETPREFIX'])
+    @commands.command()
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     @commands.cooldown(3, 60, BucketType.guild)

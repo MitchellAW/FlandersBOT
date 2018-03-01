@@ -11,20 +11,14 @@ class RickAndMorty(TVShowCog):
 
     # Messages a random R & M quote with gif if no search terms are given,
     # Otherwise, search for R & M quote using search terms and post gif
-    @commands.command(aliases=['Rickandmorty', 'RickAndMorty', 'RICKANDMORTY',
-                               'ram', 'Ram', 'RAM', 'rickandmortygif',
-                               'Rickandmortygif', 'RickAndMortyGif',
-                               'RICKANDMORTYGIF', 'ramgif', 'Ramgif',
-                               'RamGif', 'RAMGIF'])
+    @commands.command(aliases=['ram', 'ramgif', 'rickandmortygif'])
     @commands.cooldown(1, 3, BucketType.channel)
     @commands.guild_only()
     async def rickandmorty(self, ctx, *, search_terms: str=None):
         await self.post_gif(ctx, search_terms)
 
     # Allows for custom captions to go with the gif that's searched for
-    @commands.command(aliases=['rammeme', 'RAMmeme', 'RAMMeme', 'RAMMEME',
-                               'Rickandmortymeme', 'RickAndMortyMeme',
-                               'RICKANDMORTYMEME'])
+    @commands.command(aliases=['rammeme'])
     @commands.cooldown(1, 3, BucketType.channel)
     @commands.guild_only()
     async def rickandmortymeme(self, ctx, *, search_terms: str):

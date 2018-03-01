@@ -62,8 +62,11 @@ class FlandersBOT(commands.Bot):
     # Prevent bot from replying to other bots
     async def on_message(self, message):
         if not message.author.bot:
-            ctx = await self.get_context(message)
-            await self.invoke(ctx)
+            ctx = await bot.get_context(message)
+            if ctx.prefix is not None:
+                ctx.invoked_with = ctx.invoked_with.lower()
+                ctx.command = self.get_command(ctx.invoked_with)
+                await self.invoke(ctx)
 
     # Track number of command executed
     async def on_command(self, ctx):

@@ -11,9 +11,7 @@ class WestWing(TVShowCog):
 
     # Messages a random West Wing quote with gif if no search terms are given,
     # Otherwise, search for West Wing quote using search terms and post gif
-    @commands.command(aliases=['Westwing', 'WestWing', 'WESTWING',
-                               'westwinggif', 'Westwinggif', 'WestWingGif',
-                               'WESTWINGGIF'])
+    @commands.command(aliases=['westwinggif', 'wgif'])
     @commands.cooldown(1, 3, BucketType.channel)
     @commands.guild_only()
     async def westwing(self, ctx, *, search_terms: str=None):

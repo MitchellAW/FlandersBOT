@@ -11,16 +11,14 @@ class Simpsons(TVShowCog):
 
     # Messages a random Simpsons quote with gif if no search terms are given,
     # Otherwise, search for Simpsons quote using search terms and post gif
-    @commands.command(aliases=['Simpsons', 'SIMPSONS', 'simpsonsgif',
-                               'Simpsonsgif', 'SimpsonsGif', 'SIMPSONSGIF'])
+    @commands.command(aliases=['simpsonsgif', 'sgif'])
     @commands.cooldown(1, 3, BucketType.channel)
     @commands.guild_only()
     async def simpsons(self, ctx, *, search_terms: str=None):
         await self.post_gif(ctx, search_terms)
 
     # Allows for custom captions to go with the gif that's searched for
-    @commands.command(aliases=['smeme', 'Smeme', 'SMEME', 'SimpsonsMEME',
-                               'SimpsonsMeme', 'SIMPSONSMEME'])
+    @commands.command(aliases=['smeme'])
     @commands.cooldown(1, 3, BucketType.channel)
     @commands.guild_only()
     async def simpsonsmeme(self, ctx, *, search_terms: str):

@@ -109,7 +109,7 @@ class Trivia:
             await ctx.send('No trivia questions remaining. Trivia has ended.')
 
     # Starts a game of trivia using the simpsons trivia questions
-    @commands.command(aliases=['Simpsonstrivia', 'SIMPSONSTRIVIA'])
+    @commands.command('strivia')
     async def simpsonstrivia(self, ctx):
         if ctx.channel.id not in self.channels_playing:
             simpsons_yellow = discord.Colour(0xffef06)
@@ -120,7 +120,7 @@ class Trivia:
                                     'ord.gif?raw=true')
 
     # Starts a game of trivia using the futurama trivia questions
-    @commands.command(aliases=['Futuramatrivia', 'FUTURAMATRIVIA'])
+    @commands.command(aliases=['ftrivia'])
     async def futuramatrivia(self, ctx):
         if ctx.channel.id not in self.channels_playing:
             fry_red = discord.Colour(0x9b2525)
@@ -130,7 +130,7 @@ class Trivia:
                                     'ress-discord.gif?raw=true')
 
     # Starts a game of trivia using the rick and morty trivia questions
-    @commands.command(aliases=['Rickandmortytrivia', 'RICKANDMORTYTRIVIA'])
+    @commands.command(aliases=['ramtrivia'])
     async def rickandmortytrivia(self, ctx):
         portal_gif = ('https://github.com/MitchellAW/MitchellAW.github.io/blo' +
                       'b/master/images/rick-morty-portal.gif?raw=true')
@@ -138,7 +138,7 @@ class Trivia:
 
     # Provide an explanation for how trivia games end for users trying to use
     # a stop command
-    @commands.command(aliases=['Stop', 'STOP'])
+    @commands.command()
     @commands.cooldown(1, 3, BucketType.channel)
     async def stop(self, ctx):
         if ctx.channel.id in self.channels_playing:
@@ -147,7 +147,7 @@ class Trivia:
                            'permissions uses the forcestop command.')
 
     # Allow users with manage server permissions to force trivia games to stop
-    @commands.command(aliases=['Forcestop', 'FORCESTOP', 'ForceStop'])
+    @commands.command()
     @commands.has_permissions(manage_guild=True)
     async def forcestop(self, ctx):
         if ctx.channel.id in self.channels_playing:
