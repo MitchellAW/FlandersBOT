@@ -116,7 +116,7 @@ class General:
     async def prefix(self, ctx):
         guild_prefixes = prefixes.prefixes_for(ctx.message.guild,
                                                self.bot.prefix_data)
-        if len(guild_prefixes) > 5:
+        if len(guild_prefixes) > 7:
             await ctx.send('This servers prefixes are: `Ned`, `ned`, `diddly`' +
                            ', `doodly`,' + ' `diddly-`, `doodly-` and `' +
                            guild_prefixes[-1] + '`.')
@@ -147,8 +147,10 @@ class General:
 
         # Add a new custom guild prefix if one doesn't already exist
         elif guild_index == -1:
-            self.bot.prefix_data.append({'guildID': ctx.message.guild.id,
-                                        'prefix': new_prefix})
+            self.bot.prefix_data.append(
+                {'guildID': ctx.message.guild.id,
+                 'prefix': new_prefix}
+            )
             prefixes.write_prefixes(self.bot.prefix_data)
             await ctx.send('This servers custom prefix changed to `'
                            + new_prefix + '`.')

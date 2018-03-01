@@ -6,30 +6,34 @@ class TVShowCog:
         self.bot = bot
         self.api = api
 
-    # Post a random moment
+    # Post a random screencap
     async def post_image(self, ctx, search_text=None, caption=None):
         if search_text is None:
-            moment = await self.api.get_random_moment()
+            screencap = await self.api.get_random_screencap()
 
         else:
-            moment = await self.api.search_for_moment(search_text)
+            screencap = await self.api.search_for_screencap(search_text)
 
-        if moment is not None:
-            ctx.bot.cached_moments.update({ctx.message.channel.id: moment})
-            await ctx.send(moment.get_meme_url(caption))
+        if screencap is not None:
+            ctx.bot.cached_screencaps.update(
+                {ctx.message.channel.id: screencap}
+            )
+            await ctx.send(screencap.get_meme_url(caption))
 
     # Post generating message, generate gif then post generated Url
     async def post_gif(self, ctx, search_text=None, caption=None):
         if search_text is None:
-            moment = await self.api.get_random_moment()
+            screencap = await self.api.get_random_screencap()
 
         else:
-            moment = await self.api.search_for_moment(search_text)
+            screencap = await self.api.search_for_screencap(search_text)
 
-        if moment is not None:
-            ctx.bot.cached_moments.update({ctx.message.channel.id: moment})
-            gif_url = await moment.get_gif_url(caption)
-            sent = await ctx.send('Generating {}... '.format(moment.key)
+        if screencap is not None:
+            ctx.bot.cached_screencaps.update(
+                {ctx.message.channel.id: screencap}
+            )
+            gif_url = await screencap.get_gif_url(caption)
+            sent = await ctx.send('Generating {}... '.format(screencap.key)
                                   + '<a:loading:410316176510418955>')
 
             generated_url = await self.api.generate_gif(gif_url)

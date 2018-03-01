@@ -17,7 +17,7 @@ class APIPageStatusError(commands.CommandError):
         super().__init__('Error {}. {} may be down.'.format(page_status, url))
 
 
-# API Used for getting all TV Show moments
+# API Used for getting all TV Show screencaps
 class CompuGlobalAPI:
     def __init__(self, url, title):
         self.URL = url
@@ -41,58 +41,58 @@ class CompuGlobalAPI:
         # Gets episode info and subtitles from start to end (episode/start/end)
         self.episode_url = self.URL + 'api/episode/{}/{}/{}'
 
-    # Gets a TV Show moment using episode and timestamp
-    async def get_moment(self, episode, timestamp):
+    # Gets a TV Show screencap using episode and timestamp
+    async def get_screencap(self, episode, timestamp):
         caption_url = self.caption_url.format(episode, timestamp)
         async with aiohttp.ClientSession() as session:
-            async with session.get(caption_url, timeout=15) as moment_page:
-                if moment_page.status == 200:
-                    return Moment(self, await moment_page.json())
+            async with session.get(caption_url, timeout=15) as screencap:
+                if screencap.status == 200:
+                    return Screencap(self, await screencap.json())
 
                 else:
-                    raise APIPageStatusError(moment_page.status, self.URL)
+                    raise APIPageStatusError(screencap.status, self.URL)
 
-    # Gets a random TV Show moment (episode and timestamp)
-    async def get_random_moment(self):
+    # Gets a random TV Show screencap (episode and timestamp)
+    async def get_random_screencap(self):
         async with aiohttp.ClientSession() as session:
-            async with session.get(self.random_url, timeout=15) as moment_page:
+            async with session.get(self.random_url, timeout=15) as screencap:
 
-                if moment_page.status == 200:
-                    return Moment(self, await moment_page.json())
+                if screencap.status == 200:
+                    return Screencap(self, await screencap.json())
 
                 else:
-                    raise APIPageStatusError(moment_page.status, self.URL)
+                    raise APIPageStatusError(screencap.status, self.URL)
 
-    # Gets the first search result for a TV Show moment using search_text
-    async def search_for_moment(self, search_text):
-        search = self.search_url + search_text.replace(' ', '+')
+    # Gets the first search result for a TV Show screencap using search_text
+    async def search_for_screencap(self, search_text):
+        search_url = self.search_url + search_text.replace(' ', '+')
 
         async with aiohttp.ClientSession() as session:
-            async with session.get(search, timeout=15) as moment_page:
-                if moment_page.status == 200:
-                    search_results = await moment_page.json()
+            async with session.get(search_url, timeout=15) as search:
+                if search.status == 200:
+                    search_results = await search.json()
 
                     if len(search_results) > 0:
-                        first_result = search_results[0]
-                        return await self.get_moment(first_result['Episode'],
-                                                     first_result['Timestamp'])
+                        result = search_results[0]
+                        return await self.get_screencap(result['Episode'],
+                                                        result['Timestamp'])
 
                     else:
                         raise NoSearchResultsFound()
 
                 else:
-                    raise APIPageStatusError(moment_page.status, self.URL)
+                    raise APIPageStatusError(search.status, self.URL)
 
     # Gets all valid frames before and after timestamp for the episode
     async def get_frames(self, episode, timestamp, before, after):
         frames_url = self.frames_url.format(episode, timestamp, before, after)
         async with aiohttp.ClientSession() as session:
-            async with session.get(frames_url, timeout=15) as frames_page:
-                if frames_page.status == 200:
-                    return await frames_page.json()
+            async with session.get(frames_url, timeout=15) as frames:
+                if frames.status == 200:
+                    return await frames.json()
 
                 else:
-                    raise APIPageStatusError(frames_page.status, self.URL)
+                    raise APIPageStatusError(frames.status, self.URL)
 
     # Loop through all words of the subtitles, add them to the caption and then
     # return the caption encoded in base64 for use in the url
@@ -182,8 +182,9 @@ class CapitalBeatUs(CompuGlobalAPI):
         super().__init__('https://capitalbeat.us/', 'West Wing')
 
 
-# A moment of a TV Show (episode and timestamp) generated using CompuGlobalAPI
-class Moment:
+# A screencap of a TV Show (episode and timestamp) generated using
+# CompuGlobalAPI
+class Screencap:
     def __init__(self, api: CompuGlobalAPI, json: dict):
         self.api = api
         self.json = json
@@ -215,18 +216,18 @@ class Moment:
         else:
             return value.replace('\n', '')
 
-    # Gets a readable timestamp for the moment in format (mm:ss)
+    # Gets a readable timestamp for the screencap in format (mm:ss)
     def get_real_timestamp(self):
         seconds = int(self.timestamp / 1000)
         minutes = int(seconds / 60)
         seconds -= int(minutes * 60)
         return '{}:{:02d}'.format(minutes, seconds)
 
-    # Gets the direct image url for the moment without any caption
+    # Gets the direct image url for the screencap without any caption
     def get_image_url(self):
         return self.image_url.format(self.key, self.timestamp)
 
-    # Gets the meme url for the moment captioned with subtitles
+    # Gets the meme url for the screencap captioned with subtitles
     def get_meme_url(self, caption=None):
         if caption is None:
             caption = self.caption
@@ -234,7 +235,7 @@ class Moment:
         b64_caption = self.api.encode_caption(caption)
         return self.meme_url.format(self.key, self.timestamp, b64_caption)
 
-    # Gets the gif url for the moment captioned with subtitles, defaults gif
+    # Gets the gif url for the screencap captioned with subtitles, defaults gif
     # length to < ~7000ms, before + after must not exceed 10,000ms (10 sec.)
     async def get_gif_url(self, caption=None, before=3000, after=4000):
         if caption is None:

@@ -38,30 +38,30 @@ class Stats:
         latency = round(self.bot.latency * 1000, 2)
         await ctx.send('🏓 Latency: ' + str(latency) + 'ms')
 
-    # Get all episode information of the last moment that was posted in the
+    # Get all episode information of the last screencap that was posted in the
     # channel
     @commands.command(aliases=['Epinfo', 'EpInfo', 'EPINFO'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def epinfo(self, ctx):
-        if ctx.channel.id in self.bot.cached_moments:
-            # Get moment and its timestamp
-            moment = self.bot.cached_moments[ctx.channel.id]
-            real_timestamp = moment.get_real_timestamp()
+        if ctx.channel.id in self.bot.cached_screencaps:
+            # Get screencap and its timestamp
+            screencap = self.bot.cached_screencaps[ctx.channel.id]
+            real_timestamp = screencap.get_real_timestamp()
 
             # Create embed for episode information, links to wiki of episode
             embed = discord.Embed(
-                title=moment.api.title + ': ' + moment.title,
+                title=screencap.api.title + ': ' + screencap.title,
                 colour=discord.Colour(0x44981e),
-                url=moment.wiki_url)
+                url=screencap.wiki_url)
 
             # Add episode information
-            embed.add_field(name='Episode', value=moment.key, inline=True)
-            embed.add_field(name='Air Date', value=moment.air_date,
+            embed.add_field(name='Episode', value=screencap.key, inline=True)
+            embed.add_field(name='Air Date', value=screencap.air_date,
                             inline=True)
             embed.add_field(name='Timestamp', value=real_timestamp,
                             inline=True)
-            embed.add_field(name='Director(s)', value=moment.director)
-            embed.add_field(name='Writer(s)', value=moment.writer)
+            embed.add_field(name='Director(s)', value=screencap.director)
+            embed.add_field(name='Writer(s)', value=screencap.writer)
             await ctx.send(embed=embed)
 
     # Display statistics for the bot
