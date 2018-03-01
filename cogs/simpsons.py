@@ -27,7 +27,7 @@ class Simpsons(TVShowCog):
         await self.post_custom_gif(ctx, search_terms)
 
     # Generate a random Steamed Hams gif and post it
-    @commands.command(aliases=['aurora', 'borealis'])
+    @commands.command(aliases=['steamed', 'aurora', 'borealis'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def steamedhams(self, ctx):
         screencap = await self.frinkihams.get_random_screencap()
