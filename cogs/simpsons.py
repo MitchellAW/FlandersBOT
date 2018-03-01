@@ -26,17 +26,13 @@ class Simpsons(TVShowCog):
     async def simpsonsmeme(self, ctx, *, search_terms: str):
         await self.post_custom_gif(ctx, search_terms)
 
-    # Generate a random Steamed Hams quote with gif if no search terms are
-    # given, otherwise search for quote using search terms and post gif
-    @commands.command(aliases=['steamed', 'aurora', 'borealis'])
-    async def steamedhams(self, ctx, *, search_terms: str=None):
-        if search_terms is None:
-            screencap = await self.frinkihams.get_random_screencap()
+    # Generate a random Steamed Hams gif and post it
+    @commands.command(aliases=['aurora', 'borealis'])
+    @commands.cooldown(1, 3, BucketType.channel)
+    async def steamedhams(self, ctx):
+        screencap = await self.frinkihams.get_random_screencap()
 
-        else:
-            screencap = await self.frinkihams.search_for_screencap(search_terms)
-
-        gif_url = await screencap.get_gif_url(before=2000, after=2000)
+        gif_url = await screencap.get_gif_url()
         sent = await ctx.send('Steaming your hams...'
                               + '<a:loading:410316176510418955>')
 
