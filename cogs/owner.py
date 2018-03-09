@@ -25,10 +25,8 @@ class Owner:
     @commands.command(hidden=True)
     @commands.is_owner()
     async def status(self, ctx, *, message: str):
-        new_status = discord.Game(name=message.format(len(self.bot.guilds)),
-                                  type=0)
-
-        await self.bot.change_presence(game=new_status, afk=True)
+        new_status = discord.Game(name=message.format(len(self.bot.guilds)))
+        await self.bot.change_presence(activity=new_status, afk=True)
         self.bot.status_format = message
         await ctx.send('Status changed!')
 
