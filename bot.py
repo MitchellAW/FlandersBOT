@@ -26,7 +26,7 @@ startup_extensions = [
 
 class FlandersBOT(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix=get_prefix)
+        super().__init__(command_prefix=get_prefix, case_insensitive=True)
 
         self.remove_command('help')
         self.command_stats = self.read_command_stats()
@@ -63,10 +63,7 @@ class FlandersBOT(commands.Bot):
     async def on_message(self, message):
         if not message.author.bot:
             ctx = await bot.get_context(message)
-            if ctx.prefix is not None:
-                ctx.invoked_with = ctx.invoked_with.lower()
-                ctx.command = self.get_command(ctx.invoked_with)
-                await self.invoke(ctx)
+            await self.invoke(ctx)
 
     # Track number of command executed
     async def on_command(self, ctx):
@@ -117,9 +114,8 @@ class FlandersBOT(commands.Bot):
                                                settings.config.BD_TOKEN)
         await api.bot_lists.update_guild_count(self, 'https://discordbots.org/',
                                                settings.config.DB_TOKEN)
-        status = discord.Game(name=self.status_format.format(len(self.guilds)),
-                              type=0)
-        await self.change_presence(game=status, afk=False)
+        status = discord.Game(name=self.status_format.format(len(self.guilds)))
+        await self.change_presence(activity=status)
 
     # Read the command statistics from json file
     @staticmethod
