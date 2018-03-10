@@ -31,6 +31,14 @@ or `python3 -m pip install -U git+https://github.com/Rapptz/discord.py@rewrite`
 
 *Utilises the latest version of discord.py (rewrite)*
 
+### Config
+Update settings/config.py with your bot token and your user ID.
+```
+TOKEN = 'BOT_TOKEN_HERE'
+
+OWNER_ID = OWNER_ID_HERE
+```
+
 ## Usage
 The bot commands can be executed using several different methods/prefixes, to minimise clashing with other discord bots. Any command can be prefixed with an @mention, ned or diddly/doodly when you really want to flaunt those Flanders-isms.
 
