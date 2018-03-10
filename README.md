@@ -87,7 +87,11 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
     </tr>
     <tr>
       <td><b>epinfo</b></td>
-      <td>Will post episode information on the last post made in the channel.</td>
+      <td>Will post episode information on the last post made by FlandersBOT in the channel.</td>
+    </tr>
+    <tr>
+      <td><b>meme [caption]</b></td>
+      <td>Will repost the last gif made by FlandersBOT in the channel with the new caption.</td>
     </tr>
   </table>
 </div>
