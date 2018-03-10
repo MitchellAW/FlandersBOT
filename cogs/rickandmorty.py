@@ -17,13 +17,6 @@ class RickAndMorty(TVShowCog):
     async def rickandmorty(self, ctx, *, search_terms: str=None):
         await self.post_gif(ctx, search_terms)
 
-    # Allows for custom captions to go with the gif that's searched for
-    @commands.command(aliases=['rammeme'])
-    @commands.cooldown(1, 3, BucketType.channel)
-    @commands.guild_only()
-    async def rickandmortymeme(self, ctx, *, search_terms: str):
-        await self.post_custom_gif(ctx, search_terms)
-
 
 def setup(bot):
     bot.add_cog(RickAndMorty(bot))
