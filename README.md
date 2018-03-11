@@ -19,14 +19,12 @@ If you like FlandersBOT, help the bot grow by voting [here](https://discordbots.
 [![Discord Bots](https://discordbots.org/api/widget/221609683562135553.svg)](https://discordbots.org/bot/221609683562135553)
 
 ## Requirements
-I'd prefer that instead of running an instance of FlandersBOT yourself you'd just [invite FlandersBOT](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456) to your own server. 
+I'd prefer that instead of running an instance of FlandersBOT yourself you'd just [invite FlandersBOT](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456) to your own server.   
 [Or go ahead anyway.](https://i.imgur.com/mSHi8.jpg)
 
 ### Dependencies
 *Requires Python 3.5+*  
 `python3 -m pip install -U -r requirements.txt`  
-
-or `python3 -m pip install -U git+https://github.com/Rapptz/discord.py@rewrite` 
 
 *Utilises the latest version of discord.py (rewrite)*
 
