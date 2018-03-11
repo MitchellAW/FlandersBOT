@@ -1,8 +1,8 @@
+from compuglobal import Frinkiac
+from compuglobal import FrinkiHams
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
-from api.compuglobal import Frinkiac
-from api.compuglobal import FrinkiHams
 from cogs.tvshows import TVShowCog
 
 

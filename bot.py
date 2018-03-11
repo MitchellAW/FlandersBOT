@@ -5,7 +5,6 @@ import discord
 from discord.ext import commands
 
 import api.bot_lists
-import api.compuglobal
 import prefixes
 import settings.config
 
@@ -96,13 +95,6 @@ class FlandersBOT(commands.Bot):
 
         elif isinstance(error, commands.CommandNotFound):
             pass
-
-        elif isinstance(error, api.compuglobal.APIPageStatusError):
-            await logging.send(error)
-            await ctx.send(error)
-
-        elif isinstance(error, api.compuglobal.NoSearchResultsFound):
-            await ctx.send(error)
 
         else:
             await logging.send(error)

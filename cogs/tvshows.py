@@ -1,5 +1,7 @@
 import asyncio
 
+import compuglobal
+
 
 class TVShowCog:
     def __init__(self, bot, api):
@@ -12,7 +14,16 @@ class TVShowCog:
             screencap = await self.api.get_random_screencap()
 
         else:
-            screencap = await self.api.search_for_screencap(search)
+            try:
+                screencap = await self.api.search_for_screencap(search)
+
+            except compuglobal.APIPageStatusError as error:
+                await ctx.send(error)
+                return
+
+            except compuglobal.NoSearchResultsFound as error:
+                await ctx.send(error)
+                return
 
         if screencap is not None:
             ctx.bot.cached_screencaps.update(
@@ -27,7 +38,16 @@ class TVShowCog:
             screencap = await self.api.get_random_screencap()
 
         else:
-            screencap = await self.api.search_for_screencap(search)
+            try:
+                screencap = await self.api.search_for_screencap(search)
+
+            except compuglobal.APIPageStatusError as error:
+                await ctx.send(error)
+                return
+
+            except compuglobal.NoSearchResultsFound as error:
+                await ctx.send(error)
+                return
 
         if screencap is not None:
             ctx.bot.cached_screencaps.update(
