@@ -70,21 +70,26 @@ class General:
     # Sends the feedback to the feedback channel of support server
     @commands.command()
     @commands.cooldown(2, 600, BucketType.user)
-    async def feedback(self, ctx, *, message: str):
-        feedback_channel = self.bot.get_channel(self.FEEDBACK_CHANNEL)
-        embed = discord.Embed(title='📫 Feedback from: ' + str(ctx.author) +
-                              ' (' + str(ctx.author.id) + ')',
-                              colour=discord.Colour(0x44981e),
-                              description='```' + message + '```')
+    async def feedback(self, ctx, *, message: str=None):
+        if message is None:
+            await ctx.send('Sorry, I noodily-need some feedback to send.\n' +
+                           'Usage: `ned feedback [feedback message here]`')
+        else:
+            feedback_channel = self.bot.get_channel(self.FEEDBACK_CHANNEL)
+            embed = discord.Embed(title='📫 Feedback from: ' + str(ctx.author) +
+                                  ' (' + str(ctx.author.id) + ')',
+                                  colour=discord.Colour(0x44981e),
+                                  description='```' + message + '```')
 
-        embed.set_author(name=ctx.message.author.name,
-                         icon_url=ctx.message.author.avatar_url)
+            embed.set_author(name=ctx.message.author.name,
+                             icon_url=ctx.message.author.avatar_url)
 
-        await feedback_channel.send(embed=embed)
-        # Thank for feedback and suggest vote
-        await ctx.send('Thanks neighbourino! 📫 The feedback has been sent ' +
-                       'to my support serveroo! If you\'d like to hel-diddly' +
-                       '-elp me grow in popularity, try `ned vote`')
+            await feedback_channel.send(embed=embed)
+            # Thank for feedback and suggest vote
+            await ctx.send('Thanks neighbourino! 📫 The feedback has been ' +
+                           'sent to my support serveroo! If you\'d like to ' +
+                           'hel-diddly-elp me grow in popularity, try ' +
+                           '`ned vote`.')
 
     # Message the benefits of voting and provide link to upvote at
     @commands.command(aliases=['upvote'])
