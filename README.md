@@ -53,9 +53,9 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
 
 *All examples above are valid methods of executing any command below.*
 
-# Commands
+## Commands
 
-## General
+### General
 
 <div style="overflow-x:auto;">
   <table width=180 style='table-layout:fixed'>
@@ -102,7 +102,7 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
   </table>
 </div>
 
-## Simpsons
+### Simpsons
 
 <div style="overflow-x:auto;">
   <table width=180 style='table-layout:fixed'>
@@ -129,7 +129,7 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
   </table>
 </div>
 
-## Futurama
+### Futurama
 
 <div style="overflow-x:auto;">
   <table width=180 style='table-layout:fixed'>
@@ -156,7 +156,7 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
   </table>
 </div>
 
-## Rick and Morty
+### Rick and Morty
 
 <div style="overflow-x:auto;">
   <table width=180 style='table-layout:fixed'>
@@ -179,7 +179,7 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
   </table>
 </div>
 
-## 30 Rock
+### 30 Rock
 
 <div style="overflow-x:auto;">
   <table width=180 style='table-layout:fixed'>
@@ -202,7 +202,7 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
   </table>
 </div>
 
-## West Wing
+### West Wing
 
 <div style="overflow-x:auto;">
   <table width=180 style='table-layout:fixed'>
@@ -227,10 +227,6 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
 
 ## Preview
 ![FlandersBOT](https://media.giphy.com/media/3o7522dwW8Bj5zNez6/giphy.gif)
-
-## Requirements
-Requires discord.py to be installed.
-The bot also depends entirely on https://frinkiac.com/, https://morbotron.com/ and https://masterofallscience.com/ for all of its commands and may fail if the API for these sites change.
 
 ## Support Server
 If you need any help with FlandersBOT, would like to provide feedback, suggestions or have any other questions regarding FlandersBOT, join the FlandersBOT Support Server on discord:
