@@ -38,6 +38,8 @@ OWNER_ID = OWNER_ID_HERE
 ```
 
 ## Usage
+<img src="https://github.com/MitchellAW/MitchellAW.github.io/blob/master/images/flanders-preview.gif" width="450" height="450" align="right">
+
 The bot commands can be executed using several different methods/prefixes, to minimise clashing with other discord bots. Any command can be prefixed with an @mention, ned or diddly/doodly when you really want to flaunt those Flanders-isms.
 
 If you're not a fan of any of these prefixes, you can add a new prefix to your server using the setprefix command. (Requires Manage Server Pemissions)
@@ -226,7 +228,7 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
 </div>
 
 ## Preview
-<img src="https://github.com/MitchellAW/MitchellAW.github.io/blob/master/images/flanders-preview.gif" width="450" height="450">
+<img src="https://github.com/MitchellAW/MitchellAW.github.io/blob/master/images/flanders-preview-2.gif" width="450" height="450">
 
 
 ## Support Server
