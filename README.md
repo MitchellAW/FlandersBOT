@@ -26,7 +26,8 @@ I'd prefer that instead of running an instance of FlandersBOT yourself you'd jus
 *Requires Python 3.5+*  
 `python3 -m pip install -U -r requirements.txt`  
 
-*Utilises the latest version of discord.py (rewrite)*
+*Utilises the latest version of [discord.py](https://github.com/Rapptz/discord.py/tree/rewrite) (rewrite)*  
+*Depends upon the async branch of [CompuGlobal](https://github.com/MitchellAW/CompuGlobal/tree/async)*
 
 ### Config
 Update settings/config.py with your bot token and your user ID.
