@@ -61,7 +61,11 @@ class General:
                 sent = await ctx.send('Generating meme... ' +
                                       '<a:loading:410316176510418955>')
                 generated_url = await screencap.api.generate_gif(gif_url)
-                await sent.edit(content=generated_url)
+                try:
+                    await sent.edit(content=generated_url)
+
+                except discord.NotFound:
+                    pass
 
     # Sends the feedback to the feedback channel of support server
     @commands.command()

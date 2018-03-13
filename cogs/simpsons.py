@@ -1,3 +1,4 @@
+import discord
 from compuglobal import Frinkiac
 from compuglobal import FrinkiHams
 from discord.ext import commands
@@ -30,7 +31,11 @@ class Simpsons(TVShowCog):
                               + '<a:loading:410316176510418955>')
 
         generated_url = await self.api.generate_gif(gif_url)
-        await sent.edit(content=generated_url)
+        try:
+            await sent.edit(content=generated_url)
+
+        except discord.NotFound:
+            pass
 
 
 def setup(bot):
