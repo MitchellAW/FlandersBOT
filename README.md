@@ -16,7 +16,9 @@ Thanks to https://discordbots.org/ for listing FlandersBOT!
 If you like FlandersBOT, help the bot grow by voting [here](https://discordbots.org/bot/221609683562135553/vote)
 
 
-[![Discord Bots](https://discordbots.org/api/widget/221609683562135553.svg)](https://discordbots.org/bot/221609683562135553)
+<a href="https://discordbots.org/bot/221609683562135553" >
+  <img src="https://discordbots.org/api/widget/221609683562135553.svg" alt="Discord Music Bot" />
+</a>
 
 ## Requirements
 I'd prefer that instead of running an instance of FlandersBOT yourself you'd just [invite FlandersBOT](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456) to your own server.   
