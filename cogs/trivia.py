@@ -109,7 +109,7 @@ class Trivia:
             await ctx.send('No trivia questions remaining. Trivia has ended.')
 
     # Starts a game of trivia using the simpsons trivia questions
-    @commands.command('strivia')
+    @commands.command(aliases=['strivia'])
     async def simpsonstrivia(self, ctx):
         if ctx.channel.id not in self.channels_playing:
             simpsons_yellow = discord.Colour(0xffef06)
