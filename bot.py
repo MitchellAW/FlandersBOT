@@ -96,6 +96,11 @@ class FlandersBOT(commands.Bot):
         elif isinstance(error, commands.CommandNotFound):
             pass
 
+        elif isinstance(error, commands.MissingPermissions):
+            await logging.send(error)
+            await logging.send('Command :' + str(ctx.command.qualified_name))
+            await logging.send('Missing Perms: ' + error.missing_perms)
+
         else:
             await logging.send(error)
             print(error)
