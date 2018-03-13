@@ -226,7 +226,8 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
 </div>
 
 ## Preview
-![FlandersBOT](https://media.giphy.com/media/3o7522dwW8Bj5zNez6/giphy.gif)
+<img src="https://github.com/MitchellAW/MitchellAW.github.io/blob/master/images/flanders-preview.gif" width="450" height="450">
+
 
 ## Support Server
 If you need any help with FlandersBOT, would like to provide feedback, suggestions or have any other questions regarding FlandersBOT, join the FlandersBOT Support Server on discord:
