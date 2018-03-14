@@ -102,6 +102,7 @@ class FlandersBOT(commands.Bot):
             await logging.send('Missing Perms: ' + error.missing_perms)
 
         else:
+            await logging.send('Command: ' + str(ctx.command.qualified_name))
             await logging.send(error)
             print(error)
 
