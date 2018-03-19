@@ -1,4 +1,4 @@
-from compuglobal import MasterOfAllScience
+from compuglobal.aio import MasterOfAllScience
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 

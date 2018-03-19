@@ -1,6 +1,6 @@
 import discord
-from compuglobal import Frinkiac
-from compuglobal import FrinkiHams
+from compuglobal.aio import Frinkiac
+from compuglobal.aio import FrinkiHams
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 

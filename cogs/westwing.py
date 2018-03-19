@@ -1,4 +1,4 @@
-from compuglobal import CapitalBeatUs
+from compuglobal.aio import CapitalBeatUs
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 

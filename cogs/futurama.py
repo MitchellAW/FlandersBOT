@@ -1,4 +1,4 @@
-from compuglobal import Morbotron
+from compuglobal.aio import Morbotron
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
