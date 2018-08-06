@@ -245,5 +245,3 @@ If you need any help with FlandersBOT, would like to provide feedback, suggestio
 [Allie Young](https://twitter.com/seriousallie)  
 **Source of the higher quality Adventures of Ned Flanders image**  
 [/u/nmcfaden](https://i.redd.it/3m7txitrcjgy.png)
-
-![Flanders](https://github.com/MitchellAW/MitchellAW.github.io/blob/master/images/flanders.png?raw=true)
