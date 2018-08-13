@@ -228,7 +228,7 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
 </div>
 
 ## Preview
-<img src="https://github.com/MitchellAW/MitchellAW.github.io/blob/master/images/flanders-preview.gif" width="450" height="350">
+<img src="https://raw.githubusercontent.com/MitchellAW/MitchellAW.github.io/master/images/flanders-preview.gif" width="450" height="350">
 
 
 ## Support Server
