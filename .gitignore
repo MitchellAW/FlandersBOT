@@ -5,4 +5,4 @@ cogs/api/__pycache__/
 venv/
 settings/config.py
 cogs/data/prefixes.json
-
+cogs/data/guildlist.csv

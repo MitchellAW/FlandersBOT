@@ -98,6 +98,27 @@ class Owner:
         except asyncio.TimeoutError:
             pass
 
+    # Generates a list of guilds the bot is in, contains name, bot and user
+    # counts
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def guildlist(self, ctx):
+        with open('cogs/data/guildlist.csv', 'w') as guild_list:
+            for guild in self.bot.guilds:
+                bot_count = 0
+                for member in guild.members:
+                    if member.bot:
+                        bot_count += 1
+
+                # Write to csv file (guild name, bot count, user count,
+                #  total member count)
+                guild_list.write('"' + guild.name + '",' +
+                                 str(bot_count) + ',' +
+                                 str(len(guild.members) - bot_count) + ',' +
+                                 str(len(guild.members)) + '\n')
+
+        await ctx.send(file=discord.File('cogs/data/guildlist.csv'))
+
 
 def setup(bot):
     bot.add_cog(Owner(bot))
