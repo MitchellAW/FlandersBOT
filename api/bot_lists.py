@@ -5,7 +5,7 @@ import settings.config
 
 # Post guild count to update count for either discordbots.org or bots.discord.pw
 async def update_guild_count(bot, url, token):
-    if 'bots.discord.pw' in url:
+    if 'discord.bots.gg' in url:
         url += 'api/v1/bots/' + str(bot.user.id) + '/stats'
     else:
         url += 'api/bots/' + str(bot.user.id) + '/stats'
@@ -13,7 +13,7 @@ async def update_guild_count(bot, url, token):
     payload = {"server_count": len(bot.guilds)}
 
     async with aiohttp.ClientSession() as session:
-        if 'bots.discord.pw' in url:
+        if 'discord.bots.gg' in url:
             await session.post(url, json=payload, headers=headers, timeout=15)
 
         else:
