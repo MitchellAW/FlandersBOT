@@ -108,7 +108,7 @@ class FlandersBOT(commands.Bot):
 
     # Update guild count at https://discordbots.org and in bots status/presence
     async def update_status(self):
-        await api.bot_lists.update_guild_count(self, 'https://bots.discord.pw/',
+        await api.bot_lists.update_guild_count(self, 'https://discord.bots.gg/',
                                                settings.config.BD_TOKEN)
         await api.bot_lists.update_guild_count(self, 'https://discordbots.org/',
                                                settings.config.DB_TOKEN)
