@@ -5,7 +5,10 @@ import settings.config
 
 # Post guild count to update count for either discordbots.org or bots.discord.pw
 async def update_guild_count(bot, url, token):
-    url += 'api/bots/' + str(bot.user.id) + '/stats'
+    if 'bots.discord.pw' in url:
+        url += 'api/v1/bots/' + str(bot.user.id) + '/stats'
+    else:
+        url += 'api/bots/' + str(bot.user.id) + '/stats'
     headers = {"Authorization": token}
     payload = {"server_count": len(bot.guilds)}
 
