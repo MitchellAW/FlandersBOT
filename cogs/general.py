@@ -2,8 +2,77 @@ import discord
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
-import bot_info
 import prefixes
+
+COMMANDS_LIST = ('''
+Hi-diddly-ho, neighborino! Here are the commands, shout them out anytime and
+I'll happily oblige! Well, so long as the reverend approves of course.
+
+**COMMAND PREFIXES**
+
+`ned`, `diddly`, `doodly`
+
+**COMMANDS**
+*All commands must start with one of the command prefixes or 
+<@221609683562135553>!*
+
+**GENERAL**
+
+**help** - Will send this list of commands.
+**info** - Will send a personal message with more information about me.
+**prefix** - Will post the prefixes I respond to on your server.
+**setprefix [prefix]** - Sets a prefix I will respond to on your server.
+**feedback [message]** - Send a feedback message or suggestions.
+**invite** - Will post an invite link for me to join your server.
+**vote** - Will post the benefits of voting for me and a link to vote.
+**update** - Will post the highlights of my last major update.
+**stats** - Will post some of my statist-diddly-istics.
+
+**TV SHOWS**
+
+**tvshows** - Will post a list of commands for all currently supported TV shows.
+**epinfo** - Will post episode information on the last post made in the channel.
+
+*I currently support commands for The Simpsons, Futurama, Rick and Morty.*
+
+**For Example:** `ned info`, `diddly help tvshows`, `doodly-simpsons`
+''')
+
+TV_SHOW_COMMANDS = ('''
+**TV SHOWS**
+
+**simpsons** - Will post a random Simpsons gif with caption.
+**simpsons [quote]** - Searches for a Simpsons gif using the quote.
+**simpsonstrivia** - Starts a game of trivia using 100+ Simpsons questions.
+
+**futurama** - Will post a random Futurama gif with caption.
+**futurama [quote]** - Searches for a Futurama gif using the quote.
+**futuramatrivia** - Starts a game of trivia using 100+ Futurama questions.
+
+**rickandmorty** - Will post a random Rick and Morty gif with caption.
+**rickandmorty [quote]** - Searches for a Rick and Morty gif using the quote.
+
+**epinfo** - Will post episode information on the last post made in the channel.
+
+**For Example:** `ned info`, `diddly help`, `doodly-simpsons`
+''')
+
+BOT_INFO = ('''Hi-diddly-ho, neighborino! I hear you wanted some 
+mor-diddly-ore information...
+Well, If it's clear and yella', you've got juice there, fella. If it's tangy 
+and brown, you're in cider town.
+Now, there's two exceptions and it gets kinda tricky here...
+
+__**INFO**__
+
+Framework: Discord.py (version=''' + discord.__version__ + ''')
+Author: <@210898009242861568> (Discord)
+Support Server: <https://discord.gg/xMmxMYg>
+Invite URL: <https://discordapp.com/oauth2/authorize?client_id=''' +
+            '''221609683562135553&scope=bot&permissions=19456>
+GitHub Source: <https://github.com/MitchellAW/FlandersBOT>
+If you'd like to hel-diddly-elp me grow in popularity, use `ned vote`
+''')
 
 
 class General:
@@ -25,7 +94,7 @@ class General:
     @commands.command()
     @commands.cooldown(1, 3, BucketType.user)
     async def info(self, ctx):
-        await self.dm_author(ctx, bot_info.bot_info + '\n***Currently active '
+        await self.dm_author(ctx, BOT_INFO + '\n***Currently active '
                              'in ' + str(len(self.bot.guilds)) + ' servers***')
 
     # Whispers a list of the bot commands, If the user has DMs disabled,
@@ -35,17 +104,17 @@ class General:
     async def help(self, ctx, *, category: str=None):
         # Post general help commands
         if category is None:
-            await self.dm_author(ctx, bot_info.commands_list)
+            await self.dm_author(ctx, COMMANDS_LIST)
 
         # Post help commands for all tv shows
         elif category.lower() == 'tvshows' or category.lower() == 'tv shows':
-            await self.dm_author(ctx, bot_info.tv_shows)
+            await self.dm_author(ctx, TV_SHOW_COMMANDS)
 
     # Whispers a list of help commands for all tv shows
     @commands.command(aliases=['tv'])
     @commands.cooldown(1, 3, BucketType.user)
     async def tvshows(self, ctx):
-        await self.dm_author(ctx, bot_info.tv_shows)
+        await self.dm_author(ctx, TV_SHOW_COMMANDS)
 
     # Will get the last screencap posted in the channel and post a new gif
     # of the same moment with meme_caption as the new caption
