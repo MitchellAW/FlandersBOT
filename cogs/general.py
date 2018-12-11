@@ -189,10 +189,8 @@ class General:
     @commands.command()
     @commands.cooldown(1, 3, BucketType.user)
     async def update(self, ctx):
-        await ctx.send('I now support 30 Rock and West Wing! Use `ned tvshows`'
-                       'for information on how to use them. If you experience '
-                       'any issues with this, please use `ned feedback ['
-                       'feedback here]`')
+        await ctx.send('-Fixed bug preventing custom prefixes on new discord'
+                       'servers.')
 
     # Allow administrators to make ned leave the server
     @commands.command()
