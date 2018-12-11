@@ -119,6 +119,7 @@ class Owner:
     @commands.is_owner()
     async def guildlist(self, ctx):
         with open('cogs/data/guildlist.csv', 'w') as guild_list:
+            guild_list.write('Server Name,# of Bots,# of Users,Total\n')
             for guild in self.bot.guilds:
                 bot_count = 0
                 for member in guild.members:
