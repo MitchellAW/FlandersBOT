@@ -233,10 +233,6 @@ class General:
         elif len(new_prefix) > 10:
             await ctx.send('Custom server prefix too long (Max 10 chars).')
 
-        elif self.bot.prefix_data[guild_index]['prefix'] == new_prefix:
-            await ctx.send('This server custom prefix is already `' +
-                           new_prefix + '`.')
-
         # Add a new custom guild prefix if one doesn't already exist
         elif guild_index == -1:
             self.bot.prefix_data.append(
@@ -246,6 +242,10 @@ class General:
             prefixes.write_prefixes(self.bot.prefix_data)
             await ctx.send('This servers custom prefix changed to `'
                            + new_prefix + '`.')
+
+        elif self.bot.prefix_data[guild_index]['prefix'] == new_prefix:
+            await ctx.send('This server custom prefix is already `' +
+                           new_prefix + '`.')
 
         # Otherwise, modify the current prefix to the new one
         else:
