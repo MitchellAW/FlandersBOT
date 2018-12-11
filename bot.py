@@ -122,7 +122,7 @@ class FlandersBOT(commands.Bot):
     async def cycle_status_format(self):
         await self.wait_until_ready()
         while not self.is_closed():
-            if self.status_index == len(self.status_formats) - 1:
+            if self.status_index >= len(self.status_formats) - 1:
                 self.status_index = 0
 
             else:
