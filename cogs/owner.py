@@ -119,7 +119,8 @@ class Owner:
     @commands.is_owner()
     async def guildlist(self, ctx):
         with open('cogs/data/guildlist.csv', 'w') as guild_list:
-            guild_list.write('Server Name,# of Bots,# of Users,Total\n')
+            guild_list.write('Server Name,# of Bots,# of Users,Total,Region,'
+                             'Features\n')
             for guild in self.bot.guilds:
                 bot_count = 0
                 for member in guild.members:
@@ -131,7 +132,9 @@ class Owner:
                 guild_list.write('"' + guild.name + '",' +
                                  str(bot_count) + ',' +
                                  str(len(guild.members) - bot_count) + ',' +
-                                 str(len(guild.members)) + '\n')
+                                 str(len(guild.members)) + ',' +
+                                 str(guild.region) + ',' +
+                                 str(guild.features) + '\n')
 
         await ctx.send(file=discord.File('cogs/data/guildlist.csv'))
 
