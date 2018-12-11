@@ -1,6 +1,7 @@
 import datetime
 import json
 
+import asyncio
 import discord
 from discord.ext import commands
 
@@ -29,7 +30,9 @@ class FlandersBOT(commands.Bot):
 
         self.remove_command('help')
         self.command_stats = self.read_command_stats()
-        self.status_format = 'Ned help | {} Servers'
+        self.status_index = 0
+        self.bg_task = self.loop.create_task(self.cycle_status_format())
+        self.status_formats = ['Ned help | {} Servers', 'Ned vote | {} Servers']
         self.prefix_data = prefixes.read_prefixes()
         self.uptime = datetime.datetime.utcnow()
         self.LOGGING_CHANNEL = 415700137302818836
@@ -112,8 +115,25 @@ class FlandersBOT(commands.Bot):
                                                settings.config.BD_TOKEN)
         await api.bot_lists.update_guild_count(self, 'https://discordbots.org/',
                                                settings.config.DB_TOKEN)
-        status = discord.Game(name=self.status_format.format(len(self.guilds)))
+        status = discord.Game(name=self.status_formats[self.status_index].
+                              format(len(self.guilds)))
         await self.change_presence(activity=status)
+
+    # Cycle through all status formats, waits a minute between status changes
+    async def cycle_status_format(self):
+        await self.wait_until_ready()
+        while not self.is_closed():
+            if self.status_index == len(self.status_formats) - 1:
+                self.status_index = 0
+
+            else:
+                self.status_index += 1
+
+            status = discord.Game(name=self.status_formats[self.status_index].
+                                  format(len(self.guilds)))
+
+            await self.change_presence(activity=status)
+            await asyncio.sleep(60)
 
     # Read the command statistics from json file
     @staticmethod
