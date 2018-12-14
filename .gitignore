@@ -3,6 +3,6 @@ __pycache__/
 cogs/__pycache__/
 cogs/api/__pycache__/
 venv/
-settings/config.py
+settings/config.json
 cogs/data/prefixes.json
 cogs/data/guildlist.csv

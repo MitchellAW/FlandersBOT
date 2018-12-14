@@ -1,10 +1,10 @@
+import json
+
 import asyncio
 
 import aiohttp
 import discord
 from discord.ext import commands
-
-import settings.config
 
 
 class Owner:
@@ -98,7 +98,7 @@ class Owner:
         # myself from shutting wrong bot down.
         def check(message):
             return (message.content == self.bot.user.name[:4] and
-                    message.author.id == settings.config.OWNER_ID)
+                    message.author.id == self.bot.config['owner_id'])
 
         try:
             await ctx.send('Respond ' + self.bot.user.name[:4] +
@@ -137,6 +137,15 @@ class Owner:
                                  str(guild.features) + '\n')
 
         await ctx.send(file=discord.File('cogs/data/guildlist.csv'))
+
+    # Reload config json file, allows regen of bot listing tokens without taking
+    # bot down
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def reloadconfig(self, ctx):
+        with open('settings/config.json', 'r') as config_file:
+            self.bot.config = json.load(config_file)
+            await ctx.message.add_reaction('✅')
 
 
 def setup(bot):

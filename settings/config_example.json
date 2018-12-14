@@ -1,0 +1,31 @@
+{
+    "bot_token": "BOT_TOKEN",
+    "owner_id": 100000000000000000,
+    "webhook_auth": "PASSWORD",
+    "bot_listings": [
+        {
+            "url": "https://discordbots.org/api/bots/{}/stats",
+            "headers": {
+                "Authorization": "TOKEN"
+            },
+            "payload": {
+                "guild_count": "server_count",
+                "shard_count": "shard_count",
+                "shard_no": "shard_no"
+            },
+            "posts_data": true
+        },
+        {
+            "url": "https://discord.bots.gg/api/v1/bots/{}/stats",
+            "headers": {
+                "Authorization": "TOKEN"
+            },
+            "payload": {
+                "guild_count": "guildCount",
+                "shard_count": "shardCount",
+                "shard_no": "shardId"
+            },
+            "posts_data": false
+        }
+    ]
+}

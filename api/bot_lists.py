@@ -1,35 +1,19 @@
 import aiohttp
 
-import settings.config
 
+# Post guild count to update count for bot_listing sites
+async def update_guild_counts(bot):
+    for listing in bot.config['bot_listings']:
+        async with aiohttp.ClientSession() as session:
+            url = listing['url'].format(str(bot.user.id))
+            data = {
+                listing['payload']['guild_count']: len(bot.guilds)
+            }
+            headers = listing['headers']
 
-# Post guild count to update count for either discordbots.org or bots.discord.pw
-async def update_guild_count(bot, url, token):
-    if 'discord.bots.gg' in url:
-        url += 'api/v1/bots/' + str(bot.user.id) + '/stats'
-    else:
-        url += 'api/bots/' + str(bot.user.id) + '/stats'
-    headers = {"Authorization": token}
-    payload = {"server_count": len(bot.guilds)}
+            # Check if api needs payload posted as data or json
+            if listing['posts_data']:
+                await session.post(url, data=data, headers=headers, timeout=15)
 
-    async with aiohttp.ClientSession() as session:
-        if 'discord.bots.gg' in url:
-            await session.post(url, json=payload, headers=headers, timeout=15)
-
-        else:
-            await session.post(url, data=payload, headers=headers, timeout=15)
-
-
-# Get a list of user IDs who have upvoted FlandersBOT
-async def get_upvoters():
-    async with aiohttp.ClientSession() as aio_client:
-        db_headers = {"Authorization": settings.config.DB_TOKEN}
-        resp = await aio_client.get('https://discordbots.org/api/bots/2216096' +
-                                    '83562135553/votes?onlyids=true',
-                                    headers=db_headers)
-        if resp.status == 200:
-            upvoters = await resp.json()
-            return upvoters
-
-        else:
-            return []
+            else:
+                await session.post(url, json=data, headers=headers, timeout=15)

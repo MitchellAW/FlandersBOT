@@ -7,7 +7,6 @@ from discord.ext import commands
 
 import api.bot_lists
 import prefixes
-import settings.config
 
 
 # Get the prefixes for the bot
@@ -36,6 +35,9 @@ class FlandersBOT(commands.Bot):
         self.uptime = datetime.datetime.utcnow()
         self.LOGGING_CHANNEL = 415700137302818836
         self.cached_screencaps = {}
+
+        with open('settings/config.json', 'r') as config_file:
+            self.config = json.load(config_file)
 
         for extension in startup_extensions:
             try:
@@ -108,12 +110,9 @@ class FlandersBOT(commands.Bot):
             await logging.send(error)
             print(error)
 
-    # Update guild count at https://discordbots.org and in bots status/presence
+    # Update guild count at bot listing sites and in bots status/presence
     async def update_status(self):
-        await api.bot_lists.update_guild_count(self, 'https://discord.bots.gg/',
-                                               settings.config.BD_TOKEN)
-        await api.bot_lists.update_guild_count(self, 'https://discordbots.org/',
-                                               settings.config.DB_TOKEN)
+        await api.bot_lists.update_guild_counts(self)
         status = discord.Game(name=self.status_formats[self.status_index].
                               format(len(self.guilds)))
         await self.change_presence(activity=status)
@@ -152,4 +151,8 @@ class FlandersBOT(commands.Bot):
 
 
 bot = FlandersBOT()
-bot.run(settings.config.TOKEN)
+
+with open('settings/config.json', 'r') as conf:
+    config = json.load(conf)
+
+bot.run(config['bot_token'])
