@@ -1,7 +1,19 @@
 {
+    "bot_id": "BOT_ID",
     "bot_token": "BOT_TOKEN",
-    "owner_id": 100000000000000000,
-    "webhook_auth": "PASSWORD",
+    "dbl_token": "DBL_TOKEN",
+    "owner_id": "100000000000000000",
+    "webhook": {
+        "webhookAuth": "PASSWORD",
+        "webhookPort": "0000"
+    },
+    "db_credentials": {
+        "user": "DB_USER",
+        "host": "URL",
+        "database": "DB_NAME",
+        "password": "PASSWORD",
+        "port": "5432"
+    },
     "bot_listings": [
         {
             "url": "https://discordbots.org/api/bots/{}/stats",

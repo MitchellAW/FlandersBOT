@@ -1,3 +1,6 @@
+import asyncio
+from datetime import datetime
+
 import discord
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
@@ -25,6 +28,7 @@ I'll happily oblige! Well, so long as the reverend approves of course.
 **feedback [message]** - Send a feedback message or suggestions.
 **invite** - Will post an invite link for me to join your server.
 **vote** - Will post the benefits of voting for me and a link to vote.
+**notifications** - Will enable/disable DM reminders for when you can vote next.
 **update** - Will post the highlights of my last major update.
 **stats** - Will post some of my statist-diddly-istics.
 
@@ -73,6 +77,8 @@ Invite URL: <https://discordapp.com/oauth2/authorize?client_id=''' +
 GitHub Source: <https://github.com/MitchellAW/FlandersBOT>
 If you'd like to hel-diddly-elp me grow in popularity, use `ned vote`
 ''')
+
+VOTE_URL = '<https://discordbots.org/bot/221609683562135553/vote>'
 
 
 class General:
@@ -164,9 +170,31 @@ class General:
     @commands.command(aliases=['upvote'])
     @commands.cooldown(1, 3, BucketType.user)
     async def vote(self, ctx):
-        await ctx.send('If you vote for me using the link below, it will '
-                       'hel-diddly-elp me grow in popularity!\n'
-                       '<https://discordbots.org/bot/221609683562135553/vote>')
+        query = '''SELECT MAX(votedAt) FROM VoteHistory
+                   WHERE userID = $1 AND voteType = 'upvote';'''
+
+        message = ('If you vote for me using the link below, it will ' +
+                   'hel-diddly-elp me grow in popularity!\n' + VOTE_URL + '\n')
+
+        row = await self.bot.db.fetchrow(query, ctx.author.id)
+
+        if row['max'] is not None:
+            time_diff = (datetime.utcnow() - row['max'])
+            seconds_remaining = 43200 - time_diff.seconds
+
+            if seconds_remaining <= 0:
+                message += '**You can vote now.**'
+
+            else:
+                hours, remainder = divmod(seconds_remaining, 3600)
+                minutes, seconds = divmod(remainder, 60)
+                message += ('**You can vote again in: {} hours, {} minutes, '
+                            'and {} seconds.**'.format(hours, minutes, seconds))
+
+        else:
+            message += '**You can vote now.**'
+
+        await ctx.send(message)
 
     # DM user with an invite link for the bot
     @commands.command()
@@ -251,6 +279,64 @@ class General:
             prefixes.write_prefixes(self.bot.prefix_data)
             await ctx.send('This servers custom prefix changed to `' +
                            new_prefix + '`.')
+
+    # Sends a DM reminder when
+    @commands.command(aliases=['reminder'])
+    @commands.cooldown(2, 30, BucketType.user)
+    async def notifications(self, ctx):
+        query = '''SELECT MAX(votedAt) FROM VoteHistory
+                   WHERE userID = $1 AND voteType = 'upvote';'''
+
+        # User disabling notifications, notify and exit
+        if ctx.author.id in self.bot.reminders:
+            self.bot.reminders.remove(ctx.author.id)
+            await self.dm_author(ctx, 'You will no longer be notified when you '
+                                      'can vote again.')
+            return
+
+        else:
+            self.bot.reminders.append(ctx.author.id)
+
+        # Get timestamp of users latest vote
+        row = await self.bot.db.fetchrow(query, ctx.author.id)
+
+        # No timestamps in history, notify and exit
+        if row['max'] is None:
+            await self.dm_author(ctx, VOTE_URL + '\n**You can vote now.**')
+            return
+
+        # Calculate seconds until next vote
+        time_diff = (datetime.utcnow() - row['max'])
+        seconds_remaining = 43200 - time_diff.seconds
+
+        # Voted over 12 hours ago, notify and exit
+        if seconds_remaining <= 0:
+            await self.dm_author(ctx, VOTE_URL + '\n**You can vote now.**')
+            return
+
+        # Calculate hours, minutes, seconds until able to vote again
+        hours, remainder = divmod(seconds_remaining, 3600)
+        minutes, seconds = divmod(remainder, 60)
+
+        # Check if user has DMs disabled
+        try:
+            await ctx.author.send('I will remind you to vote again in: '
+                                  '**{} hours, {} minutes, and {} seconds.**'.
+                                  format(hours, minutes, seconds))
+
+        # DMs disabled, notify and exit
+        except discord.Forbidden:
+            await ctx.send('You have DMs disabled, please enable DMs if you\'d'
+                           'like to be reminded when you can vote next.')
+            return
+
+        # Wait until user is able to vote again
+        await asyncio.sleep(seconds_remaining)
+
+        # If user has not disabled notifications yet, notify user
+        if ctx.author.id in self.bot.reminders:
+            self.bot.reminders.remove(ctx.author.id)
+            await ctx.author.send(VOTE_URL + '\n**You can vote now.**')
 
 
 def setup(bot):

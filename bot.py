@@ -2,6 +2,7 @@ import datetime
 import json
 
 import asyncio
+import asyncpg
 import discord
 from discord.ext import commands
 
@@ -35,6 +36,8 @@ class FlandersBOT(commands.Bot):
         self.uptime = datetime.datetime.utcnow()
         self.LOGGING_CHANNEL = 415700137302818836
         self.cached_screencaps = {}
+        self.reminders = []
+        self.db = None
 
         with open('settings/config.json', 'r') as config_file:
             self.config = json.load(config_file)
@@ -53,6 +56,9 @@ class FlandersBOT(commands.Bot):
         await self.update_status()
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.datetime.utcnow()
+
+        if self.db is None:
+            self.db = await asyncpg.create_pool(**self.config['db_credentials'])
 
     # Update guild count on join
     async def on_guild_join(self, guild):

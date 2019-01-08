@@ -101,12 +101,11 @@ class Owner:
                     message.author.id == self.bot.config['owner_id'])
 
         try:
-            await ctx.send('Respond ' + self.bot.user.name[:4] +
-                           ' to shutdown')
-
+            await ctx.send('Respond ' + self.bot.user.name[:4] + ' to shutdown')
             response = await self.bot.wait_for('message', check=check,
                                                timeout=10)
             await response.add_reaction('✅')
+            await self.bot.db.close()
             await self.bot.logout()
             await self.bot.close()
 
