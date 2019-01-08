@@ -6,3 +6,5 @@ venv/
 settings/config.json
 cogs/data/prefixes.json
 cogs/data/guildlist.csv
+node_modules/
+*.min.js
