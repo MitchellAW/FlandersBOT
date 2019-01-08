@@ -26,17 +26,52 @@ I'd prefer that instead of running an instance of FlandersBOT yourself you'd jus
 
 ### Dependencies
 *Requires Python 3.5+*  
-`python3 -m pip install -U -r requirements.txt`  
+`python3 -m pip install -U -r requirements.txt`
 
 *Utilises the latest version of [discord.py](https://github.com/Rapptz/discord.py/tree/rewrite) (rewrite)*  
 *Depends upon the async branch of [CompuGlobal](https://github.com/MitchellAW/CompuGlobal/tree/async)*
 
-### Config
-Update settings/config.py with your bot token and your user ID.
-```
-TOKEN = 'BOT_TOKEN_HERE'
+*Requires PostgreSQL 9.6+*  
+```sh
+$ sudo apt-get update
+$ sudo apt-get upgrade
+$ sudo apt-get install postgresql
+```  
 
-OWNER_ID = OWNER_ID_HERE
+*Requires Node.js v11.6+ for dbl webhook*
+```sh
+$ npm install dblapi.js
+$ npm install pg
+```  
+
+### Config
+Update settings/config.json with required credentials.
+
+
+## Database Setup
+
+### Create Database
+```sh
+sudo -u postgres psql
+```  
+
+```sql
+CREATE ROLE IF NOT EXISTS ned WITH LOGIN PASSWORD '<password>';
+CREATE DATABASE flandersdb OWNER ned;
+```
+
+### Create Table
+```sh
+$ psql -h 127.0.0.1 -d flandersdb -U ned
+```  
+```sql
+CREATE TABLE IF NOT EXISTS VoteHistory (
+	voteID serial PRIMARY KEY,
+	userID bigint,
+	voteType text CHECK (voteType IN ('upvote', 'test')),
+	isWeekend boolean,
+	votedAt timestamp default (now() at time zone 'utc')
+);
 ```
 
 ## Usage
