@@ -40,7 +40,7 @@ async function startWebhook() {
     // Voting webhook, inserts vote into vote_history table
     await dbl.webhook.on('vote', async vote => {
         await pool.query(INSERT_QUERY, [vote.user, vote.type, vote.isWeekend]);
-        await pool.query(`NOTIFY vote, ${vote.user}\';`);
+        await pool.query(`NOTIFY vote, \'${vote.user}\';`);
         console.log(`User with ID ${vote.user} just voted!`);
     });
 }
