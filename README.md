@@ -129,6 +129,10 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
       <td>Will post some of FlandersBOT's statistics.</td>
     </tr>
     <tr>
+      <td><b>notifications</b></td>
+      <td>Toggle notifications for when you are able to vote.</td>
+    </tr>
+    <tr>
       <td><b>epinfo</b></td>
       <td>Will post episode information on the last post made by FlandersBOT in the channel.</td>
     </tr>

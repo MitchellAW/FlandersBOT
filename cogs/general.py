@@ -28,7 +28,7 @@ I'll happily oblige! Well, so long as the reverend approves of course.
 **feedback [message]** - Send a feedback message or suggestions.
 **invite** - Will post an invite link for me to join your server.
 **vote** - Will post the benefits of voting for me and a link to vote.
-**notifications** - Will enable/disable DM reminders for when you can vote next.
+**notifications** - Will toggle DM reminders for when you can vote next.
 **update** - Will post the highlights of my last major update.
 **stats** - Will post some of my statist-diddly-istics.
 
