@@ -299,6 +299,25 @@ class General:
                 await ctx.send('You have DMs disabled, please enable DMs if '
                                'you\'d like to enable notifications.')
 
+            # Check if user is able to vote now
+            query = '''SELECT MAX(votedAt) FROM VoteHistory
+                       WHERE userID = $1 AND voteType = 'upvote';'''
+            row = await self.bot.db.fetchrow(query, ctx.author.id)
+
+            # No timestamps in history, notify and exit
+            if row['max'] is None:
+                await self.dm_author(ctx, VOTE_URL + '\n**You can vote now.**')
+
+            else:
+                # Calculate seconds until next vote
+                time_diff = (datetime.utcnow() - row['max'])
+                seconds_remaining = 43200 - time_diff.seconds
+
+                # Voted over 12 hours ago, notify and exit
+                if seconds_remaining <= 0:
+                    await self.dm_author(ctx, VOTE_URL +
+                                         '\n**You can vote now.**')
+
     @commands.command(aliases=['toggled'])
     async def toggle(self, ctx):
         if ctx.author.id not in self.bot.reminders:
