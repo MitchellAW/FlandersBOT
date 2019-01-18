@@ -280,63 +280,32 @@ class General:
             await ctx.send('This servers custom prefix changed to `' +
                            new_prefix + '`.')
 
-    # Sends a DM reminder when
-    @commands.command(aliases=['reminder'])
+    # Toggle notifications for when user can vote again
+    @commands.command(aliases=['reminder', 'subscribe'])
     @commands.cooldown(2, 30, BucketType.user)
     async def notifications(self, ctx):
-        query = '''SELECT MAX(votedAt) FROM VoteHistory
-                   WHERE userID = $1 AND voteType = 'upvote';'''
-
-        # User disabling notifications, notify and exit
         if ctx.author.id in self.bot.reminders:
             self.bot.reminders.remove(ctx.author.id)
             await self.dm_author(ctx, 'You will no longer be notified when you '
                                       'can vote again.')
-            return
 
         else:
             self.bot.reminders.append(ctx.author.id)
+            try:
+                await self.dm_author(ctx, 'Notifications enabled. You will be '
+                                          'notified when you are able to vote.')
 
-        # Get timestamp of users latest vote
-        row = await self.bot.db.fetchrow(query, ctx.author.id)
+            except discord.Forbidden:
+                await ctx.send('You have DMs disabled, please enable DMs if '
+                               'you\'d like to enable notifications.')
 
-        # No timestamps in history, notify and exit
-        if row['max'] is None:
-            await self.dm_author(ctx, VOTE_URL + '\n**You can vote now.**')
-            return
+    @commands.command(aliases=['toggled'])
+    async def toggle(self, ctx):
+        if ctx.author.id not in self.bot.reminders:
+            self.bot.reminders.append(ctx.author.id)
 
-        # Calculate seconds until next vote
-        time_diff = (datetime.utcnow() - row['max'])
-        seconds_remaining = 43200 - time_diff.seconds
-
-        # Voted over 12 hours ago, notify and exit
-        if seconds_remaining <= 0:
-            await self.dm_author(ctx, VOTE_URL + '\n**You can vote now.**')
-            return
-
-        # Calculate hours, minutes, seconds until able to vote again
-        hours, remainder = divmod(seconds_remaining, 3600)
-        minutes, seconds = divmod(remainder, 60)
-
-        # Check if user has DMs disabled
-        try:
-            await ctx.author.send('I will remind you to vote again in: '
-                                  '**{} hours, {} minutes, and {} seconds.**'.
-                                  format(hours, minutes, seconds))
-
-        # DMs disabled, notify and exit
-        except discord.Forbidden:
-            await ctx.send('You have DMs disabled, please enable DMs if you\'d'
-                           'like to be reminded when you can vote next.')
-            return
-
-        # Wait until user is able to vote again
-        await asyncio.sleep(seconds_remaining)
-
-        # If user has not disabled notifications yet, notify user
-        if ctx.author.id in self.bot.reminders:
+        else:
             self.bot.reminders.remove(ctx.author.id)
-            await ctx.author.send(VOTE_URL + '\n**You can vote now.**')
 
 
 def setup(bot):

@@ -1,5 +1,5 @@
-import datetime
 import json
+from datetime import datetime
 
 import asyncio
 import asyncpg
@@ -31,9 +31,11 @@ class FlandersBOT(commands.Bot):
         self.command_stats = self.read_command_stats()
         self.status_index = 0
         self.bg_task = self.loop.create_task(self.cycle_status_format())
+        self.db_conn = None
+        self.bg_task_2 = self.loop.create_task(self.track_votes())
         self.status_formats = ['Ned help | {} Servers', 'Ned vote | {} Servers']
         self.prefix_data = prefixes.read_prefixes()
-        self.uptime = datetime.datetime.utcnow()
+        self.uptime = datetime.utcnow()
         self.LOGGING_CHANNEL = 415700137302818836
         self.cached_screencaps = {}
         self.reminders = []
@@ -55,7 +57,7 @@ class FlandersBOT(commands.Bot):
         print('Client ID: ' + str(self.user.id))
         await self.update_status()
         if not hasattr(self, 'uptime'):
-            self.uptime = datetime.datetime.utcnow()
+            self.uptime = datetime.utcnow()
 
         if self.db is None:
             self.db = await asyncpg.create_pool(**self.config['db_credentials'])
@@ -138,6 +140,40 @@ class FlandersBOT(commands.Bot):
 
             await self.change_presence(activity=status)
             await asyncio.sleep(60)
+
+    async def track_votes(self):
+        self.db_conn = await asyncpg.connect(**self.config['db_credentials'])
+
+        async def vote_listener(*args):
+            # Get user_id from payload
+            user_id = int(args[0][-1])
+            user = self.get_user(user_id)
+
+            # Thank subscribed user for voting
+            if user_id in self.reminders:
+                await user.send('Thanks for voting! You will now be notified '
+                                'when you can vote again in 12 hours.')
+
+            # Get timestamp of users latest vote
+            query = '''SELECT MAX(votedAt) FROM VoteHistory
+                       WHERE userID = $1 AND voteType = 'upvote';'''
+            row = await self.db_conn.fetchrow(query, user_id)
+
+            # Calculate seconds until next vote
+            time_diff = (datetime.utcnow() - row['max'])
+            seconds_remaining = 43200 - time_diff.seconds
+
+            # Wait time remaining (should be 12 hours)
+            await asyncio.sleep(seconds_remaining)
+
+            # Notify subscribed user that they are able to vote again.
+            if user_id in self.reminders:
+                await user.send('<https://discordbots.org/bot/2216096835621'
+                                '35553/vote>\n**You can vote now.**')
+
+        # Add listener to db connection for when user votes
+        await self.db_conn.add_listener('vote', lambda *args: self.loop.
+                                        create_task(vote_listener(args)))
 
     # Read the command statistics from json file
     @staticmethod

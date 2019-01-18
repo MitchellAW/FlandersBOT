@@ -8,7 +8,9 @@ const POINTS_QUERY = `SELECT SUM(CASE WHEN isWeekend THEN 2 ELSE 1 END)
 
 // Query to insert a new vote into the history
 const INSERT_QUERY = `INSERT INTO VoteHistory (userID, voteType,  isWeekend) 
-				      VALUES ($1, $2, $3);`;
+				      VALUES ($1, $2, $3);`
+
+const NOTIFY_QUERY = `NOTIFY vote, $1::text;`
 
 // Records any missing votes since webhook was last ran. Inserts
 // missing votes as null userID into vote_history table
@@ -40,6 +42,7 @@ async function startWebhook() {
     // Voting webhook, inserts vote into vote_history table
     await dbl.webhook.on('vote', async vote => {
         await pool.query(INSERT_QUERY, [vote.user, vote.type, vote.isWeekend]);
+        await pool.query(NOTIFY_QUERY, [vote.user]);
         console.log(`User with ID ${vote.user} just voted!`);
     });
 }
