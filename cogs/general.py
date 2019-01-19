@@ -168,7 +168,7 @@ class General:
 
     # Message the benefits of voting and provide link to upvote at
     @commands.command(aliases=['upvote'])
-    @commands.cooldown(1, 3, BucketType.user)
+    @commands.cooldown(1, 30, BucketType.user)
     async def vote(self, ctx):
         query = '''SELECT MAX(votedAt) FROM VoteHistory
                    WHERE userID = $1 AND voteType = 'upvote';'''
