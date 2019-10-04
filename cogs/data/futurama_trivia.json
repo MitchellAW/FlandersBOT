@@ -1,443 +1,548 @@
 [
     {
         "question":"What is Fry's first name?",
-        "answers":["Philip", "Frederick", "Yancy"]
+        "answers":["Philip", "Frederick", "Yancy"],
+        "source":"https://morbotron.com/caption/S03E08/980712"
     },
     {
         "question":"What does Morbo, the news reporter, call himself?",
-        "answers":["Morbo the Annihilator", "Morbo the Destructor", "Morbo the Destroyer"]
+        "answers":["Morbo the Annihilator", "Morbo the Destructor", "Morbo the Destroyer"],
+        "source":"https://morbotron.com/caption/S06E03/1396310"
     },
     {
         "question":"What is Bender's 2nd most used word according to episode, 'War is the H-Word'?",
-        "answers":["Dffodil", "Shiny", "Metal"]
+        "answers":["Daffodil", "Shiny", "Metal"],
+        "source":"https://morbotron.com/caption/S03E01/987607"
     },
     {
         "question":"In 'The Cyber House Rules', how many orphans does Bender adopt?",
-        "answers":["12", "10", "8"]
+        "answers":["12", "10", "8"],
+        "source":"https://morbotron.com/caption/S03E09/370936"
     },
     {
         "question":"What is Bender's middle name?",
-        "answers":["Bending", "Rodriguez", "Bended"]
+        "answers":["Bending", "Rodriguez", "Bended"],
+        "source":"https://morbotron.com/caption/S03E08/468984"
     },
     {
         "question":"Hermes' wife, LaBarbara, was once married to who?",
-        "answers":["Barbados Slim", "Trinidad Slim", "Antigua Slim"]
+        "answers":["Barbados Slim", "Trinidad Slim", "Antigua Slim"],
+        "source":"https://morbotron.com/caption/S05E13/284350"
     },
     {
         "question":"What was the PIN for Fry's ATM card? (The price of a cheese pizza and large soda at Panucci's Pizza)",
-        "answers":["1077", "1150", "1089"]
+        "answers":["1077", "1150", "1089"],
+        "source":"https://morbotron.com/caption/S01E06/1094606"
     },
     {
         "question":"What rank does Kif hold in the DOOP?",
-        "answers":["Lieutenant", "Sergeant", "Captain"]
+        "answers":["Lieutenant", "Sergeant", "Captain"],
+        "source":"https://morbotron.com/caption/S04E02/920402"
     },
     {
         "question":"What are the names of the two recurring cops, often seen in New New York?",
-        "answers":["Smitty and URL", "Jonesy and ISP", "Brady and Dotcom"]
+        "answers":["Smitty and URL", "Jonesy and ISP", "Brady and Dotcom"],
+        "source":"https://morbotron.com/caption/S08E03/323990"
     },
     {
         "question":"Which product successfully uses a dream advert to market itself to Fry?",
-        "answers":["Lightspeed Briefs", "Bachelor Chow", "Slurm"]
+        "answers":["Lightspeed Briefs", "Bachelor Chow", "Slurm"],
+        "source":"https://morbotron.com/caption/S01E06/1153365"
     },
     {
         "question":"What religion does Bender turn to in order to overcome his addiction?",
-        "answers":["Temple of Robotology", "Church of Roboism", "Order of Mechanology"]
+        "answers":["Temple of Robotology", "Church of Roboism", "Order of Mechanology"],
+        "source":"https://morbotron.com/caption/S01E09/638431"
     },
     {
         "question":"Which planet is Amy from?",
-        "answers":["Mars", "Earth", "Pluto"]
+        "answers":["Mars", "Earth", "Pluto"],
+        "source":"https://morbotron.com/caption/S03E09/839604"
     },
     {
         "question":"What is the name of Planet Express' janitor",
-        "answers":["Scruffy", "Scrubby", "Scott"]
+        "answers":["Scruffy", "Scrubby", "Scott"],
+        "source":"https://morbotron.com/caption/S05E03/782148"
     },
     {
         "question":"Who is the bending unit similar to Bender?",
-        "answers":["Flexo", "Bendo", "Clamps"]
+        "answers":["Flexo", "Bendo", "Clamps"],
+        "source":"https://morbotron.com/caption/S03E06/875156"
     },
     {
         "question":"Who is Professor Hubert Farnsworth's arch enemy?",
-        "answers":["Ogden Wernstrom", "Mom", "Albert Einstein"]
+        "answers":["Ogden Wernstrom", "Mom", "Albert Einstein"],
+        "source":"https://morbotron.com/caption/S01E08/150398"
     },
     {
         "question":"What species is Leela?",
-        "answers":["Mutant human", "Cyclops", "Human"]
+        "answers":["Mutant human", "Cyclops", "Human"],
+        "source":"https://morbotron.com/caption/S04E10/1006288"
     },
     {
-        "question":"What was the name of Fry's dogs?",
-        "answers":["Seymour Asses", "I.C. Wiener", "Buster"]
+        "question":"What was the name of Fry's dog?",
+        "answers":["Seymour Asses", "I.C. Wiener", "Buster"],
+        "source":"https://morbotron.com/caption/S05E02/177126"
     },
     {
         "question":"Who's New New York's mayor?",
-        "answers":["C. Randell Poopenmeyer", "Richard Nixon's head", "D. Ed Peenpoopen"]
+        "answers":["C. Randell Poopenmeyer", "Richard Nixon's head", "D. Ed Peenpoopen"],
+        "source":"https://morbotron.com/caption/S02E12/163946"
     },
     {
         "question":"What is the age that the Sunset Squad Robots take people to the Near-Death Star",
-        "answers":["160", "150", "200"]
+        "answers":["160", "150", "200"],
+        "source":"https://morbotron.com/caption/S02E14/337019"
     },
     {
         "question":"Who is the biological mother of Kiff's children?",
-        "answers":["Leela", "Kiff", "Amy"]
+        "answers":["Leela", "Kiff", "Amy"],
+        "source":"https://morbotron.com/caption/S05E05/751216"
     },
     {
         "question":"What is Bender's super hero alter ego in the episdoe, 'Less Than a Hero'",
-        "answers":["Super King", "The Masked Unit", "Bender the Offender"]
+        "answers":["Super King", "The Masked Unit", "Bender the Offender"],
+        "source":"https://morbotron.com/caption/S05E06/441156"
     },
     {
         "question":"What is Leela's fathers name?",
-        "answers":["Turanga Morris", "Turanga Morgan", "Turanga Maurice"]
+        "answers":["Turanga Morris", "Turanga Morgan", "Turanga Maurice"],
+        "source":"https://futurama.fandom.com/wiki/Turanga_Morris"
     },
     {
-        "question":"What planet is Lrr the ruler of?",
-        "answers":["Omicron Persei 8", "Cygnus 5", "Decapod 10"]
+        "question":"What planet is Lrrr the ruler of?",
+        "answers":["Omicron Persei 8", "Cygnus 5", "Decapod 10"],
+        "source":"https://futurama.fandom.com/wiki/Lrrr"
     },
     {
         "question":"What hit TV show stars Calculon?",
-        "answers":["All My Circuits", "Single Female Lawyer", "Hold My Circuits"]
+        "answers":["All My Circuits", "Single Female Lawyer", "Hold My Circuits"],
+        "source":"https://morbotron.com/caption/S01E03/180980"
     },
     {
         "question":"Which of the robots below did not participate in the Ultimate Robot Fighting League?",
-        "answers":["Crushinator", "The Masked Unit", "Destructor"]
+        "answers":["Crushinator", "The Masked Unit", "Destructor"],
+        "source":"https://morbotron.com/caption/S01E02/1065607"
     },
     {
         "question":"In which city is the Planet Express headquarters?",
-        "answers":["New New York", "New York", "Old New York"]
+        "answers":["New New York", "New York", "Old New York"],
+        "source":"https://futurama.fandom.com/wiki/Planet_Express"
     },
     {
         "question":"Which package delivery company do the main characters work for?",
-        "answers":["Planet Express", "Pizza Planet", "Awesome Express"]
+        "answers":["Planet Express", "Pizza Planet", "Awesome Express"],
+        "source":"https://futurama.fandom.com/wiki/Planet_Express"
     },
     {
         "question":"What sorority did Amy originally belong to?",
-        "answers":["Kappa Kappa Wong", "Phi Kappa Wong", "Zeta Theta Wong"]
+        "answers":["Kappa Kappa Wong", "Phi Kappa Wong", "Zeta Theta Wong"],
+        "source":"https://morbotron.com/caption/S01E02/281223"
     },
     {
         "question":"Who was Fry's roommate in the Institute for Criminally Insane Robots?",
-        "answers":["Malfunctioning Eddie", "Roberto", "Unit 2013"]
+        "answers":["Malfunctioning Eddie", "Roberto", "Unit 2013"],
+        "source":"https://morbotron.com/caption/S03E10/508507"
     },
     {
         "question":"Which of the following is the first of four Futurama movies?",
-        "answers":["Bender's Big Score", "Bender's Game", "The Beast with a Billion Backs"]
+        "answers":["Bender's Big Score", "Bender's Game", "The Beast with a Billion Backs"],
+        "source":"https://futurama.fandom.com/wiki/Bender%27s_Big_Score"
     },
     {
-        "question":"What does Bender secretly long to come?",
-        "answers":["A Folk Singer", "A Salsa Dancer", "A Successful Bending Unit"]
+        "question":"What does Bender secretly long to become?",
+        "answers":["A Folk Singer", "A Salsa Dancer", "A Successful Bending Unit"],
+        "source":"https://morbotron.com/caption/S03E14/158874"
     },
     {
         "question":"Which of the following is not one of Mom's three sons?",
-        "answers":["Wayne", "Igner", "Larry"]
+        "answers":["Wayne", "Igner", "Larry"],
+        "source":"https://morbotron.com/caption/S06E03/2155610"
     },
     {
         "question":"What planet is the home of the Yarn people?",
-        "answers":["Nylar 4", "Cygnus 5", "Chapek 9"]
+        "answers":["Nylar 4", "Cygnus 5", "Chapek 9"],
+        "source":"https://morbotron.com/caption/S02E06/196968"
     },
     {
         "question":"From which planet did the Slurm soft drink originate?",
-        "answers":["Wormulon", "Amphibios 9", "Stumbos 4"]
+        "answers":["Wormulon", "Amphibios 9", "Stumbos 4"],
+        "source":"https://morbotron.com/caption/S02E04/456361"
     },
     {
         "question":"What is Leela's apartment number?",
-        "answers":["11", "13", "15"]
+        "answers":["1I", "E3", "5S"],
+        "source":"https://morbotron.com/caption/S03E04/905870"
     },
     {
         "question":"Name the device that Bender and Fry used to find the winning Slurm bottle cap?",
-        "answers":["F-Ray", "X-ray", "Z-ray"]
+        "answers":["F-Ray", "X-ray", "Z-ray"],
+        "source":"https://morbotron.com/caption/S02E04/361967"
     },
     {
         "question":"Who was Fry's roommate at Mars University?",
-        "answers":["Guenter", "George", "Gertrude"]
+        "answers":["Guenter", "George", "Gertrude"],
+        "source":"https://morbotron.com/caption/S02E02/798647"
     },
     {
         "question":"What is the name of Zapp Brannigan's ship?",
-        "answers":["Nimbus", "RMS Overkill", "Titanic"]
+        "answers":["Nimbus", "RMS Overkill", "Titanic"],
+        "source":"https://morbotron.com/caption/S10E03/352143"
     },
     {
         "question":"What is Calculon's operating system?",
-        "answers":["Windows Vista", "Windows 98", "Windows XP"]
+        "answers":["Windows Vista", "Windows 98", "Windows XP"],
+        "source":"https://morbotron.com/caption/S06E04/4750086"
     },
     {
         "question":"Which sport did Hermes represent Earth for at the Olympics?",
-        "answers":["Limbo", "Blernsball", "Girder Bending"]
+        "answers":["Limbo", "Blernsball", "Girder Bending"],
+        "source":"https://morbotron.com/caption/S05E13/218667"
     },
     {
         "question":"What did Fry's dad name him after?",
-        "answers":["The Screwdriver", "The Island", "His Grandfather"]
+        "answers":["The Screwdriver", "The Island", "His Grandfather"],
+        "source":"https://morbotron.com/caption/S03E08/76559"
     },
     {
         "question":"Which apartment complex did Fry and Bender share?",
-        "answers":["The Robot Arms", "The Robo-Complex", "Robo-Units"]
+        "answers":["Robot Arms Apts", "The Robo-Complex", "Robo-Units"],
+        "source":"https://morbotron.com/caption/S01E06/4404"
     },
     {
         "question":"What does Professor Farnsworth say is strange about Zoidberg?",
-        "answers":["He wears sandals", "He's a doctor", "He eats trash"]
+        "answers":["He wears sandals", "He's a doctor", "He eats trash"],
+        "source":"https://morbotron.com/caption/S01E02/185294"
     },
     {
         "question":"What rank is the bureaucrat that runs Cookieville Minimum Security Orphanarium?",
-        "answers":["135", "125", "115"]
+        "answers":["135", "125", "115"],
+        "source":"https://morbotron.com/caption/S03E09/155087"
     },
     {
         "question":"In 'Parasites Lost' What does Fry eat that had the parasites?",
-        "answers":["Egg Salad Sandwich", "Tuna Sandwich", "Salad"]
+        "answers":["Egg Salad Sandwich", "Tuna Sandwich", "Salad"],
+        "source":"https://morbotron.com/caption/S03E04/85084"
     },
     {
         "question":"How much did Fry pay for Ted Danson's skeleton?",
-        "answers":["$10,000", "$30,000", "$300,000"]
+        "answers":["$10,000", "$30,000", "$300,000"],
+        "source":"https://morbotron.com/caption/S01E06/571647"
     },
     {
         "question":"Which celebration was going on when Fry fell in to the cryogenic chamber and was frozen?",
-        "answers":["New Year's Eve", "Christmas", "Independance Day"]
+        "answers":["New Year's Eve", "Christmas", "Independance Day"],
+        "source":"https://morbotron.com/caption/S01E01/96312"
     },
     {
         "question":"Which of these were not on the checklist of animals the Planet Express crew was supposed to rescue?",
-        "answers":["Nibblonian", "Hermaphlamingo", "Molotov Cockatoo"]
+        "answers":["Nibblonian", "Parasitic Puppy", "Sharktopus"],
+        "source":"https://morbotron.com/caption/S01E04/934312"
     },
     {
         "question":"Where did Fry meet Bender?",
-        "answers":["Suicide Booth", "In a Bar", "Robot Strip Club"]
+        "answers":["Suicide Booth", "In a Bar", "Robot Strip Club"],
+        "source":"https://morbotron.com/caption/S01E01/557414"
     },
     {
         "question":"From what age did Fry say he has wanted a robot for a friend?",
-        "answers":["Six", "Four", "Eight"]
+        "answers":["Six", "Four", "Eight"],
+        "source":"https://morbotron.com/caption/S01E01/678152"
     },
     {
         "question":"What did Zoidberg trade all his stock in Planet Express for?",
-        "answers":["A Sandwich", "An Anchovy", "A Movie Ticket"]
+        "answers":["A Sandwich", "An Anchovy", "A Movie Ticket"],
+        "source":"https://morbotron.com/caption/S04E06/726575"
     },
     {
         "question":"What was the first title caption used in the 'Futurama' opening credits?",
-        "answers":["In color", "As seen on TV", "Filmed on Location"]
+        "answers":["In color", "As seen on TV", "Filmed on Location"],
+        "source":"https://futurama.fandom.com/wiki/Space_Pilot_3000"
     },
     {
         "question":"Which of these characters is not voiced by Billy West?",
-        "answers":["Kif Kroker", "Zapp Brannigan", "Dr. Zoidberg"]
+        "answers":["Kif Kroker", "Zapp Brannigan", "Dr. Zoidberg"],
+        "source":"https://futurama.fandom.com/wiki/Billy_West"
     },
     {
         "question":"Where is Fry's first delivery for Planet Express?",
-        "answers":["Luna Park", "Mars University", "Sicily 8"]
+        "answers":["Luna Park", "Mars University", "Sicily 8"],
+        "source":"https://morbotron.com/caption/S01E02/318544"
     },
     {
         "question":"What planet is at the exact center of the universe?",
-        "answers":["Eternium", "Near Death Star", "Omicron Persei 8"]
+        "answers":["Eternium", "Near Death Star", "Omicron Persei 8"],
+        "source":"https://futurama.fandom.com/wiki/Eternium"
     },
     {
         "question":"What language is said to be dead in the English version of the show?",
-        "answers":["French", "Latin", "Spanish"]
+        "answers":["French", "Latin", "Spanish"],
+        "source":"https://morbotron.com/caption/S02E14/612937"
     },
     {
         "question":"Who is the only member of the Planet Express crew not to have piloted the Planet Express ship?",
-        "answers":["Dr. Zoidberg", "Amy", "Bender"]
+        "answers":["Dr. Zoidberg", "Amy", "Bender"],
+        "source":""
     },
     {
         "question":"What was the name of the movie that Calculon collaborated with Dr. Zoidberg?",
-        "answers":["The Magnificent 3", "All My Circuits: The Movie", "Quizblorg, Quizblorg"]
+        "answers":["The Magnificent 3", "All My Circuits: The Movie", "Quizblorg, Quizblorg"],
+        "source":"https://morbotron.com/caption/S03E13/645861"
     },
     {
         "question":"Bachelor Chow, now with ________?",
-        "answers":["Flavor", "Quality", "Raisins"]
+        "answers":["Flavor", "Quality", "Raisins"],
+        "source":"https://morbotron.com/caption/S01E03/170970"
     },
     {
-        "question":"What is Fry's favourite drink?",
-        "answers":["Slurm", "Beer", "Extreme Walrus Juice"]
+        "question":"What is the drink of the future that Fry gets addicted to?",
+        "answers":["Slurm", "Beer", "Extreme Walrus Juice"],
+        "source":"https://morbotron.com/caption/S02E04/128650"
     },
     {
         "question":"What species runs the pizzeria in 'A Leela of her Own'?",
-        "answers":["Cygnoids", "Decapodians", "Trisolians"]
+        "answers":["Cygnoids", "Decapodians", "Trisolians"],
+        "source":"https://futurama.fandom.com/wiki/Cygnoid"
     },
     {
         "question":"Which of these is NOT one of Professor Farnsworth's inventions?",
-        "answers":["The Suicide Machine", "The Smell-O-Scope", "The Death Clock"]
+        "answers":["The Suicide Booth", "The Smell-O-Scope", "The Death Clock"],
+        "source":"https://futurama.fandom.com/wiki/Suicide_booth"
     },
     {
         "question":"Which of these is NOT a political party?",
-        "answers":["Whigbots", "Tastycrats", "Bull Space Moose Party"]
+        "answers":["Whigbots", "National Ray-Gun Association", "Bull Space Moose Party"],
+        "source":"https://futurama.fandom.com/wiki/Political_parties"
     },
     {
         "question":"What does Leela like Bender for?",
-        "answers":["His in your face attitude", "His overinflated ego", "His love for cooking"]
+        "answers":["His in-your-face attitude", "His overinflated ego", "His love for cooking"],
+        "source":"https://morbotron.com/caption/S01E07/1103351"
     },
     {
         "question":"Which one of Mom's sons have black hair?",
-        "answers":["Walt", "Larry", "Igner"]
+        "answers":["Walt", "Larry", "Igner"],
+        "source":"https://futurama.fandom.com/wiki/Walt"
     },
     {
         "question":"Which college did Fry attend while still living in the 20th century?",
-        "answers":["Coney Island Community College", "Mars University", "Rhode Island Community College"]
+        "answers":["Coney Island Community College", "Mars University", "Rhode Island Community College"],
+        "source":"https://morbotron.com/caption/S02E02/230711"
     },
     {
         "question":"Which of these songs from the 20th century is considered classical music in the future?",
-        "answers":["Baby Got Back ", "Can't Touch This", "Do the Hustle"]
+        "answers":["Baby Got Back ", "Can't Touch This", "Do the Hustle"],
+        "source":"https://morbotron.com/caption/S01E06/736612"
     },
     {
         "question":"What colour is Fry's walking ashtray?",
-        "answers":["Gold", "Red", "Silver"]
+        "answers":["Gold", "Red", "Silver"],
+        "source":"https://morbotron.com/caption/S01E06/414407"
     },
     {
         "question":"What did Fry buy Leela for X-mas in 'X-mas Story'?",
-        "answers":["A Bird", "Flowers", ""]
+        "answers":["A Bird", "Flowers", "500 Lizards"],
+        "source":"https://morbotron.com/caption/S02E08/738302"
     },
     {
         "question":"In 'Futurestock', how many stocks of Planet Express does Scruffy reveal that he has?",
-        "answers":["40,000", "20,000", "60,000"]
+        "answers":["40,000", "20,000", "10,000"],
+        "source":"https://morbotron.com/caption/S04E06/369301"
     },
     {
         "question":"Which of the following is NOT one of the names of Professor Farnsworth's atomic supermen?",
-        "answers":["Gallactico", "Arachnion", "Thorias"]
+        "answers":["Gallactico", "Arachnion", "Thorias"],
+        "source":"https://futurama.fandom.com/wiki/Atomic_Supermen"
     },
     {
         "question":"Zoidberg says he lost his medical degree in a ________?",
-        "answers":["Volcano", "Trash Compactor", "Geyser"]
+        "answers":["Volcano", "Trash Compactor", "Geyser"],
+        "source":"https://morbotron.com/caption/S02E14/543701"
     },
     {
         "question":"What planet is Elzar from?",
-        "answers":["Neptune", "Jupiter", "Saturn"]
+        "answers":["Neptune", "Jupiter", "Saturn"],
+        "source":"https://morbotron.com/caption/S01E07/93833"
     },
     {
         "question":"In the future, what major US city has sunken to the bottom of the ocean?",
-        "answers":["Atlanta", "Sacramento", "Boston"]
+        "answers":["Atlanta", "Sacramento", "Boston"],
+        "source":"https://morbotron.com/caption/S02E16/969502"
     },
     {
         "question":"Which of the following does Fry claim requires graduate school education?",
-        "answers":["Barber", "Taxi Driver", "Janitor"]
+        "answers":["Barber", "Taxi Driver", "Janitor"],
+        "source":"https://morbotron.com/caption/S05E04/998847"
     },
     {
         "question":"What is the name of Mayor Poopenmeyer's secretary?",
-        "answers":["Stephanie", "Sarah", "Sophie"]
+        "answers":["Stephanie", "Sarah", "Sophie"],
+        "source":"https://morbotron.com/caption/S01E08/1080438"
     },
     {
         "question":"The anchovy tin says 'Angry ________ Anchovies",
-        "answers":["Norwegian", "French", "German"]
+        "answers":["Norwegian", "French", "German"],
+        "source":"https://morbotron.com/caption/S01E06/597507"
     },
     {
         "question":"What is the name of Professor Farnsworth's pet gargoyle?",
-        "answers":["Pazuzu", "Cthulhu", "Anubu"]
+        "answers":["Pazuzu", "Cthulhu", "Anubu"],
+        "source":"https://morbotron.com/caption/S05E07/37019"
     },
     {
         "question":"Which of the following is not one of Bender's punishment levels in Robot Hell?",
-        "answers":["Being melted down", "Being deep fried", "Being rolled up and smoked like a cigar"]
+        "answers":["Being melted down", "Being deep fried", "Being rolled up and smoked like a cigar"],
+        "source":"https://morbotron.com/episode/S01E09/938530"
     },
     {
         "question":"What is the name of Leela's pet?",
-        "answers":["Nibbler", "Nibblonian", "Nobbler"]
+        "answers":["Nibbler", "Nibblonian", "Nobbler"],
+        "source":"https://morbotron.com/caption/S01E04/988850"
     },
     {
         "question":"What was Fry's job in 1999?",
-        "answers":["Pizza Delivery Boy", "Newspaper Delivery Boy", "Planet Express' Delivery Boy"]
+        "answers":["Pizza Delivery Boy", "Newspaper Delivery Boy", "Planet Express' Delivery Boy"],
+        "source":"https://morbotron.com/caption/S01E01/81864"
     },
     {
         "question":"What colour is Fry's hair?",
-        "answers":["Orange", "Black", "Blue"]
+        "answers":["Orange", "Black", "Blue"],
+        "source":"https://morbotron.com/caption/S01E01/1297306"
     },
     {
         "question":"What company does Dr. Farnsworth run?",
-        "answers":["Planet Express", "Space Express", "Earth Express"]
+        "answers":["Planet Express", "Space Express", "Earth Express"],
+        "source":"https://morbotron.com/caption/S01E02/36252"
     },
     {
         "question":"What is the name of Captian Zapp Brannigan's assistant?",
-        "answers":["Kif", "Zif", "Gif"]
+        "answers":["Kif", "Zif", "Gif"],
+        "source":"https://morbotron.com/caption/S02E01/367446"
     },
     {
         "question":"Bender is, Bending Unit ________?",
-        "answers":["22", "21", "20"]
+        "answers":["22", "21", "20"],
+        "source":"https://morbotron.com/caption/S08E12/297297"
     },
     {
         "question":"What was Fry's bank account balance in 1999?",
-        "answers":["93 cents", "33 cents", "73 cents"]
+        "answers":["93 cents", "33 cents", "73 cents"],
+        "source":"https://morbotron.com/caption/S01E06/388835"
     },
     {
         "question":"What did the Professors Smell-O-Scope detect in space?",
-        "answers":["A Ball of Garbage", "A Planet of Cheese", "A Comet"]
+        "answers":["A Ball of Garbage", "A Planet of Cheese", "A Comet"],
+        "source":"https://morbotron.com/caption/S01E08/745868"
     },
     {
         "question":"What was the name of the space cruise ship that was destroyed by a black hole?",
-        "answers":["The Titanic", "The Nimbus", "The Titanic V2"]
+        "answers":["Titanic", "The Nimbus", "Titanic V2"],
+        "source":"https://morbotron.com/caption/S02E01/101814"
     },
     {
         "question":"Why did Fry and Bender enlist in the US army?",
-        "answers":["Military discount for chewing gum", "The Rolling Stones were due to entertain the troops", "They thought it was the queue for the Kwik-E-mart"]
+        "answers":["Military discount for chewing gum", "The Rolling Stones were due to entertain the troops", "They thought it was the queue for the Kwik-E-mart"],
+        "source":"https://morbotron.com/caption/S03E01/103552"
     },
     {
         "question":"Why was Tuesday special to Leela as a child?",
-        "answers":["It was double-soup Tuesday at the Orphinarium", "The Wizard of Oz was on TV every Tuesday", "The prospective parents would visit"]
+        "answers":["It was double-soup Tuesday at the Orphinarium", "The Wizard of Oz was on TV every Tuesday", "The prospective parents would visit"],
+        "source":"https://morbotron.com/caption/S03E04/990905"
     },
     {
         "question":"What did Fry and his brother hope to win in the Break-Dancing competition?",
-        "answers":["A pair of authographed parachute pants", "A seven-leafed lucky clover", "Gravity Boots"]
+        "answers":["A pair of authographed parachute pants", "A seven-leafed lucky clover", "Gravity Boots"],
+        "source":"https://morbotron.com/caption/S03E08/536218"
     },
     {
         "question":"Who was the famous uncle of Dr. Zoidberg?",
-        "answers":["Harold Zoid", "Sigmund Zoid", "Zoid Grossman"]
-    },
-    {
-        "question":"How many seasons of Futurama are there?",
-        "answers":["8", "7", "9"]
+        "answers":["Harold Zoid", "Sigmund Zoid", "Zoid Grossman"],
+        "source":"https://morbotron.com/caption/S03E13/605203"
     },
     {
         "question":"How long has Amy been an intern at Planet Express?",
-        "answers":["12 years", "3 months", "1 year"]
+        "answers":["12 years", "3 months", "1 year"],
+        "source":"https://morbotron.com/caption/S07E08/94469"
     },
     {
         "question":"What did it say on the pizza box Fry delivers in the first episode?",
-        "answers":["Don't tip the delivery boy", "Fresh, fresh pizza", "Delicious Pizza"]
+        "answers":["Do not tip the delivery boy", "Fresh, fresh pizza", "Delicious Pizza"],
+        "source":"https://morbotron.com/caption/S01E01/93476"
     },
     {
         "question":"How did Kif get pregnant?",
-        "answers":["He was in love and touched Leela's hand", "He was in love and touched Amy's hand", "He was in love and touched the toilet seat"]
+        "answers":["He was in love and touched Leela's hand", "He was in love and touched Amy's hand", "He was in love and touched the toilet seat"],
+        "source":"https://morbotron.com/caption/S05E05/755804"
     },
     {
         "question":"What is planet Uranus called in Futurama?",
-        "answers":["Urectum", "Bluto", "Juniper"]
+        "answers":["Urectum", "Bluto", "Juniper"],
+        "source":"https://morbotron.com/caption/S01E08/456488"
     },
     {
         "question":"In, 'The Farnsworth Parabox', what colour was Universe 1 Bender?",
-        "answers":["Gold", "Pearl", "Silver"]
+        "answers":["Gold", "Pearl", "Silver"],
+        "source":"https://morbotron.com/caption/S05E10/553869"
     },
     {
         "question":"Where was Professor Farnsworth taken in, 'Clone of My Own'?",
-        "answers":["Near-Death Star", "Elderly Island", "Florida"]
+        "answers":["Near-Death Star", "Elderly Island", "Florida"],
+        "source":"https://morbotron.com/caption/S02E14/915812"
     },
     {
         "question":"What is the name of Hermes' son?",
-        "answers":["Dwight", "Hermes Jr.", "Sam"]
+        "answers":["Dwight", "Hermes Jr.", "Sam"],
+        "source":"https://morbotron.com/caption/S05E11/1271252"
     },
     {
         "question":"Which one of these characters is not related to Fry?",
-        "answers":["Scruffy", "Yancy", "Professor Farnsworth"]
+        "answers":["Scruffy", "Yancy", "Professor Farnsworth"],
+        "source":"https://futurama.fandom.com/wiki/Philip_J._Fry"
     },
     {
         "question":"What beer was Fry holding when he was frozen?",
-        "answers":["Lobrow", "BerAle", "Benderbrew"]
+        "answers":["LöBrau", "BerAle", "BenderBrew"],
+        "source":"https://futurama.fandom.com/wiki/L%C3%B6Brau"
     },
     {
         "question":"What made Bender want to kill himself?",
-        "answers":["Building girders for suicide booths", "He lost his job", "He lost his ability to bend"]
+        "answers":["Building girders for suicide booths", "He lost his job", "He lost his ability to bend"],
+        "source":"https://morbotron.com/caption/S01E01/665105"
     },
     {
         "question":"What year was Fry born?",
-        "answers":["1974", "1976", "1978"]
+        "answers":["1974", "1976", "1978"],
+        "source":"https://futurama.fandom.com/wiki/Philip_J._Fry"
     },
     {
         "question":"In 'The Tale of Two Santas', what is the name of the book that Kwanzabot is delivering?",
-        "answers":["What The Hell is Kwanza?", "Who the Hell is Kwanza?", "What is Kwanza About?"]
+        "answers":["What The Hell is Kwanza?", "Who the Hell is Kwanza?", "What is Kwanza About?"],
+        "source":"https://morbotron.com/caption/S04E01/747546"
     },
     {
         "question":"What sport are Phillip and Yancy playing when Phillip finds a seven-leafed clover?",
-        "answers":["Basketball", "Soccer", "They're not playing a sport"]
+        "answers":["Basketball", "Soccer", "They're not playing a sport"],
+        "source":"https://morbotron.com/caption/S03E08/376859"
     },
     {
         "question":"What do the Amazonians say instead of sex?",
-        "answers":["Snu-snu", "Ugh-ugh", "Ooh-ooh"]
+        "answers":["Snu-snu", "Ugh-ugh", "Ooh-ooh"],
+        "source":"https://morbotron.com/caption/S03E05/855153"
     },
     {
         "question":"In 'Godfellas' when Bender becomes a god, what is Bender's single commandment?",
-        "answers":["God needs booze", "Kill all humans", "Up yours"]
+        "answers":["God needs booze", "Kill all humans", "Up yours"],
+        "source":"https://morbotron.com/caption/S04E05/388103"
     },
     {
         "question":"What was the replacement show for 'All My Circuits' when the robot playing Calculon's child malfunctioned?",
-        "answers":["Everybody Loves Hypnotoad", "Morbo and Friends", "Rumbledy-Hump"]
+        "answers":["Everybody Loves Hypnotoad", "Morbo and Friends", "Rumbledy-Hump"],
+        "source":"https://morbotron.com/caption/S05E15/238254"
     },
     {
         "question":"Who purchases the 'human horn' that was harvested from Fry?",
-        "answers":["Lrr", "Elzar", "Glurmo"]
+        "answers":["Lrr", "Elzar", "Glurmo"],
+        "source":"https://morbotron.com/img/S05E12/724406.jpg"
     }
 ]
 
