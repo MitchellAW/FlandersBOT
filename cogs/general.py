@@ -81,7 +81,7 @@ If you'd like to hel-diddly-elp me grow in popularity, use `ned vote`
 VOTE_URL = '<https://discordbots.org/bot/221609683562135553/vote>'
 
 
-class General:
+class General(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.FEEDBACK_CHANNEL = 403688189627465730

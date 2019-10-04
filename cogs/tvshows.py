@@ -1,9 +1,10 @@
 import discord
+from discord.ext import commands
 
 import compuglobal
 
 
-class TVShowCog:
+class TVShowCog(commands.Cog):
     def __init__(self, bot, api):
         self.bot = bot
         self.api = api

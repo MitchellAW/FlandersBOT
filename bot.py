@@ -178,7 +178,7 @@ class FlandersBOT(commands.Bot):
     # Read the command statistics from json file
     @staticmethod
     def read_command_stats():
-        with open('cogs/data/commandStats.json', 'r') as command_counter:
+        with open('cogs/data/command_stats.json', 'r') as command_counter:
             command_stats = json.load(command_counter)
             command_counter.close()
 
@@ -187,7 +187,7 @@ class FlandersBOT(commands.Bot):
     # Dump the command statistics to json file
     @staticmethod
     def write_command_stats(command_stats):
-        with open('cogs/data/commandStats.json', 'w') as command_counter:
+        with open('cogs/data/command_stats.json', 'w') as command_counter:
             json.dump(command_stats, command_counter, indent=4)
             command_counter.close()
 

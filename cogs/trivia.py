@@ -8,7 +8,7 @@ from discord.ext import commands
 from discord.ext.commands import BucketType
 
 
-class Trivia:
+class Trivia(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.channels_playing = []
