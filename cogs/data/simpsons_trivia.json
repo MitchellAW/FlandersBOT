@@ -37,47 +37,47 @@
     },
     {
         "question":"Who invented The Flaming Moe?",
-        "answers":["Homer Simpson", "Moe Syzslak", "Moe St. Cool"]
+        "answers":["Homer Simpson", "Moe Syzslak", "Professor Huntington"]
     },
     {
         "question":"What is the name of Cletus' Wife?",
-        "answers":["Brandine", "Francine", "Mary"]
+        "answers":["Brandine", "Francine", "Charlene"]
     },
     {
         "question":"What is the name of the gymnastics teacher at the Springfield YMCA?",
         "answers":["Lugash", "Baldash", "Rebash"]
     },
     {
-        "question":"What is Lisa's IQ?",
+        "question":"What is Lisa's IQ in the episode, \"Homer's Enemy\"?",
         "answers":["156", "153", "158"]
     },
     {
         "question":"Who ran over Snowball I?",
-        "answers":["Clovis Quimby", "Principal Skinner", "Moe Syzslak"]
+        "answers":["Clovis Quimby", "Mr. Burns", "Moe Syzslak"]
     },
     {
-        "question":"What did Nelson tell Bart was showing?",
-        "answers":["His epidermus", "His lamina", "His butt"]
+        "question":"What did Nelson exclaim Bart was showing?",
+        "answers":["His epidermis", "His lamina", "His butt"]
     },
     {
-        "question":"What is the name of the cocktail waitress Ned Married?",
+        "question":"What is the name of the cocktail waitress that Ned married?",
         "answers":["Ginger", "Amber", "Candy"]
     },
     {
         "question":"Where are the Kwik-E-Mart headquarters located?",
-        "answers":["India", "Germany", "England"]
+        "answers":["India", "Germany", "Springfield"]
     },
     {
-        "question":"Who said \"So I says to Mabel, I says...\"?",
+        "question":"Who said, \"So I says to Mabel, I says...\"?",
         "answers":["Bart", "Milhouse", "Lenny"]
     },
     {
         "question":"Where did Homer get the idea for his new name, Max Power?",
-        "answers":["From a hairdryer", "From the nuclear reactor at work", "From the Squishee machine"]
+        "answers":["Off a hairdryer", "From the nuclear reactor at work", "From the Squishee machine"]
     },
     {
         "question":"Who practices medicine without a license?",
-        "answers":["Dr. Hibbert", "Dr. Nick", "Bart Simpson"]
+        "answers":["Homer Simpson", "Dr. Nick", "Bart Simpson"]
     },
     {
         "question":"Who did Marge go to her high school prom with?",
@@ -85,7 +85,7 @@
     },
     {
         "question":"Who sold a defective monorail to Springfield?",
-        "answers":["Lyle Lanley", "Lioney Hutz", "Cecil Terwilliger"]
+        "answers":["Lyle Lanley", "Lionel Hutz", "Cecil Terwilliger"]
     },
     {
         "question":"Who ran Bart over in his car?",
@@ -96,15 +96,15 @@
         "answers":["Underdunk", "Robert", "Terwilliger"]
     },
     {
-        "question":"What is the name of Homer's brother?",
+        "question":"What is the name of Homer's seldom-seen long-lost half-brother?",
         "answers":["Herbert Powell", "Hank Powell", "Henry Powell"]
     },
     {
-        "question":"What does Smithers collect?",
-        "answers":["Malibu Stacey Dolls", "Lisa Lionheart Dolls", "Romance Comics"]
+        "question":"What does Waylon Smithers, Jr. collect?",
+        "answers":["Malibu Stacy Dolls", "Lisa Lionheart Dolls", "Romance Comics"]
     },
     {
-        "question":"Who did Barney replace in the Be Sharps?",
+        "question":"Who did Barney replace in The Be Sharps?",
         "answers":["Chief Wiggum", "Principal Skinner", "Barney Gumble"]
     },
     {
@@ -113,7 +113,7 @@
     },
     {
         "question":"What is Chief Wiggum's first name?",
-        "answers":["Clancy", "Charles", "Cletus"]
+        "answers":["Clancy", "Charles", "Clarence"]
     },
     {
         "question":"What did Bart name his pet elephant?",
@@ -153,11 +153,11 @@
     },
     {
         "question":"What is the name of Springfield's rival town?",
-        "answers":["Shelbyville", "Seinfeld", "Springfield"]
+        "answers":["Shelbyville", "Seinfeld", "Sprungfield"]
     },
     {
         "question":"What was Lisa's first word?",
-        "answers":["Bart", "Daddy", "Mommy"]
+        "answers":["Bart", "Dada", "Mommy"]
     },
     {
         "question":"What killed Maude Flanders?",
@@ -169,18 +169,18 @@
     },
     {
         "question":"Which of the following is not a movie Troy McClure was in?",
-        "answers":["Attack of the Killer Tomatoes", "The Presiden't Neck is Missing", "The Muppets Go Medieve"]
+        "answers":["Attack of the Killer Tomatoes", "The President's Neck is Missing", "Firecrackers, the silent killer"]
     },
     {
         "question":"What is the name of the store that Ned Flanders owns?",
-        "answers":["The Leftorium", "Diddly's", "The Android's Dungeon"]
+        "answers":["The Leftorium", "Diddly's Emporium", "The Android's Dungeon"]
     },
     {
         "question":"Nelson Muntz has a poster that says 'Nuke the __________'?",
         "answers":["Whales", "Flowers", "Teachers"]
     },
     {
-        "question":"What company makes Bat's mischief kits?",
+        "question":"What company makes Bart's mischief kits?",
         "answers":["Lil Bastard", "Springfield Suckers", "Krustylu"]
     },
     {
@@ -188,7 +188,7 @@
         "answers":["Utica", "Albany", "Syracuse"]
     },
     {
-        "question":"What is the title of the song that Kirk Van Houten wrote?",
+        "question":"What is the title of the song that Kirk Van Houten produced?",
         "answers":["Can I Borrow a Feeling?", "Baby Take Me Back", "Did You Ever Still Love Me?"]
     },
     {
@@ -200,11 +200,11 @@
         "answers":["A peanut", "A walnut", "A peach"]
     },
     {
-        "question":"Milhouse Van Houten was tagged to play the sidekick for which movie hero?",
-        "answers":["Radioactive Man", "Fallout Boy", "Radiation Dude"]
+        "question":"Milhouse Van Houten was selected to play the sidekick for which movie hero?",
+        "answers":["Radioactive Man", "Fallout Boy", "Biclops"]
     },
     {
-        "question":"What told Ralph Wiggum to burn things?",
+        "question":"Who told Ralph Wiggum to burn things?",
         "answers":["A leprechaun", "A unicorn", "A gnome"]
     },
     {
@@ -220,7 +220,7 @@
         "answers":["Advertise", "Salsa", "Roller Skate"]
     },
     {
-        "question":"What is Abraham Simpsons's favourite TV show?",
+        "question":"What is Grampa Simpson's favourite TV show?",
         "answers":["Matlock", "Diagnosis Murder", "Murder She Wrote"]
     },
     {
@@ -232,7 +232,7 @@
         "answers":["Boxing", "Wrestling", "Fencing"]
     },
     {
-        "question":"One of Lionel Hutz's slogan is 'Your case won in 30 minutes or ______'",
+        "question":"One of Lionel Hutz's slogans is 'Your case won in 30 minutes or ______'",
         "answers":["your pizza is free", "your next case is on me", "you get it half price"]
     },
     {
@@ -241,18 +241,18 @@
     },
     {
         "question":"What is Marge Simpson addicted to?",
-        "answers":["Gambling", "Cleaning", "Mexican Food"]
+        "answers":["Gambling", "Cleaning", "Shoplifting"]
     },
     {
         "question":"Kent Brockman has to reaffirm his allegiance to the US government after pledging his support to who?",
-        "answers":["Our new insect overlords", "Zombie mutants", "Canadians"]
+        "answers":["Our new insect overlords", "Zombie mutants", "Mr. Burns"]
     },
     {
         "question":"Which of the following no longer applies to Mayor Quimby?",
         "answers":["Illiterate", "Tax-Cheating", "Wife-Swapping"]
     },
     {
-        "question":"What's the Simpsons address?",
+        "question":"What is the address of the Simpsons?",
         "answers":["742 Evergreen Terrace", "1042 Evergreen Terrace", "724 Evergreen Terrace"]
     },
     {
@@ -272,7 +272,7 @@
         "answers":["Julius", "John", "Jimmy"]
     },
     {
-        "question":"What does the scanner say when Maggie is scanned in the opening titles?",
+        "question":"What does the scanner most often display when Maggie is scanned in the opening titles?",
         "answers":["$847.63", "$39.99", "NRA4EVER"]
     },
     {
@@ -292,7 +292,7 @@
         "answers":["Waylon Smithers, Jr.", "Barney Gumble", "Seymour Skinner"]
     },
     {
-        "question":"What is the name of the bar where Homer drinks?",
+        "question":"What is the name of the bar where Homer typically drinks?",
         "answers":["Moe's Tavern", "Joe's Cavern", "The Drink Hole"]
     },
     {
@@ -300,23 +300,23 @@
         "answers":["Woohoo!", "Aye Carumba!", "Don't have a cow, man!"]
     },
     {
-        "question":"What did the Simpsons get for their first Christmas?",
-        "answers":["A dog", "A cat", "A hamster"]
+        "question":"What did the Simpsons get for their Christmas in the first episode?",
+        "answers":["A dog", "A cat", "Funzos"]
     },
     {
         "question":"Where does Marge hide the christmas money?",
         "answers":["In her hair", "In the glove compartment", "In the attic"]
     },
     {
-        "question":"Who runs the Kwik-E-Mart?",
+        "question":"Who runs the Kwik-E-Mart in Springfield?",
         "answers":["Apu", "Homer", "Mr. Burns"]
     },
     {
         "question":"What nationality were the people who bought the power plant from Mr. Burns?",
-        "answers":["German", "French", "Canadian"]
+        "answers":["German", "French", "Swedish"]
     },
     {
-        "question":"How long was Marge in prison for when she was caught shoplifting?",
+        "question":"How long was Marge sentenced to imprisonment for when she was caught shoplifting?",
         "answers":["30 days", "20 days", "60 days"]
     },
     {
@@ -328,7 +328,7 @@
         "answers":["Dewey Largo", "Mr. Bergstrom", "Mr. Taylor"]
     },
     {
-        "question":"Who are Lista's favourite favourite cartoon characters?",
+        "question":"Who were Lisa's favourite favourite cartoon characters?",
         "answers":["Happy Little Elves", "Tellytubbies", "The Smurfs"]
     },
     {
@@ -344,7 +344,7 @@
         "answers":["Simpsons Roasting on an Open Fire", "Some Enchanted Evening", "The Call of the Simpsons"]
     },
     {
-        "question":"What insect starts on Channel Ocho?",
+        "question":"What insect stars on Channel 8?",
         "answers":["Bumbleebee man", "Human Fly", "Bluebottle"]
     },
     {
@@ -356,7 +356,7 @@
         "answers":["Stinking Fish Realty", "Red Blazer Realty", "Globex Corporation"]
     },
     {
-        "question":"Who stands in for Kent Brockman when he is ill?",
+        "question":"Who typically stands in for Kent Brockman when he is ill?",
         "answers":["Scott Christian", "Arnie Pie", "Rainier Wolfcastle"]
     },
     {
@@ -372,7 +372,7 @@
         "answers":["216", "215", "218"]
     },
     {
-        "question":"What did Homer do in order to get sent to a mental institution?",
+        "question":"For which reason was Homer sent to a mental institution?",
         "answers":["Wearing a pink shirt", "Wetting his pants", "Imitating Michael Jackson"]
     },
     {
@@ -380,7 +380,7 @@
         "answers":["Crandall", "Crab-apple", "Krampus"]
     },
     {
-        "question":"What were the names of the carnies who took over the Simpsons' home?",
+        "question":"What were the names of the carnies who took over the Simpsons home?",
         "answers":["Cooder and Spud", "Patches and Violet", "Cletus and Brandine"]
     },
     {
@@ -400,7 +400,7 @@
         "answers":["Flying", "Gambling", "Sock Puppets"]
     },
     {
-        "question":"Who stayed up all night dying their underwear?",
+        "question":"Who stayed up all night dyeing their underwear?",
         "answers":["Human Fly", "Duffman", "Gil"]
     },
     {
