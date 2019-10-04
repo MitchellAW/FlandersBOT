@@ -113,7 +113,7 @@ class Trivia(commands.Cog):
     async def simpsonstrivia(self, ctx):
         if ctx.channel.id not in self.channels_playing:
             simpsons_yellow = discord.Colour(0xffef06)
-            await self.start_trivia(ctx, 'simpsonsTrivia.json',
+            await self.start_trivia(ctx, 'simpsons_trivia.json',
                                     simpsons_yellow,
                                     'https://github.com/MitchellAW/MitchellAW' +
                                     '.github.io/blob/master/images/donut-disc' +
@@ -124,7 +124,7 @@ class Trivia(commands.Cog):
     async def futuramatrivia(self, ctx):
         if ctx.channel.id not in self.channels_playing:
             fry_red = discord.Colour(0x9b2525)
-            await self.start_trivia(ctx, 'futuramaTrivia.json', fry_red,
+            await self.start_trivia(ctx, 'futurama_trivia.json', fry_red,
                                     'https://github.com/MitchellAW/MitchellAW' +
                                     '.github.io/blob/master/images/planet-exp' +
                                     'ress-discord.gif?raw=true')
