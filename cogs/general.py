@@ -1,4 +1,3 @@
-import asyncio
 from datetime import datetime
 
 import discord
@@ -35,6 +34,7 @@ I'll happily oblige! Well, so long as the reverend approves of course.
 **TV SHOWS**
 
 **tvshows** - Will post a list of commands for all currently supported TV shows.
+**trivia** - Will post a list of commands for playing trivia games.
 **epinfo** - Will post episode information on the last post made in the channel.
 
 *I currently support commands for The Simpsons, Futurama, Rick and Morty.*
@@ -47,18 +47,28 @@ TV_SHOW_COMMANDS = ('''
 
 **simpsons** - Will post a random Simpsons gif with caption.
 **simpsons [quote]** - Searches for a Simpsons gif using the quote.
-**simpsonstrivia** - Starts a game of trivia using 100+ Simpsons questions.
 
 **futurama** - Will post a random Futurama gif with caption.
 **futurama [quote]** - Searches for a Futurama gif using the quote.
-**futuramatrivia** - Starts a game of trivia using 100+ Futurama questions.
 
 **rickandmorty** - Will post a random Rick and Morty gif with caption.
 **rickandmorty [quote]** - Searches for a Rick and Morty gif using the quote.
 
 **epinfo** - Will post episode information on the last post made in the channel.
 
-**For Example:** `ned info`, `diddly help`, `doodly-simpsons`
+**For Example:** `ned simpsons nothing at all`, `ned futurama`
+''')
+
+TRIVIA_COMMANDS = ('''
+**TRIVIA**
+
+**simpsonstrivia** - Starts a game of trivia using 100+ questions from The Simpsons.
+**futuramatrivia** - Starts a game of trivia using 100+ questions from Futurama.
+**suggest** - Posts a link for suggesting some trivia questions of your own.
+**leaderboard** - Shows a leaderboard of the leading trivia users across the globe.
+**scoreboard** - Shows a leaderboard of the leading trivia users in the server.
+
+**For Example:** `ned simpsonstrivia`, `ned leaderboard`
 ''')
 
 BOT_INFO = ('''Hi-diddly-ho, neighborino! I hear you wanted some 
