@@ -39,7 +39,7 @@ I'll happily oblige! Well, so long as the reverend approves of course.
 
 *I currently support commands for The Simpsons, Futurama, Rick and Morty.*
 
-**For Example:** `ned info`, `diddly help tvshows`, `doodly-simpsons`
+**For Example:** `ned info`, `diddly help tvshows`, `doodly-trivia`
 ''')
 
 TV_SHOW_COMMANDS = ('''
@@ -62,13 +62,14 @@ TV_SHOW_COMMANDS = ('''
 TRIVIA_COMMANDS = ('''
 **TRIVIA**
 
-**simpsonstrivia** - Starts a game of trivia using 100+ questions from The Simpsons.
-**futuramatrivia** - Starts a game of trivia using 100+ questions from Futurama.
+**simpsonstrivia** - Play a trivia game using 100+ questions from The Simpsons.
+**futuramatrivia** - Play a game of trivia using 100+ questions from Futurama.
 **suggest** - Posts a link for suggesting some trivia questions of your own.
-**leaderboard** - Shows a leaderboard of the leading trivia users across the globe.
-**scoreboard** - Shows a leaderboard of the leading trivia users in the server.
+**leaderboard** - Shows a leaderboard of trivia users across the globe.
+**scoreboard** - Shows a scoreboard of trivia users in the server.
+**score** - Shows your trivia score and statistics, used in the leaderboards.
 
-**For Example:** `ned simpsonstrivia`, `ned leaderboard`
+**For Example:** `ned simpsonstrivia`, `ned leaderboard`, `ned suggest` 
 ''')
 
 BOT_INFO = ('''Hi-diddly-ho, neighborino! I hear you wanted some 
