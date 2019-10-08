@@ -16,7 +16,7 @@
     },
     {
         "question":"What was the alternate banner wording for the weather balloon Bart defaced?",
-        "answers":["Buttzilla", "Hi, I'm Big Butt Skinner!", "I Am a Wiener"],
+        "answers":["Buttzilla", "Hi, I'm Big Butt Skinner!", "Does this many my butt look big"],
         "source": "https://frinkiac.com/caption/S06E14/162761"
     },
     {
@@ -568,6 +568,188 @@
         "question":"Who drives a mobile pool around Springfield for a day?",
         "answers":["Otto", "Snake", "Lenny"],
         "source": "https://frinkiac.com/caption/S06E01/188621"
+    },
+    {
+        "question": "Which of these characters has never been mayor of Springfield?",
+        "answers": ["Mr. Burns", "Sideshow Bob", "Marge Simpson"],
+        "source": "https://simpsons.fandom.com/wiki/List_of_Mayors_of_Springfield"
+    },
+    {
+        "question": "Which of these characters are not a supervillain?",
+        "answers": ["The Rambler", "The Collector", "ClownFace"],
+        "source": "https://simpsons.fandom.com/wiki/The_Rambler"
+    },
+    {
+        "question": "Which of these characters are Australian?",
+        "answers": ["Bruno Dundridge", "", ""],
+        "source": ""
+    },
+    {
+        "question": "In \"Bart vs. Australia\", what does the souvenir vendor say he'd call Bull Frogs?",
+        "answers": ["Chasswassers", "Pashboshers", "Waschasers"],
+        "source": "https://frinkiac.com/caption/S06E16/1059924"
+    },
+    {
+        "question": "In \"Bart vs. Australia\", how many \"Dollar-adoos\" did Bart's collect call cost? ,",
+        "answers": ["900", "500", "300"],
+        "source": "https://frinkiac.com/caption/S06E16/344410"
+    },
+    {
+        "question": "Which of the following characters is adopted?",
+        "answers": ["Waylon Smithers, Jr.", "Frank Grimes", "Nelson Muntz"],
+        "source": "https://frinkiac.com/caption/S13E05/1190523"
+    },
+    {
+        "question": "How old was Springfield's oldest resident, Cornelius Chapman?",
+        "answers": ["108", "109", "110"],
+        "source": "https://frinkiac.com/caption/S11E12/189760"
+    },
+    {
+        "question": "What does Lunchlady Doris say contains very little meat?",
+        "answers": ["Gym mats", "Newspapers", "Grade F Meat"],
+        "source": "https://frinkiac.com/caption/S06E21/285267"
+    },
+    {
+        "question": "\"Malk\", now with ... ?,",
+        "answers": ["Vitamin R", "Dairy", "Calcium"],
+        "source": "https://frinkiac.com/caption/S06E21/319885"
+    },
+    {
+        "question": "What was the name of The Be Sharps' second album?",
+        "answers": ["Bigger Than Jesus", "Baby on Board", "Meet The Be Sharps"],
+        "source": "https://frinkiac.com/caption/S05E01/1068400"
+    },
+    {
+        "question": "Bart's idol, Ronnie Beck has won how many Soapbox derby championships?",
+        "answers": ["3", "2", "4"],
+        "source": "https://frinkiac.com/caption/S03E09/649032"
+    },
+    {
+        "question": "Which laundry detergent does Skinner go with in, \"Sweet Seymour Skinner's Baadasssss Song\"?",
+        "answers": ["Bold", "Tide", "Wisk"],
+        "source": "https://frinkiac.com/caption/S05E19/740305"
+    },
+    {
+        "question": "In \"Bart Carny\", what does Skinner try to win for his mother in a game of ring toss?",
+        "answers": ["Lamp", "Toy Monkey", "Radio"],
+        "source": "https://frinkiac.com/caption/S09E12/710258"
+    },
+    {
+        "question": "What does Moe bring to Homer's Gun Club meetup?",
+        "answers": ["A bag of irregular Oreos", "A pillowcase of seashells", "A box of allied biscuit"],
+        "source": "https://frinkiac.com/caption/S09E05/978310"
+    },
+    {
+        "question": "How much does Bart pay for the original Itchy drawing?",
+        "answers": ["$700", "$1200", "$10"],
+        "source": "https://frinkiac.com/caption/S07E18/189122"
+    },
+    {
+        "question": "Which world record is Springfield awarded?",
+        "answers": ["World's fattest town", "World's tallest human pyramid", "World's drunkest town"],
+        "source": "https://frinkiac.com/caption/S13E08/403069"
+    },
+    {
+        "question": "What do the Simpsons grow at the old Simpson farm?",
+        "answers": ["Tomacco", "Watermelon", "Tobacco"],
+        "source": "https://frinkiac.com/caption/S11E05/956360"
+    },
+    {
+        "question": "How heavy is General Sherman believed to be?",
+        "answers": ["500 pounds", "200 pounds", "1000 pounds"],
+        "source": "https://frinkiac.com/caption/S02E20/1306565"
+    }
+    ,
+    {
+        "question": "In which restaurant is a cadillac crashed into the building?",
+        "answers": ["Planet Hype", "The Frying Dutchman", "Gulp 'n' Blow"],
+        "source": "https://frinkiac.com/caption/S08E17/583782"
+    }
+    ,
+    {
+        "question": "Who purchases a rocket car?",
+        "answers": ["Chester J. Lampwick", "Herbert Powell", "Hettie Mae Bogs"],
+        "source": "https://frinkiac.com/caption/S07E18/1110375"
+    }
+    ,
+    {
+        "question": "Who helped resurrect Itchy a& Scratchy?",
+        "answers": ["Lester and Eliza", "Bart and Lisa", "Shelby and Lily"],
+        "source": "https://frinkiac.com/caption/S07E18/1231997"
+    }
+    ,
+    {
+        "question": "Who plays Stanley in the musical version of \"A Streetcar Named Desire\"?",
+        "answers": ["Ned Flanders", "Llewellyn Sinclair", "Lionel Hutz"],
+        "source": "https://frinkiac.com/caption/S04E02/331547"
+    }
+    ,
+    {
+        "question": "What does Moe name his family restaurant?",
+        "answers": ["Uncle Moe's Family Feedbag", "Madman Moe's Pressure Cooker", "Chairman Moe's Magic Wok"],
+        "source": "https://frinkiac.com/caption/S07E04/615697"
+    }
+    ,
+    {
+        "question": "What did Bart trade his soul for?",
+        "answers": ["$5", "Mary Worth Telephone", "Alf Pogs"],
+        "source": "https://frinkiac.com/caption/S07E04/226008"
+    }
+    ,
+    {
+        "question": "Who was Milhouse's first girlfriend?",
+        "answers": ["Samantha Stankey", "Lisa Simpson", "Greta Wolfcastle"],
+        "source": "https://frinkiac.com/caption/S03E23/1052318"
+    },
+    {
+        "question": "What arcade game does Homer play in The Simpsons Movie?",
+        "answers": ["Grand Theft Walrus", "Grand Theft Auto", "Grand Theft Seal"],
+        "source": "https://simpsons.fandom.com/wiki/Grand_Theft_Walrus"
+    },
+    {
+        "question": "Who creates fictional comic, turned internet series, \"Angry Dad\"?",
+        "answers": ["Bart Simpson", "Homer Simpson", "Herman Millwood"],
+        "source": "https://frinkiac.com/caption/S13E18/800967"
+    },
+    {
+        "question": "What does it cost to play Kevin Costner's \"Waterworld\"?",
+        "answers": ["40 quarters", "20 quarters", "10 quarters"],
+        "source": "https://frinkiac.com/caption/S08E10/211810"
+    },
+    {
+        "question": "Which of these aliens is not in the lineup in, \"The Springfield Field\"?",
+        "answers": ["E.T.", "Alf", "Marvin the Martian"],
+        "source": "https://frinkiac.com/caption/S08E10/605771"
+    },
+    {
+        "question": "Who also attends the traffic school that Marge attends due to her road rage?",
+        "answers": ["Kearney", "Otto", "Snake"],
+        "source": "https://frinkiac.com/caption/S10E15/794376"
+    },
+    {
+        "question": "Who saves Homer when a fire engulfs Bart's new treehouse?",
+        "answers": ["Snowball II", "Santa's Little Helper", "Suds McDuff"],
+        "source": "https://frinkiac.com/caption/S14E19/476059"
+    },
+    {
+        "question": "Which judge declares Bart emancipated?",
+        "answers": ["Judge Constance Harm", "Judge Roy Snyder", "Judge Julie"],
+        "source": "https://frinkiac.com/caption/S14E11/551342"
+    },
+    {
+        "question": "Who shot Mr. Burns?",
+        "answers": ["Maggie Simpson", "Waylon Smithers, Jr.", "Homer Simpson"],
+        "source": "https://frinkiac.com/caption/S07E01/1234249"
+    },
+    {
+        "question": "In \"The Blunder Years\", whose corpse did young Homer find blocking the pipe to the quarry?",
+        "answers": ["Waylon Smithers, Sr.", "Red Barclay", "Joe Quimby, Sr."],
+        "source": "https://frinkiac.com/caption/S13E05/1121704"
+    },
+    {
+        "question": "In the episode, \"Radioactive Man\" how many issues of the comic have Bart and Milhouse read?",
+        "answers": ["814", "481", "148"],
+        "source": "https://frinkiac.com/caption/S07E02/73723"
     }
 ]
 
