@@ -96,7 +96,7 @@ class FlandersBOT(commands.Bot):
             time_left = round(error.retry_after, 2)
             await ctx.send(':hourglass: Command on cooldown. Slow '
                            'diddly-ding-dong down. (' + str(time_left) + 's)',
-                           delete_after=max(error.retry_after, 1))
+                           delete_after=max(error.retry_after, 5))
 
         elif isinstance(error, commands.MissingPermissions) and \
                 ctx.command.qualified_name is not 'forcestop':
