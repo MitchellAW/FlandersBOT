@@ -51,7 +51,7 @@
     },
     {
         "question":"What is the name of Cletus' Wife?",
-        "answers":["Brandine", "Francine", "Charlene"],
+        "answers":["Brandine", "Francine", "Cherlene"],
         "source": "https://frinkiac.com/caption/S07E21/1035083"
     },
     {
@@ -290,7 +290,7 @@
         "source": "https://frinkiac.com/caption/S08E03/368250"
     },
     {
-        "question":"One of Lionel Hutz's slogans is 'Cases won in 30 minutes or ______'",
+        "question":"One of Lionel Hutz's slogans is \"Cases won in 30 minutes or _________",
         "answers":["your pizza is free", "your next case is on me", "you get it half price"],
         "source": "https://frinkiac.com/caption/S07E10/1008006"
     },
@@ -581,8 +581,8 @@
     },
     {
         "question": "Which of these characters are Australian?",
-        "answers": ["Bruno Dundridge", "", ""],
-        "source": ""
+        "answers": ["Bruno Dundridge", "Brendan Beiderbecke", "Adil Hoxha"],
+        "source": "https://frinkiac.com/caption/S06E16/391940"
     },
     {
         "question": "In \"Bart vs. Australia\", what does the souvenir vendor say he'd call Bull Frogs?",
@@ -750,6 +750,676 @@
         "question": "In the episode, \"Radioactive Man\" how many issues of the comic have Bart and Milhouse read?",
         "answers": ["814", "481", "148"],
         "source": "https://frinkiac.com/caption/S07E02/73723"
+    },
+    {
+        "question": "What is the name of Reverend Lovejoy's Daughter?",
+        "answers": ["Jessica", "Hellen", "Jenny"],
+        "source": "https://simpsons.fandom.com/wiki/Jessica_Lovejoy"
+    },
+    {
+        "question": "Who said, \"My cat's breath smells like cat food\"?",
+        "answers": ["Ralph Wiggum", "Milhouse Van Houten", "Martin Prince"],
+        "source": "https://frinkiac.com/caption/S06E02/1311994"
+    },
+    {
+        "question": "Which football team did Homer dream of owning?",
+        "answers": ["Dallas Cowboys", "Denver Broncos", "Miami Dolphins"],
+        "source": "https://frinkiac.com/caption/S08E02/144009"
+    },
+    {
+        "question": "What is the name of Jay Sherman's TV show?",
+        "answers": ["Coming Attractions", "The Movie Man", "The Movies"],
+        "source": "https://frinkiac.com/caption/S06E18/318200"
+    },
+    {
+        "question": "When Homer worked for Globex Corporation, what did he want to get for his team?",
+        "answers": ["Hammocks", "Recliners", "Laptops"],
+        "source": "https://frinkiac.com/caption/S08E02/867983"
+    },
+    {
+        "question": "When a prohibition was enforced in Springfield, how did Homer transport alcohol to Moe's?",
+        "answers": ["Bowling Balls", "Bathtubs", "Wheelbarrows"],
+        "source": "https://frinkiac.com/caption/S08E18/809658"
+    },
+    {
+        "question": "Who pretended to be Apu's wife when his mother visited Springfield?",
+        "answers": ["Marge Simpson", "Maude Flanders", "Helen Lovejoy"],
+        "source": "https://frinkiac.com/caption/S09E07/537653"
+    },
+    {
+        "question": "Where did Hullabalooza's freak show manager send Homer when he was feeling unwell?",
+        "answers": ["A vet", "A sea captain", "Dr. Nick"],
+        "source": "https://frinkiac.com/caption/S07E24/909991"
+    },
+    {
+        "question": "When Homer and Marge were deemed negligent parents, who saved Bart from being baptized?",
+        "answers": ["Homer Simpson", "Milhouse Van Houten", "Ned Flanders"],
+        "source": "https://frinkiac.com/caption/S07E03/1247095"
+    },
+    {
+        "question": "Who said, \"Ooh, they have the internet on computers now\"?",
+        "answers": ["Homer Simpson", "Marge Simpson", "Carl Carlson"],
+        "source": "https://frinkiac.com/caption/S09E14/1097562"
+    },
+    {
+        "question": "What is Duff Man's real first name?",
+        "answers": ["Barry", "Larry", "Jerry"],
+        "source": "https://frinkiac.com/caption/S14E19/1070403"
+    },
+    {
+        "question": "What alias did Homer use on his web site?",
+        "answers": ["Mr. X", "Somer Himpson", "J"],
+        "source": "https://frinkiac.com/caption/S12E06/346763"
+    },
+    {
+        "question": "When did Mr. Burns say he would donate a million dollars to charity?",
+        "answers": ["When pigs fly", "When hell freezes over", "When he regrew hair"],
+        "source": "https://frinkiac.com/caption/S07E05/930078"
+    },
+    {
+        "question": "What is the name of Snake's car?",
+        "answers": ["Li'l Bandit", "Pinky", "Snake Bite"],
+        "source": "https://frinkiac.com/caption/S09E09/186986"
+    },
+    {
+        "question": "What was homer doing in the picture he sent along with is college application?",
+        "answers": ["Eating cake", "Throwing the cat", "Licking a frozen pole"],
+        "source": "https://frinkiac.com/caption/S05E03/356955"
+    },
+    {
+        "question": "To what animal did Lisa say, \"You're so reticulated!\"?",
+        "answers": ["Northern Reticulated Chipmunk", "Southern Reticulated Squirrel", "Easter Reticulated Owl"],
+        "source": "https://frinkiac.com/caption/S08E02/785717"
+    },
+    {
+        "question": "When Homer was put in a mental institution, who was the man posing as Michael Jackson?",
+        "answers": ["Leon Kompowsky", "Leroy Danza", "Herman Arnold"],
+        "source": "https://frinkiac.com/caption/S03E01/1275811"
+    },
+    {
+        "question": "Which of these bands did Homer not meet at Hullabalooza?",
+        "answers": ["ZZ Top", "Sonic Youth", "Cypress Hill"],
+        "source": "https://frinkiac.com/caption/S07E24/1125440"
+    },
+    {
+        "question": "What is the name of the sea captain that Homer sued?",
+        "answers": ["Captain McCallister", "Captain Ivory", "Captain Murdock"],
+        "source": "https://frinkiac.com/caption/S04E08/980362"
+    },
+    {
+        "question": "Who said, \"You might even say I hate the post office. That and my parents...\"?",
+        "answers": ["Ned Flanders", "Mona Simpson", "Montgomery Burns"],
+        "source": "https://frinkiac.com/caption/S08E08/1262160"
+    },
+    {
+        "question": "What is the name of the tiger owned Gunter and Ernst?",
+        "answers": ["Anastasia", "Samantha", "Shiba"],
+        "source": "https://frinkiac.com/caption/S05E10/594910"
+    },
+    {
+        "question": "Marcia Wallace voiced which female character until her untimely death in 2013?",
+        "answers": ["Edna Krabappel", "Maude Flanders", "Mona Simpson"],
+        "source": "https://simpsons.fandom.com/wiki/Edna_Krabappel"
+    },
+    {
+        "question": "Who said, \"I'll pump them so full of sap, they'll be blowing their nose with a pancake!\"?",
+        "answers": ["Lisa Simpson", "Bart Simpson", "Marge Simpson"],
+        "source": "https://frinkiac.com/caption/S09E21/801783"
+    },
+    {
+        "question": "Who said, \"On your way out, if you wanna kill somebody, it would help me a lot\"?",
+        "answers": ["Hank Scorpio", "Chief Wiggum", "Fat Tony"],
+        "source": "https://frinkiac.com/caption/S08E02/1239304"
+    },
+    {
+        "question": "Who was the conductor of the monorail?",
+        "answers": ["Homer Simpson", "Lyle Lanley", "Leonard Nimoy"],
+        "source": "https://frinkiac.com/caption/S04E12/764730"
+    },
+    {
+        "question": "Which of these is not a Stonecutters activity?",
+        "answers": ["Happy Hour", "Keggers", "A.A. Meetings"],
+        "source": "https://frinkiac.com/caption/S06E12/719518"
+    },
+    {
+        "question": "When Homer and Marge went to parent-teacher what did Bart take from Grampa?",
+        "answers": ["Dentures", "Slippers", "Pants"],
+        "source": "n/a"
+    },
+    {
+        "question": "Who got the Hellfish Bannanza in the end?",
+        "answers": ["Baron Von Wortzenburger", "Abe Simpson", "Mr. Burns"],
+        "source": "https://frinkiac.com/caption/S07E22/1266881"
+    },
+    {
+        "question": "Who ended up with Santa's Little Helper after the repo men took him away?",
+        "answers": ["A blind man", "Groundskeeper Willy", "Grampa Simpson"],
+        "source": "https://frinkiac.com/caption/S08E20/1148046"
+    },
+    {
+        "question": "In the episode, \"Tis the Fifteenth Season\", Nelson's mother tells Nelson he left with her what?",
+        "answers": ["Golden tooth", "Beer Keg", "Lottery Tickets"],
+        "source": "https://frinkiac.com/caption/S15E07/1113987"
+    },
+    {
+        "question": "Who said, \"We've tried nothing and we're all out of ideas!\"?",
+        "answers": ["Ned Flanders' parents", "Homer's hippy friend", "Grampa Simpson"],
+        "source": "https://frinkiac.com/caption/S08E08/1013328"
+    },
+    {
+        "question": "Why did Homer say he wanted a little brother?",
+        "answers": ["Revenge", "Boredom", "Profit"],
+        "source": "https://frinkiac.com/caption/S08E08/1013328"
+    },
+    {
+        "question": "Who sleeps, \"on top of a pile of money with many beatufiul ladies\"?",
+        "answers": ["Rainier Wolfcastle", "Joe Quimby", "Mr. Burns"],
+        "source": "https://frinkiac.com/caption/S08E08/1013328"
+    },
+    {
+        "question": "Who said, \"Buy me BoneStorm or go to hell!\"?",
+        "answers": ["Bart Simpson", "Homer Simpson", "Nelson Muntz"],
+        "source": "https://frinkiac.com/caption/S07E11/126175"
+    },
+    {
+        "question": "Homer says, \"Everything looks bad if you...\"?",
+        "answers": ["remember it", "think about it", "are religious"],
+        "source": "https://frinkiac.com/caption/S08E09/144560"
+    },
+    {
+        "question": "Who was Marge's bowling instructor?",
+        "answers": ["Jacques", "Claude", "Pierre"],
+        "source": "https://frinkiac.com/caption/S06E03/364063"
+    },
+    {
+        "question": "Chief Wiggum sold what parts of his gun to feed his family?",
+        "answers": ["Trigger and part of the handle", "Barrel and trigger", "Trigger and bullets"],
+        "source": "https://frinkiac.com/caption/S08E18/1112227"
+    },
+    {
+        "question": "What is the name of the club that tried to admit Bart when he discovered a comet?",
+        "answers": ["Super Friends", "S.B.S.E", "Sky Watchers"],
+        "source": "https://frinkiac.com/caption/S06E14/490172"
+    },
+    {
+        "question": "Bart redesigned Lisa's flag to look like a butt, with what quote underneath?",
+        "answers": ["\"Learn to Fart\"", "\"Do Some Squats\"", "\"Butt-Off\""],
+        "source": "https://frinkiac.com/caption/S14E03/883966"
+    },
+    {
+        "question": "Who hosts the TV show \"Smartline\"?",
+        "answers": ["Kent Brockman", "Krusty the Clown", "Roger Myers Jr."],
+        "source": "https://frinkiac.com/caption/S04E17/1131379"
+    },
+    {
+        "question": "Who said, \"Is the poopdeck really what I think it is?\"",
+        "answers": ["Homer Simpson", "Barney Gumble", "Moe Syzslak"],
+        "source": "https://frinkiac.com/caption/S09E19/725107"
+    },
+    {
+        "question": "Which football team was Homer given by Hank Scorpio?",
+        "answers": ["Denver Broncos", "Dallas Cowboys", "Miami Dolphins"],
+        "source": "https://frinkiac.com/caption/S08E02/1306871"
+    },
+    {
+        "question": "What was the name of the store in which Marge bought Bart's football equipment?",
+        "answers": ["Sportacus", "Balls-R-Us", "O'Limpwick's Source for Sports"],
+        "source": "https://frinkiac.com/caption/S09E06/217416"
+    },
+    {
+        "question": "What was the name of the toy airplane that Mr. Burns told Smithers to \"hop in?\"?",
+        "answers": ["The Spruce Moose", "The Spruce Goose", "The Goose Moose"],
+        "source": "https://frinkiac.com/caption/S05E10/994175"
+    },
+    {
+        "question": "Which of these images did Homer see on the internet?",
+        "answers": ["Dancing Jesus", "Fighting Kangaroo", "Running Doughnut"],
+        "source": "https://frinkiac.com/caption/S12E06/278778"
+    },
+    {
+        "question": "Who said, \"Man, that is flagrant false advertising!\"?",
+        "answers": ["Otto", "Barney", "Homer"],
+        "source": "https://frinkiac.com/caption/S08E06/135434"
+    },
+    {
+        "question": "Who invented the Juice Loosener?",
+        "answers": ["Dr. Nick Riviera", "Troy McClure", "Professor Frink"],
+        "source": "https://frinkiac.com/caption/S04E21/160976"
+    },
+    {
+        "question": "Who sang to Homer and the NASA crew while they were in space?",
+        "answers": ["James Taylor", "Elton John", "Ozzy Osbourne"],
+        "source": "https://frinkiac.com/caption/S05E15/979577"
+    },
+    {
+        "question": "What did Hank Scorpio destroy so that politicians would take him seriously?",
+        "answers": ["The 59th St. Bridge", "The Statue of Liberty", "The Eiffel Tower"],
+        "source": "https://frinkiac.com/caption/S08E02/919618"
+    },
+    {
+        "question": "Who dances for nickels at the dock and resembles Krusty The Clown?",
+        "answers": ["Handsome Pete", "Joyful Gus", "Crazy Mike"],
+        "source": "https://frinkiac.com/caption/S07E15/1075507"
+    },
+    {
+        "question": "Who is the criminal who constantly robs the Kwik-E-Mart?",
+        "answers": ["Snake", "Shark", "Scorpion"],
+        "source": "https://simpsons.fandom.com/wiki/Snake_Jailbird"
+    },
+    {
+        "question": "Characters from which other FOX program appeared at one of Bart's football games?",
+        "answers": ["King of the Hill", "Futurama", "Family Guy"],
+        "source": "https://frinkiac.com/caption/S09E06/1111709"
+    },
+    {
+        "question": "What kind of tape did Chief Wiggum claim was cheaper than a blank tape?",
+        "answers": ["Hootie and the Blowfish", "Spinal Tap", "Sonic Youth"],
+        "source": "https://frinkiac.com/caption/S12E18/1114405"
+    },
+    {
+        "question": "Which famous singer helped to stop Whacking Day?",
+        "answers": ["Barry White", "James Brown", "Tom Jones"],
+        "source": "https://frinkiac.com/caption/S04E20/1247545"
+    },
+    {
+        "question": "What is Mr. Smithers' first name?",
+        "answers": ["Waylon", "John", "Winston"],
+        "source": "https://frinkiac.com/caption/S13E05/1227852"
+    },
+    {
+        "question": "In the episode where Homer was attracted to Mindy, what food did Marge find behind the bed?",
+        "answers": ["A turkey", "A chicken", "A goose"],
+        "source": "https://frinkiac.com/caption/S05E09/1293257"
+    },
+    {
+        "question": "What machine helped Moe on his date in the Spin-Off Showcase episode?",
+        "answers": ["Love tester", "Vending machine", "Slot machine"],
+        "source": "https://frinkiac.com/caption/S08E24/730479"
+    },
+    {
+        "question": "Why did NASA hire an \"average man\" to go into space?",
+        "answers": ["Low TV ratings", "Homer suggested it to NASA", "An astronaut was sick"],
+        "source": "https://frinkiac.com/caption/S05E15/233132"
+    },
+    {
+        "question": "What did Homer propose to do after killing the last of the mutants?",
+        "answers": ["Steal some Ferraris", "Go eat supper", "Fight to the Death"],
+        "source": "https://frinkiac.com/caption/S09E04/483031"
+    },
+    {
+        "question": "When Homer's beer was exploding in the basement, on who or what did he place the blame?",
+        "answers": ["A bean he had for dinner", "Underground miners", "Fireworks next door"],
+        "source": "https://frinkiac.com/caption/S08E18/1049614"
+    },
+    {
+        "question": "In which war was Seymour Skinner captured?",
+        "answers": ["Vietnam War", "World War II", "Persian Gulf War"],
+        "source": "https://frinkiac.com/caption/S12E08/666875"
+    },
+    {
+        "question": "who said, \"I would die a happy man if I could prove to you that Homer Simpson has the intelligence of a six year old.\"?",
+        "answers": ["Frank Grimes", "Mr. Smithers", "Krusty the Clown"],
+        "source": "https://frinkiac.com/caption/S08E23/955053"
+    },
+    {
+        "question": "Who said, \"Is it? Or is it that you girls can't admit that you have a problem?\"",
+        "answers": ["Barney Gumble", "Moe Syzslak", "Chief Wiggum"],
+        "source": "https://frinkiac.com/caption/S06E18/932847"
+    },
+    {
+        "question": "What was Krusty Burger renamed to when the IRS took it over?",
+        "answers": ["IRS Burger", "Tax Burger", "Value Burger"],
+        "source": "https://simpsons.fandom.com/wiki/Krusty_Burger"
+    },
+    {
+        "question": "What's the name of Cletus' smellhound?",
+        "answers": ["Geech", "Merle", "Earl"],
+        "source": "https://frinkiac.com/caption/S08E16/677826"
+    },
+    {
+        "question": "Why did Spring and Shelbyville create two different towns?",
+        "answers": ["Shelbyville wanted to marry his cousins", "Shelbyville wanted a lemon tree", "Shelbyville found out Springfield was a pirate"],
+        "source": "https://frinkiac.com/caption/S06E24/357806"
+    },
+    {
+        "question": "Who is the mayor of Springfield?",
+        "answers": ["Joe Quimby", "Robert Quincy", "Clovis Quimby"],
+        "source": "https://frinkiac.com/caption/S16E04/119620"
+    },
+    {
+        "question": "Who said, \"Rock stars... is there anything they don't know?\"",
+        "answers": ["Homer", "Otto", "Snake"],
+        "source": "https://frinkiac.com/caption/S07E05/1276257"
+    },
+    {
+        "question": "Who said, \"It is not for infantile intellects such as yours.\"?",
+        "answers": ["Comic Book Guy", "Professor Frink", "Sideshow Mel"],
+        "source": "https://frinkiac.com/caption/S07E18/173106"
+    },
+    {
+        "question": "Who are the only twins at Springfield Elementary?",
+        "answers": ["Sherri and Terri", "Mary and Carey", "Rod and Todd"],
+        "source": "https://frinkiac.com/caption/S01E03/248742"
+    },
+    {
+        "question": "Who was Homer's new 'friend' that worked in the lighthouse?",
+        "answers": ["E.A.R.L", "B.O.B", "B.R.A.D"],
+        "source": "https://frinkiac.com/caption/S08E09/1123404"
+    },
+    {
+        "question": "Which of these did not pass Homer while he was waiting for his gun?",
+        "answers": ["Deer", "Ducks", "Bunnies"],
+        "source": "https://frinkiac.com/caption/S09E05/453852"
+    },
+    {
+        "question": "When Bart and Lisa wrote an Itchy & Scratchy cartoon, who's name did they put on it?",
+        "answers": ["Abraham Simpson", "Santa's Little Helper", "Homer Simpson"],
+        "source": "https://frinkiac.com/caption/S04E19/447429"
+    },
+    {
+        "question": "Homer says, \"I've been _________ since before you were born.",
+        "answers": ["Safari-ing", "Jamaican", "Indian"],
+        "source": "https://frinkiac.com/caption/S07E24/556572"
+    },
+    {
+        "question": "Where did Hank Scorpio keep his sugar?",
+        "answers": ["In his pockets", "In packages", "In a mound in the backyard"],
+        "source": "https://frinkiac.com/caption/S08E02/991356"
+    },
+    {
+        "question": "Who said \"Something is rotten at the Simpson house\"?",
+        "answers": ["Principal Skinner", "Krusty the Clown", "Chief Wiggum"],
+        "source": "https://frinkiac.com/caption/S07E03/272821"
+    },
+    {
+        "question": "How did Bart attach his novelty face pieces?",
+        "answers": ["Glue", "Gum", "Dog Doo"],
+        "source": "https://frinkiac.com/caption/S09E24/292207"
+    },
+    {
+        "question": "How old was Apu when his parents decided who would be his wife?",
+        "answers": ["8", "5", "12"],
+        "source": "https://frinkiac.com/caption/S09E07/308557"
+    },{
+        "question": "With what did Homer close the hatch when he was in space?",
+        "answers": ["A carbon rod", "His body", "A turkey bone"],
+        "source": "https://frinkiac.com/caption/S05E15/1170752"
+    },
+    {
+        "question": "What was the name of the video game thta Lisa played while she was home sick?",
+        "answers": ["Dash Dingo", "Larry the Looter", "Sonic the Warthog"],
+        "source": "https://frinkiac.com/caption/S10E07/336502"
+    },
+    {
+        "question": "Who said, \"This is why I don't talk much\", after making everybody at Moe's feel bad?",
+        "answers": ["Carl", "Lenny", "Barney"],
+        "source": "https://frinkiac.com/caption/S11E16/491560"
+    },
+    {
+        "question": "Which song was Homer singing in his room the first time he used medicinal marijuana?",
+        "answers": ["Smoke on the Water", "Stairway to Heaven", "Do the Hustle"],
+        "source": "https://frinkiac.com/caption/S13E16/418710"
+    },
+    {
+        "question": "What was the name of the first Itchy cartoon?",
+        "answers": ["Manhatten Madness", "Mississippi Mischief", "Dirty Downtown"],
+        "source": "https://frinkiac.com/caption/S07E18/347780"
+    },
+    {
+        "question": "After leaving the football team, what arcade game was Bart playing?",
+        "answers": ["Cat Fight", "Larry the Looter", "Fists of Fury"],
+        "source": "https://frinkiac.com/caption/S09E06/1141105"
+    },
+    {
+        "question": "When trying out to be quarterback, what did Ralph Wiggum throw?",
+        "answers": ["A basketball", "A banana", "His helmet"],
+        "source": "https://frinkiac.com/caption/S09E06/285951"
+    },
+    {
+        "question": "What are the names of the Terwilliger brothers?",
+        "answers": ["Robert and Cecil", "Jim and Carl", "Bob and Carl"],
+        "source": "https://simpsons.fandom.com/wiki/Terwilliger_family"
+    },
+    {
+        "question": "What did Homer purchase at Professor Frink's yard sale?",
+        "answers": ["Matter Transporter", "Animal Translator", "Mood Pants"],
+        "source": "https://frinkiac.com/caption/S09E04/544626"
+    },
+    {
+
+        "question": "Who said, \"What's a jib?\"",
+        "answers": ["Homer", "Barney", "Moe"],
+        "source": "https://frinkiac.com/caption/S09E19/730729"
+    },
+    {
+        "question": "Mr. Burns spit out a piece of baked __________ at the Simpsons' home?",
+        "answers": ["Three eyed fish", "Rocky mountain oyster", "Lobster"],
+        "source": "https://frinkiac.com/caption/S02E04/1187343"
+    },
+    {
+        "question": "Reverend Lovejoy saved Ned Flanders from what type of primate?",
+        "answers": ["Baboon", "Gorilla", "Lemur"],
+        "source": "https://frinkiac.com/caption/S08E22/1244425"
+    },
+    {
+        "question": "Which of these characters is not a member of the Flying Hellfish?",
+        "answers": ["Seymour Skinner", "Montgomery Burns", "Arnie Gumble"],
+        "source": "https://simpsons.fandom.com/wiki/Category:Flying_Hellfish_Members"
+    },
+    {
+        "question": "What pattern is on the Simpsons' kitchen curtains?",
+        "answers": ["Corn", "Wheat", "Pineapples"],
+        "source": "https://frinkiac.com/caption/S08E09/55654"
+    },
+    {
+        "question": "How did Homer accidentally kill his pet lobster?",
+        "answers": ["Gave him a bath", "Drove over him in his car", "Stepped on him"],
+        "source": "https://frinkiac.com/caption/S10E07/1255753"
+    },
+    {
+        "question": "Why did Bart need to get his appendix taken out?",
+        "answers": ["He ate a metal Krusty-O", "Jimbo punched him", "He got attacked by a wolf"],
+        "source": "https://frinkiac.com/caption/S06E22/351383"
+    },
+    {
+        "question": "What was Abe Simpson watching when Homer's mother left?",
+        "answers": ["The Super Bowl", "Magnun P.I.", "Matlock"],
+        "source": "https://frinkiac.com/caption/S07E08/657222"
+    },
+    {
+        "question": "How did the Simpsons get Bobo the stuffed bear?",
+        "answers": ["Found it in a bag of ice", "Bought it at a yard sale", "Stole it from the Kwik-E-Mart"],
+        "source": "https://frinkiac.com/caption/S05E04/567182"
+    },
+    {
+        "question": "Which body part determined that Jebediah Springfield was a pirate?",
+        "answers": ["Silver Tongue", "Wooden Leg", "Hook hand"],
+        "source": "https://frinkiac.com/caption/S07E16/1133232"
+    },
+    {
+        "question": "After shooting Lisa's ball off the roof, what did Homer suggest getting down?",
+        "answers": ["The cat", "A frisbee", "Bart"],
+        "source": "https://frinkiac.com/caption/S09E05/756888"
+    },
+    {
+        "question": "Which two soccer teams were playing in Springfield when a riot broke out?",
+        "answers": ["Mexico and Portugal", "Germany and France", "Springfield and Shelbyville"],
+        "source": "https://frinkiac.com/caption/S09E05/99582"
+    },
+    {
+        "question": "What is the name of Springfield's baseball team?",
+        "answers": ["Springfield Isotopes", "Springfield Atoms", "Springfield Wildcats"],
+        "source": "https://simpsons.fandom.com/wiki/Springfield_Isotopes"
+    },
+    {
+        "question": "Who said, \"my old friend, Mr. McCraig with a leg for an arm and an arm for a leg\"?",
+        "answers": ["Dr. Nick", "Dr. Hibbert", "Professor Frink"],
+        "source": "https://frinkiac.com/caption/S04E11/1296811"
+    },
+    {
+        "question": "What is the name of the baby with the monobrow?",
+        "answers": ["Gerald", "Herman", "Teddy"],
+        "source": "https://frinkiac.com/caption/S08E20/808140"
+    },
+    {
+        "question": "Where did Marge get her new hat?",
+        "answers": ["She fount it", "She bought it", "It was a birthday gift"],
+        "source": "https://frinkiac.com/caption/S09E09/201133"
+    },
+    {
+        "question": "What did Homer name his pet Lobster?",
+        "answers": ["Pinchy", "Pointy", "Pinter"],
+        "source": "https://frinkiac.com/caption/S10E07/650349"
+    },
+    {
+        "question": "The Simpsons travelled to New York with what bus company?",
+        "answers": ["Sit-N-Stare Bus Lines", "Sit-N-Shutup Freight Services", "Cramped Legs Travel"],
+        "source": "https://frinkiac.com/caption/S09E01/428894"
+    },
+    {
+        "question": "What was Mr. Burns drinking when he first met his son?",
+        "answers": ["Lime Rickey", "Scotch on the Rocks", "Morning Martini"],
+        "source": "https://frinkiac.com/caption/S08E04/391840"
+    },
+    {
+        "question": "Who said, \"Hi Super Nintendo Chalmers!\"?",
+        "answers": ["Ralph", "Milhouse", "Martin"],
+        "source": "https://frinkiac.com/caption/S10E07/992607"
+    },
+    {
+        "question": "Who said, \"Camus can do, but Sartre is smartre\"?",
+        "answers": ["Jay Sherman", "Jay Leno", "Homer Simpson"],
+        "source": "https://frinkiac.com/caption/S06E18/641807"
+    },
+    {
+        "question": "Who is the country-singing waitress that is attracted to Homer?",
+        "answers": ["Lurleen", "Amber", "Mindy"],
+        "source": "https://frinkiac.com/caption/S03E20/983744"
+    },
+    {
+        "question": "What was the name of the pool that the Simpsons bought?",
+        "answers": ["The Tinkler", "The Insta-Rust", "The Hick Tub"],
+        "source": "https://frinkiac.com/caption/S06E01/264781"
+    },
+    {
+        "question": "Who was attempting to seduce Marge at the ski lodge, when the family went skiiing?",
+        "answers": ["Disco Stu", "Otto", "Moe Syzslak"],
+        "source": "https://frinkiac.com/caption/S11E10/445960"
+    },
+    {
+        "question": "What was Otto listening to on his Walkman when the Megastore opened?",
+        "answers": ["Judas Priest", "Iron Maiden", "Metallica"],
+        "source": "https://frinkiac.com/caption/S10E21/302801"
+    },
+    {
+        "question": "Who said, \"I can't wait to eat that monkey\"?",
+        "answers": ["Abe", "Homer", "Jasper"],
+        "source": "https://frinkiac.com/caption/S09E21/404720"
+    },
+    {
+        "question": "Who bought Bart's soul?",
+        "answers": ["Milhouse", "Comic Book Guy", "Lisa"],
+        "source": "https://frinkiac.com/caption/S07E04/231013"
+    },
+    {
+        "question": "Who is the father of 44 children in Springfield?",
+        "answers": ["Cletus Spuckler", "Joe Quimby", "Merl"],
+        "source": "https://simpsons.fandom.com/wiki/Cletus_Spuckler"
+    },
+    {
+        "question": "What was the name of the air conditioner store?",
+        "answers": ["It Blows", "Chill Out", "Your Biggest Fan"],
+        "source": "https://frinkiac.com/caption/S09E03/1107388"
+    },
+    {
+        "question": "What did Yale ask Mr. Burns to donate?",
+        "answers": ["An international airport", "A football field", "A new scoreboard"],
+        "source": "https://frinkiac.com/caption/S08E04/708123"
+    },
+    {
+        "question": "Who did Lisa play in her school's Presidents Day play?",
+        "answers": ["Martha Washington", "Nancy Reagan", "Martha Jefferson"],
+        "source": "https://frinkiac.com/caption/S04E15/666698"
+    },
+    {
+        "question": "What code did Homer say he was \"so sick of\" on Valentines Day?",
+        "answers": ["Skywriter's code", "Florist's Code", "Stonecutter's code"],
+        "source": "https://frinkiac.com/caption/S10E14/1097929"
+    },
+    {
+        "question": "When Krusty faked his death, what was his fake identity?",
+        "answers": ["Rory Bellows", "Handsome Pete", "Captain McCallistre"],
+        "source": "https://frinkiac.com/caption/S07E15/1131897"
+    },
+    {
+        "question": "Who said, \"Let that be a lesson to the rest of you nuts!\"?",
+        "answers": ["Chief Wiggum", "Krusty the Clown", "Homer Simpson"],
+        "source": "https://frinkiac.com/caption/S04E15/560342"
+    },
+    {
+        "question": "What is Patty and Selma's favourite TV show?",
+        "answers": ["MacGyver", "Jerry Springer", "Seinfeld"],
+        "source": "https://frinkiac.com/caption/S17E17/221179"
+    },
+    {
+        "question": "Who is Mr. Burns' son?",
+        "answers": ["Larry", "Monty", "Jim"],
+        "source": "https://frinkiac.com/caption/S08E04/380996"
+    },
+    {
+        "question": "What was printed on the T-Shirt Homer wore under his Naval uniform?",
+        "answers": ["I'm with Admiral Stupid", "Disco Stu", "Homer is a Dope"],
+        "source": "https://frinkiac.com/caption/S09E19/1187635"
+    },
+    {
+        "question": "What name did Milhouse choose whilst playing \"Bonestorm\"?",
+        "answers": ["Thrillhouse", "Bone Crusher", "Mr. Dud"],
+        "source": "https://frinkiac.com/caption/S07E11/250900"
+    },
+    {
+        "question": "Which of these names did Bart not suggest for the name of Lisa's doll?",
+        "answers": ["Big Dumb Lisa Doll", "Stupid Lisa Garbage Face", "Loudmouth Lisa"],
+        "source": "https://frinkiac.com/caption/S05E14/1071319"
+    },
+    {
+        "question": "What was the name of Bleeding Gums Murphy's only album?",
+        "answers": ["Sax on the Beach", "Sexaphone Murphy", "Saxing it Up"],
+        "source": "https://frinkiac.com/caption/S06E22/499865"
+    },
+    {
+        "question": "What was the signal that it was time for Apu's wedding?",
+        "answers": ["Lotus flower", "Silver tongue", "A lily"],
+        "source": "https://frinkiac.com/caption/S09E07/295210"
+    },
+    {
+        "question": "Who said, \"I could call my maw while I'm up here\"?",
+        "answers": ["Cletus", "Ralph", "Cooder"],
+        "source": "https://frinkiac.com/caption/S07E21/1066281"
+    },
+    {
+        "question": "What is the name of the train that Lisa thought, \"doesn't come by here much anymore\"?",
+        "answers": ["Old Union Pacific", "Old Runner", "Springfield Monorail"],
+        "source": "https://frinkiac.com/caption/S09E21/825140"
+    },
+    {
+        "question": "Which of these is NOT one of mother Simpson's aliases?",
+        "answers": ["Mona Stevens", "Martha Stewart", "Anita Bonghit"],
+        "source": "https://simpsons.fandom.com/wiki/Mona_Simpson"
+    },
+    {
+        "question": "Who was Frostillicus?",
+        "answers": ["Jasper Beardly", "Hans Moleman", "Grampa Simpson"],
+        "source": "https://frinkiac.com/caption/S09E17/701633"
+    },
+    {
+        "question": "Why did Marge smoke in the house?",
+        "answers": ["To mask the smell of chilli", "The show Bart that smoking kills", "Because it was cold outside"],
+        "source": "https://frinkiac.com/caption/S08E09/95211"
+    },
+    {
+        "question": "Who nearly said, \"I wanna a C-U-P\"?",
+        "answers": ["Marge", "Lenny", "Duff Man"],
+        "source": "https://frinkiac.com/caption/S09E06/256322"
     }
 ]
 
