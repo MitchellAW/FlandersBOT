@@ -118,7 +118,18 @@ class FlandersBOT(commands.Bot):
         else:
             await logging.send('Command: ' + str(ctx.command.qualified_name))
             await logging.send(error)
-            await logging.send(error.__traceback__)
+
+            # Send error traceback to logging channel
+            error_traceback = traceback.format_exception(type(error), error,
+                                                         error.__traceback__)
+            paginator = commands.Paginator()
+            for line in error_traceback:
+                paginator.add_line(line)
+
+            for page in paginator.pages:
+                await logging.send(page)
+
+            # Print error traceback to console
             traceback.print_exception(type(error), error, error.__traceback__,
                                       file=sys.stderr)
 
