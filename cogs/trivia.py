@@ -321,7 +321,7 @@ class Trivia(commands.Cog):
         # Scoreboard display embed TODO: Add colour to discord.Embed()
         embed = discord.Embed()
 
-        embed.set_author(name='Trivia Scoreboard',
+        embed.set_author(name='Trivia Leaderboard',
                          icon_url='https://raw.githubusercontent.com/Mitchell' +
                                   'AW/MitchellAW.github.io/master/images/flan' +
                                   'ders-square.png')
@@ -329,7 +329,7 @@ class Trivia(commands.Cog):
         query = 'SELECT COUNT(user_id) FROM leaderboard'
         leader_count = await self.bot.db.fetchval(query)
 
-        if leader_count >= 5:
+        if leader_count >= 1:
             for stat in stats:
                 rows = await self.bot.db.fetch(stat['query'])
 
