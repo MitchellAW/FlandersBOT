@@ -27,7 +27,8 @@ CREATE TABLE IF NOT EXISTS rounds (
 CREATE TABLE IF NOT EXISTS answers (
 	answer_id serial PRIMARY KEY,
 	round_id serial REFERENCES rounds(round_id),
-	user_id bigint REFERENCES leaderboard(user_id) NOT NULL,
+	user_id bigint NOT NULL,
+	username text NOT NULL,
 	is_correct boolean NOT NULL,
 	answer_index int NOT NULL,
 	answer_time int NOT NULL
@@ -40,7 +41,6 @@ CREATE TABLE IF NOT EXISTS leaderboard (
 	score bigint DEFAULT 0 NOT NULL,
 	wins int DEFAULT 0 NOT NULL,
 	losses int DEFAULT 0 NOT NULL,
-	draws int DEFAULT 0 NOT NULL,
 	correct_answers int DEFAULT 0 NOT NULL,
 	incorrect_answers int DEFAULT 0 NOT NULL,
 	fastest_answer int DEFAULT 20000 NOT NULL,
@@ -52,15 +52,49 @@ CREATE TABLE IF NOT EXISTS leaderboard (
 CREATE OR REPLACE FUNCTION has_voted_today(p_user_id bigint) 
 RETURNS boolean AS $$
 	BEGIN
-		PERFORM (
-			SELECT v.voted_at FROM vote_history v 
+		RETURN (
+			SELECT COUNT(v.voted_at) FROM vote_history v 
 			WHERE v.user_id = p_user_id
 			AND v.voted_at BETWEEN (
 				NOW() AT time zone 'utc') - INTERVAL '24 HOURS' AND (
 				NOW() AT time zone 'utc')
-		);
-		RETURN FOUND;
+		) != 0;
 	END;
+$$ LANGUAGE plpgsql;
+
+-- Get the user_id of user that won match,
+-- Winner is determined based on correct answers, then fastest answer if tie
+CREATE OR REPLACE FUNCTION get_winner(p_match_id bigint)
+RETURNS bigint AS $$
+    BEGIN
+        RETURN (
+            SELECT user_id FROM (
+                SELECT * FROM answers a
+                INNER JOIN rounds r
+                ON a.round_id = r.round_id
+                WHERE r.match_id = p_match_id
+            ) match_answers
+            GROUP by user_id
+            ORDER BY COUNT(CASE WHEN is_correct THEN 1 END) DESC, MIN(answer_time) ASC
+            LIMIT 1
+            );
+    END;
+$$ LANGUAGE plpgsql;
+
+-- Get the user_id of the user that had the fastest correct answer in the match
+CREATE OR REPLACE FUNCTION get_fastest_answer(p_match_id bigint)
+RETURNS bigint AS $$
+    BEGIN
+        RETURN (
+            SELECT user_id FROM answers a
+            INNER JOIN rounds r
+            ON a.round_id = r.round_id
+            WHERE a.is_correct = true and r.match_id = p_match_id
+            GROUP BY a.user_id
+            ORDER BY MIN(answer_time) ASC
+            LIMIT 1
+        );
+    END;
 $$ LANGUAGE plpgsql;
 
 -- Check if answer is a new unique answer
@@ -107,17 +141,16 @@ RETURNS int AS $$
 	END;
 $$ LANGUAGE plpgsql;
 
--- Adds the vote multiplier to points gained, rounds to nearest 5
-CREATE OR REPLACE FUNCTION multiply(p_user_id bigint, points bigint)
+-- Adds the vote xp multiplier to points gained, rounds to nearest 5
+CREATE OR REPLACE FUNCTION vote_multiply(p_user_id bigint, points bigint)
 RETURNS bigint as $$
 	DECLARE
-		multiplier int := (CASE WHEN has_voted_today(p_user_id) THEN 1.5 ELSE 1 END);
+		vote_multiplier float := (CASE WHEN has_voted_today(p_user_id) THEN 1.5 ELSE 1 END);
 		new_points int;
 	BEGIN
-		SELECT 5 * ROUND(multiplier * points / 5 ) INTO new_points;
+		SELECT 5 * ROUND(vote_multiplier * points / 5) INTO new_points;
 		RETURN new_points;
 	END;
-
 $$ LANGUAGE plpgsql;
 
 -- Update a users statistics when a user answers
@@ -127,17 +160,21 @@ CREATE OR REPLACE FUNCTION update_stats() RETURNS TRIGGER AS $BODY$
 			             FROM rounds 
 			             WHERE round_id = new.round_id);
 	BEGIN
-		-- 100 Bonus points for correctly answering  a unique answer
-		IF (SELECT is_unique_answer(new.user_id, question)) THEN
-			UPDATE leaderboard SET score = score + 100
-			WHERE user_id = new.user_id;
-		END IF;
+		-- Insert user that answers into leaderboard
+		INSERT INTO leaderboard (user_id, username) 
+		VALUES (new.user_id, new.username) ON CONFLICT DO NOTHING;
 
 		-- Update stats for correct answer (100 points for correct, increase streak)
 		IF new.is_correct THEN
 
+			-- 500 Bonus points for correctly answering  a unique answer
+			IF (SELECT is_unique_answer(new.user_id, question)) THEN
+				UPDATE leaderboard SET score = score + (SELECT vote_multiply(user_id, 500))
+				WHERE user_id = new.user_id;
+			END IF;
+
 			-- 100 points for correct answer, 10 bonus points multiplier for each correct in a row
-		    UPDATE leaderboard SET score = score + (SELECT multiply(new.user_id, 100 + (10 * current_streak))), 
+		    UPDATE leaderboard SET score = score + (SELECT vote_multiply(user_id, 100 + (10 * current_streak))), 
 		        correct_answers = correct_answers + 1,
 		        -- New fastest answer
 		        fastest_answer = LEAST(fastest_answer, new.answer_time), 
@@ -148,7 +185,7 @@ CREATE OR REPLACE FUNCTION update_stats() RETURNS TRIGGER AS $BODY$
 
 		-- Update stats for incorrect answer (5 points, reset streak)
 		ELSE
-	        UPDATE leaderboard SET score = score + (SELECT multiply(new.user_id, 5)), 
+	        UPDATE leaderboard SET score = score + (SELECT vote_multiply(user_id, 5)), 
 	        incorrect_answers = incorrect_answers + 1, 
 	        current_streak = 0
 	        WHERE user_id = new.user_id;
@@ -158,37 +195,77 @@ CREATE OR REPLACE FUNCTION update_stats() RETURNS TRIGGER AS $BODY$
 $BODY$
 language plpgsql;
 
--- TODO: add bonus points for being first to answer correctly, and 
--- being only one to correctly answer
+-- Add bonus points for being the fastest and only correct answer
 CREATE OR REPLACE FUNCTION end_round() RETURNS TRIGGER AS $BODY$
 	DECLARE
+		-- Get user_id of user that answered correctly fastest
+		fastest_user bigint := (SELECT user_id FROM answers a
+								WHERE a.round_id = new.round_id AND a.is_correct = true
+								GROUP BY a.user_id
+								ORDER BY MIN(answer_time) ASC
+								LIMIT 1);
 
-	BEGIN 
+		-- Get number of correct answers for round
+		correct_count int := (SELECT COUNT(CASE WHEN is_correct THEN 1 END) FROM answers a
+						  WHERE a.round_id = new.round_id AND a.is_correct = true);
 
+		-- Get user_id of top answer (only used if correct_count is 1)
+		only_answer bigint := (SELECT user_id FROM answers a
+							   WHERE a.round_id = new.round_id AND a.is_correct = true
+							   LIMIT 1);
+	BEGIN
+		-- 50 Bonus points for fastest answer in round
+		UPDATE leaderboard SET score = score + vote_multiply(user_id, 50)
+		WHERE user_id = fastest_user;
+
+		-- 50 Bonus points for being only correct answer
+		IF (correct_count = 1) THEN
+			UPDATE leaderboard SET score = score + vote_multiply(user_id, 50)
+			WHERE user_id = only_answer;
+		END IF;
 		RETURN NEW;
 	END;
 $BODY$
 language plpgsql;
 
--- TODO: Add bonus points for being winner, loser, draw etc.,
--- and being fastest answer, also require that 5 rounds were played, 
--- and with more than one player
+-- Add bonus points for being winner, loser, and being fastest answer,
+-- requires that 5 rounds were played, with more than one player
 CREATE OR REPLACE FUNCTION end_match() RETURNS TRIGGER AS $BODY$
 	DECLARE
 		-- Get number of rounds
-		round_count := (SELECT COUNT(DISTINCT round_id) AS round_count 
-						FROM rounds WHERE match_id = new.match_id);
+		round_count int := (SELECT COUNT(DISTINCT round_id) AS round_count
+						    FROM rounds 
+						    WHERE match_id = new.match_id);
 
 		-- Get number of players that participated
-		player_count := (SELECT COUNT(DISTINCT user_id) FROM answers a 
+		player_count int := (SELECT COUNT(DISTINCT user_id) FROM answers a 
 			             INNER JOIN rounds r
 			             ON a.round_id = r.round_id
-			             WHERE r.match_id = 3);
+			             WHERE r.match_id = new.match_id);
+
+		-- Get user_id of winner of match
+	    winner bigint := (SELECT get_winner(new.match_id));
+
+	    -- Get user_id of fastest answer in match
+	    fastest_user bigint := (SELECT get_fastest_answer(new.match_id));
 	BEGIN
 		-- Check that it counts as a valid multiplayer match 
 		-- (more than 1 player, at least 5 rounds)
 		IF (round_count >= 5 AND player_count > 1) THEN
 
+			-- 1,000 Bonus Points for winning, +1 Win
+		    UPDATE leaderboard SET wins = wins + 1,
+		    score = score + (SELECT vote_multiply(user_id, 1000))
+		    WHERE user_id = winner;
+
+		    -- 100 Bonus Points for losing, +1 Loss, 
+		    UPDATE leaderboard SET losses = losses + 1,
+		    score = score + (SELECT vote_multiply(user_id, 100))
+		    WHERE user_id != winner;
+
+		    -- 100 Bonus points for being fastest correct answer in match
+		    UPDATE leaderboard SET score = score + (SELECT vote_multiply(user_id, 100))
+		    WHERE user_id = fastest_user;
 		END IF;
 		RETURN NEW;
 	END;
@@ -201,18 +278,15 @@ CREATE TRIGGER insert_answer
 	FOR EACH ROW
 	EXECUTE FUNCTION update_stats();
 
+-- Trigger stat updates on round end
 CREATE TRIGGER update_round
 	BEFORE UPDATE ON rounds
 	FOR EACH ROW
 	EXECUTE FUNCTION end_round();
 
+-- Trigger stat updates on match end
 CREATE TRIGGER update_match
 	BEFORE UPDATE ON matches
 	FOR EACH ROW
 	EXECUTE FUNCTION end_match();
-
-
--- INDEX user_id in vote_history, match_id in matches, 
---
---
 

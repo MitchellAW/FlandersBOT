@@ -132,8 +132,6 @@ class Trivia(commands.Cog):
         # Track some important round data
         user_answers = {}
         correct_count = 0
-        fastest_answer = (self.TIMER_DURATION * 1000) + 1000
-        fastest_user = None
 
         # Start timer
         end_time = time.time() + self.TIMER_DURATION
@@ -157,12 +155,6 @@ class Trivia(commands.Cog):
                     answer_time = int((time.time() -
                                        (end_time - self.TIMER_DURATION)) * 1000)
 
-                    # Track fastest time and user
-                    print(answer_time)
-                    if answer_time < fastest_answer:
-                        fastest_answer = answer_time
-                        fastest_user = user
-
                     # Insert answer into DB
                     query = '''INSERT INTO answers (round_id, user_id, username,
                                is_correct, answer_index, answer_time) 
@@ -177,9 +169,14 @@ class Trivia(commands.Cog):
         except asyncio.TimeoutError:
             pass
 
-        # Update user stats in the leaderboard
-        await self.update_leaderboard(ctx, round_id, user_answers, fastest_user,
-                                      question_index)
+        # Update usernames in the leaderboard
+        await self.update_usernames(ctx, round_id)
+
+        # Set round as complete (Triggers leaderboard stat updates)
+        query = '''UPDATE rounds SET is_complete = true
+                   WHERE round_id = $1
+                '''
+        await self.bot.db.fetch(query, round_id)
 
         # Check the results of the trivia question
         embed.set_thumbnail(url='')
@@ -206,41 +203,28 @@ class Trivia(commands.Cog):
 
         await ctx.send(embed=embed, delete_after=self.TIMER_DURATION + 3)
 
-    # Update the records in the leaderboard based on round performance of users
-    async def update_leaderboard(self, ctx, round_id, user_answers,
-                                 fastest_user, question_index):
+    # Update usernames in leaderboard
+    async def update_usernames(self, ctx, round_id):
         # Get answers from the round
         query = 'SELECT * FROM answers WHERE round_id = $1'
         answers = await self.bot.db.fetch(query, round_id)
 
-        # For each answer in round, calculate bonus points
+        # For each answer in round, update username
         for answer in answers:
-            points = 0
-
-            # Calculate stat changes
-            if answer['is_correct']:
-                # Multiplayer bonus points
-                if len(user_answers) > 1:
-
-                    # 50 bonus points for being only one to correctly answer
-                    if len(answers) == 1:
-                        points += 50
-
-                    # 50 bonus points for being first to correctly answer
-                    if fastest_user.id == answer['user_id']:
-                        points += 50
-
-            # 10 bonus points per every other player you play with
-            points += 10 - (10 * len(user_answers))
-
             # Add points to score
-            query = '''UPDATE leaderboard SET username = $1, score = score + $2 
-                       WHERE user_id = $3
+            query = '''UPDATE leaderboard SET username = $1 
+                       WHERE user_id = $2
                     '''
             username = str(ctx.guild.get_member(answer['user_id']))
-            await self.bot.db.fetch(query, username, points, answer['user_id'])
+            await self.bot.db.fetch(query, username, answer['user_id'])
 
     async def end_match(self, ctx, match_id, category):
+        # Set the match as complete (Triggers leaderboard stat updates)
+        query = '''UPDATE matches SET is_complete = true
+                   WHERE match_id = $1
+                '''
+        await self.bot.db.fetch(query, match_id)
+
         # Top Scorers (sorted by correct answers descending)
         query = '''SELECT user_id, COUNT(CASE WHEN is_correct THEN 1 END) 
                    AS correct FROM answers a
@@ -303,7 +287,7 @@ class Trivia(commands.Cog):
                 '''
         fastest_answers = await self.bot.db.fetch(query, match_id)
 
-        scorers = ''
+        scorers = '' if len(fastest_answers) > 0 else '---'
         for scorer in fastest_answers[:5]:
             scorers += (f'**{ctx.guild.get_member(scorer["user_id"]).name}**: '
                         f'{str(scorer["fastest_time"]/1000)}s\n')
@@ -312,32 +296,6 @@ class Trivia(commands.Cog):
         # Display the scoreboard
         await ctx.send(embed=embed)
 
-        query = 'SELECT COUNT(*) AS round_count FROM rounds WHERE match_id = $1'
-        round_count = await self.bot.db.fetchval(query, match_id)
-
-        # Distribute the winning bonus points if more than 1 top scorer
-        # (100 bonus points minimum)
-        top_score = top_scorers[0]['correct']
-        draw_count = 0
-        for scorer in top_scorers:
-            if scorer['correct'] == top_score:
-                draw_count += 1
-
-        # Distribute points
-        points = max(100, 1000/draw_count)
-
-        # Round to nearest 5
-        points = 5 * round(points / 5)
-
-        query = '''UPDATE LEADERBOARD '
-                   SET score = score + $1, wins = wins + $2,  
-                   draws = draws + $3, losses = losses + $4
-                   WHERE user_id = $5
-                '''
-        for scorer in top_scorers:
-            if scorer['correct'] == top_score:
-                print('')
-
     # Display the global trivia leaderboard
     @commands.command()
     async def leaderboard(self, ctx):
@@ -345,6 +303,9 @@ class Trivia(commands.Cog):
             {"query": "SELECT username, score AS result "
                       "FROM leaderboard ORDER BY score DESC",
              "category": ":trophy: High Scores"},
+            {"query": "SELECT username, wins AS result "
+                      "FROM leaderboard ORDER BY wins DESC",
+             "category": ":first_place: Wins"},
             {"query": "SELECT username, correct_answers AS result "
                       "FROM leaderboard ORDER BY correct_answers DESC",
              "category": ":white_check_mark:  Correct Answers"},
@@ -365,16 +326,21 @@ class Trivia(commands.Cog):
                                   'AW/MitchellAW.github.io/master/images/flan' +
                                   'ders-square.png')
 
-        for stat in stats:
-            rows = await self.bot.db.fetch(stat['query'])
+        query = 'SELECT COUNT(user_id) FROM leaderboard'
+        leader_count = await self.bot.db.fetchval(query)
 
-            scores = ''
-            for row in rows[:5]:
-                scores += (f'**{row["username"]}**: '
-                           f'{str(row["result"])}\n')
-            embed.add_field(name=stat['category'], value=scores)
+        if leader_count >= 5:
+            for stat in stats:
+                rows = await self.bot.db.fetch(stat['query'])
 
-        await ctx.send(embed=embed)
+                scores = ''
+                for row in rows[:5]:
+                    scores += (f'**{row["username"]}**: '
+                               f'{str(row["result"])}\n')
+                embed.add_field(name=stat['category'], value=scores)
+
+            if len(embed.fields) > 0:
+                await ctx.send(embed=embed)
 
 
 def setup(bot):
