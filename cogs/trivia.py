@@ -348,8 +348,8 @@ class Trivia(commands.Cog):
             {"query": "SELECT username, correct_answers AS result "
                       "FROM leaderboard ORDER BY correct_answers DESC",
              "category": ":white_check_mark:  Correct Answers"},
-            {"query": "SELECT username, "
-                      "CAST(fastest_answer AS FLOAT) / 1000 AS result "
+            {"query": "SELECT username, CONCAT(CAST(fastest_answer AS FLOAT) "
+                      "/ 1000, 's') AS result "
                       "FROM leaderboard ORDER BY fastest_answer ASC",
              "category": ":point_up: Fastest Answers"},
             {"query": "SELECT username, longest_streak AS result "
