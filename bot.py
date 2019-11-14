@@ -1,5 +1,7 @@
 import json
 from datetime import datetime
+import sys
+import traceback
 
 import asyncio
 import asyncpg
@@ -116,7 +118,9 @@ class FlandersBOT(commands.Bot):
         else:
             await logging.send('Command: ' + str(ctx.command.qualified_name))
             await logging.send(error)
-            print(error)
+            await logging.send(error.__traceback__)
+            traceback.print_exception(type(error), error, error.__traceback__,
+                                      file=sys.stderr)
 
     # Update guild count at bot listing sites and in bots status/presence
     async def update_status(self):
