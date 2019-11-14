@@ -3,12 +3,12 @@ const DBL = require('dblapi.js');
 const { Pool } = require('pg');
 
 // Query to get the total points (weekend = 2, weekday = 1)
-const POINTS_QUERY = `SELECT SUM(CASE WHEN isWeekend THEN 2 ELSE 1 END) 
-					  AS points FROM voteHistory WHERE voteType = 'upvote';`;
+const POINTS_QUERY = `SELECT SUM(CASE WHEN is_weekend THEN 2 ELSE 1 END)
+                      AS points FROM vote_history WHERE vote_type = 'upvote';`;
 
 // Query to insert a new vote into the history
-const INSERT_QUERY = `INSERT INTO VoteHistory (userID, voteType,  isWeekend) 
-				      VALUES ($1, $2, $3);`
+const INSERT_QUERY = `INSERT INTO vote_history (user_id, vote_type,  is_weekend)
+                      VALUES ($1, $2, $3);`
 
 // Records any missing votes since webhook was last ran. Inserts
 // missing votes as null userID into vote_history table
