@@ -28,8 +28,8 @@ I'd prefer that instead of running an instance of FlandersBOT yourself you'd jus
 *Requires Python 3.5+*  
 `python3 -m pip install -U -r requirements.txt`
 
-*Utilises the latest version of [discord.py](https://github.com/Rapptz/discord.py/tree/rewrite) (rewrite)*  
-*Depends upon the async branch of [CompuGlobal](https://github.com/MitchellAW/CompuGlobal/tree/async)*
+*Utilises the latest version of [discord.py](https://github.com/Rapptz/discord.py) *  
+*Depends upon [CompuGlobal](https://github.com/MitchellAW/CompuGlobal/tree/async)*
 
 *Requires PostgreSQL 9.6+*  
 ```sh
@@ -56,23 +56,14 @@ sudo -u postgres psql
 ```  
 
 ```sql
-CREATE ROLE IF NOT EXISTS ned WITH LOGIN PASSWORD '<password>';
+CREATE ROLE ned WITH LOGIN PASSWORD '<password>';
 CREATE DATABASE flandersdb OWNER ned;
 ```
 
-### Create Table
+### Create Tables
 ```sh
-$ psql -h 127.0.0.1 -d flandersdb -U ned
+$ psql -h 127.0.0.1 -d flandersdb -U ned -f bot.sql
 ```  
-```sql
-CREATE TABLE IF NOT EXISTS VoteHistory (
-	voteID serial PRIMARY KEY,
-	userID bigint,
-	voteType text CHECK (voteType IN ('upvote', 'test')),
-	isWeekend boolean,
-	votedAt timestamp default (now() at time zone 'utc')
-);
-```
 
 ## Usage
 The bot commands can be executed using several different methods/prefixes, to minimise clashing with other discord bots. Any command can be prefixed with an @mention, ned or diddly/doodly when you really want to flaunt those Flanders-isms.
@@ -215,52 +206,6 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
     </tr>
     <tr>
       <td><b>rickandmorty [quote]</b></td>
-      <td>Searches for a Rick and Morty gif using the quote.</td>
-    </tr>
-  </table>
-</div>
-
-### 30 Rock
-
-<div style="overflow-x:auto;">
-  <table width=180 style='table-layout:fixed'>
-    <col width=20>
- 	<col width=100>
-    <thead>
-      <tr>
-        <th>Command</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tr>
-      <td><b>30rock</b></td>
-      <td>Will post a random Rick and Morty gif with caption.</td>
-    </tr>
-    <tr>
-      <td><b>30rock [quote]</b></td>
-      <td>Searches for a Rick and Morty gif using the quote.</td>
-    </tr>
-  </table>
-</div>
-
-### West Wing
-
-<div style="overflow-x:auto;">
-  <table width=180 style='table-layout:fixed'>
-    <col width=20>
- 	<col width=100>
-    <thead>
-      <tr>
-        <th>Command</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tr>
-      <td><b>westwing</b></td>
-      <td>Will post a random Rick and Morty gif with caption.</td>
-    </tr>
-    <tr>
-      <td><b>westwing [quote]</b></td>
       <td>Searches for a Rick and Morty gif using the quote.</td>
     </tr>
   </table>
