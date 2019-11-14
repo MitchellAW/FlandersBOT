@@ -118,7 +118,7 @@ class General(commands.Cog):
     # sends the message in the channel
     @commands.command()
     @commands.cooldown(1, 3, BucketType.user)
-    async def help(self, ctx, *, category: str=None):
+    async def help(self, ctx, *, category: str = None):
         # Post general help commands
         if category is None:
             await self.dm_author(ctx, COMMANDS_LIST)
@@ -156,7 +156,7 @@ class General(commands.Cog):
     # Sends the feedback to the feedback channel of support server
     @commands.command()
     @commands.cooldown(2, 600, BucketType.user)
-    async def feedback(self, ctx, *, message: str=None):
+    async def feedback(self, ctx, *, message: str = None):
         if message is None:
             await ctx.send('Sorry, I noodily-need some feedback to send.\n' +
                            'Usage: `ned feedback [feedback message here]`')
@@ -260,7 +260,7 @@ class General(commands.Cog):
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     @commands.cooldown(3, 60, BucketType.guild)
-    async def setprefix(self, ctx, *, new_prefix: str=None):
+    async def setprefix(self, ctx, *, new_prefix: str = None):
         guild_index = prefixes.find_guild(ctx.message.guild,
                                           self.bot.prefix_data)
         # Require entering a prefix
