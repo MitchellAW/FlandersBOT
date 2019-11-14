@@ -1,6 +1,5 @@
 .idea/
 __pycache__/
-cogs/__pycache__/
 cogs/api/__pycache__/
 venv/
 settings/config.json
