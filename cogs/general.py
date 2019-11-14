@@ -6,7 +6,7 @@ from discord.ext.commands.cooldowns import BucketType
 
 import prefixes
 
-COMMANDS_LIST = ('''
+COMMANDS_LIST = '''
 Hi-diddly-ho, neighborino! Here are the commands, shout them out anytime and
 I'll happily oblige! Well, so long as the reverend approves of course.
 
@@ -40,9 +40,9 @@ I'll happily oblige! Well, so long as the reverend approves of course.
 *I currently support commands for The Simpsons, Futurama, Rick and Morty.*
 
 **For Example:** `ned info`, `diddly help tvshows`, `doodly-trivia`
-''')
+'''
 
-TV_SHOW_COMMANDS = ('''
+TV_SHOW_COMMANDS = '''
 **TV SHOWS**
 
 **simpsons** - Will post a random Simpsons gif with caption.
@@ -57,9 +57,9 @@ TV_SHOW_COMMANDS = ('''
 **epinfo** - Will post episode information on the last post made in the channel.
 
 **For Example:** `ned simpsons nothing at all`, `ned futurama`
-''')
+'''
 
-TRIVIA_COMMANDS = ('''
+TRIVIA_COMMANDS = '''
 **TRIVIA**
 
 **simpsonstrivia** - Play a trivia game using 100+ questions from The Simpsons.
@@ -70,7 +70,7 @@ TRIVIA_COMMANDS = ('''
 **score** - Shows your trivia score and statistics, used in the leaderboards.
 
 **For Example:** `ned simpsonstrivia`, `ned leaderboard`, `ned suggest` 
-''')
+'''
 
 BOT_INFO = ('''Hi-diddly-ho, neighborino! I hear you wanted some 
 mor-diddly-ore information...
@@ -224,12 +224,13 @@ class General(commands.Cog):
         await ctx.send('Github Repo Source: '
                        '<https://github.com/MitchellAW/FlandersBOT>')
 
-    # Display information regarding the last update
-    @commands.command()
+    # Display information/news regarding the last update
+    @commands.command(aliases=['news'])
     @commands.cooldown(1, 3, BucketType.user)
     async def update(self, ctx):
-        await ctx.send('-Fixed bug preventing custom prefixes on new discord'
-                       'servers.')
+        await ctx.send('- Added 200+ new questions to Simpsons trivia!'
+                       '- Added a trivia leaderboard, use `Ned leaderboard`!'
+                       '- Trivia matches now display a scoreboard at the end!')
 
     # Allow administrators to make ned leave the server
     @commands.command()
