@@ -181,8 +181,8 @@ class General(commands.Cog):
     @commands.command(aliases=['upvote'])
     @commands.cooldown(1, 30, BucketType.user)
     async def vote(self, ctx):
-        query = '''SELECT MAX(votedAt) FROM VoteHistory
-                   WHERE userID = $1 AND voteType = 'upvote';'''
+        query = '''SELECT MAX(voted_at) FROM vote_history
+                   WHERE user_id = $1 AND vote_type = 'upvote';'''
 
         message = ('If you vote for me using the link below, it will ' +
                    'hel-diddly-elp me grow in popularity!\n' + VOTE_URL + '\n')
@@ -312,8 +312,8 @@ class General(commands.Cog):
                                'you\'d like to enable notifications.')
 
             # Check if user is able to vote now
-            query = '''SELECT MAX(votedAt) FROM VoteHistory
-                       WHERE userID = $1 AND voteType = 'upvote';'''
+            query = '''SELECT MAX(voted_at) FROM vote_history
+                       WHERE user_id = $1 AND vote_type = 'upvote';'''
             row = await self.bot.db.fetchrow(query, ctx.author.id)
 
             # No timestamps in history, notify and exit
