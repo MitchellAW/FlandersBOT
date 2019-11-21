@@ -1,7 +1,7 @@
 -- Create table for storing all user votes
 CREATE TABLE IF NOT EXISTS vote_history (
 	vote_id serial PRIMARY KEY,
-	user_id bigint NOT NULL,
+	user_id bigint,
 	vote_type text CHECK (vote_type IN ('upvote', 'test')),
 	is_weekend boolean NOT NULL,
 	voted_at timestamp DEFAULT (NOW() at time zone 'utc') NOT NULL
