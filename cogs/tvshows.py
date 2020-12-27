@@ -51,9 +51,14 @@ class TVShowCog(commands.Cog):
             if generate:
                 sent = await ctx.send('Generating {}... '.format(screencap.key)
                                       + '<a:loading:410316176510418955>')
-                generated_url = await self.api.generate_gif(gif_url)
+
                 try:
+                    generated_url = await self.api.generate_gif(gif_url)
                     await sent.edit(content=generated_url)
+
+                except compuglobal.APIPageStatusError as error:
+                    await self.bot.LOGGING.send(error)
+                    await ctx.send(error)
 
                 except discord.NotFound:
                     pass
