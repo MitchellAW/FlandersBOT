@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS answers (
 CREATE TABLE IF NOT EXISTS leaderboard ( 
 	user_id bigint PRIMARY KEY,
 	username text NOT NULL,
+	privacy int DEFAULT 0 NOT NULL,
 	score bigint DEFAULT 0 NOT NULL,
 	wins int DEFAULT 0 NOT NULL,
 	losses int DEFAULT 0 NOT NULL,
