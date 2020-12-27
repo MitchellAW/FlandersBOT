@@ -24,10 +24,14 @@ startup_extensions = [
     'cogs.rickandmorty', 'cogs.owner', 'cogs.trivia'
     ]
 
+intents = discord.Intents.default()
+intents.members = True
+
 
 class FlandersBOT(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix=get_prefix, case_insensitive=True)
+        super().__init__(command_prefix=get_prefix, case_insensitive=True,
+                         intents=intents)
 
         self.remove_command('help')
         self.command_stats = self.read_command_stats()
