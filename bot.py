@@ -95,29 +95,52 @@ class FlandersBOT(commands.Bot):
 
     # Commands error handler
     async def on_command_error(self, ctx, error):
+
+        # Allows us to check for original exceptions raised and sent to
+        # CommandInvokeError. If nothing is found. We keep the exception passed
+        # to on_command_error.
+        error = getattr(error, 'original', error)
+
+        # Channel in FlandersBOT server for logging errors to
         logging = self.get_channel(self.LOGGING_CHANNEL)
+
+        # Ignore non-existent commands
+        if isinstance(error, commands.CommandNotFound):
+            return
+
+        # Check if command cooldown error
         if isinstance(error, commands.CommandOnCooldown):
             time_left = round(error.retry_after, 2)
             await ctx.send(':hourglass: Command on cooldown. Slow '
                            'diddly-ding-dong down. (' + str(time_left) + 's)',
                            delete_after=max(error.retry_after, 5))
 
-        elif isinstance(error, commands.MissingPermissions) and \
-                ctx.command.qualified_name != 'forcestop':
+        elif isinstance(error, commands.BotMissingPermissions):
+            message = '⛔ Sorry, I do not have the permissions riddly-required' \
+                      ' for that command-aroo!\nRequires: '
+
+            # List all missing permissions
+            for i in range(len(error.missing_perms)):
+                message += str(error.missing_perms[i])
+
+                if i < len(error.missing_perms) - 1:
+                    message += ', '
+
+            await ctx.send(message)
+
+        # Check for missing permissions
+        elif isinstance(error, commands.MissingPermissions):
                 await ctx.send('<:xmark:411718670482407424> Sorry, '
                                'you don\'t have the permissions '
                                'riddly-required for that command-aroo! ')
 
+        # Check if private messages not allowed
         elif isinstance(error, commands.NoPrivateMessage):
-            await ctx.send(error)
-
-        elif isinstance(error, commands.CommandNotFound):
-            pass
-
-        elif isinstance(error, commands.MissingPermissions):
-            await logging.send(error)
-            await logging.send('Command :' + str(ctx.command.qualified_name))
-            await logging.send('Missing Perms: ' + error.missing_perms)
+            try:
+                await ctx.author.send(
+                    f'{ctx.command} can not be used in Private Messages.')
+            except discord.HTTPException:
+                pass
 
         else:
             await logging.send('Command: ' + str(ctx.command.qualified_name))
