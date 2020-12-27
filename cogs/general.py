@@ -230,9 +230,9 @@ class General(commands.Cog):
     @commands.command(aliases=['news'])
     @commands.cooldown(1, 3, BucketType.user)
     async def update(self, ctx):
-        await ctx.send('- Added 200+ new questions to Simpsons trivia!'
-                       '- Added a trivia leaderboard, use `Ned leaderboard`!'
-                       '- Trivia matches now display a scoreboard at the end!')
+        last_update = '2020-12-27'
+        await ctx.send('- Added privacy settings, use `ned privacy` for more '
+                       f'info!\nLast Update: {last_update}')
 
     # Allow administrators to make ned leave the server
     @commands.command()
