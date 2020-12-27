@@ -42,6 +42,7 @@ class Stats(commands.Cog):
     # channel
     @commands.command(aliases=['episodeinfo'])
     @commands.cooldown(1, 3, BucketType.channel)
+    @commands.bot_has_permissions(embed_links=True)
     async def epinfo(self, ctx):
         if ctx.channel.id in self.bot.cached_screencaps:
             # Get screencap and its timestamp
@@ -67,6 +68,7 @@ class Stats(commands.Cog):
     # Display statistics for the bot
     @commands.command(aliases=['statistics'])
     @commands.cooldown(1, 3, BucketType.channel)
+    @commands.bot_has_permissions(embed_links=True)
     async def stats(self, ctx):
         # Count users online in guilds and user average
         total_members = 0

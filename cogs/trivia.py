@@ -25,6 +25,7 @@ class Trivia(commands.Cog):
     # Starts a game of trivia using the simpsons trivia questions
     @commands.command(aliases=['strivia', 'simpsontrivia'])
     @commands.cooldown(10, 300, BucketType.channel)
+    @commands.bot_has_permissions(add_reactions=True, embed_links=True)
     async def simpsonstrivia(self, ctx):
         if ctx.channel.id not in self.channels_playing:
             await self.start_trivia(ctx, SimpsonsTrivia())
@@ -32,6 +33,7 @@ class Trivia(commands.Cog):
     # Starts a game of trivia using the futurama trivia questions
     @commands.command(aliases=['ftrivia'])
     @commands.cooldown(10, 300, BucketType.channel)
+    @commands.bot_has_permissions(add_reactions=True, embed_links=True)
     async def futuramatrivia(self, ctx):
         if ctx.channel.id not in self.channels_playing:
             # Start the game

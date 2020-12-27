@@ -59,6 +59,7 @@ class Owner(commands.Cog):
     # Loads a cog (requires dot path)
     @commands.command(hidden=True)
     @commands.is_owner()
+    @commands.bot_has_permissions(add_reactions=True)
     async def load(self, ctx, *, cog: str):
         try:
             self.bot.load_extension(cog)
@@ -70,6 +71,7 @@ class Owner(commands.Cog):
     # Unloads a cog (requires dot path)
     @commands.command(hidden=True)
     @commands.is_owner()
+    @commands.bot_has_permissions(add_reactions=True)
     async def unload(self, ctx, *, cog: str):
         try:
             self.bot.unload_extension(cog)
@@ -81,6 +83,7 @@ class Owner(commands.Cog):
     # Reloads a cog (requires dot path)
     @commands.command(hidden=True)
     @commands.is_owner()
+    @commands.bot_has_permissions(add_reactions=True)
     async def reload(self, ctx, *, cog: str):
         try:
             self.bot.unload_extension(cog)
@@ -93,6 +96,7 @@ class Owner(commands.Cog):
     # Shuts the bot down - usable by the bot owner - requires confirmation
     @commands.command(hidden=True)
     @commands.is_owner()
+    @commands.bot_has_permissions(add_reactions=True)
     async def shutdown(self, ctx):
         # Make confirmation message based on bots username to prevent
         # myself from shutting wrong bot down.
@@ -116,6 +120,7 @@ class Owner(commands.Cog):
     # counts
     @commands.command(hidden=True)
     @commands.is_owner()
+    @commands.bot_has_permissions(attach_files=True)
     async def guildlist(self, ctx):
         with open('cogs/data/guildlist.csv', 'w') as guild_list:
             guild_list.write('Server Name,# of Bots,# of Users,Total,Region,'
@@ -141,6 +146,7 @@ class Owner(commands.Cog):
     # bot down
     @commands.command(hidden=True)
     @commands.is_owner()
+    @commands.bot_has_permissions(add_reactions=True)
     async def reloadconfig(self, ctx):
         with open('settings/config.json', 'r') as config_file:
             self.bot.config = json.load(config_file)

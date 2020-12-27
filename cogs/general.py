@@ -156,6 +156,7 @@ class General(commands.Cog):
     # Sends the feedback to the feedback channel of support server
     @commands.command()
     @commands.cooldown(2, 600, BucketType.user)
+    @commands.bot_has_permissions(embed_links=True)
     async def feedback(self, ctx, *, message: str = None):
         if message is None:
             await ctx.send('Sorry, I noodily-need some feedback to send.\n' +
