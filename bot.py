@@ -103,7 +103,7 @@ class FlandersBOT(commands.Bot):
                            delete_after=max(error.retry_after, 5))
 
         elif isinstance(error, commands.MissingPermissions) and \
-                ctx.command.qualified_name is not 'forcestop':
+                ctx.command.qualified_name != 'forcestop':
                 await ctx.send('<:xmark:411718670482407424> Sorry, '
                                'you don\'t have the permissions '
                                'riddly-required for that command-aroo! ')
