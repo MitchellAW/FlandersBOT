@@ -192,6 +192,14 @@ class Stats(commands.Cog):
                         '''
                 await self.bot.db.execute(query, user.id)
 
+                # Clear all records of user id from vote history, replaces
+                # with null
+                query = '''UPDATE vote_history
+                           SET user_id = NULL
+                           WHERE user_id = $1
+                        '''
+                await self.bot.db.execute(query, user.id)
+
                 await msg.edit(content='All data relating to your account has '
                                        'been deleted.\nIf you wish to '
                                        'participate in trivia without '
