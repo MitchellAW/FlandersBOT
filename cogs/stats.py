@@ -101,6 +101,60 @@ class Stats(commands.Cog):
         embed.add_field(name='Commands Used', value=command_count, inline=True)
         await ctx.send(embed=embed)
 
+    # All privacy related functions, including information regarding the data
+    # logged, and options to both delete, and opt out of future data logging
+    @commands.command()
+    @commands.cooldown(1, 3, BucketType.user)
+    async def privacy(self, ctx, *, subcommand: str = None):
+        # Display generic privacy info
+        if subcommand is None or subcommand == 'info':
+            await ctx.send('FlandersBOT stores the user ID (e.g. '
+                           '221609683562135553) privately and stores the '
+                           'username & discriminator (e.g. FlandersBOT#0680) '
+                           'of all trivia participants publicly for use in the'
+                           ' trivia leaderboards.\nIf you wish to participate '
+                           'in trivia without appearing in the leaderboards, '
+                           'use the command: `ned privacy config`\nIf you '
+                           'wish to remove all data relating to your account, '
+                           'use the command: `ned privacy remove`.')
+
+        # Remove all data logged for user
+        elif subcommand.lower() in ['remove', 'delete', 'erase', 'purge']:
+            msg = await ctx.send('Would you like to erase all your user '
+                                 'data?\nThis will remove you from the '
+                                 'trivia leaderboard, and cannot be undone.')
+
+            await msg.add_reaction('❌')
+            await msg.add_reaction('✅')
+
+            # Check for response of cross/tick
+            def is_answer(reaction, user):
+                return (not user.bot and str(reaction.emoji) in ['❌', '✅']
+                        and user.id == ctx.author.id)
+
+            react, user = await self.bot.wait_for('reaction_add',
+                                                  check=is_answer, timeout=120)
+
+            # Affirmative reaction, drop all data for that user
+            if react.emoji == '✅':
+                # Delete all records of user from leaderboard
+                query = '''DELETE FROM leaderboard 
+                           WHERE user_id = $1
+                        '''
+                await self.bot.db.execute(query, user.id)
+
+                # Delete all records of user from answers
+                query = '''DELETE FROM answers
+                           WHERE user_id = $1
+                        '''
+                await self.bot.db.execute(query, user.id)
+
+                await msg.edit(content='All data relating to your account has '
+                                       'been deleted.\nIf you wish to '
+                                       'participate in trivia without '
+                                       'appearing in the leaderboards, use the'
+                                       ' command: `ned privacy config`')
+
 
 def setup(bot):
     bot.add_cog(Stats(bot))
