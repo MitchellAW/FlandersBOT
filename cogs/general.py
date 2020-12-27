@@ -139,7 +139,8 @@ class General(commands.Cog):
     @commands.cooldown(1, 3, BucketType.channel)
     @commands.guild_only()
     async def meme(self, ctx, *, meme_caption: str = None):
-        if ctx.channel.id in self.bot.cached_screencaps:
+        if (ctx.channel.id in self.bot.cached_screencaps
+                and meme_caption is not None):
             screencap = self.bot.cached_screencaps[ctx.channel.id]
 
             if screencap is not None:
