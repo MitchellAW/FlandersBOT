@@ -98,7 +98,7 @@ class Owner(commands.Cog):
         # myself from shutting wrong bot down.
         def check(message):
             return (message.content == self.bot.user.name[:4] and
-                    message.author.id == self.bot.config['owner_id'])
+                    str(message.author.id) == self.bot.config['owner_id'])
 
         try:
             await ctx.send('Respond ' + self.bot.user.name[:4] + ' to shutdown')
