@@ -118,6 +118,47 @@ class Stats(commands.Cog):
                            'wish to remove all data relating to your account, '
                            'use the command: `ned privacy remove`.')
 
+        # Adjust privacy settings for user
+        elif subcommand.lower() in ['edit', 'update', 'config', 'modify']:
+            msg = await ctx.send('By default, all trivia participants are '
+                                 'visible to the public in the trivia '
+                                 'leaderboard. Alternatively, you may change '
+                                 'your privacy settings by reacting to this '
+                                 'message.\n'
+                                 '**A**: Public\n**B**: Private')
+
+            await msg.add_reaction('🇦')
+            await msg.add_reaction('🇧')
+
+            # Check for response of cross/tick
+            def is_answer(reaction, user):
+                return (not user.bot and str(reaction.emoji) in ['🇦', '🇧', '🇨']
+                        and user.id == ctx.author.id)
+
+            react, user = await self.bot.wait_for('reaction_add',
+                                                  check=is_answer, timeout=120)
+
+            # Affirmative reaction, drop all data for that user
+            if react.emoji == '🇦':
+
+                # Set privacy setting for profile to public
+                query = '''UPDATE leaderboard
+                           SET privacy = 0
+                           WHERE user_id = $1
+                        '''
+                await self.bot.db.execute(query, user.id)
+                await msg.edit(content='Your leaderboard stats are now public')
+
+            # Affirmative reaction, drop all data for that user
+            if react.emoji == '🇧':
+                # Set privacy setting for profile to private
+                query = '''UPDATE leaderboard
+                           SET privacy = 1
+                           WHERE user_id = $1
+                        '''
+                await self.bot.db.execute(query, user.id)
+                await msg.edit(content='Your leaderboard stats are now private.')
+
         # Remove all data logged for user
         elif subcommand.lower() in ['remove', 'delete', 'erase', 'purge']:
             msg = await ctx.send('Would you like to erase all your user '

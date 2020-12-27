@@ -301,20 +301,25 @@ class Trivia(commands.Cog):
     async def leaderboard(self, ctx):
         stats = [
             {"query": "SELECT username, score AS result "
-                      "FROM leaderboard ORDER BY score DESC",
+                      "FROM leaderboard WHERE privacy = 0 "
+                      "ORDER BY score DESC",
              "category": ":trophy: High Scores"},
             {"query": "SELECT username, wins AS result "
-                      "FROM leaderboard ORDER BY wins DESC",
+                      "FROM leaderboard WHERE privacy = 0 "
+                      "ORDER BY wins DESC",
              "category": ":first_place: Wins"},
             {"query": "SELECT username, correct_answers AS result "
-                      "FROM leaderboard ORDER BY correct_answers DESC",
+                      "FROM leaderboard WHERE privacy = 0 "
+                      "ORDER BY correct_answers DESC",
              "category": ":white_check_mark:  Correct Answers"},
             {"query": "SELECT username, CONCAT(CAST(fastest_answer AS FLOAT) "
                       "/ 1000, 's') AS result "
-                      "FROM leaderboard ORDER BY fastest_answer ASC",
+                      "FROM leaderboard WHERE privacy = 0 "
+                      "ORDER BY fastest_answer ASC",
              "category": ":point_up: Fastest Answers"},
             {"query": "SELECT username, longest_streak AS result "
-                      "FROM leaderboard ORDER BY longest_streak DESC",
+                      "FROM leaderboard WHERE privacy = 0 "
+                      "ORDER BY longest_streak DESC",
              "category": ":chart_with_upwards_trend: Longest Streak"}
         ]
 
@@ -326,7 +331,7 @@ class Trivia(commands.Cog):
                                   'AW/MitchellAW.github.io/master/images/flan' +
                                   'ders-square.png')
 
-        query = 'SELECT COUNT(user_id) FROM leaderboard'
+        query = 'SELECT COUNT(user_id) FROM leaderboard WHERE privacy = 0'
         leader_count = await self.bot.db.fetchval(query)
 
         if leader_count >= 1:
