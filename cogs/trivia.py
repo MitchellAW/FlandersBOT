@@ -68,7 +68,7 @@ class Trivia(commands.Cog):
         self.channels_playing.append(ctx.channel.id)
 
         # Load question data from trivia file
-        with open('cogs/data/' + category.file_name, 'r') as trivia_data:
+        with open(f'cogs/data/{category.file_name}', 'r') as trivia_data:
             trivia = json.load(trivia_data)
             questions = trivia.copy()
             random.shuffle(questions)
@@ -195,7 +195,7 @@ class Trivia(commands.Cog):
             embed.description += f'**{str(correct_count)} correct answers!**'
             for key in user_answers:
                 if user_answers[key]['answer'] == correct_choice:
-                    embed.description += '\n' + key.name
+                    embed.description += f'\n{key.name}'
 
         await ctx.send(embed=embed, delete_after=self.TIMER_DURATION + 3)
 
@@ -242,8 +242,8 @@ class Trivia(commands.Cog):
             scorers += f'**{ctx.guild.get_member(scorer["user_id"]).name}**: {str(scorer["correct"])}\n'
 
         # Scoreboard display embed
-        embed = discord.Embed(description=f'**Congratulations to the top scorer,'
-                              f' {ctx.guild.get_member(top_scorer).name} :trophy:**', color=category.colour)
+        embed = discord.Embed(description=f'**Congratulations to the top scorer, '
+                                          f'{ctx.guild.get_member(top_scorer).name} :trophy:**', color=category.colour)
 
         embed.set_author(name='Trivia Scoreboard', icon_url=self.bot.user.avatar_url)
 

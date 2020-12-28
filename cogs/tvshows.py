@@ -48,7 +48,7 @@ class TVShowCog(commands.Cog):
             gif_url = await screencap.get_gif_url(caption)
 
             if generate:
-                sent = await ctx.send('Generating {}... '.format(screencap.key) + '<a:loading:410316176510418955>')
+                sent = await ctx.send(f'Generating {screencap.key}... <a:loading:410316176510418955>')
 
                 try:
                     generated_url = await self.api.generate_gif(gif_url)

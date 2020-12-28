@@ -37,7 +37,7 @@ class FlandersBOT(commands.Bot):
         self.bg_task = self.loop.create_task(self.cycle_status_format())
         self.db_conn = None
         self.bg_task_2 = self.loop.create_task(self.track_votes())
-        self.status_formats = ['Ned help | {} Servers', 'Ned vote | {} Servers']
+        self.status_formats = [f'Ned help | {len(self.guilds)} Servers', f'Ned vote | {len(self.guilds)} Servers']
         self.prefix_data = prefixes.read_prefixes()
         self.uptime = datetime.utcnow()
         self.LOGGING_CHANNEL = 415700137302818836
@@ -52,13 +52,13 @@ class FlandersBOT(commands.Bot):
             try:
                 self.load_extension(extension)
             except Exception as e:
-                exc = '{}: {}'.format(type(e).__name__, e)
-                print('Failed to load extension {}\n{}'.format(extension, exc))
+                exc = f'{type(e).__name__}: {e}'
+                print(f'Failed to load extension {extension}\n{exc}')
 
     # Print bot information, update status and set uptime when bot is ready
     async def on_ready(self):
-        print('Username: ' + str(self.user.name))
-        print('Client ID: ' + str(self.user.id))
+        print(f'Username: {self.user.name}')
+        print(f'Client ID: {self.user.id}')
         await self.update_status()
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.utcnow()
@@ -108,7 +108,7 @@ class FlandersBOT(commands.Bot):
         # Check if command cooldown error
         if isinstance(error, commands.CommandOnCooldown):
             time_left = round(error.retry_after, 2)
-            await ctx.send(':hourglass: Command on cooldown. Slow diddly-ding-dong down. (' + str(time_left) + 's)',
+            await ctx.send(f':hourglass: Command on cooldown. Slow diddly-ding-dong down. ({time_left}s)',
                            delete_after=max(error.retry_after, 5))
 
         elif isinstance(error, commands.BotMissingPermissions):
@@ -137,7 +137,7 @@ class FlandersBOT(commands.Bot):
                 pass
 
         else:
-            await logging.send('Command: ' + str(ctx.command.qualified_name))
+            await logging.send(f'Command: {ctx.command.qualified_name}')
             await logging.send(error)
 
             # Send error traceback to logging channel
@@ -155,7 +155,7 @@ class FlandersBOT(commands.Bot):
     # Update guild count at bot listing sites and in bots status/presence
     async def update_status(self):
         await api.bot_lists.update_guild_counts(self)
-        status = discord.Game(name=self.status_formats[self.status_index].format(len(self.guilds)))
+        status = discord.Game(name=self.status_formats[self.status_index])
         await self.change_presence(activity=status)
 
     # Cycle through all status formats, waits a minute between status changes
@@ -168,7 +168,7 @@ class FlandersBOT(commands.Bot):
             else:
                 self.status_index += 1
 
-            status = discord.Game(name=self.status_formats[self.status_index].format(len(self.guilds)))
+            status = discord.Game(name=self.status_formats[self.status_index])
 
             await self.change_presence(activity=status)
             await asyncio.sleep(60)

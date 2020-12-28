@@ -72,7 +72,7 @@ TRIVIA_COMMANDS = '''
 **For Example:** `ned simpsonstrivia`, `ned leaderboard`, `ned suggest` 
 '''
 
-BOT_INFO = ('''Hi-diddly-ho, neighborino! I hear you wanted some 
+BOT_INFO = f'''Hi-diddly-ho, neighborino! I hear you wanted some 
 mor-diddly-ore information...
 Well, If it's clear and yella', you've got juice there, fella. If it's tangy 
 and brown, you're in cider town.
@@ -80,14 +80,13 @@ Now, there's two exceptions and it gets kinda tricky here...
 
 __**INFO**__
 
-Framework: Discord.py (version=''' + discord.__version__ + ''')
+Framework: Discord.py (version={discord.__version__})
 Author: <@210898009242861568> (Discord)
 Support Server: <https://discord.gg/xMmxMYg>
-Invite URL: <https://discordapp.com/oauth2/authorize?client_id=''' +
-            '''221609683562135553&scope=bot&permissions=19456>
+Invite URL: <https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456>
 GitHub Source: <https://github.com/MitchellAW/FlandersBOT>
 If you'd like to hel-diddly-elp me grow in popularity, use `ned vote`
-''')
+'''
 
 VOTE_URL = '<https://discordbots.org/bot/221609683562135553/vote>'
 
@@ -111,7 +110,7 @@ class General(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 3, BucketType.user)
     async def info(self, ctx):
-        await self.dm_author(ctx, BOT_INFO + '\n***Currently active in ' + str(len(self.bot.guilds)) + ' servers***')
+        await self.dm_author(ctx, BOT_INFO + f'\n***Currently active in {len(self.bot.guilds)} servers***')
 
     # Whispers a list of the bot commands, If the user has DMs disabled,
     # sends the message in the channel
@@ -162,8 +161,8 @@ class General(commands.Cog):
                            'Usage: `ned feedback [feedback message here]`')
         else:
             feedback_channel = self.bot.get_channel(self.FEEDBACK_CHANNEL)
-            embed = discord.Embed(title='📫 Feedback from: ' + str(ctx.author) + ' (' + str(ctx.author.id) + ')',
-                                  colour=discord.Colour(0x44981e), description='```' + message + '```')
+            embed = discord.Embed(title=f'📫 Feedback from: {ctx.author} ({ctx.author.id})',
+                                  colour=discord.Colour(0x44981e), description=f'```{message}```')
 
             embed.set_author(name=ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
             await feedback_channel.send(embed=embed)
@@ -179,8 +178,8 @@ class General(commands.Cog):
         query = '''SELECT MAX(voted_at) FROM vote_history
                    WHERE user_id = $1 AND vote_type = 'upvote';'''
 
-        message = ('If you vote for me using the link below, it will hel-diddly-elp me grow in popularity!\n' +
-                   VOTE_URL + '\n')
+        message = ('If you vote for me using the link below, it will hel-diddly-elp me grow in popularity!\n'
+                   f'{VOTE_URL}\n')
 
         row = await self.bot.db.fetchrow(query, ctx.author.id)
 
@@ -194,8 +193,7 @@ class General(commands.Cog):
             else:
                 hours, remainder = divmod(seconds_remaining, 3600)
                 minutes, seconds = divmod(remainder, 60)
-                message += '**You can vote again in: {} hours, {} minutes, ''and {} seconds.**'.format(hours, minutes,
-                                                                                                       seconds)
+                message += f'**You can vote again in: {hours} hours, {minutes} minutes, and {seconds} seconds.**'
 
         else:
             message += '**You can vote now.**'
@@ -207,7 +205,7 @@ class General(commands.Cog):
     @commands.cooldown(1, 3, BucketType.user)
     async def invite(self, ctx):
         await self.dm_author(ctx, 'You can add me to your own server using the link below:\n'
-                                  '<https://discordapp.com/oauth2/authorize?client_id=' + str(self.bot.user.id) +
+                                  f'<https://discordapp.com/oauth2/authorize?client_id={self.bot.user.id}'
                                   '&scope=bot&permissions=19456>')
 
     # Sends url to FlandersBOT github repo
@@ -238,11 +236,11 @@ class General(commands.Cog):
         guild_prefixes = prefixes.prefixes_for(ctx.message.guild,
                                                self.bot.prefix_data)
         if len(guild_prefixes) > 7:
-            await ctx.send('This servers prefixes are: `Ned`, `ned`, `diddly`, `doodly`, `diddly-`, `doodly-` and `' +
-                           guild_prefixes[-1] + '`.')
+            await ctx.send('This servers prefixes are: `Ned`, `ned`, `diddly`, `doodly`, `diddly-`, `doodly-` and `'
+                           f'{guild_prefixes[-1]}`.')
 
         else:
-            await ctx.send('This servers prefixes are: `Ned`, `ned`, `diddly`, `doodly`,' + ' `diddly-` and `doodly-`.')
+            await ctx.send('This servers prefixes are: `Ned`, `ned`, `diddly`, `doodly`, `diddly-` and `doodly-`.')
 
     # Allows for a single custom prefix per-guild
     @commands.command()
@@ -268,16 +266,16 @@ class General(commands.Cog):
                 }
             )
             prefixes.write_prefixes(self.bot.prefix_data)
-            await ctx.send('This servers custom prefix changed to `' + new_prefix + '`.')
+            await ctx.send(f'This servers custom prefix changed to `{new_prefix}`.')
 
         elif self.bot.prefix_data[guild_index]['prefix'] == new_prefix:
-            await ctx.send('This server custom prefix is already `' + new_prefix + '`.')
+            await ctx.send(f'This server custom prefix is already `{new_prefix}`.')
 
         # Otherwise, modify the current prefix to the new one
         else:
             self.bot.prefix_data[guild_index]['prefix'] = new_prefix
             prefixes.write_prefixes(self.bot.prefix_data)
-            await ctx.send('This servers custom prefix changed to `' + new_prefix + '`.')
+            await ctx.send(f'This servers custom prefix changed to `{new_prefix}`.')
 
     # Toggle notifications for when user can vote again
     @commands.command(aliases=['reminder', 'subscribe'])
