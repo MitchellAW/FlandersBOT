@@ -9,18 +9,11 @@ import discord
 from discord.ext import commands
 
 import api.bot_lists
-import prefixes
-
-
-# Get the prefixes for the bot
-def get_prefix(bot, message):
-    extras = prefixes.prefixes_for(message.guild, bot.prefix_data)
-    return commands.when_mentioned_or(*extras)(bot, message)
-
 
 # All cogs that will be loaded on bots startup
 startup_extensions = [
-    'cogs.general', 'cogs.stats', 'cogs.simpsons', 'cogs.futurama', 'cogs.rickandmorty', 'cogs.owner', 'cogs.trivia'
+    'cogs.general', 'cogs.stats', 'cogs.simpsons', 'cogs.futurama', 'cogs.rickandmorty', 'cogs.owner', 'cogs.trivia',
+    'cogs.prefixes'
     ]
 
 intents = discord.Intents.default()
@@ -29,7 +22,7 @@ intents.members = True
 
 class FlandersBOT(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix=get_prefix, case_insensitive=True, intents=intents)
+        super().__init__(command_prefix=self.get_prefixes, case_insensitive=True, intents=intents)
 
         self.remove_command('help')
         self.command_stats = self.read_command_stats()
@@ -38,9 +31,10 @@ class FlandersBOT(commands.Bot):
         self.db_conn = None
         self.bg_task_2 = self.loop.create_task(self.track_votes())
         self.status_formats = ['Ned help | {} Servers', 'Ned vote | {} Servers']
-        self.prefix_data = prefixes.read_prefixes()
+        self.default_prefixes = ['ned', 'diddly', 'doodly']
         self.uptime = datetime.utcnow()
         self.LOGGING_CHANNEL = 415700137302818836
+        self.cached_prefixes = {}
         self.cached_screencaps = {}
         self.reminders = []
         self.db = None
@@ -65,6 +59,8 @@ class FlandersBOT(commands.Bot):
 
         if self.db is None:
             self.db = await asyncpg.create_pool(**self.config['db_credentials'])
+
+        await self.cache_prefixes()
 
     # Update guild count on join
     async def on_guild_join(self, guild):
@@ -151,6 +147,46 @@ class FlandersBOT(commands.Bot):
 
             # Print error traceback to console
             traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+
+    # Gets all approved prefixes for a particular guild using the message received
+    async def get_prefixes(self, bot, message):
+        guild_prefixes = self.default_prefixes.copy()
+        if message.guild.id in self.cached_prefixes:
+            guild_prefixes.extend(self.cached_prefixes[message.guild.id])
+
+        # Note, must sort prefixes from longest to shortest length to account for shorter prefixes
+        # being contained in longer prefixes
+        guild_prefixes.sort(key=len, reverse=True)
+
+        # Note, must end with zero space separator or else it would read "Ned help" as "Ned"+" help" and ignore it
+        separators = [' ', '-', '']
+        case_insensitive_prefixes = []
+
+        # Loop through and create different casing variants of each prefix, currently builds the following variants:
+        # "ned ", "NED ", Ned ", "ned-", "NED-", "Ned-", "ned", "NED", "Ned"
+        for prefix in guild_prefixes:
+            for separator in separators:
+                # All lowercase prefix
+                case_insensitive_prefixes.append(prefix.lower() + separator)
+
+                # All uppercase prefix
+                case_insensitive_prefixes.append(prefix.upper() + separator)
+
+                # Capitalise first character
+                if len(prefix) > 1:
+                    case_insensitive_prefixes.append(prefix[0].upper() + prefix[1:] + separator)
+
+        return commands.when_mentioned_or(*case_insensitive_prefixes)(bot, message)
+
+    # Updates the cached prefixes using a SELECT query, is called when a custom prefix is added/removed
+    async def cache_prefixes(self):
+        self.cached_prefixes.clear()
+        query = '''SELECT guild_id, prefix
+                   FROM prefixes
+                '''
+        rows = await self.db.fetch(query)
+        for row in rows:
+            self.cached_prefixes.setdefault(row['guild_id'], []).append(row['prefix'])
 
     # Update guild count at bot listing sites and in bots status/presence
     async def update_status(self):

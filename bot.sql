@@ -49,6 +49,13 @@ CREATE TABLE IF NOT EXISTS leaderboard (
 	longest_streak int DEFAULT 0 NOT NULL
 );
 
+-- Create table for storing all custom guild prefixes
+CREATE TABLE IF NOT EXISTS prefixes (
+	prefix_id serial PRIMARY KEY,
+	guild_id bigint NOT NULL,
+	prefix VARCHAR(10) NOT NULL
+);
+
 -- Check if user has voted in the last 24 hours
 CREATE OR REPLACE FUNCTION has_voted_today(p_user_id bigint) 
 RETURNS boolean AS $$

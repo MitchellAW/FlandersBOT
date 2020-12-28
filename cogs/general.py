@@ -4,8 +4,6 @@ import discord
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
-import prefixes
-
 COMMANDS_LIST = '''
 Hi-diddly-ho, neighborino! Here are the commands, shout them out anytime and
 I'll happily oblige! Well, so long as the reverend approves of course.
@@ -228,54 +226,6 @@ class General(commands.Cog):
     async def leave(self, ctx):
         await ctx.send('Okilly-dokilly! 👋')
         await ctx.guild.leave()
-
-    # Display the prefixes used on the current guild
-    @commands.command(aliases=['prefixes'])
-    @commands.cooldown(1, 3, BucketType.channel)
-    async def prefix(self, ctx):
-        guild_prefixes = prefixes.prefixes_for(ctx.message.guild,
-                                               self.bot.prefix_data)
-        if len(guild_prefixes) > 7:
-            await ctx.send('This servers prefixes are: `Ned`, `ned`, `diddly`, `doodly`, `diddly-`, `doodly-` and `'
-                           f'{guild_prefixes[-1]}`.')
-
-        else:
-            await ctx.send('This servers prefixes are: `Ned`, `ned`, `diddly`, `doodly`, `diddly-` and `doodly-`.')
-
-    # Allows for a single custom prefix per-guild
-    @commands.command()
-    @commands.guild_only()
-    @commands.has_permissions(manage_guild=True)
-    @commands.cooldown(3, 60, BucketType.guild)
-    async def setprefix(self, ctx, *, new_prefix: str = None):
-        guild_index = prefixes.find_guild(ctx.message.guild, self.bot.prefix_data)
-        # Require entering a prefix
-        if new_prefix is None:
-            await ctx.send('You did not provide a new prefix.')
-
-        # Limit prefix to 10 characters, may increase
-        elif len(new_prefix) > 10:
-            await ctx.send('Custom server prefix too long (Max 10 chars).')
-
-        # Add a new custom guild prefix if one doesn't already exist
-        elif guild_index == -1:
-            self.bot.prefix_data.append(
-                {
-                    'guildID': ctx.message.guild.id,
-                    'prefix': new_prefix
-                }
-            )
-            prefixes.write_prefixes(self.bot.prefix_data)
-            await ctx.send(f'This servers custom prefix changed to `{new_prefix}`.')
-
-        elif self.bot.prefix_data[guild_index]['prefix'] == new_prefix:
-            await ctx.send(f'This server custom prefix is already `{new_prefix}`.')
-
-        # Otherwise, modify the current prefix to the new one
-        else:
-            self.bot.prefix_data[guild_index]['prefix'] = new_prefix
-            prefixes.write_prefixes(self.bot.prefix_data)
-            await ctx.send(f'This servers custom prefix changed to `{new_prefix}`.')
 
     # Toggle notifications for when user can vote again
     @commands.command(aliases=['reminder', 'subscribe'])
