@@ -34,15 +34,24 @@ class TVShowCog(commands.Cog):
 
     # Post a random screencap image with caption
     async def post_image(self, ctx, search=None, caption=None):
-        screencap = await self.get_screencap(ctx, search)
+        try:
+            screencap = await self.get_screencap(ctx, search)
 
-        if screencap is not None:
-            await ctx.send(await screencap.get_meme_url(caption))
+            if screencap is not None:
+                await ctx.send(await screencap.get_meme_url(caption))
+
+        except compuglobal.APIPageStatusError as error:
+            await ctx.send(error)
 
     # Post a gif, if generating, post generating loading message and then edit message to include gif with the
     # generated url
     async def post_gif(self, ctx, search=None, caption=None, generate=True):
-        screencap = await self.get_screencap(ctx, search)
+        screencap = None
+        try:
+            screencap = await self.get_screencap(ctx, search)
+
+        except compuglobal.APIPageStatusError as error:
+            await ctx.send(error)
 
         if screencap is not None:
             gif_url = await screencap.get_gif_url(caption)
@@ -56,7 +65,7 @@ class TVShowCog(commands.Cog):
 
                 except compuglobal.APIPageStatusError as error:
                     await self.bot.LOGGING.send(error)
-                    await ctx.send(error)
+                    await sent.edit(error)
 
                 except discord.NotFound:
                     pass
