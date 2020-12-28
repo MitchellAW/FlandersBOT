@@ -1,3 +1,6 @@
+import random
+
+import compuglobal
 import discord
 from compuglobal.aio import Frinkiac
 from compuglobal.aio import FrinkiHams
@@ -11,6 +14,7 @@ class Simpsons(TVShowCog):
     def __init__(self, bot):
         super().__init__(bot, Frinkiac())
         self.frinkihams = FrinkiHams()
+        self.frinkiac = Frinkiac()
 
     # Messages a random Simpsons quote with gif if no search terms are given, otherwise, search for Simpsons quote using
     # search terms and post gif
@@ -24,14 +28,39 @@ class Simpsons(TVShowCog):
     @commands.command(aliases=['steamed', 'aurora', 'borealis'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def steamedhams(self, ctx):
-        screencap = await self.frinkihams.get_random_screencap()
+        # Steamed hams episode key
+        steamed_hams_key = 'S07E21'
+        start_timestamp = 483532
+        end_timestamp = 652200
 
-        gif_url = await screencap.get_gif_url()
+        # The middle timestamp of the skit
+        middle_timestamp = 567866
+
+        # Send gif generation message, will be later edited to display generated gif url
         sent = await ctx.send('Steaming your hams... <a:loading:410316176510418955>')
 
-        generated_url = await self.api.generate_gif(gif_url)
+        # Get all frames for the steamed hams skit
+        # Skit duration is 2:48 (168 seconds), get frames 80 seconds before and 80 seconds after mid point
+        # 4 seconds are subtracted from start and end to allow for 7 second gif length and prevent displaying parts of
+        # other skits
         try:
-            await sent.edit(content=generated_url)
+            frames = await self.frinkiac.get_frames(steamed_hams_key, middle_timestamp, 80000, 80000)
+
+            # Check frames are returned
+            if len(frames) > 0:
+                steamed_ham = random.choice(frames)
+                screencap = await self.frinkiac.get_screencap(steamed_hams_key, steamed_ham.timestamp)
+
+                # Ensure valid screencap
+                if screencap is not None:
+                    gif_url = await screencap.get_gif_url()
+
+                    # Generate the gif and replace loading message with generated url
+                    generated_url = await self.frinkiac.generate_gif(gif_url)
+                    await sent.edit(content=generated_url)
+
+        except compuglobal.APIPageStatusError as error:
+            await sent.edit(str(error).replace('https://frinkiac.com/', '<https://frinkiac.com/>'))
 
         except discord.NotFound:
             pass
