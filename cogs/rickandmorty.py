@@ -9,8 +9,8 @@ class RickAndMorty(TVShowCog):
     def __init__(self, bot):
         super().__init__(bot, MasterOfAllScience())
 
-    # Messages a random R & M quote with gif if no search terms are given,
-    # Otherwise, search for R & M quote using search terms and post gif
+    # Messages a random R & M quote with gif if no search terms are given, otherwise, search for R & M quote using
+    # search terms and post gif
     @commands.command(aliases=['ram', 'ramgif', 'rickandmortygif'])
     @commands.cooldown(1, 3, BucketType.channel)
     @commands.guild_only()

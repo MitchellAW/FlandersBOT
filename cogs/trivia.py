@@ -51,9 +51,9 @@ class Trivia(commands.Cog):
     async def stop(self, ctx):
         if ctx.channel.id in self.channels_playing:
             await ctx.send(
-                'The game of trivia will end once nobody answers a' +
-                ' question or a member with manage server ' +
-                'permissions uses the forcestop command.')
+                'The game of trivia will end once nobody answers a question or a member with manage server permissions '
+                'uses the forcestop command.'
+            )
 
     # Allow users with manage server permissions to force stop trivia games
     @commands.command()
@@ -110,16 +110,16 @@ class Trivia(commands.Cog):
         round_id = await self.bot.db.fetchval(query, match_id, question_index)
 
         # Display the question and answers
-        answer_msg = (f'**A:** {answers[0]} \n**B:** {answers[1]} \n**C:** '
-                      f'{answers[2]} \n\nReact below to answer!')
+        answer_msg = (f'**A:** {answers[0]} \n'
+                      f'**B:** {answers[1]} \n'
+                      f'**C:** {answers[2]} \n\n'
+                      f'React below to answer!')
 
-        embed = discord.Embed(title=question, colour=category.colour,
-                              description=answer_msg)
+        embed = discord.Embed(title=question, colour=category.colour, description=answer_msg)
         embed.set_thumbnail(url=category.thumbnail_url)
 
         # Send the trivia question
-        question = await ctx.send(embed=embed,
-                                  delete_after=self.TIMER_DURATION + 3)
+        question = await ctx.send(embed=embed, delete_after=self.TIMER_DURATION + 3)
 
         # Add the answer react boxes
         await question.add_reaction('🇦')
@@ -128,8 +128,7 @@ class Trivia(commands.Cog):
 
         # Check for confirming a valid answer was made (A, B or C)
         def is_answer(reaction, user):
-            return (not user.bot and str(reaction.emoji) in ['🇦', '🇧', '🇨'] and
-                    reaction.message.guild == ctx.guild)
+            return not user.bot and str(reaction.emoji) in ['🇦', '🇧', '🇨'] and reaction.message.guild == ctx.guild
 
         # Track some important round data
         user_answers = {}
@@ -141,29 +140,24 @@ class Trivia(commands.Cog):
         try:
             # Wait until timer ends for each question before displaying results
             while time.time() < end_time:
-                react, user = await self.bot.wait_for(
-                    'reaction_add', check=is_answer,
-                    timeout=end_time - time.time())
+                react, user = await self.bot.wait_for('reaction_add', check=is_answer, timeout=end_time - time.time())
 
                 # Only accept users first answer
                 if user.id not in user_answers:
-                    answer_index = trivia[question_index]['answers'].\
-                        index(answers[self.answer_key[str(react.emoji)]])
+                    answer_index = trivia[question_index]['answers'].index(answers[self.answer_key[str(react.emoji)]])
 
                     # Check if correct answer
                     is_correct = answer_index == correct_index
                     if is_correct:
                         correct_count += 1
-                    answer_time = int((time.time() -
-                                       (end_time - self.TIMER_DURATION)) * 1000)
+                    answer_time = int((time.time() - (end_time - self.TIMER_DURATION)) * 1000)
 
                     # Insert answer into DB
                     query = '''INSERT INTO answers (round_id, user_id, username,
                                is_correct, answer_index, answer_time) 
                                VALUES ($1, $2, $3, $4, $5, $6)
                             '''
-                    await self.bot.db.fetch(query, round_id, int(user.id),
-                                            str(user), is_correct, answer_index,
+                    await self.bot.db.fetch(query, round_id, int(user.id), str(user), is_correct, answer_index,
                                             answer_time)
 
                     user_answers.update({user.id: {'answer': str(react.emoji)}})
@@ -245,18 +239,14 @@ class Trivia(commands.Cog):
         scorers = ''
         top_scorer = top_scorers[0]["user_id"]
         for scorer in top_scorers[:5]:
-            scorers += (f'**{ctx.guild.get_member(scorer["user_id"]).name}**: '
-                        f'{str(scorer["correct"])}\n')
+            scorers += f'**{ctx.guild.get_member(scorer["user_id"]).name}**: {str(scorer["correct"])}\n'
 
         # Scoreboard display embed
-        embed = discord.Embed(description='**Congratulations to the top scorer,'
-                              f' {ctx.guild.get_member(top_scorer).name} '
-                              ':trophy:**', color=category.colour)
+        embed = discord.Embed(description=f'**Congratulations to the top scorer,'
+                              f' {ctx.guild.get_member(top_scorer).name} :trophy:**', color=category.colour)
 
-        embed.set_author(name='Trivia Scoreboard',
-                         icon_url='https://raw.githubusercontent.com/Mitchell' +
-                                  'AW/MitchellAW.github.io/master/images/flan' +
-                                  'ders-square.png')
+        embed.set_author(name='Trivia Scoreboard', icon_url=self.bot.user.avatar_url)
+
         embed.add_field(name='*:medal:Correct Answers*', value=scorers)
 
         # Highest Accuracy (sorted by accuracy descending)
@@ -273,8 +263,7 @@ class Trivia(commands.Cog):
 
         scorers = ''
         for scorer in highest_accuracy[:5]:
-            scorers += (f'**{ctx.guild.get_member(scorer["user_id"]).name}**: '
-                        f'{str(scorer["accuracy"] * 100.0)}%\n')
+            scorers += f'**{ctx.guild.get_member(scorer["user_id"]).name}**: {str(scorer["accuracy"] * 100.0)}%\n'
         embed.add_field(name='*:bow_and_arrow: Highest Accuracy*',
                         value=scorers)
 
@@ -291,8 +280,7 @@ class Trivia(commands.Cog):
 
         scorers = '' if len(fastest_answers) > 0 else '---'
         for scorer in fastest_answers[:5]:
-            scorers += (f'**{ctx.guild.get_member(scorer["user_id"]).name}**: '
-                        f'{str(scorer["fastest_time"]/1000)}s\n')
+            scorers += f'**{ctx.guild.get_member(scorer["user_id"]).name}**: {str(scorer["fastest_time"]/1000)}s\n'
         embed.add_field(name='*:point_up: Fastest Answers*', value=scorers)
 
         # Display the scoreboard
@@ -302,36 +290,41 @@ class Trivia(commands.Cog):
     @commands.command()
     async def leaderboard(self, ctx):
         stats = [
-            {"query": "SELECT username, score AS result "
-                      "FROM leaderboard WHERE privacy = 0 "
-                      "ORDER BY score DESC",
-             "category": ":trophy: High Scores"},
-            {"query": "SELECT username, wins AS result "
-                      "FROM leaderboard WHERE privacy = 0 "
-                      "ORDER BY wins DESC",
-             "category": ":first_place: Wins"},
-            {"query": "SELECT username, correct_answers AS result "
-                      "FROM leaderboard WHERE privacy = 0 "
-                      "ORDER BY correct_answers DESC",
-             "category": ":white_check_mark:  Correct Answers"},
-            {"query": "SELECT username, CONCAT(CAST(fastest_answer AS FLOAT) "
-                      "/ 1000, 's') AS result "
-                      "FROM leaderboard WHERE privacy = 0 "
-                      "ORDER BY fastest_answer ASC",
-             "category": ":point_up: Fastest Answers"},
-            {"query": "SELECT username, longest_streak AS result "
-                      "FROM leaderboard WHERE privacy = 0 "
-                      "ORDER BY longest_streak DESC",
-             "category": ":chart_with_upwards_trend: Longest Streak"}
+            {
+                "query": "SELECT username, score AS result "
+                         "FROM leaderboard WHERE privacy = 0 "
+                         "ORDER BY score DESC",
+                "category": ":trophy: High Scores"
+            },
+            {
+                "query": "SELECT username, wins AS result "
+                         "FROM leaderboard WHERE privacy = 0 "
+                         "ORDER BY wins DESC",
+                "category": ":first_place: Wins"},
+            {
+                "query": "SELECT username, correct_answers AS result "
+                         "FROM leaderboard WHERE privacy = 0 "
+                         "ORDER BY correct_answers DESC",
+                "category": ":white_check_mark:  Correct Answers"
+            },
+            {
+                "query": "SELECT username, CONCAT(CAST(fastest_answer AS FLOAT) / 1000, 's') AS result "
+                         "FROM leaderboard WHERE privacy = 0 "
+                         "ORDER BY fastest_answer ASC",
+                "category": ":point_up: Fastest Answers"
+            },
+            {
+                "query": "SELECT username, longest_streak AS result "
+                         "FROM leaderboard WHERE privacy = 0 "
+                         "ORDER BY longest_streak DESC",
+                "category": ":chart_with_upwards_trend: Longest Streak"
+            }
         ]
 
         # Scoreboard display embed TODO: Add colour to discord.Embed()
         embed = discord.Embed()
 
-        embed.set_author(name='Trivia Leaderboard',
-                         icon_url='https://raw.githubusercontent.com/Mitchell' +
-                                  'AW/MitchellAW.github.io/master/images/flan' +
-                                  'ders-square.png')
+        embed.set_author(name='Trivia Leaderboard', icon_url=self.bot.user.avatar_url)
 
         query = 'SELECT COUNT(user_id) FROM leaderboard WHERE privacy = 0'
         leader_count = await self.bot.db.fetchval(query)

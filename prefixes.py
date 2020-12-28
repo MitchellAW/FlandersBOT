@@ -40,6 +40,5 @@ def prefixes_for(guild, prefix_data):
     else:
         custom_prefix = prefix_data[guild_index]['prefix']
         return [
-            'ned ', 'Ned ', 'NED ', 'diddly-', 'doodly-', 'diddly ', 'doodly ',
-            custom_prefix
+            'ned ', 'Ned ', 'NED ', 'diddly-', 'doodly-', 'diddly ', 'doodly ', custom_prefix
         ]

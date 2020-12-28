@@ -9,8 +9,7 @@ class TVShowCog(commands.Cog):
         self.bot = bot
         self.api = api
 
-    # Get random or searched screencap based on search parameter and update
-    # cached_screencaps
+    # Get random or searched screencap based on search parameter and update cached_screencaps
     async def get_screencap(self, ctx, search=None):
         screencap = None
         try:
@@ -40,8 +39,8 @@ class TVShowCog(commands.Cog):
         if screencap is not None:
             await ctx.send(await screencap.get_meme_url(caption))
 
-    # Post a gif, if generating, post generating loading message and then edit
-    # message to include gif with the generated url
+    # Post a gif, if generating, post generating loading message and then edit message to include gif with the
+    # generated url
     async def post_gif(self, ctx, search=None, caption=None, generate=True):
         screencap = await self.get_screencap(ctx, search)
 
@@ -49,8 +48,7 @@ class TVShowCog(commands.Cog):
             gif_url = await screencap.get_gif_url(caption)
 
             if generate:
-                sent = await ctx.send('Generating {}... '.format(screencap.key)
-                                      + '<a:loading:410316176510418955>')
+                sent = await ctx.send('Generating {}... '.format(screencap.key) + '<a:loading:410316176510418955>')
 
                 try:
                     generated_url = await self.api.generate_gif(gif_url)

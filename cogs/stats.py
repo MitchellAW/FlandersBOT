@@ -18,12 +18,10 @@ class Stats(commands.Cog):
         days, hours = divmod(hours, 24)
 
         if full:
-            return ('{} days, {} hours, {} minutes, and {} seconds'.
-                    format(days, hours, minutes, seconds))
+            return '{} days, {} hours, {} minutes, and {} seconds'.format(days, hours, minutes, seconds)
 
         else:
-            return ('{}d {}h {}m {}s'.
-                    format(days, hours, minutes, seconds))
+            return '{}d {}h {}m {}s'.format(days, hours, minutes, seconds)
 
     # Posts the bots uptime to the channel
     @commands.command()
@@ -50,10 +48,8 @@ class Stats(commands.Cog):
             real_timestamp = screencap.get_real_timestamp()
 
             # Create embed for episode information, links to wiki of episode
-            embed = discord.Embed(
-                title=screencap.api.title + ': ' + screencap.title,
-                colour=discord.Colour(0x44981e),
-                url=screencap.wiki_url)
+            embed = discord.Embed(title=screencap.api.title + ': ' + screencap.title, colour=discord.Colour(0x44981e),
+                                  url=screencap.wiki_url)
 
             # Add episode information
             embed.add_field(name='Episode', value=screencap.key, inline=True)
@@ -79,7 +75,7 @@ class Stats(commands.Cog):
                 if member.status == discord.Status.online:
                     online_users += 1
         user_average = round((online_users / len(self.bot.guilds)), 2)
-        guild_count = str(len(self.bot.guilds))
+        guild_count = len(self.bot.guilds)
 
         # Count number of commands executed
         command_count = 0
@@ -89,45 +85,37 @@ class Stats(commands.Cog):
         # Embed statistics output
         embed = discord.Embed(colour=discord.Colour(0x44981e))
         embed.set_thumbnail(url=self.bot.user.avatar_url)
-        embed.set_author(name=self.bot.user.name + ' Statistics',
-                         url='https://github.com/FlandersBOT',
+        embed.set_author(name=self.bot.user.name + ' Statistics', url='https://github.com/FlandersBOT',
                          icon_url=self.bot.user.avatar_url)
 
         # Add all statistics
         embed.add_field(name='Bot Owner', value='Mitch#8293', inline=True)
-        embed.add_field(name='Server Count', value=guild_count, inline=True)
-        embed.add_field(name='Total Members', value=total_members, inline=True)
-        embed.add_field(name='Online Users', value=online_users, inline=True)
-        embed.add_field(name='Average Online', value=user_average, inline=True)
+        embed.add_field(name='Server Count', value=str(guild_count), inline=True)
+        embed.add_field(name='Total Members', value=str(total_members), inline=True)
+        embed.add_field(name='Online Users', value=str(online_users), inline=True)
+        embed.add_field(name='Average Online', value=str(user_average), inline=True)
         embed.add_field(name='Uptime', value=self.get_uptime(), inline=True)
-        embed.add_field(name='Commands Used', value=command_count, inline=True)
+        embed.add_field(name='Commands Used', value=str(command_count), inline=True)
         await ctx.send(embed=embed)
 
-    # All privacy related functions, including information regarding the data
-    # logged, and options to both delete, and opt out of future data logging
+    # All privacy related functions, including information regarding the data logged, and options to both delete, and
+    # opt out of future data logging
     @commands.command()
     @commands.cooldown(1, 3, BucketType.user)
     async def privacy(self, ctx, *, subcommand: str = None):
         # Display generic privacy info
         if subcommand is None or subcommand == 'info':
-            await ctx.send('FlandersBOT stores the user ID (e.g. '
-                           '221609683562135553) privately and stores the '
-                           'username & discriminator (e.g. FlandersBOT#0680) '
-                           'of all trivia participants publicly for use in the'
-                           ' trivia leaderboards.\nIf you wish to participate '
-                           'in trivia without appearing in the leaderboards, '
-                           'use the command: `ned privacy config`\nIf you '
-                           'wish to remove all data relating to your account, '
-                           'use the command: `ned privacy remove`.')
+            await ctx.send('FlandersBOT stores the user ID (e.g. 221609683562135553) privately and stores the username '
+                           '& discriminator (e.g. FlandersBOT#0680) of all trivia participants publicly for use in the '
+                           'trivia leaderboards.\nIf you wish to participate in trivia without appearing in the '
+                           'leaderboards, use the command: `ned privacy config`\nIf you wish to remove all data '
+                           'relating to your account, use the command: `ned privacy remove`.')
 
         # Adjust privacy settings for user
         elif subcommand.lower() in ['edit', 'update', 'config', 'modify']:
-            msg = await ctx.send('By default, all trivia participants are '
-                                 'visible to the public in the trivia '
-                                 'leaderboard. Alternatively, you may change '
-                                 'your privacy settings by reacting to this '
-                                 'message.\n'
-                                 '**A**: Public\n**B**: Private')
+            msg = await ctx.send('By default, all trivia participants are visible to the public in the trivia '
+                                 'leaderboard. Alternatively, you may change your privacy settings by reacting to this '
+                                 'message.\n**A**: Public\n**B**: Private')
 
             await msg.add_reaction('🇦')
             await msg.add_reaction('🇧')
@@ -163,23 +151,21 @@ class Stats(commands.Cog):
 
         # Remove all data logged for user
         elif subcommand.lower() in ['remove', 'delete', 'erase', 'purge']:
-            msg = await ctx.send('Would you like to erase all your user '
-                                 'data?\nThis will remove you from the '
-                                 'trivia leaderboard, and cannot be undone.')
+            msg = await ctx.send('Would you like to erase all your user data?\nThis will remove you from the trivia '
+                                 'leaderboard, and cannot be undone.')
 
             await msg.add_reaction('❌')
             await msg.add_reaction('✅')
 
             # Check for response of cross/tick
             def is_answer(reaction, user):
-                return (not user.bot and str(reaction.emoji) in ['❌', '✅']
-                        and user.id == ctx.author.id)
+                return not user.bot and str(reaction.emoji) in ['❌', '✅'] and user.id == ctx.author.id
 
-            react, user = await self.bot.wait_for('reaction_add',
-                                                  check=is_answer, timeout=120)
+            react, user = await self.bot.wait_for('reaction_add', check=is_answer, timeout=120)
 
             # Affirmative reaction, drop all data for that user
             if react.emoji == '✅':
+
                 # Delete all records of user from leaderboard
                 query = '''DELETE FROM leaderboard 
                            WHERE user_id = $1
@@ -192,19 +178,16 @@ class Stats(commands.Cog):
                         '''
                 await self.bot.db.execute(query, user.id)
 
-                # Clear all records of user id from vote history, replaces
-                # with null
+                # Clear all records of user id from vote history, replaces with null
                 query = '''UPDATE vote_history
                            SET user_id = NULL
                            WHERE user_id = $1
                         '''
                 await self.bot.db.execute(query, user.id)
 
-                await msg.edit(content='All data relating to your account has '
-                                       'been deleted.\nIf you wish to '
-                                       'participate in trivia without '
-                                       'appearing in the leaderboards, use the'
-                                       ' command: `ned privacy config`')
+                await msg.edit(content='All data relating to your account has been deleted.\nIf you wish to '
+                                       'participate in trivia without appearing in the leaderboards, use the command: '
+                                       '`ned privacy config`')
 
 
 def setup(bot):

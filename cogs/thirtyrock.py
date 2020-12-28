@@ -9,8 +9,8 @@ class ThirtyRock(TVShowCog):
     def __init__(self, bot):
         super().__init__(bot, GoodGodLemon())
 
-    # Messages a random 30 Rock quote with gif if no search terms are given,
-    # Otherwise, search for 30 Rock quote using search terms and post gif
+    # Messages a random 30 Rock quote with gif if no search terms are given, otherwise, search for 30 Rock quote using
+    # search terms and post gif
     @commands.command(aliases=['30rock', '30rockgif'])
     @commands.cooldown(1, 3, BucketType.channel)
     @commands.guild_only()

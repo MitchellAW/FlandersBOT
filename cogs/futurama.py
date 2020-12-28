@@ -9,8 +9,8 @@ class Futurama(TVShowCog):
     def __init__(self, bot):
         super().__init__(bot, Morbotron())
 
-    # Messages a random Futurama quote with gif if no search terms are given,
-    # Otherwise, search for Futurama quote using search terms and post gif
+    # Messages a random Futurama quote with gif if no search terms are given, otherwise, search for Futurama quote using
+    # search terms and post gif
     @commands.command(aliases=['futuramagif', 'fgif'])
     @commands.cooldown(1, 3, BucketType.channel)
     @commands.guild_only()

@@ -41,8 +41,7 @@ class Owner(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     async def resetstatus(self, ctx):
-        self.bot.status_formats = ['Ned vote | {} Servers',
-                                   'Ned help | {} Servers']
+        self.bot.status_formats = ['Ned vote | {} Servers', 'Ned help | {} Servers']
         await ctx.send('Status reset!')
 
     # Get the number of all the commands executed
@@ -51,8 +50,7 @@ class Owner(commands.Cog):
     async def commandstats(self, ctx):
         command_count = ''
         for key in self.bot.command_stats:
-            command_count += (key + ': ' + str(self.bot.command_stats[key]) +
-                              '\n')
+            command_count += (key + ': ' + str(self.bot.command_stats[key]) + '\n')
 
         await ctx.send(command_count)
 
@@ -98,16 +96,14 @@ class Owner(commands.Cog):
     @commands.is_owner()
     @commands.bot_has_permissions(add_reactions=True)
     async def shutdown(self, ctx):
-        # Make confirmation message based on bots username to prevent
-        # myself from shutting wrong bot down.
+        # Make confirmation message based on bots username to prevent myself from shutting wrong bot down.
         def check(message):
             return (message.content == self.bot.user.name[:4] and
                     str(message.author.id) == self.bot.config['owner_id'])
 
         try:
             await ctx.send('Respond ' + self.bot.user.name[:4] + ' to shutdown')
-            response = await self.bot.wait_for('message', check=check,
-                                               timeout=10)
+            response = await self.bot.wait_for('message', check=check, timeout=10)
             await response.add_reaction('✅')
             await self.bot.db.close()
             await self.bot.logout()
@@ -123,8 +119,7 @@ class Owner(commands.Cog):
     @commands.bot_has_permissions(attach_files=True)
     async def guildlist(self, ctx):
         with open('cogs/data/guildlist.csv', 'w') as guild_list:
-            guild_list.write('Server Name,# of Bots,# of Users,Total,Region,'
-                             'Features\n')
+            guild_list.write('Server Name,# of Bots,# of Users,Total,Region,Features\n')
             for guild in self.bot.guilds:
                 bot_count = 0
                 for member in guild.members:

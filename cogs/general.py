@@ -111,8 +111,7 @@ class General(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 3, BucketType.user)
     async def info(self, ctx):
-        await self.dm_author(ctx, BOT_INFO + '\n***Currently active '
-                             'in ' + str(len(self.bot.guilds)) + ' servers***')
+        await self.dm_author(ctx, BOT_INFO + '\n***Currently active in ' + str(len(self.bot.guilds)) + ' servers***')
 
     # Whispers a list of the bot commands, If the user has DMs disabled,
     # sends the message in the channel
@@ -145,8 +144,7 @@ class General(commands.Cog):
 
             if screencap is not None:
                 gif_url = await screencap.get_gif_url(meme_caption)
-                sent = await ctx.send('Generating meme... ' +
-                                      '<a:loading:410316176510418955>')
+                sent = await ctx.send('Generating meme... <a:loading:410316176510418955>')
                 generated_url = await screencap.api.generate_gif(gif_url)
                 try:
                     await sent.edit(content=generated_url)
@@ -160,24 +158,19 @@ class General(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def feedback(self, ctx, *, message: str = None):
         if message is None:
-            await ctx.send('Sorry, I noodily-need some feedback to send.\n' +
+            await ctx.send('Sorry, I noodily-need some feedback to send.\n'
                            'Usage: `ned feedback [feedback message here]`')
         else:
             feedback_channel = self.bot.get_channel(self.FEEDBACK_CHANNEL)
-            embed = discord.Embed(title='📫 Feedback from: ' + str(ctx.author) +
-                                  ' (' + str(ctx.author.id) + ')',
-                                  colour=discord.Colour(0x44981e),
-                                  description='```' + message + '```')
+            embed = discord.Embed(title='📫 Feedback from: ' + str(ctx.author) + ' (' + str(ctx.author.id) + ')',
+                                  colour=discord.Colour(0x44981e), description='```' + message + '```')
 
-            embed.set_author(name=ctx.message.author.name,
-                             icon_url=ctx.message.author.avatar_url)
-
+            embed.set_author(name=ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
             await feedback_channel.send(embed=embed)
+
             # Thank for feedback and suggest vote
-            await ctx.send('Thanks neighbourino! 📫 The feedback has been ' +
-                           'sent to my support serveroo! If you\'d like to ' +
-                           'hel-diddly-elp me grow in popularity, try ' +
-                           '`ned vote`.')
+            await ctx.send('Thanks neighbourino! 📫 The feedback has been sent to my support serveroo! If you\'d like '
+                           'to hel-diddly-elp me grow in popularity, try `ned vote`.')
 
     # Message the benefits of voting and provide link to upvote at
     @commands.command(aliases=['upvote'])
@@ -186,8 +179,8 @@ class General(commands.Cog):
         query = '''SELECT MAX(voted_at) FROM vote_history
                    WHERE user_id = $1 AND vote_type = 'upvote';'''
 
-        message = ('If you vote for me using the link below, it will ' +
-                   'hel-diddly-elp me grow in popularity!\n' + VOTE_URL + '\n')
+        message = ('If you vote for me using the link below, it will hel-diddly-elp me grow in popularity!\n' +
+                   VOTE_URL + '\n')
 
         row = await self.bot.db.fetchrow(query, ctx.author.id)
 
@@ -201,8 +194,8 @@ class General(commands.Cog):
             else:
                 hours, remainder = divmod(seconds_remaining, 3600)
                 minutes, seconds = divmod(remainder, 60)
-                message += ('**You can vote again in: {} hours, {} minutes, '
-                            'and {} seconds.**'.format(hours, minutes, seconds))
+                message += '**You can vote again in: {} hours, {} minutes, ''and {} seconds.**'.format(hours, minutes,
+                                                                                                       seconds)
 
         else:
             message += '**You can vote now.**'
@@ -213,26 +206,22 @@ class General(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 3, BucketType.user)
     async def invite(self, ctx):
-        await self.dm_author(ctx, 'You can add me to your own server using '
-                                  'the link below:\n'
-                                  '<https://discordapp.com/oauth2/authorize?'
-                                  'client_id=' + str(self.bot.user.id) +
+        await self.dm_author(ctx, 'You can add me to your own server using the link below:\n'
+                                  '<https://discordapp.com/oauth2/authorize?client_id=' + str(self.bot.user.id) +
                                   '&scope=bot&permissions=19456>')
 
     # Sends url to FlandersBOT github repo
     @commands.command(aliases=['github', 'repo'])
     @commands.cooldown(1, 3, BucketType.user)
     async def source(self, ctx):
-        await ctx.send('Github Repo Source: '
-                       '<https://github.com/MitchellAW/FlandersBOT>')
+        await ctx.send('Github Repo Source: <https://github.com/MitchellAW/FlandersBOT>')
 
     # Display information/news regarding the last update
     @commands.command(aliases=['news'])
     @commands.cooldown(1, 3, BucketType.user)
     async def update(self, ctx):
         last_update = '2020-12-27'
-        await ctx.send('- Added privacy settings, use `ned privacy` for more '
-                       f'info!\nLast Update: {last_update}')
+        await ctx.send(f'- Added privacy settings, use `ned privacy` for more info!\nLast Update: {last_update}')
 
     # Allow administrators to make ned leave the server
     @commands.command()
@@ -249,13 +238,11 @@ class General(commands.Cog):
         guild_prefixes = prefixes.prefixes_for(ctx.message.guild,
                                                self.bot.prefix_data)
         if len(guild_prefixes) > 7:
-            await ctx.send('This servers prefixes are: `Ned`, `ned`, `diddly`' +
-                           ', `doodly`,' + ' `diddly-`, `doodly-` and `' +
+            await ctx.send('This servers prefixes are: `Ned`, `ned`, `diddly`, `doodly`, `diddly-`, `doodly-` and `' +
                            guild_prefixes[-1] + '`.')
 
         else:
-            await ctx.send('This servers prefixes are: `Ned`, `ned`, `diddly`' +
-                           ', `doodly`,' + ' `diddly-` and `doodly-`.')
+            await ctx.send('This servers prefixes are: `Ned`, `ned`, `diddly`, `doodly`,' + ' `diddly-` and `doodly-`.')
 
     # Allows for a single custom prefix per-guild
     @commands.command()
@@ -263,8 +250,7 @@ class General(commands.Cog):
     @commands.has_permissions(manage_guild=True)
     @commands.cooldown(3, 60, BucketType.guild)
     async def setprefix(self, ctx, *, new_prefix: str = None):
-        guild_index = prefixes.find_guild(ctx.message.guild,
-                                          self.bot.prefix_data)
+        guild_index = prefixes.find_guild(ctx.message.guild, self.bot.prefix_data)
         # Require entering a prefix
         if new_prefix is None:
             await ctx.send('You did not provide a new prefix.')
@@ -276,23 +262,22 @@ class General(commands.Cog):
         # Add a new custom guild prefix if one doesn't already exist
         elif guild_index == -1:
             self.bot.prefix_data.append(
-                {'guildID': ctx.message.guild.id,
-                 'prefix': new_prefix}
+                {
+                    'guildID': ctx.message.guild.id,
+                    'prefix': new_prefix
+                }
             )
             prefixes.write_prefixes(self.bot.prefix_data)
-            await ctx.send('This servers custom prefix changed to `'
-                           + new_prefix + '`.')
+            await ctx.send('This servers custom prefix changed to `' + new_prefix + '`.')
 
         elif self.bot.prefix_data[guild_index]['prefix'] == new_prefix:
-            await ctx.send('This server custom prefix is already `' +
-                           new_prefix + '`.')
+            await ctx.send('This server custom prefix is already `' + new_prefix + '`.')
 
         # Otherwise, modify the current prefix to the new one
         else:
             self.bot.prefix_data[guild_index]['prefix'] = new_prefix
             prefixes.write_prefixes(self.bot.prefix_data)
-            await ctx.send('This servers custom prefix changed to `' +
-                           new_prefix + '`.')
+            await ctx.send('This servers custom prefix changed to `' + new_prefix + '`.')
 
     # Toggle notifications for when user can vote again
     @commands.command(aliases=['reminder', 'subscribe'])
@@ -300,18 +285,15 @@ class General(commands.Cog):
     async def notifications(self, ctx):
         if ctx.author.id in self.bot.reminders:
             self.bot.reminders.remove(ctx.author.id)
-            await self.dm_author(ctx, 'You will no longer be notified when you '
-                                      'can vote again.')
+            await self.dm_author(ctx, 'You will no longer be notified when you can vote again.')
 
         else:
             self.bot.reminders.append(ctx.author.id)
             try:
-                await self.dm_author(ctx, 'Notifications enabled. You will be '
-                                          'notified when you are able to vote.')
+                await self.dm_author(ctx, 'Notifications enabled. You will be notified when you are able to vote.')
 
             except discord.Forbidden:
-                await ctx.send('You have DMs disabled, please enable DMs if '
-                               'you\'d like to enable notifications.')
+                await ctx.send('You have DMs disabled, please enable DMs if you\'d like to enable notifications.')
 
             # Check if user is able to vote now
             query = '''SELECT MAX(voted_at) FROM vote_history
@@ -329,8 +311,7 @@ class General(commands.Cog):
 
                 # Voted over 12 hours ago, notify and exit
                 if seconds_remaining <= 0:
-                    await self.dm_author(ctx, VOTE_URL +
-                                         '\n**You can vote now.**')
+                    await self.dm_author(ctx, VOTE_URL + '\n**You can vote now.**')
 
     @commands.command(aliases=['toggled'])
     async def toggle(self, ctx):

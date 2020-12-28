@@ -20,8 +20,7 @@ def get_prefix(bot, message):
 
 # All cogs that will be loaded on bots startup
 startup_extensions = [
-    'cogs.general', 'cogs.stats', 'cogs.simpsons', 'cogs.futurama',
-    'cogs.rickandmorty', 'cogs.owner', 'cogs.trivia'
+    'cogs.general', 'cogs.stats', 'cogs.simpsons', 'cogs.futurama', 'cogs.rickandmorty', 'cogs.owner', 'cogs.trivia'
     ]
 
 intents = discord.Intents.default()
@@ -30,8 +29,7 @@ intents.members = True
 
 class FlandersBOT(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix=get_prefix, case_insensitive=True,
-                         intents=intents)
+        super().__init__(command_prefix=get_prefix, case_insensitive=True, intents=intents)
 
         self.remove_command('help')
         self.command_stats = self.read_command_stats()
@@ -96,9 +94,8 @@ class FlandersBOT(commands.Bot):
     # Commands error handler
     async def on_command_error(self, ctx, error):
 
-        # Allows us to check for original exceptions raised and sent to
-        # CommandInvokeError. If nothing is found. We keep the exception passed
-        # to on_command_error.
+        # Allows us to check for original exceptions raised and sent to CommandInvokeError. If nothing is found.
+        # We keep the exception passed to on_command_error.
         error = getattr(error, 'original', error)
 
         # Channel in FlandersBOT server for logging errors to
@@ -111,13 +108,11 @@ class FlandersBOT(commands.Bot):
         # Check if command cooldown error
         if isinstance(error, commands.CommandOnCooldown):
             time_left = round(error.retry_after, 2)
-            await ctx.send(':hourglass: Command on cooldown. Slow '
-                           'diddly-ding-dong down. (' + str(time_left) + 's)',
+            await ctx.send(':hourglass: Command on cooldown. Slow diddly-ding-dong down. (' + str(time_left) + 's)',
                            delete_after=max(error.retry_after, 5))
 
         elif isinstance(error, commands.BotMissingPermissions):
-            message = '⛔ Sorry, I do not have the permissions riddly-required' \
-                      ' for that command-aroo!\nRequires: '
+            message = '⛔ Sorry, I do not have the permissions riddly-required for that command-aroo!\nRequires: '
 
             # List all missing permissions
             for i in range(len(error.missing_perms)):
@@ -130,9 +125,8 @@ class FlandersBOT(commands.Bot):
 
         # Check for missing permissions
         elif isinstance(error, commands.MissingPermissions):
-                await ctx.send('<:xmark:411718670482407424> Sorry, '
-                               'you don\'t have the permissions '
-                               'riddly-required for that command-aroo! ')
+                await ctx.send('<:xmark:411718670482407424> Sorry, you don\'t have the permissions riddly-required for '
+                               'that command-aroo! ')
 
         # Check if private messages not allowed
         elif isinstance(error, commands.NoPrivateMessage):
@@ -147,8 +141,7 @@ class FlandersBOT(commands.Bot):
             await logging.send(error)
 
             # Send error traceback to logging channel
-            error_traceback = traceback.format_exception(type(error), error,
-                                                         error.__traceback__)
+            error_traceback = traceback.format_exception(type(error), error, error.__traceback__)
             paginator = commands.Paginator()
             for line in error_traceback:
                 paginator.add_line(line)
@@ -157,14 +150,12 @@ class FlandersBOT(commands.Bot):
                 await logging.send(page)
 
             # Print error traceback to console
-            traceback.print_exception(type(error), error, error.__traceback__,
-                                      file=sys.stderr)
+            traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
     # Update guild count at bot listing sites and in bots status/presence
     async def update_status(self):
         await api.bot_lists.update_guild_counts(self)
-        status = discord.Game(name=self.status_formats[self.status_index].
-                              format(len(self.guilds)))
+        status = discord.Game(name=self.status_formats[self.status_index].format(len(self.guilds)))
         await self.change_presence(activity=status)
 
     # Cycle through all status formats, waits a minute between status changes
@@ -177,8 +168,7 @@ class FlandersBOT(commands.Bot):
             else:
                 self.status_index += 1
 
-            status = discord.Game(name=self.status_formats[self.status_index].
-                                  format(len(self.guilds)))
+            status = discord.Game(name=self.status_formats[self.status_index].format(len(self.guilds)))
 
             await self.change_presence(activity=status)
             await asyncio.sleep(60)
@@ -193,12 +183,12 @@ class FlandersBOT(commands.Bot):
 
             # Thank subscribed user for voting
             if user_id in self.reminders:
-                await user.send('Thanks for voting! You will now be notified '
-                                'when you can vote again in 12 hours.')
+                await user.send('Thanks for voting! You will now be notified when you can vote again in 12 hours.')
 
             # Get timestamp of users latest vote
-            query = '''SELECT MAX(votedAt) FROM VoteHistory
-                       WHERE userID = $1 AND voteType = 'upvote';'''
+            query = '''SELECT MAX(votedAt) FROM VoteHistory 
+                       WHERE userID = $1 AND voteType = 'upvote';
+                    '''
             row = await self.db_conn.fetchrow(query, user_id)
 
             # Calculate seconds until next vote
@@ -210,12 +200,10 @@ class FlandersBOT(commands.Bot):
 
             # Notify subscribed user that they are able to vote again.
             if user_id in self.reminders:
-                await user.send('<https://discordbots.org/bot/2216096835621'
-                                '35553/vote>\n**You can vote now.**')
+                await user.send('<https://discordbots.org/bot/221609683562135553/vote>\n**You can vote now.**')
 
         # Add listener to db connection for when user votes
-        await self.db_conn.add_listener('vote', lambda *args: self.loop.
-                                        create_task(vote_listener(args)))
+        await self.db_conn.add_listener('vote', lambda *args: self.loop.create_task(vote_listener(args)))
 
     # Read the command statistics from json file
     @staticmethod

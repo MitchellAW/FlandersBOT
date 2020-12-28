@@ -12,8 +12,8 @@ class Simpsons(TVShowCog):
         super().__init__(bot, Frinkiac())
         self.frinkihams = FrinkiHams()
 
-    # Messages a random Simpsons quote with gif if no search terms are given,
-    # Otherwise, search for Simpsons quote using search terms and post gif
+    # Messages a random Simpsons quote with gif if no search terms are given, otherwise, search for Simpsons quote using
+    # search terms and post gif
     @commands.command(aliases=['simpsonsgif', 'sgif'])
     @commands.cooldown(1, 3, BucketType.channel)
     @commands.guild_only()
@@ -27,8 +27,7 @@ class Simpsons(TVShowCog):
         screencap = await self.frinkihams.get_random_screencap()
 
         gif_url = await screencap.get_gif_url()
-        sent = await ctx.send('Steaming your hams...'
-                              + '<a:loading:410316176510418955>')
+        sent = await ctx.send('Steaming your hams...' + '<a:loading:410316176510418955>')
 
         generated_url = await self.api.generate_gif(gif_url)
         try:
