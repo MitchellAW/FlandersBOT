@@ -59,7 +59,6 @@ class FlandersBOT(commands.Bot):
     async def on_ready(self):
         print(f'Username: {self.user.name}')
         print(f'Client ID: {self.user.id}')
-        print(len(self.guilds))
         await self.update_status()
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.utcnow()
