@@ -53,6 +53,9 @@ class Prefixes(commands.Cog):
     @commands.has_permissions(manage_guild=True)
     @commands.cooldown(3, 60, BucketType.guild)
     async def addprefix(self, ctx, *, new_prefix: str = None):
+        # Get custom prefixes for guild, gets empty list if none found
+        current_prefixes = self.bot.cached_prefixes.get(ctx.guild.id, [])
+
         # Require entering a prefix
         if new_prefix is None:
             await ctx.send('You did not provide a new prefix.')
@@ -63,35 +66,25 @@ class Prefixes(commands.Cog):
 
         # Prevent adding default prefix as a custom prefix
         elif new_prefix in self.bot.default_prefixes:
-            await ctx.send(f'This bot alread supports `{new_prefix}` as a default prefix.')
+            await ctx.send(f'This bot already supports `{new_prefix}` as a default prefix.')
 
         # Add custom prefix to DB
+        elif new_prefix in current_prefixes:
+            await ctx.send(f'This server already supports `{new_prefix.lower()}` as a custom prefix.')
+
+        # Check if server is at custom prefix limit of 10 prefixes
+        elif len(current_prefixes) >= 10:
+            await ctx.send('Sorry, this server already has 10 custom prefixes. Use the command '
+                           '`ned removeprefix <prefix>` to clear another prefix first.')
+
+        # Insert new prefix into custom prefixes table and update cached prefixes
         else:
-            query = '''SELECT prefix
-                       FROM prefixes
-                       WHERE guild_id = $1
+            query = '''INSERT INTO prefixes (guild_id, prefix)
+                       VALUES ($1, $2)
                     '''
-            rows = await self.bot.db.fetch(query, ctx.guild.id)
-
-            # Check for duplicate prefix
-            for row in rows:
-                if row['prefix'].lower() == new_prefix.lower():
-                    await ctx.send(f'This server already supports `{new_prefix.lower()}` as a custom prefix.')
-                    return
-
-            # Check if server is at custom prefix limit of 10 prefixes
-            if len(rows) >= 10:
-                await ctx.send('Sorry, this server already has 10 custom prefixes. Use the command `ned removeprefix '
-                               '<prefix>` to clear another prefix first.')
-
-            # Insert new prefix into custom prefixes table and update cached prefixes
-            else:
-                query = '''INSERT INTO prefixes (guild_id, prefix)
-                           VALUES ($1, $2)
-                        '''
-                await self.bot.db.execute(query, ctx.guild.id, new_prefix.lower())
-                await self.bot.cache_prefixes()
-                await ctx.send(f'This server now supports the custom prefix `{new_prefix.lower()}`.')
+            await self.bot.db.execute(query, ctx.guild.id, new_prefix.lower())
+            await self.bot.cache_prefixes()
+            await ctx.send(f'This server now supports the custom prefix `{new_prefix.lower()}`.')
 
     # Allows removal of a specified custom server command prefix
     @commands.command(aliases=['deleteprefix', 'eraseprefix'])
