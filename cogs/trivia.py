@@ -78,14 +78,12 @@ class Trivia(commands.Cog):
         query = '''INSERT INTO matches (guild_id, trivia_category) 
                    VALUES ($1, $2) RETURNING match_id
                 '''
-        match_id = await self.bot.db.fetchval(query, ctx.guild.id,
-                                              category.category_name)
+        match_id = await self.bot.db.fetchval(query, ctx.guild.id, category.category_name)
 
         # Continue playing trivia until exit or out of questions
         while ctx.channel.id in self.channels_playing and len(questions) > 0:
             question_data = questions.pop()
-            await self.play_round(ctx, match_id, question_data, trivia,
-                                  category)
+            await self.play_round(ctx, match_id, question_data, trivia, category)
 
         await self.end_match(ctx, match_id, category)
 
@@ -264,8 +262,7 @@ class Trivia(commands.Cog):
         scorers = ''
         for scorer in highest_accuracy[:5]:
             scorers += f'**{ctx.guild.get_member(scorer["user_id"]).name}**: {str(scorer["accuracy"] * 100.0)}%\n'
-        embed.add_field(name='*:bow_and_arrow: Highest Accuracy*',
-                        value=scorers)
+        embed.add_field(name='*:bow_and_arrow: Highest Accuracy*', value=scorers)
 
         # Fastest Answers (sorted by fastest time ascending)
         query = '''SELECT user_id, MIN(answer_time) AS fastest_time 
