@@ -44,13 +44,6 @@ class Events(commands.Cog):
     async def on_guild_remove(self, guild):
         await self.update_status()
 
-    # Prevent bot from replying to other bots
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        if not message.author.bot:
-            ctx = await self.bot.get_context(message)
-            await self.bot.invoke(ctx)
-
     # Track number of command executed
     @commands.Cog.listener()
     async def on_command(self, ctx):
