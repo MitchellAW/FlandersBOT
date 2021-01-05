@@ -37,7 +37,8 @@ class Simpsons(TVShowCog):
         middle_timestamp = 567866
 
         # Send gif generation message, will be later edited to display generated gif url
-        sent = await ctx.send('Steaming your hams... <a:loading:410316176510418955>')
+        emoji = await self.bot.use_emoji(ctx, '<a:loading:410316176510418955>', '⌛')
+        sent = await ctx.send(f'Steaming your hams... {emoji}')
 
         # Get all frames for the steamed hams skit
         # Skit duration is 2:48 (168 seconds), get frames 80 seconds before and 80 seconds after mid point

@@ -241,6 +241,17 @@ class FlandersBOT(commands.Bot):
         # Add listener to db connection for when user votes
         await self.db_conn.add_listener('vote', lambda *args: self.loop.create_task(vote_listener(args)))
 
+    # Checks if bot has permission to use external emojis in the guild, returns external emoji if permitted
+    # otherwise, returns the fallback emoji
+    async def use_emoji(self, ctx, external_emoji, fallback_emoji):
+        perms = ctx.channel.permissions_for(ctx.guild.me)
+
+        if perms.use_external_emojis:
+            return external_emoji
+
+        else:
+            return fallback_emoji
+
     # Read the command statistics from json file
     @staticmethod
     def read_command_stats():

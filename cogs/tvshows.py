@@ -57,7 +57,8 @@ class TVShowCog(commands.Cog):
             gif_url = await screencap.get_gif_url(caption)
 
             if generate:
-                sent = await ctx.send(f'Generating {screencap.key}... <a:loading:410316176510418955>')
+                emoji = await self.bot.use_emoji(ctx, '<a:loading:410316176510418955>', '⌛')
+                sent = await ctx.send(f'Generating {screencap.key}... {emoji}')
 
                 try:
                     generated_url = await self.api.generate_gif(gif_url)
