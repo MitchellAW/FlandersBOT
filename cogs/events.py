@@ -84,16 +84,10 @@ class Events(commands.Cog):
                            delete_after=max(error.retry_after, 5))
 
         elif isinstance(error, commands.BotMissingPermissions):
-            message = '⛔ Sorry, I do not have the permissions riddly-required for that command-aroo!\nRequires: '
 
             # List all missing permissions
-            for i in range(len(error.missing_perms)):
-                message += str(error.missing_perms[i])
-
-                if i < len(error.missing_perms) - 1:
-                    message += ', '
-
-            await ctx.send(message)
+            await ctx.send('⛔ Sorry, I do not have the permissions riddly-required for that command-aroo!\nRequires: ' +
+                           ', '.join(map(str, error.missing_perms)))
 
         # Check for missing permissions
         elif isinstance(error, commands.MissingPermissions):

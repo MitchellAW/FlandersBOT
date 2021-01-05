@@ -59,35 +59,17 @@ class Prefixes(commands.Cog):
     @commands.cooldown(1, 3, BucketType.channel)
     async def prefix(self, ctx):
         # List default command prefixes
-        message = 'My default prefixes are: '
-        for i in range(len(self.default_prefixes)):
-            message += f'`{self.default_prefixes[i]}`'
+        message = 'My default prefixes are: ' + ', '.join(
+            map(lambda prefix: f'`{prefix}`', self.default_prefixes)
+        )
 
-            # Follow message format of "prefix1, prefix2 and prefix3"
-            if i < len(self.default_prefixes) - 1:
-                message += ', '
-
-            if i == len(self.default_prefixes) - 2:
-                message += ' and '
-
-        message += '.'
-
-        # Display custom guild prefixes
+        # List custom guild prefixes
         if ctx.guild.id in self.cached_prefixes:
             guild_prefixes = self.cached_prefixes[ctx.guild.id]
 
-            message += '\nThis servers custom prefixes include: '
-
-            # Loop through and add each custom prefix
-            for i in range(len(guild_prefixes)):
-                message += f'`{guild_prefixes[i]}`'
-
-                # Follow message format of "prefix1, prefix2 and prefix3"
-                if i == len(guild_prefixes) - 2:
-                    message += ' and '
-
-                elif i < len(guild_prefixes) - 1:
-                    message += ', '
+            message += '\nThis servers custom prefixes include: ' + ', '.join(
+                map(lambda prefix: f'`{prefix}`', guild_prefixes)
+            )
 
         # No custom prefixes found
         else:
