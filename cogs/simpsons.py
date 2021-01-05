@@ -8,6 +8,7 @@ from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
 from cogs.tvshows import TVShowCog
+from cogs.events import Events
 
 
 class Simpsons(TVShowCog):
@@ -35,7 +36,7 @@ class Simpsons(TVShowCog):
         middle_timestamp = 567866
 
         # Send gif generation message, will be later edited to display generated gif url
-        emoji = await self.bot.use_emoji(ctx, '<a:loading:410316176510418955>', '⌛')
+        emoji = await Events.use_emoji(ctx, '<a:loading:410316176510418955>', '⌛ ')
         sent = await ctx.send(f'Steaming your hams... {emoji}')
 
         # Get all frames for the steamed hams skit

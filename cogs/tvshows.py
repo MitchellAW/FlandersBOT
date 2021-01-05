@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 
 import compuglobal
+from cogs.events import Events
 
 
 class TVShowCog(commands.Cog):
@@ -57,7 +58,7 @@ class TVShowCog(commands.Cog):
             gif_url = await screencap.get_gif_url(caption)
 
             if generate:
-                emoji = await self.bot.use_emoji(ctx, '<a:loading:410316176510418955>', '⌛')
+                emoji = await Events.use_emoji(ctx, '<a:loading:410316176510418955>', '⌛')
                 sent = await ctx.send(f'Generating {screencap.key}... {emoji}')
 
                 try:
