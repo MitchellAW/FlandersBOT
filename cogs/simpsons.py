@@ -30,10 +30,8 @@ class Simpsons(TVShowCog):
     async def steamedhams(self, ctx):
         # Steamed hams episode key
         steamed_hams_key = 'S07E21'
-        start_timestamp = 483532
-        end_timestamp = 652200
 
-        # The middle timestamp of the skit
+        # The middle timestamp of the skit  (start: 483532, end: 652200)
         middle_timestamp = 567866
 
         # Send gif generation message, will be later edited to display generated gif url
