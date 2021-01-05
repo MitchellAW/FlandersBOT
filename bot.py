@@ -7,8 +7,6 @@ import asyncpg
 import discord
 from discord.ext import commands
 
-from cogs.prefixes import Prefixes
-
 
 class FlandersBOT(commands.Bot):
     def __init__(self, intents):
