@@ -53,7 +53,8 @@ CREATE TABLE IF NOT EXISTS leaderboard (
 CREATE TABLE IF NOT EXISTS prefixes (
 	prefix_id serial PRIMARY KEY,
 	guild_id bigint NOT NULL,
-	prefix VARCHAR(10) NOT NULL
+	prefix VARCHAR(10) NOT NULL,
+	UNIQUE (guild_id, prefix)
 );
 
 -- Check if user has voted in the last 24 hours
