@@ -8,6 +8,7 @@ class Prefixes(commands.Cog):
         self.cached_prefixes = {}
         self.default_prefixes = ['ned', 'diddly', 'doodly']
         self.bot.command_prefix = self.get_prefixes
+        self.bot.loop.create_task(self.cache_prefixes())
 
     # Gets all approved prefixes for a particular guild using the message received
     async def get_prefixes(self, bot, message):
@@ -48,11 +49,6 @@ class Prefixes(commands.Cog):
         rows = await self.bot.db.fetch(query)
         for row in rows:
             self.cached_prefixes.setdefault(row['guild_id'], set()).add(row['prefix'])
-
-    # Update prefix cache when bot loads
-    @commands.Cog.listener()
-    async def on_ready(self):
-        await self.cache_prefixes()
 
     # Display the prefixes used on the current guild
     @commands.command(aliases=['prefixes'])
