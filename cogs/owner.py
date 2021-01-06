@@ -21,29 +21,6 @@ class Owner(commands.Cog):
                 await self.bot.user.edit(avatar=new_avatar)
                 await ctx.send('Avatar changed!')
 
-    # Change the bot's status/presence to only cycle through given message
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    async def status(self, ctx, *, message: str):
-        new_status = discord.Game(name=message)
-        await self.bot.change_presence(activity=new_status)
-        self.bot.status_formats = [message]
-        await ctx.send('Status changed!')
-
-    # Add a status/presence format to the status cycle
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    async def addstatus(self, ctx, *, message: str):
-        self.bot.status_formats.append(message)
-        await ctx.send('Status added!')
-
-    # Resets the status/presence formats to cycle through two original formats
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    async def resetstatus(self, ctx):
-        self.bot.status_formats = ['Ned vote | {} Servers', 'Ned help | {} Servers']
-        await ctx.send('Status reset!')
-
     # Get the number of all the commands executed
     @commands.command(hidden=True)
     @commands.is_owner()

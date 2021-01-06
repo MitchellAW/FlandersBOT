@@ -7,7 +7,7 @@ import aiohttp
 import asyncio
 import asyncpg
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 
 
 class Events(commands.Cog):
@@ -21,30 +21,23 @@ class Events(commands.Cog):
         # Initialise command stats
         self.bot.command_stats = self.read_command_stats()
 
-        # Create background tasks for cycling status format
-        self.bot.bg_task = self.bot.loop.create_task(self.cycle_status_format())
+        # Start task for cycling between status formats
+        self.cycle_status_format.start()
+
+    # If cog is unloaded, cancel task for cycling between status formats
+    def cog_unload(self):
+        self.cycle_status_format.cancel()
 
     # Print bot information, update status and set uptime when bot is ready
     @commands.Cog.listener()
     async def on_ready(self):
         print(f'Username: {self.bot.user.name}')
         print(f'Client ID: {self.bot.user.id}')
-        await self.update_status()
         if not hasattr(self, 'uptime'):
             self.bot.uptime = datetime.utcnow()
 
         # Channel in FlandersBOT server for logging errors to
         self.bot.logging = self.bot.get_channel(self.bot.LOGGING_CHANNEL)
-
-    # Update guild count on join
-    @commands.Cog.listener()
-    async def on_guild_join(self, guild):
-        await self.update_status()
-
-    # Update guild count on leave
-    @commands.Cog.listener()
-    async def on_guild_remove(self, guild):
-        await self.update_status()
 
     # Track number of command executed
     @commands.Cog.listener()
@@ -113,27 +106,6 @@ class Events(commands.Cog):
             # Print error traceback to console
             traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
-    # Update guild count at bot listing sites and in bots status/presence
-    async def update_status(self):
-        await self.update_guild_counts()
-        status = discord.Game(name=self.status_formats[self.status_index].format(str(len(self.bot.guilds))))
-        await self.bot.change_presence(activity=status)
-
-    # Cycle through all status formats, waits a minute between status changes
-    async def cycle_status_format(self):
-        await self.bot.wait_until_ready()
-        while not self.bot.is_closed():
-            if self.status_index >= len(self.status_formats) - 1:
-                self.status_index = 0
-
-            else:
-                self.status_index += 1
-
-            status = discord.Game(name=self.status_formats[self.status_index].format(str(len(self.bot.guilds))))
-
-            await self.bot.change_presence(activity=status)
-            await asyncio.sleep(60)
-
     # Post guild count to update count for bot_listing sites
     async def update_guild_counts(self):
         for listing in self.bot.config['bot_listings']:
@@ -150,6 +122,20 @@ class Events(commands.Cog):
 
                 else:
                     await session.post(url, json=data, headers=headers, timeout=15)
+
+    # Cycle through all status formats, waits 5 minutes between status changes
+    # Formats status/presence with the current guild count
+    @tasks.loop(minutes=5)
+    async def cycle_status_format(self):
+        if self.status_index >= len(self.status_formats) - 1:
+            self.status_index = 0
+
+        else:
+            self.status_index += 1
+
+        # Update presence/status
+        status = discord.Game(name=self.status_formats[self.status_index].format(str(len(self.bot.guilds))))
+        await self.bot.change_presence(activity=status)
 
     # Read the command statistics from json file
     @staticmethod
@@ -178,6 +164,27 @@ class Events(commands.Cog):
 
         else:
             return fallback_emoji
+
+    # Change the bot's status/presence to only cycle through given message
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def status(self, ctx, *, message: str):
+        self.status_formats = [message]
+        await ctx.send('Status changed! You will see an update in < 5 minutes.')
+
+    # Add a status/presence format to the status cycle
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def addstatus(self, ctx, *, message: str):
+        self.bot.status_formats.append(message)
+        await ctx.send('Status added!')
+
+    # Resets the status/presence formats to cycle through two original formats
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def resetstatus(self, ctx):
+        self.bot.status_formats = ['Ned vote | {} Servers', 'Ned help | {} Servers']
+        await ctx.send('Status reset!')
 
 
 def setup(bot):
