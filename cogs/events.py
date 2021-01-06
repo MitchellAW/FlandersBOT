@@ -21,9 +21,8 @@ class Events(commands.Cog):
         # Initialise command stats
         self.bot.command_stats = self.read_command_stats()
 
-        # Create background tasks for cycling status format and tracking votes
+        # Create background tasks for cycling status format
         self.bot.bg_task = self.bot.loop.create_task(self.cycle_status_format())
-        self.bot.bg_task_2 = self.bot.loop.create_task(self.track_votes())
 
     # Print bot information, update status and set uptime when bot is ready
     @commands.Cog.listener()
@@ -131,38 +130,6 @@ class Events(commands.Cog):
 
             await self.bot.change_presence(activity=status)
             await asyncio.sleep(60)
-
-    async def track_votes(self):
-        self.bot.db_conn = await asyncpg.connect(**self.bot.config['db_credentials'])
-
-        async def vote_listener(*args):
-            # Get user_id from payload
-            user_id = int(args[0][-1])
-            user = self.bot.get_user(user_id)
-
-            # Thank subscribed user for voting
-            if user_id in self.bot.reminders:
-                await user.send('Thanks for voting! You will now be notified when you can vote again in 12 hours.')
-
-            # Get timestamp of users latest vote
-            query = '''SELECT MAX(votedAt) FROM VoteHistory 
-                       WHERE userID = $1 AND voteType = 'upvote';
-                    '''
-            row = await self.bot.db_conn.fetchrow(query, user_id)
-
-            # Calculate seconds until next vote
-            time_diff = (datetime.utcnow() - row['max'])
-            seconds_remaining = 43200 - time_diff.seconds
-
-            # Wait time remaining (should be 12 hours)
-            await asyncio.sleep(seconds_remaining)
-
-            # Notify subscribed user that they are able to vote again.
-            if user_id in self.bot.reminders:
-                await user.send('<https://discordbots.org/bot/221609683562135553/vote>\n**You can vote now.**')
-
-        # Add listener to db connection for when user votes
-        await self.bot.db_conn.add_listener('vote', lambda *args: self.bot.loop.create_task(vote_listener(args)))
 
     # Post guild count to update count for bot_listing sites
     async def update_guild_counts(self):

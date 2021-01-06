@@ -1,5 +1,3 @@
-from datetime import datetime
-
 import discord
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
@@ -86,8 +84,6 @@ GitHub Source: <https://github.com/MitchellAW/FlandersBOT>
 If you'd like to hel-diddly-elp me grow in popularity, use `ned vote`
 '''
 
-VOTE_URL = '<https://discordbots.org/bot/221609683562135553/vote>'
-
 
 class General(commands.Cog):
     def __init__(self, bot):
@@ -169,35 +165,6 @@ class General(commands.Cog):
             await ctx.send('Thanks neighbourino! 📫 The feedback has been sent to my support serveroo! If you\'d like '
                            'to hel-diddly-elp me grow in popularity, try `ned vote`.')
 
-    # Message the benefits of voting and provide link to upvote at
-    @commands.command(aliases=['upvote'])
-    @commands.cooldown(1, 30, BucketType.user)
-    async def vote(self, ctx):
-        query = '''SELECT MAX(voted_at) FROM vote_history
-                   WHERE user_id = $1 AND vote_type = 'upvote';'''
-
-        message = ('If you vote for me using the link below, it will hel-diddly-elp me grow in popularity!\n'
-                   f'{VOTE_URL}\n')
-
-        row = await self.bot.db.fetchrow(query, ctx.author.id)
-
-        if row['max'] is not None:
-            time_diff = (datetime.utcnow() - row['max'])
-            seconds_remaining = 43200 - time_diff.seconds
-
-            if seconds_remaining <= 0:
-                message += '**You can vote now.**'
-
-            else:
-                hours, remainder = divmod(seconds_remaining, 3600)
-                minutes, seconds = divmod(remainder, 60)
-                message += f'**You can vote again in: {hours} hours, {minutes} minutes, and {seconds} seconds.**'
-
-        else:
-            message += '**You can vote now.**'
-
-        await ctx.send(message)
-
     # DM user with an invite link for the bot
     @commands.command()
     @commands.cooldown(1, 3, BucketType.user)
@@ -226,48 +193,6 @@ class General(commands.Cog):
     async def leave(self, ctx):
         await ctx.send('Okilly-dokilly! 👋')
         await ctx.guild.leave()
-
-    # Toggle notifications for when user can vote again
-    @commands.command(aliases=['reminder', 'subscribe'])
-    @commands.cooldown(2, 30, BucketType.user)
-    async def notifications(self, ctx):
-        if ctx.author.id in self.bot.reminders:
-            self.bot.reminders.remove(ctx.author.id)
-            await self.dm_author(ctx, 'You will no longer be notified when you can vote again.')
-
-        else:
-            self.bot.reminders.append(ctx.author.id)
-            try:
-                await self.dm_author(ctx, 'Notifications enabled. You will be notified when you are able to vote.')
-
-            except discord.Forbidden:
-                await ctx.send('You have DMs disabled, please enable DMs if you\'d like to enable notifications.')
-
-            # Check if user is able to vote now
-            query = '''SELECT MAX(voted_at) FROM vote_history
-                       WHERE user_id = $1 AND vote_type = 'upvote';'''
-            row = await self.bot.db.fetchrow(query, ctx.author.id)
-
-            # No timestamps in history, notify and exit
-            if row['max'] is None:
-                await self.dm_author(ctx, VOTE_URL + '\n**You can vote now.**')
-
-            else:
-                # Calculate seconds until next vote
-                time_diff = (datetime.utcnow() - row['max'])
-                seconds_remaining = 43200 - time_diff.seconds
-
-                # Voted over 12 hours ago, notify and exit
-                if seconds_remaining <= 0:
-                    await self.dm_author(ctx, VOTE_URL + '\n**You can vote now.**')
-
-    @commands.command(aliases=['toggled'])
-    async def toggle(self, ctx):
-        if ctx.author.id not in self.bot.reminders:
-            self.bot.reminders.append(ctx.author.id)
-
-        else:
-            self.bot.reminders.remove(ctx.author.id)
 
 
 def setup(bot):

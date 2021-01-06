@@ -1,4 +1,5 @@
 aiohttp>=3.6.0,<3.8.0
 asyncpg
 compuglobal>=0.2.5
+dblpy
 discord.py
