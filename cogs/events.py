@@ -33,6 +33,9 @@ class Events(commands.Cog):
         if not hasattr(self, 'uptime'):
             self.bot.uptime = datetime.utcnow()
 
+        # Channel in FlandersBOT server for logging errors to
+        self.bot.logging = self.bot.get_channel(self.bot.LOGGING_CHANNEL)
+
     # Update guild count on join
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
@@ -61,9 +64,6 @@ class Events(commands.Cog):
         # Allows us to check for original exceptions raised and sent to CommandInvokeError. If nothing is found.
         # We keep the exception passed to on_command_error.
         error = getattr(error, 'original', error)
-
-        # Channel in FlandersBOT server for logging errors to
-        logging = self.bot.get_channel(self.bot.LOGGING_CHANNEL)
 
         # Ignore non-existent commands
         if isinstance(error, commands.CommandNotFound):
@@ -95,17 +95,20 @@ class Events(commands.Cog):
                 pass
 
         else:
-            await logging.send(f'Command: {ctx.command.qualified_name}')
-            await logging.send(error)
-
             # Send error traceback to logging channel
             error_traceback = traceback.format_exception(type(error), error, error.__traceback__)
-            paginator = commands.Paginator()
-            for line in error_traceback:
-                paginator.add_line(line)
 
-            for page in paginator.pages:
-                await logging.send(page)
+            if self.bot.logging is not None:
+                await self.bot.logging.send(f'Command: {ctx.command.qualified_name}')
+                await self.bot.logging.send(error)
+
+                # Fill paginator with error traceback
+                paginator = commands.Paginator()
+                for line in error_traceback:
+                    paginator.add_line(line)
+
+                for page in paginator.pages:
+                    await self.bot.logging.send(page)
 
             # Print error traceback to console
             traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)

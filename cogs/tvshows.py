@@ -10,6 +10,11 @@ class TVShowCog(commands.Cog):
         self.bot = bot
         self.api = api
 
+    # Format error to not embed links on page status error
+    @staticmethod
+    async def format_error(error):
+        return str(error).replace('https://', '<https://').replace('.com/', '.com/>')
+
     # Get random or searched screencap based on search parameter and update cached_screencaps
     async def get_screencap(self, ctx, search=None):
         screencap = None
@@ -25,8 +30,10 @@ class TVShowCog(commands.Cog):
             )
 
         except compuglobal.APIPageStatusError as error:
-            await self.bot.LOGGING.send(error)
-            await ctx.send(error)
+            if self.bot.logging is not None:
+                await self.bot.logging.send(error)
+
+            await ctx.send(self.format_error(error))
 
         except compuglobal.NoSearchResultsFound as error:
             await ctx.send(error)
@@ -42,7 +49,7 @@ class TVShowCog(commands.Cog):
                 await ctx.send(await screencap.get_meme_url(caption))
 
         except compuglobal.APIPageStatusError as error:
-            await ctx.send(error)
+            await ctx.send(self.format_error(error))
 
     # Post a gif, if generating, post generating loading message and then edit message to include gif with the
     # generated url
@@ -52,7 +59,7 @@ class TVShowCog(commands.Cog):
             screencap = await self.get_screencap(ctx, search)
 
         except compuglobal.APIPageStatusError as error:
-            await ctx.send(error)
+            await ctx.send(self.format_error(error))
 
         if screencap is not None:
             gif_url = await screencap.get_gif_url(caption)
@@ -66,8 +73,9 @@ class TVShowCog(commands.Cog):
                     await sent.edit(content=generated_url)
 
                 except compuglobal.APIPageStatusError as error:
-                    await self.bot.LOGGING.send(error)
-                    await sent.edit(error)
+                    if self.bot.logging is not None:
+                        await self.bot.logging.send(error)
+                    await sent.edit(self.format_error(error))
 
                 except discord.NotFound:
                     pass

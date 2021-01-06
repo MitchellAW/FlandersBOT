@@ -21,6 +21,7 @@ class FlandersBOT(commands.Bot):
         self.uptime = datetime.utcnow()
         self.db = None
         self.db_conn = None
+        self.logging = None
 
         # Discord channel id used for all error logging
         self.LOGGING_CHANNEL = 415700137302818836

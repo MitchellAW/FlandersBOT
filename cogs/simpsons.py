@@ -22,7 +22,7 @@ class Simpsons(TVShowCog):
     @commands.command(aliases=['simpsonsgif', 'sgif'])
     @commands.cooldown(1, 3, BucketType.channel)
     @commands.guild_only()
-    async def simpsons(self, ctx, *, search_terms: str=None):
+    async def simpsons(self, ctx, *, search_terms: str = None):
         await self.post_gif(ctx, search_terms)
 
     # Generate a random Steamed Hams gif and post it
@@ -60,7 +60,7 @@ class Simpsons(TVShowCog):
                     await sent.edit(content=generated_url)
 
         except compuglobal.APIPageStatusError as error:
-            await sent.edit(str(error).replace('https://frinkiac.com/', '<https://frinkiac.com/>'))
+            await sent.edit(TVShowCog.format_error(error))
 
         except discord.NotFound:
             pass
