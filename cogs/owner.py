@@ -40,6 +40,7 @@ class Owner(commands.Cog):
             self.bot.load_extension(cog)
         except Exception as e:
             await ctx.message.add_reaction('❌')
+            await ctx.send(e)
         else:
             await ctx.message.add_reaction('✅')
 
@@ -52,6 +53,7 @@ class Owner(commands.Cog):
             self.bot.unload_extension(cog)
         except Exception as e:
             await ctx.message.add_reaction('❌')
+            await ctx.send(e)
         else:
             await ctx.message.add_reaction('✅')
 
@@ -65,6 +67,7 @@ class Owner(commands.Cog):
             self.bot.load_extension(cog)
         except Exception as e:
             await ctx.message.add_reaction('❌')
+            await ctx.send(e)
         else:
             await ctx.message.add_reaction('✅')
 
