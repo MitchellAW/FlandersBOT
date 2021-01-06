@@ -13,7 +13,7 @@ class Prefixes(commands.Cog):
     # Gets all approved prefixes for a particular guild using the message received
     async def get_prefixes(self, bot, message):
         guild_prefixes = self.default_prefixes.copy()
-        if message.guild.id in self.cached_prefixes:
+        if message.guild is not None and message.guild.id in self.cached_prefixes:
             guild_prefixes.extend(self.cached_prefixes[message.guild.id])
 
         # Note, must sort prefixes from longest to shortest length to account for shorter prefixes
@@ -60,7 +60,7 @@ class Prefixes(commands.Cog):
         )
 
         # List custom guild prefixes
-        if ctx.guild.id in self.cached_prefixes:
+        if ctx.guild is not None and ctx.guild.id in self.cached_prefixes:
             guild_prefixes = self.cached_prefixes[ctx.guild.id]
 
             message += '\nThis servers custom prefixes include: ' + ', '.join(
@@ -79,8 +79,12 @@ class Prefixes(commands.Cog):
     @commands.has_permissions(manage_guild=True)
     @commands.cooldown(3, 60, BucketType.guild)
     async def addprefix(self, ctx, *, new_prefix: str = None):
+        # Disallow custom prefixes in DMs
+        if ctx.guild is None:
+            return
+
         # Get custom prefixes for guild, gets empty list if none found
-        current_prefixes = self.cached_prefixes.get(ctx.guild.id, [])
+        current_prefixes = self.cached_prefixes.get(ctx.guild.id, set())
 
         # Require entering a prefix
         if new_prefix is None:
