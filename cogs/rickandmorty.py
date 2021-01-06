@@ -15,7 +15,14 @@ class RickAndMorty(TVShowCog):
     @commands.cooldown(1, 3, BucketType.channel)
     @commands.guild_only()
     async def rickandmorty(self, ctx, *, search_terms: str=None):
-        await self.post_gif(ctx, search_terms)
+        # Handle possible custom captions
+        if ' | ' in search_terms:
+            args = search_terms.split(' | ')
+            await self.post_gif(ctx, args[0], args[1])
+
+        # Use default caption
+        else:
+            await self.post_gif(ctx, search_terms)
 
 
 def setup(bot):
