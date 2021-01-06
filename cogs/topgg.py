@@ -104,8 +104,7 @@ class TopGG(commands.Cog):
             time_diff = (datetime.utcnow() - voted_at)
 
             # Seconds until user can vote again
-            # time_between_votes =  (12 * 60 * 60)
-            time_between_votes = (1 * 1 * 60)
+            time_between_votes = (12 * 60 * 60)
             seconds_remaining = time_between_votes - min(time_diff.seconds, time_between_votes)
             return seconds_remaining
 
