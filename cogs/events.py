@@ -127,6 +127,7 @@ class Events(commands.Cog):
     # Formats status/presence with the current guild count
     @tasks.loop(minutes=5)
     async def cycle_status_format(self):
+        await self.bot.wait_until_ready()
         if self.status_index >= len(self.status_formats) - 1:
             self.status_index = 0
 
