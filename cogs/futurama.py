@@ -11,7 +11,7 @@ class Futurama(TVShowCog):
 
     # Messages a random Futurama quote with gif if no search terms are given, otherwise, search for Futurama quote using
     # search terms and post gif
-    @commands.command(aliases=['futuramagif', 'fgif'])
+    @commands.command(aliases=['futuramagif', 'fgif', 'morbotron', 'morbo'])
     @commands.cooldown(1, 3, BucketType.channel)
     @commands.guild_only()
     async def futurama(self, ctx, *, search_terms: str=None):

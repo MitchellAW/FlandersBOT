@@ -108,7 +108,7 @@ class General(commands.Cog):
 
     # Whispers a list of the bot commands, If the user has DMs disabled,
     # sends the message in the channel
-    @commands.command()
+    @commands.command(aliases=['helper', 'tutorial'])
     @commands.cooldown(1, 3, BucketType.user)
     async def help(self, ctx, *, category: str = None):
         # Post general help commands
@@ -120,7 +120,7 @@ class General(commands.Cog):
             await self.dm_author(ctx, TV_SHOW_COMMANDS)
 
     # Whispers a list of help commands for all tv shows
-    @commands.command(aliases=['tv'])
+    @commands.command(aliases=['tv', 'tv-shows'])
     @commands.cooldown(1, 3, BucketType.user)
     async def tvshows(self, ctx):
         await self.dm_author(ctx, TV_SHOW_COMMANDS)

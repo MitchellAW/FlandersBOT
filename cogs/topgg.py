@@ -131,7 +131,7 @@ class TopGG(commands.Cog):
         await self.log_and_thank(data)
 
     # Message the benefits of voting and provide link to upvote at
-    @commands.command(aliases=['upvote'])
+    @commands.command(aliases=['upvote', 'voting'])
     @commands.cooldown(1, 30, BucketType.user)
     async def vote(self, ctx):
         message = 'If you vote for me using the link below, it will hel-diddly-elp me grow in popularity!\n'
@@ -149,7 +149,7 @@ class TopGG(commands.Cog):
         await ctx.send(message)
 
     # Toggle notifications for when user can vote again
-    @commands.command(aliases=['notify', 'toggle', 'reminder', 'subscribe'])
+    @commands.command(aliases=['notify', 'toggle', 'reminder', 'remind', 'subscribe', 'sub'])
     @commands.cooldown(2, 30, BucketType.user)
     async def notifications(self, ctx):
         # Disable notifications if already subscribed

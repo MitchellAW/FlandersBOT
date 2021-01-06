@@ -74,7 +74,7 @@ class Prefixes(commands.Cog):
         await ctx.send(message)
 
     # Allows for a single custom prefix per-guild
-    @commands.command()
+    @commands.command(aliases=['add-prefix'])
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     @commands.cooldown(3, 60, BucketType.guild)
@@ -142,7 +142,7 @@ class Prefixes(commands.Cog):
             await self.cache_prefixes()
 
     # Allows removal of all custom server command prefixes
-    @commands.command(aliases=['deleteprefixes', 'clearprefixes', 'eraseprefixes', 'purgeprefixes'])
+    @commands.command(aliases=['deleteprefixes', 'clearprefixes', 'eraseprefixes', 'purgeprefixes', 'resetprefixes'])
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     @commands.cooldown(1, 3, BucketType.channel)

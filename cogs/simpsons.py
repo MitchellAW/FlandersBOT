@@ -19,7 +19,7 @@ class Simpsons(TVShowCog):
 
     # Messages a random Simpsons quote with gif if no search terms are given, otherwise, search for Simpsons quote using
     # search terms and post gif
-    @commands.command(aliases=['simpsonsgif', 'sgif'])
+    @commands.command(aliases=['simpsonsgif', 'simpson', 'sgif'])
     @commands.cooldown(1, 3, BucketType.channel)
     @commands.guild_only()
     async def simpsons(self, ctx, *, search_terms: str = None):
@@ -33,7 +33,7 @@ class Simpsons(TVShowCog):
             await self.post_gif(ctx, search_terms)
 
     # Generate a random Steamed Hams gif and post it
-    @commands.command(aliases=['steamed', 'aurora', 'borealis'])
+    @commands.command(aliases=['steamed', 'steam', 'hams', 'ham', 'aurora', 'borealis', 'frinkiac', 'frink'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def steamedhams(self, ctx):
         # Steamed hams episode key

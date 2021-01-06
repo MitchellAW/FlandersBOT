@@ -11,10 +11,11 @@ class RickAndMorty(TVShowCog):
 
     # Messages a random R & M quote with gif if no search terms are given, otherwise, search for R & M quote using
     # search terms and post gif
-    @commands.command(aliases=['ram', 'ramgif', 'rickandmortygif'])
+    @commands.command(aliases=['ram', 'r&m', 'rick', 'morty', 'ramgif', 'rickandmortygif',
+                               'masterofallscience', 'masterofall', 'moas'])
     @commands.cooldown(1, 3, BucketType.channel)
     @commands.guild_only()
-    async def rickandmorty(self, ctx, *, search_terms: str=None):
+    async def rickandmorty(self, ctx, *, search_terms: str = None):
         # Handle possible custom captions
         if ' | ' in search_terms:
             args = search_terms.split(' | ')
