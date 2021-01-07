@@ -25,7 +25,7 @@ class Simpsons(TVShowCog):
     async def simpsons(self, ctx, *, search_terms: str = None):
         # Handle possible custom captions
         if search_terms is not None and ' | ' in search_terms:
-            args = search_terms.split(' | ')
+            args = search_terms.split(' | ', 1)
             await self.post_gif(ctx, args[0], args[1])
 
         # Use default caption
