@@ -3,7 +3,6 @@ __pycache__/
 cogs/api/__pycache__/
 venv/
 settings/config.json
-cogs/data/command_stats.json
 cogs/data/guildlist.csv
 node_modules/
 *.min.js

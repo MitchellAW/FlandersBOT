@@ -1,13 +1,26 @@
+import asyncio
 import datetime
+import json
 
+import asyncpg
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord.ext.commands.cooldowns import BucketType
 
 
 class Stats(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
+        # Track command count
+        self.command_count = 0
+        self.bot.loop.create_task(self.count_commands())
+
+        # Insert command updates in batches to prevent spam causing excessive inserts
+        self._command_batch = []
+        self._batch_lock = asyncio.Lock(loop=self.bot.loop)
+        self.batch_insert_loop.add_exception_type(asyncpg.PostgresConnectionError)
+        self.batch_insert_loop.start()
 
     # Get the uptime of the bot. In a short description format by default.
     def get_uptime(self, full=False):
@@ -22,6 +35,57 @@ class Stats(commands.Cog):
 
         else:
             return f'{days}d {hours}h {minutes}m {seconds}s'
+
+    # Update the cached successful command count
+    async def count_commands(self):
+        query = '''SELECT COUNT(*) FROM command_history
+                   WHERE failed = false
+                '''
+        self.command_count = await self.bot.db.fetchval(query)
+
+    # On each command, add attributes of command to batch to be logged by task loop
+    @commands.Cog.listener()
+    async def on_command_completion(self, ctx):
+        # Ensure command recorded
+        if ctx.command is None:
+            return
+
+        # Get guild id
+        guild_id = None
+        if ctx.guild is not None:
+            guild_id = ctx.guild.id
+
+        # Cache command to batch for insertion
+        self._command_batch.append(
+            {
+                'command': ctx.command.qualified_name,
+                'prefix': ctx.prefix,
+                'guild_id': guild_id,
+                'used_at': ctx.message.created_at.isoformat(),
+                'failed': ctx.command_failed
+            }
+        )
+
+        # Update command count
+        if not ctx.command_failed:
+            self.command_count += 1
+
+    # Ensure loop ends if cog is unloaded
+    def cog_unload(self):
+        self.batch_insert_loop.stop()
+
+    # Loops each 10 seconds, inserts all batched command stats into command history table
+    @tasks.loop(seconds=10)
+    async def batch_insert_loop(self):
+        async with self._batch_lock:
+            query = '''INSERT INTO command_history (command, prefix, guild_id, used_at, failed)
+                       SELECT x.command, x.prefix, x.guild_id, x.used_at, x.failed 
+                       FROM jsonb_to_recordset($1::jsonb) AS
+                       x(command TEXT, prefix TEXT, guild_id BIGINT, used_at TIMESTAMP, failed BOOLEAN)
+                    '''
+            if self._command_batch:
+                await self.bot.db.execute(query, json.dumps(self._command_batch))
+                self._command_batch.clear()
 
     # Posts the bots uptime to the channel
     @commands.command()
@@ -75,11 +139,6 @@ class Stats(commands.Cog):
         user_average = round((online_users / len(self.bot.guilds)), 2)
         guild_count = len(self.bot.guilds)
 
-        # Count number of commands executed
-        command_count = 0
-        for key in self.bot.command_stats:
-            command_count += self.bot.command_stats[key]
-
         # Embed statistics output
         embed = discord.Embed(colour=discord.Colour(0x44981e))
         embed.set_thumbnail(url=self.bot.user.avatar_url)
@@ -93,7 +152,7 @@ class Stats(commands.Cog):
         embed.add_field(name='Online Users', value=str(online_users), inline=True)
         embed.add_field(name='Average Online', value=str(user_average), inline=True)
         embed.add_field(name='Uptime', value=self.get_uptime(), inline=True)
-        embed.add_field(name='Commands Used', value=str(command_count), inline=True)
+        embed.add_field(name='Commands Used', value=str(self.command_count), inline=True)
         await ctx.send(embed=embed)
 
     # All privacy related functions, including information regarding the data logged, and options to both delete, and

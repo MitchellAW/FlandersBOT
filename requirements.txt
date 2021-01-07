@@ -3,3 +3,4 @@ asyncpg
 compuglobal>=0.2.5
 dblpy
 discord.py
+tabulate

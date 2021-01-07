@@ -61,6 +61,16 @@ CREATE TABLE IF NOT EXISTS subscribers (
     user_id bigint PRIMARY KEY
 );
 
+-- Create table for keeping track of command statistics
+CREATE TABLE IF NOT EXISTS command_history (
+    command_id serial PRIMARY KEY,
+    command text NOT NULL,
+    prefix text NOT NULL,
+    guild_id bigint,
+    used_at timestamp NOT NULL,
+    failed boolean NOT NULL
+)
+
 -- Check if user has voted in the last 24 hours
 CREATE OR REPLACE FUNCTION has_voted_today(p_user_id bigint) 
 RETURNS boolean AS $$

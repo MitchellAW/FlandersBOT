@@ -1,11 +1,8 @@
-import json
 import sys
 import traceback
 from datetime import datetime
 
 import aiohttp
-import asyncio
-import asyncpg
 import discord
 from discord.ext import commands, tasks
 
@@ -17,9 +14,6 @@ class Events(commands.Cog):
         # Default status configuration
         self.status_index = 0
         self.status_formats = ['Ned help | {} Servers', 'Ned vote | {} Servers']
-
-        # Initialise command stats
-        self.bot.command_stats = self.read_command_stats()
 
         # Start task for cycling between status formats
         self.cycle_status_format.start()
@@ -38,18 +32,6 @@ class Events(commands.Cog):
 
         # Channel in FlandersBOT server for logging errors to
         self.bot.logging = self.bot.get_channel(self.bot.LOGGING_CHANNEL)
-
-    # Track number of command executed
-    @commands.Cog.listener()
-    async def on_command(self, ctx):
-        command = ctx.command.qualified_name
-        if command in self.bot.command_stats:
-            self.bot.command_stats[command] += 1
-
-        else:
-            self.bot.command_stats[command] = 1
-
-        self.write_command_stats(self.bot.command_stats)
 
     # Commands error handler
     @commands.Cog.listener()
@@ -137,22 +119,6 @@ class Events(commands.Cog):
         # Update presence/status
         status = discord.Game(name=self.status_formats[self.status_index].format(str(len(self.bot.guilds))))
         await self.bot.change_presence(activity=status)
-
-    # Read the command statistics from json file
-    @staticmethod
-    def read_command_stats():
-        with open('cogs/data/command_stats.json', 'r') as command_counter:
-            command_stats = json.load(command_counter)
-            command_counter.close()
-
-        return command_stats
-
-    # Dump the command statistics to json file
-    @staticmethod
-    def write_command_stats(command_stats):
-        with open('cogs/data/command_stats.json', 'w') as command_counter:
-            json.dump(command_stats, command_counter, indent=4)
-            command_counter.close()
 
     # Checks if bot has permission to use external emojis in the guild, returns external emoji if permitted
     # otherwise, returns the fallback emoji
