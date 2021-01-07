@@ -6,7 +6,7 @@ class Prefixes(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.cached_prefixes = {}
-        self.default_prefixes = ['ned', 'diddly', 'doodly']
+        self.default_prefixes = [self.get_main_prefix(), 'diddly', 'doodly']
         self.bot.command_prefix = self.get_prefixes
         self.bot.loop.create_task(self.cache_prefixes())
 
@@ -49,6 +49,14 @@ class Prefixes(commands.Cog):
         rows = await self.bot.db.fetch(query)
         for row in rows:
             self.cached_prefixes.setdefault(row['guild_id'], set()).add(row['prefix'])
+
+    # Gets the main prefix of the bot based on the debug mode: uses mole if in debug mode
+    def get_main_prefix(self):
+        if self.bot.debug_mode:
+            return 'mole'
+
+        else:
+            return 'ned'
 
     # Display the prefixes used on the current guild
     @commands.command(aliases=['prefixes'])
