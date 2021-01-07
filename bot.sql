@@ -43,7 +43,6 @@ CREATE TABLE IF NOT EXISTS leaderboard (
 	wins int DEFAULT 0 NOT NULL,
 	losses int DEFAULT 0 NOT NULL,
 	correct_answers int DEFAULT 0 NOT NULL,
-	incorrect_answers int DEFAULT 0 NOT NULL,
 	fastest_answer int DEFAULT 20000 NOT NULL,
 	current_streak int DEFAULT 0 NOT NULL,
 	longest_streak int DEFAULT 0 NOT NULL
@@ -55,6 +54,11 @@ CREATE TABLE IF NOT EXISTS prefixes (
 	guild_id bigint NOT NULL,
 	prefix VARCHAR(10) NOT NULL,
 	UNIQUE (guild_id, prefix)
+);
+
+-- Create table for storing all voting subscribers
+CREATE TABLE IF NOT EXISTS subscribers (
+    user_id bigint PRIMARY KEY
 );
 
 -- Check if user has voted in the last 24 hours

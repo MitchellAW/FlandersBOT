@@ -30,6 +30,7 @@ class TopGG(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.debug_mode = self.bot.config['debug_mode']
+        self.cached_subscribers = set()
 
         # Client for interacting with top.gg API
         self.dblpy = dbl.DBLClient(
@@ -45,14 +46,34 @@ class TopGG(commands.Cog):
         # Update table with any missing votes
         self.bot.loop.create_task(self.update_missing_votes())
 
+    # (Re) Populate cache using entries in subscribers table
+    async def cache_subscribers(self):
+        self.cached_subscribers.clear()
+        query = '''SELECT user_id FROM subscribers
+                '''
+        rows = await self.bot.db.fetch(query)
+        self.cached_subscribers.update(map(lambda row: row['user_id'], rows))
+
+    # Notify all users on restart
+    async def notify_subscribers(self):
+        for user_id in self.cached_subscribers:
+            await self.notify_user(user_id, new_vote=False)
+
     # Record any missing votes since webhook was last ran.
     # Inserts missing votes as null user_id into vote_history table
     async def update_missing_votes(self):
+        # Cache subscribers and add
+        await self.cache_subscribers()
+        await self.notify_subscribers()
+
         # Get info for this bot
         bot_info = await self.dblpy.get_bot_info(self.bot.config['bot_id'])
 
         # Count votes currently in history
         logged_points = await self.bot.db.fetchval(self.POINTS_QUERY)
+
+        if logged_points is None:
+            logged_points = 0
 
         # Calculate missing votes
         votes_missing = bot_info['points'] - logged_points
@@ -73,15 +94,14 @@ class TopGG(commands.Cog):
         user = self.bot.get_user(user_id)
 
         # Thank if subscribed to notifications
-        if user_id in self.bot.reminders:
+        if user_id in self.cached_subscribers:
             await user.send('Thanks for voting! You will now be notified when you can vote again in 12 hours.')
 
             # Notify user when they can vote next
-            await self.notify_user(data)
+            await self.notify_user(user_id, new_vote=True)
 
     # Notify user in 12 hours or whenever they can vote again if they're subscribed
-    async def notify_user(self, data):
-        user_id = int(data['user'])
+    async def notify_user(self, user_id, new_vote=True):
         user = self.bot.get_user(user_id)
 
         # Wait time remaining
@@ -92,7 +112,7 @@ class TopGG(commands.Cog):
             await asyncio.sleep(seconds_remaining)
 
         # Ensure user still wants to be notified
-        if user_id in self.bot.reminders:
+        if user_id in self.cached_subscribers and new_vote:
             await user.send('<https://discordbots.org/bot/221609683562135553/vote>\n**You can vote now.**')
 
     # Get seconds remaining until user is able to vote again, returns None if no votes recorded
@@ -152,8 +172,12 @@ class TopGG(commands.Cog):
     @commands.cooldown(2, 30, BucketType.user)
     async def notifications(self, ctx):
         # Disable notifications if already subscribed
-        if ctx.author.id in self.bot.reminders:
-            self.bot.reminders.remove(ctx.author.id)
+        if ctx.author.id in self.cached_subscribers:
+            query = '''DELETE FROM subscribers
+                       WHERE user_id = $1
+                    '''
+            await self.bot.db.execute(query, ctx.author.id)
+            await self.cache_subscribers()
             await General.dm_author(ctx, 'You will no longer be notified when you can vote again.')
             return
 
@@ -182,11 +206,14 @@ class TopGG(commands.Cog):
 
         # If DMs are available, add user to reminders list and notify them
         else:
-            self.bot.reminders.append(ctx.author.id)
+            query = '''INSERT INTO subscribers (user_id)
+                       VALUES ($1)
+                    '''
+            await self.bot.db.execute(query, ctx.author.id)
 
             # Notify user when time expires
             if seconds_remaining is not None and seconds_remaining > 0:
-                await self.notify_user(ctx.author.id)
+                await self.notify_user(ctx.author.id, new_vote=True)
 
 
 def setup(bot):
