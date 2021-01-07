@@ -22,21 +22,21 @@ class Prefixes(commands.Cog):
 
         # Note, must end with zero space separator or else it would read "Ned help" as "Ned"+" help" and ignore it
         separators = [' ', '-', '']
-        case_insensitive_prefixes = set()
+        case_insensitive_prefixes = []
 
         # Loop through and create different casing variants of each prefix, currently builds the following variants:
         # "ned ", "NED ", Ned ", "ned-", "NED-", "Ned-", "ned", "NED", "Ned"
         for prefix in guild_prefixes:
             for separator in separators:
                 # All lowercase prefix
-                case_insensitive_prefixes.add(prefix.lower() + separator)
+                case_insensitive_prefixes.append(prefix.lower() + separator)
 
                 # All uppercase prefix
-                case_insensitive_prefixes.add(prefix.upper() + separator)
+                case_insensitive_prefixes.append(prefix.upper() + separator)
 
                 # Capitalise first character
                 if len(prefix) > 1:
-                    case_insensitive_prefixes.add(prefix[0].upper() + prefix[1:] + separator)
+                    case_insensitive_prefixes.append(prefix[0].upper() + prefix[1:] + separator)
 
         return commands.when_mentioned_or(*case_insensitive_prefixes)(bot, message)
 
