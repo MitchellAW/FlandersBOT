@@ -16,7 +16,7 @@ class Futurama(TVShowCog):
     @commands.guild_only()
     async def futurama(self, ctx, *, search_terms: str=None):
         # Handle possible custom captions
-        if ' | ' in search_terms:
+        if search_terms is not None and ' | ' in search_terms:
             args = search_terms.split(' | ')
             await self.post_gif(ctx, args[0], args[1])
 
