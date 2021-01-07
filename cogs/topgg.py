@@ -29,7 +29,6 @@ class TopGG(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.debug_mode = self.bot.config['debug_mode']
         self.cached_subscribers = set()
 
         # Client for interacting with top.gg API
@@ -40,7 +39,7 @@ class TopGG(commands.Cog):
             webhook_port=self.bot.config['webhook']['webhookPort'],
             webhook_path='/dblwebhook',
             # Only auto post server count if not in debug mode
-            autopost=(not self.debug_mode)
+            autopost=(not self.bot.debug_mode)
         )
 
         # Update table with any missing votes

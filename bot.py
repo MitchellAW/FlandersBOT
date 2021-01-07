@@ -30,6 +30,9 @@ class FlandersBOT(commands.Bot):
         with open('settings/config.json', 'r') as config_file:
             self.config = json.load(config_file)
 
+        # Configure debug mode
+        self.debug_mode = self.config['debug_mode']
+
     # Default get prefixes method, is replaced once prefixes cog loads (custom guild prefixes)
     async def get_default_prefixes(self, bot, message):
         default_prefixes = ['ned', 'diddly', 'doodly']
