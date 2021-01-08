@@ -97,7 +97,7 @@ class Owner(commands.Cog):
         # Make confirmation message based on bots username to prevent myself from shutting wrong bot down.
         def check(message):
             return (message.content == self.bot.user.name[:4] and
-                    str(message.author.id) == self.bot.config['owner_id'])
+                    message.author.id == self.bot.config['owner_id'])
 
         try:
             await ctx.send('Respond ' + self.bot.user.name[:4] + ' to shutdown')
