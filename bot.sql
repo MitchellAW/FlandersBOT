@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS command_history (
     guild_id bigint,
     used_at timestamp NOT NULL,
     failed boolean NOT NULL
-)
+);
 
 -- Check if user has voted in the last 24 hours
 CREATE OR REPLACE FUNCTION has_voted_today(p_user_id bigint) 
