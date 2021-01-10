@@ -146,11 +146,11 @@ class Stats(commands.Cog):
 
         # Add all statistics
         embed.add_field(name='Bot Owner', value='Mitch#8293', inline=True)
-        embed.add_field(name='Server Count', value=str(guild_count), inline=True)
-        embed.add_field(name='Total Members', value=str(total_members), inline=True)
+        embed.add_field(name='Server Count', value=f'{guild_count:,}', inline=True)
+        embed.add_field(name='Total Members', value=f'{total_members:,}', inline=True)
         embed.add_field(name='Uptime', value=self.get_uptime(), inline=True)
-        embed.add_field(name='Latency', value=str(latency) + ' ms', inline=True)
-        embed.add_field(name='Commands Used', value=str(self.command_count), inline=True)
+        embed.add_field(name='Latency', value=f'{latency:,}' + ' ms', inline=True)
+        embed.add_field(name='Commands Used', value=f'{self.command_count:,}', inline=True)
         await ctx.send(embed=embed)
 
     # All privacy related functions, including information regarding the data logged, and options to both delete, and
