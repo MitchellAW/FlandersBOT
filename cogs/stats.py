@@ -130,13 +130,9 @@ class Stats(commands.Cog):
     async def stats(self, ctx):
         # Count users online in guilds and user average
         total_members = 0
-        online_users = 0
         for guild in self.bot.guilds:
-            total_members += len(guild.members)
-            for member in guild.members:
-                if member.status == discord.Status.online:
-                    online_users += 1
-        user_average = round((online_users / len(self.bot.guilds)), 2)
+            total_members += guild.member_count
+
         guild_count = len(self.bot.guilds)
 
         # Embed statistics output
@@ -149,9 +145,8 @@ class Stats(commands.Cog):
         embed.add_field(name='Bot Owner', value='Mitch#8293', inline=True)
         embed.add_field(name='Server Count', value=str(guild_count), inline=True)
         embed.add_field(name='Total Members', value=str(total_members), inline=True)
-        # embed.add_field(name='Online Users', value=str(online_users), inline=True)
-        # embed.add_field(name='Average Online', value=str(user_average), inline=True)
         embed.add_field(name='Uptime', value=self.get_uptime(), inline=True)
+        embed.add_field(name='Latency', value=self.bot.latency, inline=True)
         embed.add_field(name='Commands Used', value=str(self.command_count), inline=True)
         await ctx.send(embed=embed)
 
