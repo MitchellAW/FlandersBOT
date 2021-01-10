@@ -334,7 +334,7 @@ class Trivia(commands.Cog):
                 for row in rows[:5]:
                     scores += (f'**{row["username"]}**: '
                                f'{str(row["result"])}\n')
-                embed.add_field(name=stat['category'], value=scores)
+                embed.add_field(name=stat['category'], value=scores, inline=False)
 
             if len(embed.fields) > 0:
                 await ctx.send(embed=embed)
