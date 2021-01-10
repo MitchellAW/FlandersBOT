@@ -57,7 +57,7 @@ class Trivia(commands.Cog):
 
     # Allow users with manage server permissions to force stop trivia games
     @commands.command()
-    @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions(manage_messages=True)
     async def forcestop(self, ctx):
         if ctx.channel.id in self.channels_playing:
             self.channels_playing.remove(ctx.channel.id)
