@@ -126,7 +126,7 @@ class Trivia(commands.Cog):
 
         # Check for confirming a valid answer was made (A, B or C)
         def is_answer(reaction, user):
-            return not user.bot and str(reaction.emoji) in ['🇦', '🇧', '🇨'] and reaction.message.guild == ctx.guild
+            return not user.bot and str(reaction.emoji) in ['🇦', '🇧', '🇨'] and reaction.message.channel == ctx.channel
 
         # Track some important round data
         user_answers = {}
