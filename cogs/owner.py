@@ -110,33 +110,21 @@ class Owner(commands.Cog):
         except asyncio.TimeoutError:
             pass
 
-    # Generates a list of guilds the bot is in, contains name, bot and user
-    # counts
+    # Generates a list of guilds the bot is in, contains name, bot and user counts
     @commands.command(hidden=True)
     @commands.is_owner()
     @commands.bot_has_permissions(attach_files=True)
     async def guildlist(self, ctx):
         with open('cogs/data/guildlist.csv', 'w') as guild_list:
-            guild_list.write('Server Name,# of Bots,# of Users,Total,Region,Features\n')
+            guild_list.write('Server Name,# of Users,Region,Features\n')
             for guild in self.bot.guilds:
-                bot_count = 0
-                for member in guild.members:
-                    if member.bot:
-                        bot_count += 1
 
-                # Write to csv file (guild name, bot count, user count,
-                #  total member count)
-                guild_list.write('"' + guild.name + '",' +
-                                 str(bot_count) + ',' +
-                                 str(len(guild.members) - bot_count) + ',' +
-                                 str(len(guild.members)) + ',' +
-                                 str(guild.region) + ',' +
-                                 str(guild.features) + '\n')
+                # Write to csv file (guild name, total member count, region and features)
+                guild_list.write(f'"{guild.name}",{guild.member_count},{guild.region},{guild.features}\n')
 
         await ctx.send(file=discord.File('cogs/data/guildlist.csv'))
 
-    # Reload config json file, allows regen of bot listing tokens without taking
-    # bot down
+    # Reload config json file, allows regen of bot listing tokens without taking bot down
     @commands.command(hidden=True)
     @commands.is_owner()
     @commands.bot_has_permissions(add_reactions=True)
