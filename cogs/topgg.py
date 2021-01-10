@@ -1,9 +1,10 @@
 import asyncio
 from datetime import datetime
 
+import asyncpg
 import dbl
 import discord
-from discord.ext import commands, tasks
+from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
 from cogs.general import General
@@ -208,7 +209,13 @@ class TopGG(commands.Cog):
             query = '''INSERT INTO subscribers (user_id)
                        VALUES ($1)
                     '''
-            await self.bot.db.execute(query, ctx.author.id)
+            # Insert new subscriber into table, log issue but continue
+            # Note: Shouldn't happen unless cache fails or subscriber is inserted into table from elsewhere
+            try:
+                await self.bot.db.execute(query, ctx.author.id)
+
+            except asyncpg.UniqueViolationError as e:
+                await self.bot.logging.send(str(e))
 
             # Cache new subscriber
             await self.cache_subscribers()
