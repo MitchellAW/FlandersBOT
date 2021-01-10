@@ -209,8 +209,7 @@ class Trivia(commands.Cog):
             query = '''UPDATE leaderboard SET username = $1 
                        WHERE user_id = $2
                     '''
-            username = str(ctx.guild.get_member(answer['user_id']))
-            await self.bot.db.fetch(query, username, answer['user_id'])
+            await self.bot.db.fetch(query, answer['username'], answer['user_id'])
 
     async def end_match(self, ctx, match_id, category):
         # Set the match as complete (Triggers leaderboard stat updates)
@@ -220,12 +219,12 @@ class Trivia(commands.Cog):
         await self.bot.db.fetch(query, match_id)
 
         # Top Scorers (sorted by correct answers descending)
-        query = '''SELECT user_id, COUNT(CASE WHEN is_correct THEN 1 END) 
+        query = '''SELECT user_id, username, COUNT(CASE WHEN is_correct THEN 1 END) 
                    AS correct FROM answers a
                    INNER JOIN rounds r
                    ON a.round_id = r.round_id
                    WHERE r.match_id = $1
-                   GROUP BY a.user_id
+                   GROUP BY a.user_id, a.username
                    ORDER BY correct DESC;
                 '''
         top_scorers = await self.bot.db.fetch(query, match_id)
@@ -235,49 +234,50 @@ class Trivia(commands.Cog):
             return
 
         scorers = ''
-        top_scorer = top_scorers[0]["user_id"]
+        top_scorer = top_scorers[0]["username"]
         for scorer in top_scorers[:5]:
-            scorers += f'**{ctx.guild.get_member(scorer["user_id"]).name}**: {str(scorer["correct"])}\n'
+            scorers += f'**{scorer["username"]}**: {str(scorer["correct"])}\n'
 
         # Scoreboard display embed
-        embed = discord.Embed(description=f'**Congratulations to the top scorer, '
-                                          f'{ctx.guild.get_member(top_scorer).name} :trophy:**', color=category.colour)
+        embed = discord.Embed(description=f'**Congratulations to the top scorer, {top_scorer} :trophy:**',
+                              color=category.colour)
 
         embed.set_author(name='Trivia Scoreboard', icon_url=self.bot.user.avatar_url)
 
         embed.add_field(name='*:medal:Correct Answers*', value=scorers)
 
         # Highest Accuracy (sorted by accuracy descending)
-        query = '''SELECT user_id, 
+        query = '''SELECT user_id, username, 
                    CAST(COUNT(CASE WHEN is_correct THEN 1 END) AS FLOAT) / 
                    CAST(COUNT(user_id) AS FLOAT) AS accuracy FROM answers a 
                    INNER JOIN rounds r 
                    ON a.round_id = r.round_id 
                    WHERE r.match_id = $1 
-                   GROUP BY a.user_id 
+                   GROUP BY a.user_id, a.username
                    ORDER BY accuracy DESC
                 '''
         highest_accuracy = await self.bot.db.fetch(query, match_id)
 
         scorers = ''
         for scorer in highest_accuracy[:5]:
-            scorers += f'**{ctx.guild.get_member(scorer["user_id"]).name}**: {str(scorer["accuracy"] * 100.0)}%\n'
+            scorers += f'**{scorer["username"]}**: {str(scorer["accuracy"] * 100.0)}%\n'
         embed.add_field(name='*:bow_and_arrow: Highest Accuracy*', value=scorers)
 
         # Fastest Answers (sorted by fastest time ascending)
-        query = '''SELECT user_id, MIN(answer_time) AS fastest_time 
+        query = '''SELECT user_id, username,
+                   MIN(answer_time) AS fastest_time 
                    FROM answers a 
                    INNER JOIN rounds r 
                    ON a.round_id = r.round_id 
                    WHERE a.is_correct = true and r.match_id = $1
-                   GROUP BY a.user_id
+                   GROUP BY a.user_id, a.username
                    ORDER BY fastest_time ASC
                 '''
         fastest_answers = await self.bot.db.fetch(query, match_id)
 
         scorers = '' if len(fastest_answers) > 0 else '---'
         for scorer in fastest_answers[:5]:
-            scorers += f'**{ctx.guild.get_member(scorer["user_id"]).name}**: {str(scorer["fastest_time"]/1000)}s\n'
+            scorers += f'**{scorer["username"]}**: {str(scorer["fastest_time"]/1000)}s\n'
         embed.add_field(name='*:point_up: Fastest Answers*', value=scorers)
 
         # Display the scoreboard
