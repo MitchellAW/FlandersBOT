@@ -215,7 +215,8 @@ class TopGG(commands.Cog):
                 await self.bot.db.execute(query, ctx.author.id)
 
             except asyncpg.UniqueViolationError as e:
-                await self.bot.logging.send(str(e))
+                if self.bot.logging is not None:
+                    await self.bot.logging.send(str(e))
 
             # Cache new subscriber
             await self.cache_subscribers()
