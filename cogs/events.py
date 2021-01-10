@@ -77,12 +77,11 @@ class Events(commands.Cog):
             # Send error traceback to logging channel
             error_traceback = traceback.format_exception(type(error), error, error.__traceback__)
 
+            # Fill paginator with error traceback
+            paginator = commands.Paginator()
             if self.bot.logging is not None:
-                await self.bot.logging.send(f'Command: {ctx.command.qualified_name}')
-                await self.bot.logging.send(error)
+                paginator.add_line(f'Command: {ctx.command.qualified_name}\n{error}')
 
-                # Fill paginator with error traceback
-                paginator = commands.Paginator()
                 for line in error_traceback:
                     paginator.add_line(line)
 
