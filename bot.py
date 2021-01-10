@@ -59,7 +59,6 @@ def run_bot():
 
     # Requires members intents for leaderboard username display
     intents = discord.Intents.default()
-    intents.members = True
 
     # Initialise bot with db connection
     bot = FlandersBOT(intents)
