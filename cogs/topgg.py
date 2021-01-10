@@ -210,6 +210,9 @@ class TopGG(commands.Cog):
                     '''
             await self.bot.db.execute(query, ctx.author.id)
 
+            # Cache new subscriber
+            await self.cache_subscribers()
+
             # Notify user when time expires
             if seconds_remaining is not None and seconds_remaining > 0:
                 await self.notify_user(ctx.author.id, new_vote=True)
