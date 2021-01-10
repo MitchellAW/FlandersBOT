@@ -61,7 +61,7 @@ class Trivia(commands.Cog):
     async def forcestop(self, ctx):
         if ctx.channel.id in self.channels_playing:
             self.channels_playing.remove(ctx.channel.id)
-            await ctx.send('Trivia has ended')
+            await ctx.send('Trivia will terminate at the end of the current round.')
 
     # Starts a match of trivia (multiple rounds of questions)
     async def start_trivia(self, ctx, category):
