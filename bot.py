@@ -24,7 +24,7 @@ class FlandersBOT(commands.Bot):
         self.logging = None
 
         # Discord channel id used for all error logging
-        self.LOGGING_CHANNEL = 415700137302818836
+        self.LOGGING_CHANNEL = 797662079573557250
         self.DEBUG_LOGGING_CHANNEL = 797656963311075339
 
         # Load config file
