@@ -30,7 +30,7 @@ class TopGG(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.cached_subscribers = set()
+        self.cached_subscribers = {}
 
         # Client for interacting with top.gg API
         self.dblpy = dbl.DBLClient(
@@ -49,10 +49,15 @@ class TopGG(commands.Cog):
     # (Re) Populate cache using entries in subscribers table
     async def cache_subscribers(self):
         self.cached_subscribers.clear()
-        query = '''SELECT user_id FROM subscribers
+        query = '''SELECT user_id, dm_channel_id FROM subscribers
                 '''
         rows = await self.bot.db.fetch(query)
-        self.cached_subscribers.update(map(lambda row: row['user_id'], rows))
+        for row in rows:
+            self.cached_subscribers.update(
+                {
+                    row['user_id']: row['dm_channel_id']
+                }
+            )
 
     # Notify all users on restart
     async def notify_subscribers(self):
@@ -87,23 +92,19 @@ class TopGG(commands.Cog):
 
     # Insert vote into vote history table and thank user for voting
     async def log_and_thank(self, data):
-        await self.bot.db.execute(self.INSERT_QUERY, int(data['user']), data['type'], data['isWeekend'])
-
-        # Get user using id
         user_id = int(data['user'])
-        user = self.bot.get_user(user_id)
+        await self.bot.db.execute(self.INSERT_QUERY, user_id, data['type'], data['isWeekend'])
 
         # Thank if subscribed to notifications
         if user_id in self.cached_subscribers:
-            await user.send('Thanks for voting! You will now be notified when you can vote again in 12 hours.')
+            dm_channel = self.get_dm_channel(user_id)
+            await dm_channel.send('Thanks for voting! You will now be notified when you can vote again in 12 hours.')
 
             # Notify user when they can vote next
             await self.notify_user(user_id, new_vote=True)
 
     # Notify user in 12 hours or whenever they can vote again if they're subscribed
     async def notify_user(self, user_id, new_vote=True):
-        user = self.bot.get_user(user_id)
-
         # Wait time remaining
         seconds_remaining = await self.seconds_until_vote(user_id)
 
@@ -113,7 +114,8 @@ class TopGG(commands.Cog):
 
         # Ensure user still wants to be notified
         if user_id in self.cached_subscribers and new_vote:
-            await user.send('<https://discordbots.org/bot/221609683562135553/vote>\n**You can vote now.**')
+            dm_channel = self.get_dm_channel(user_id)
+            await dm_channel.send('<https://discordbots.org/bot/221609683562135553/vote>\n**You can vote now.**')
 
     # Get seconds remaining until user is able to vote again, returns None if no votes recorded
     async def seconds_until_vote(self, user_id):
@@ -130,6 +132,11 @@ class TopGG(commands.Cog):
 
         else:
             return None
+
+    # Get DM Channel using id from cache using user id
+    def get_dm_channel(self, user_id):
+        dm_channel_id = self.cached_subscribers[user_id]
+        return self.bot.get_channel(dm_channel_id)
 
     # Gets the hours, minutes and seconds remaining using the number of seconds given
     @staticmethod
@@ -202,17 +209,17 @@ class TopGG(commands.Cog):
 
         # DMs are disabled, don't enable notifications
         except discord.Forbidden:
-            await ctx.send('You have DMs disabled, please enable DMs if you\'d like to enable notifications.')
+            await ctx.send('You have DMs disabled, please enable DMs if you\'d like to enable/disable notifications.')
 
         # If DMs are available, add user to reminders list and notify them
         else:
-            query = '''INSERT INTO subscribers (user_id)
-                       VALUES ($1)
+            query = '''INSERT INTO subscribers (user_id, dm_channel_id)
+                       VALUES ($1, $2)
                     '''
             # Insert new subscriber into table, log issue but continue
             # Note: Shouldn't happen unless cache fails or subscriber is inserted into table from elsewhere
             try:
-                await self.bot.db.execute(query, ctx.author.id)
+                await self.bot.db.execute(query, ctx.author.id, ctx.author.dm_channel.id)
 
             except asyncpg.UniqueViolationError as e:
                 if self.bot.logging is not None:

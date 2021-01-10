@@ -58,7 +58,8 @@ CREATE TABLE IF NOT EXISTS prefixes (
 
 -- Create table for storing all voting subscribers
 CREATE TABLE IF NOT EXISTS subscribers (
-    user_id bigint PRIMARY KEY
+    user_id bigint PRIMARY KEY,
+    dm_channel_id bigint NOT NULL
 );
 
 -- Create table for keeping track of command statistics
