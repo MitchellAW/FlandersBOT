@@ -31,7 +31,11 @@ class Events(commands.Cog):
             self.bot.uptime = datetime.utcnow()
 
         # Channel in FlandersBOT server for logging errors to
-        self.bot.logging = self.bot.get_channel(self.bot.LOGGING_CHANNEL)
+        if self.bot.debug_mode:
+            self.bot.logging = self.bot.get_channel(self.bot.DEBUG_LOGGING_CHANNEL)
+
+        else:
+            self.bot.logging = self.bot.get_channel(self.bot.LOGGING_CHANNEL)
 
     # Commands error handler
     @commands.Cog.listener()
