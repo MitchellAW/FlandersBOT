@@ -141,12 +141,15 @@ class Stats(commands.Cog):
         embed.set_author(name=f'{self.bot.user.name} Statistics', url='https://github.com/FlandersBOT',
                          icon_url=self.bot.user.avatar_url)
 
+        # Round latency to 2 decimal places and get milliseconds
+        latency = round(self.bot.latency * 1000, 2)
+
         # Add all statistics
         embed.add_field(name='Bot Owner', value='Mitch#8293', inline=True)
         embed.add_field(name='Server Count', value=str(guild_count), inline=True)
         embed.add_field(name='Total Members', value=str(total_members), inline=True)
         embed.add_field(name='Uptime', value=self.get_uptime(), inline=True)
-        embed.add_field(name='Latency', value=self.bot.latency, inline=True)
+        embed.add_field(name='Latency', value=str(latency) + ' ms', inline=True)
         embed.add_field(name='Commands Used', value=str(self.command_count), inline=True)
         await ctx.send(embed=embed)
 
