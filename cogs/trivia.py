@@ -92,6 +92,66 @@ class Trivia(commands.Cog):
             self.channels_playing.remove(ctx.channel.id)
             await ctx.send('Trivia will terminate at the end of the current round.')
 
+    # Display a users trivia stats
+    @commands.command(aliases=['mystatistics', 'mystats', 'mystat', 'triviastat', 'triviastatistics'])
+    @commands.cooldown(1, 30, BucketType.user)
+    async def triviastats(self, ctx):
+        query = '''SELECT user_id, username, score, wins, losses, correct_answers, 
+                   incorrect_answers, fastest_answer, longest_streak, current_streak
+                   FROM leaderboard
+                   WHERE user_id = $1
+                   '''
+        trivia_stats = await self.bot.db.fetchrow(query, ctx.author.id)
+
+        get_rank = '''SELECT get_rank($1, $2)'''
+
+        if trivia_stats is not None:
+            embed = discord.Embed(color=discord.Color(0x5B00C4))
+            embed.set_author(name=f'Trivia Statistics for {ctx.author}', icon_url=ctx.author.avatar_url)
+
+            # For all trivia statistics, calculate result, get current rank and add all to embed field
+            score = round(trivia_stats['score'], 2)
+            rank = await self.bot.db.fetchval(get_rank, ctx.author.id, 'score')
+            embed.add_field(name=f':trophy: Score (#{rank:,})', value=f'{score:,}', inline=True)
+
+            wins = round(trivia_stats['wins'], 2)
+            rank = await self.bot.db.fetchval(get_rank, ctx.author.id, 'wins')
+            embed.add_field(name=f':first_place: Wins (#{rank:,})', value=f'{wins:,}', inline=True)
+
+            losses = round(trivia_stats['losses'], 2)
+            rank = await self.bot.db.fetchval(get_rank, ctx.author.id, 'losses')
+            embed.add_field(name=f':poop: Losses (#{rank:,})', value=f'{losses:,}', inline=True)
+
+            rank = await self.bot.db.fetchval(get_rank, ctx.author.id, 'correct_answers')
+            correct_answers = round(trivia_stats['correct_answers'], 2)
+            embed.add_field(name=f':white_check_mark: Correct (#{rank:,})', value=f'{correct_answers:,}', inline=True)
+
+            rank = await self.bot.db.fetchval(get_rank, ctx.author.id, 'incorrect_answers')
+            incorrect_answers = round(trivia_stats['incorrect_answers'], 2)
+            embed.add_field(name=f':no_entry: Incorrect (#{rank:,})', value=f'{incorrect_answers:,}', inline=True)
+
+            accuracy = round(correct_answers / (incorrect_answers + correct_answers) * 100.0, 2)
+            embed.add_field(name=f':bow_and_arrow: Accuracy', value=f'{accuracy:,}%', inline=True)
+
+            rank = await self.bot.db.fetchval(get_rank, ctx.author.id, 'fastest_answer')
+            fastest_answer = round(trivia_stats['fastest_answer'] / 1000, 3)
+            embed.add_field(name=f':point_up: Fastest Answer (#{rank:,})', value=f'{fastest_answer:,}s', inline=True)
+
+            rank = await self.bot.db.fetchval(get_rank, ctx.author.id, 'current_streak')
+            current_streak = round(trivia_stats['current_streak'], 2)
+            embed.add_field(name=f':chart_with_upwards_trend: Current Streak (#{rank:,})',
+                            value=f'{current_streak:,}', inline=True)
+
+            rank = await self.bot.db.fetchval(get_rank, ctx.author.id, 'longest_streak')
+            longest_streak = round(trivia_stats['longest_streak'], 2)
+            embed.add_field(name=f':four_leaf_clover: Longest Streak (#{rank:,})',
+                            value=f'{longest_streak:,}', inline=True)
+
+            await ctx.send(embed=embed)
+
+        else:
+            await ctx.send('You have not participated in any trivia.')
+
     # Display the global trivia leaderboard
     @commands.command()
     @commands.cooldown(1, 30, BucketType.channel)
