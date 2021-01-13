@@ -282,10 +282,15 @@ CREATE OR REPLACE FUNCTION end_match() RETURNS TRIGGER AS $BODY$
 		    score = score + (SELECT vote_multiply(user_id, 1000))
 		    WHERE user_id = winner;
 
-		    -- 100 Bonus Points for losing, +1 Loss, 
+		    -- 100 Bonus Points for losing, +1 Loss,
 		    UPDATE leaderboard SET losses = losses + 1,
 		    score = score + (SELECT vote_multiply(user_id, 100))
-		    WHERE user_id != winner;
+		    WHERE user_id != winner AND user_id IN (
+                SELECT DISTINCT user_id FROM answers a
+                INNER JOIN rounds r
+                ON a.round_id = r.round_id
+                WHERE r.match_id = new.match_id
+		    );
 
 		    -- 100 Bonus points for being fastest correct answer in match
 		    UPDATE leaderboard SET score = score + (SELECT vote_multiply(user_id, 100))
