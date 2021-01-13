@@ -189,9 +189,8 @@ class Trivia(commands.Cog):
         ]
 
         # Scoreboard display embed
-        embed = discord.Embed(colour=discord.Colour(0x44981e))
-
-        embed.set_author(name='Trivia Leaderboard', icon_url=self.bot.user.avatar_url)
+        embed = discord.Embed(title='Trivia Leaderboard', colour=discord.Colour(0x44981e))
+        embed.set_thumbnail(url=self.bot.user.avatar_url)
 
         query = 'SELECT COUNT(user_id) FROM leaderboard WHERE privacy = 0'
         leader_count = await self.bot.db.fetchval(query)
