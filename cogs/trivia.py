@@ -10,6 +10,33 @@ from discord.ext.commands import BucketType
 from cogs.trivia_category import FuturamaTrivia
 from cogs.trivia_category import SimpsonsTrivia
 
+TRIVIA_ROLE = 'Trivia Moderator'
+
+
+# If guild has trivia mod role, require users to have role to start matches, otherwise anyone can start matches
+def has_trivia_permissions():
+    def predicate(ctx):
+        # Get custom trivia role from guild and user
+        guild_role = discord.utils.get(ctx.guild.roles, name=TRIVIA_ROLE)
+        user_role = discord.utils.get(ctx.author.roles, name=TRIVIA_ROLE)
+
+        # Get manage messages permission from user
+        manage_messages_perm = discord.utils.get(ctx.author.permissions, name='manage_messages')
+
+        # If guild doesn't have trivia role, then stop command requires manage messages permissions
+        if guild_role is None and ctx.command.qualified_name == 'forcestop':
+            return manage_messages_perm is not None
+
+        # If guild doesn't have trivia role, then trivia can be started by anyone
+        elif guild_role is None:
+            return True
+
+        # If guild has role, trivia role is required to start/stop trivia matches
+        else:
+            return user_role is not None
+
+    return commands.check(predicate)
+
 
 class Trivia(commands.Cog):
     def __init__(self, bot):
@@ -26,6 +53,7 @@ class Trivia(commands.Cog):
     @commands.command(aliases=['strivia', 'simpsontrivia'])
     @commands.cooldown(10, 300, BucketType.channel)
     @commands.bot_has_permissions(add_reactions=True, embed_links=True)
+    @has_trivia_permissions()
     async def simpsonstrivia(self, ctx):
         if ctx.channel.id not in self.channels_playing:
             await self.start_trivia(ctx, SimpsonsTrivia())
@@ -34,6 +62,7 @@ class Trivia(commands.Cog):
     @commands.command(aliases=['ftrivia'])
     @commands.cooldown(10, 300, BucketType.channel)
     @commands.bot_has_permissions(add_reactions=True, embed_links=True)
+    @commands.check(has_trivia_permissions)
     async def futuramatrivia(self, ctx):
         if ctx.channel.id not in self.channels_playing:
             # Start the game
@@ -57,7 +86,7 @@ class Trivia(commands.Cog):
 
     # Allow users with manage server permissions to force stop trivia games
     @commands.command()
-    @commands.has_permissions(manage_messages=True)
+    @has_trivia_permissions()
     async def forcestop(self, ctx):
         if ctx.channel.id in self.channels_playing:
             self.channels_playing.remove(ctx.channel.id)
