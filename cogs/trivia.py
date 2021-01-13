@@ -184,7 +184,7 @@ class Trivia(commands.Cog):
                 "query": "SELECT username, longest_streak AS result "
                          "FROM leaderboard WHERE privacy = 0 "
                          "ORDER BY longest_streak DESC",
-                "category": ":chart_with_upwards_trend: Longest Streak"
+                "category": ":four_leaf_clover: Longest Streak"
             }
         ]
 
