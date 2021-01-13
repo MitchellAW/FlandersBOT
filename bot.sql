@@ -165,6 +165,19 @@ RETURNS int AS $$
 	END;
 $$ LANGUAGE plpgsql;
 
+-- Get the users rank in leaderboard (in case of ties, users share highest rank)
+CREATE OR REPLACE FUNCTION get_rank(p_user_id bigint, column_name varchar(30))
+RETURNS SETOF bigint AS $$
+    BEGIN
+		IF column_name = 'fastest_answer' THEN
+			RETURN QUERY EXECUTE format('SELECT COUNT(user_id) + 1 FROM leaderboard WHERE %I < (SELECT %I FROM leaderboard WHERE user_id = %L)', column_name, column_name, p_user_id);
+
+		ELSE
+			RETURN QUERY EXECUTE format('SELECT COUNT(user_id) + 1 FROM leaderboard WHERE %I > (SELECT %I FROM leaderboard WHERE user_id = %L)', column_name, column_name, p_user_id);
+		END IF;
+    END;
+$$ LANGUAGE plpgsql;
+
 -- Adds the vote xp multiplier to points gained, rounds to nearest 5
 CREATE OR REPLACE FUNCTION vote_multiply(p_user_id bigint, points bigint)
 RETURNS bigint as $$
@@ -262,7 +275,7 @@ CREATE OR REPLACE FUNCTION end_match() RETURNS TRIGGER AS $BODY$
 						    WHERE match_id = new.match_id);
 
 		-- Get number of players that participated
-		player_count int := (SELECT COUNT(DISTINCT user_id) FROM answers a 
+		player_count int := (SELECT COUNT(DISTINCT user_id) FROM answers a
 			             INNER JOIN rounds r
 			             ON a.round_id = r.round_id
 			             WHERE r.match_id = new.match_id);
