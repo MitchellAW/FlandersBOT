@@ -67,7 +67,7 @@ class Simpsons(TVShowCog):
                     await sent.edit(content=generated_url)
 
         except compuglobal.APIPageStatusError as error:
-            await sent.edit(TVShowCog.format_error(error))
+            await sent.edit(content=TVShowCog.format_error(error))
 
         except discord.NotFound:
             pass

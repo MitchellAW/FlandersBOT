@@ -12,8 +12,8 @@ class TVShowCog(commands.Cog):
 
     # Format error to not embed links on page status error
     @staticmethod
-    async def format_error(error):
-        return str(error).replace('https://', '<https://').replace('.com/', '.com/>')
+    def format_error(error):
+        return str(error).replace('http', '<http').replace('.com/', '.com/>')
 
     # Get random or searched screencap based on search parameter and update cached_screencaps
     async def get_screencap(self, ctx, search=None):
@@ -75,7 +75,8 @@ class TVShowCog(commands.Cog):
                 except compuglobal.APIPageStatusError as error:
                     if self.bot.logging is not None:
                         await self.bot.logging.send(error)
-                    await sent.edit(self.format_error(error))
+
+                    await sent.edit(content=self.format_error(error))
 
                 except discord.NotFound:
                     pass
