@@ -106,7 +106,7 @@ class Trivia(commands.Cog):
         get_rank = '''SELECT get_rank($1, $2)'''
 
         if trivia_stats is not None:
-            embed = discord.Embed(color=discord.Color(0x5B00C4))
+            embed = discord.Embed(colour=discord.Colour(0x44981e))
             embed.set_author(name=f'Trivia Statistics for {ctx.author}', icon_url=ctx.author.avatar_url)
 
             # For all trivia statistics, calculate result, get current rank and add all to embed field
@@ -188,8 +188,8 @@ class Trivia(commands.Cog):
             }
         ]
 
-        # Scoreboard display embed TODO: Add colour to discord.Embed()
-        embed = discord.Embed()
+        # Scoreboard display embed
+        embed = discord.Embed(colour=discord.Colour(0x44981e))
 
         embed.set_author(name='Trivia Leaderboard', icon_url=self.bot.user.avatar_url)
 
