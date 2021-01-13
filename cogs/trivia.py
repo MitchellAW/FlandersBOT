@@ -265,7 +265,7 @@ class Trivia(commands.Cog):
         scorers = ''
         top_scorer = top_scorers[0]["username"]
         for scorer in top_scorers[:5]:
-            scorers += f'**{scorer["username"]}**: {str(scorer["correct"])}\n'
+            scorers += f'**<@{scorer["user_id"]}>**: {round(scorer["correct"], 2):,}\n'
 
         # Scoreboard display embed
         embed = discord.Embed(description=f'**Congratulations to the top scorer, {top_scorer} :trophy:**',
@@ -289,7 +289,7 @@ class Trivia(commands.Cog):
 
         scorers = ''
         for scorer in highest_accuracy[:5]:
-            scorers += f'**{scorer["username"]}**: {str(scorer["accuracy"] * 100.0)}%\n'
+            scorers += f'**<@{scorer["user_id"]}>**: {round(scorer["accuracy"] * 100.0, 2):,}%\n'
         embed.add_field(name='*:bow_and_arrow: Highest Accuracy*', value=scorers)
 
         # Fastest Answers (sorted by fastest time ascending)
@@ -306,7 +306,7 @@ class Trivia(commands.Cog):
 
         scorers = '' if len(fastest_answers) > 0 else '---'
         for scorer in fastest_answers[:5]:
-            scorers += f'**{scorer["username"]}**: {str(scorer["fastest_time"]/1000)}s\n'
+            scorers += f'**<@{scorer["user_id"]}>**: {round(scorer["fastest_time"]/1000, 3):,}s\n'
         embed.add_field(name='*:point_up: Fastest Answers*', value=scorers)
 
         # Display the scoreboard
@@ -362,7 +362,7 @@ class Trivia(commands.Cog):
                 scores = ''
                 for row in rows[:5]:
                     scores += (f'**{row["username"]}**: '
-                               f'{str(row["result"])}\n')
+                               f'{round(row["result"], 2):,}\n')
                 embed.add_field(name=stat['category'], value=scores, inline=False)
 
             if len(embed.fields) > 0:
