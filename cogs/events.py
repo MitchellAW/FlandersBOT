@@ -58,18 +58,17 @@ class Events(commands.Cog):
 
             # List all missing permissions
             await ctx.send('⛔ Sorry, I do not have the permissions riddly-required for that command-aroo!\nRequires: ' +
-                           ', '.join(map(str, error.missing_perms)))
+                           ', '.join(map(str, error.missing_perms)), delete_after=30)
 
         # Check for missing permissions
-        elif isinstance(error, commands.MissingPermissions):
+        elif isinstance(error, commands.MissingPermissions) or isinstance(error, commands.errors.CheckFailure):
             await ctx.send('<:xmark:411718670482407424> Sorry, you don\'t have the permissions riddly-required for '
-                           'that command-aroo! ')
+                           'that command-aroo! ', delete_after=10)
 
         # Check if private messages not allowed
         elif isinstance(error, commands.NoPrivateMessage):
             try:
-                await ctx.author.send(
-                    f'{ctx.command} can not be used in Private Messages.')
+                await ctx.author.send(f'{ctx.command} can not be used in Private Messages.')
             except discord.HTTPException:
                 pass
 
