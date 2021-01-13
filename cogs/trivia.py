@@ -21,11 +21,11 @@ def has_trivia_permissions():
         user_role = discord.utils.get(ctx.author.roles, name=TRIVIA_ROLE)
 
         # Get manage messages permission from user
-        manage_messages_perm = discord.utils.get(ctx.author.permissions, name='manage_messages')
+        manage_messages_perm = ctx.author.guild_permissions.manage_messages
 
         # If guild doesn't have trivia role, then stop command requires manage messages permissions
         if guild_role is None and ctx.command.qualified_name == 'forcestop':
-            return manage_messages_perm is not None
+            return manage_messages_perm
 
         # If guild doesn't have trivia role, then trivia can be started by anyone
         elif guild_role is None:
