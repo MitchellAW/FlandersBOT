@@ -92,6 +92,66 @@ class Trivia(commands.Cog):
             self.channels_playing.remove(ctx.channel.id)
             await ctx.send('Trivia will terminate at the end of the current round.')
 
+    # Display the global trivia leaderboard
+    @commands.command()
+    @commands.cooldown(1, 30, BucketType.channel)
+    async def leaderboard(self, ctx):
+        stats = [
+            {
+                "query": "SELECT username, score AS result "
+                         "FROM leaderboard WHERE privacy = 0 "
+                         "ORDER BY score DESC",
+                "category": ":trophy: High Scores"
+            },
+            {
+                "query": "SELECT username, wins AS result "
+                         "FROM leaderboard WHERE privacy = 0 "
+                         "ORDER BY wins DESC",
+                "category": ":first_place: Wins"},
+            {
+                "query": "SELECT username, correct_answers AS result "
+                         "FROM leaderboard WHERE privacy = 0 "
+                         "ORDER BY correct_answers DESC",
+                "category": ":white_check_mark:  Correct Answers"
+            },
+            {
+                "query": "SELECT username, CONCAT(CAST(fastest_answer AS FLOAT) / 1000, 's') AS result "
+                         "FROM leaderboard WHERE privacy = 0 "
+                         "ORDER BY fastest_answer ASC",
+                "category": ":point_up: Fastest Answers"
+            },
+            {
+                "query": "SELECT username, longest_streak AS result "
+                         "FROM leaderboard WHERE privacy = 0 "
+                         "ORDER BY longest_streak DESC",
+                "category": ":chart_with_upwards_trend: Longest Streak"
+            }
+        ]
+
+        # Scoreboard display embed TODO: Add colour to discord.Embed()
+        embed = discord.Embed()
+
+        embed.set_author(name='Trivia Leaderboard', icon_url=self.bot.user.avatar_url)
+
+        query = 'SELECT COUNT(user_id) FROM leaderboard WHERE privacy = 0'
+        leader_count = await self.bot.db.fetchval(query)
+
+        if leader_count >= 1:
+            for stat in stats:
+                rows = await self.bot.db.fetch(stat['query'])
+
+                scores = ''
+                for row in rows[:5]:
+                    scores += f'**{row["username"]}**: '
+                    result = row['result']
+                    if not isinstance(result, str):
+                        result = f'{round(result, 2):,}'
+                    scores += f'{result}\n'
+                embed.add_field(name=stat['category'], value=scores, inline=False)
+
+            if len(embed.fields) > 0:
+                await ctx.send(embed=embed)
+
     # Starts a match of trivia (multiple rounds of questions)
     async def start_trivia(self, ctx, category):
         self.channels_playing.append(ctx.channel.id)
@@ -311,65 +371,6 @@ class Trivia(commands.Cog):
 
         # Display the scoreboard
         await ctx.send(embed=embed)
-
-    # Display the global trivia leaderboard
-    @commands.command()
-    async def leaderboard(self, ctx):
-        stats = [
-            {
-                "query": "SELECT username, score AS result "
-                         "FROM leaderboard WHERE privacy = 0 "
-                         "ORDER BY score DESC",
-                "category": ":trophy: High Scores"
-            },
-            {
-                "query": "SELECT username, wins AS result "
-                         "FROM leaderboard WHERE privacy = 0 "
-                         "ORDER BY wins DESC",
-                "category": ":first_place: Wins"},
-            {
-                "query": "SELECT username, correct_answers AS result "
-                         "FROM leaderboard WHERE privacy = 0 "
-                         "ORDER BY correct_answers DESC",
-                "category": ":white_check_mark:  Correct Answers"
-            },
-            {
-                "query": "SELECT username, CONCAT(CAST(fastest_answer AS FLOAT) / 1000, 's') AS result "
-                         "FROM leaderboard WHERE privacy = 0 "
-                         "ORDER BY fastest_answer ASC",
-                "category": ":point_up: Fastest Answers"
-            },
-            {
-                "query": "SELECT username, longest_streak AS result "
-                         "FROM leaderboard WHERE privacy = 0 "
-                         "ORDER BY longest_streak DESC",
-                "category": ":chart_with_upwards_trend: Longest Streak"
-            }
-        ]
-
-        # Scoreboard display embed TODO: Add colour to discord.Embed()
-        embed = discord.Embed()
-
-        embed.set_author(name='Trivia Leaderboard', icon_url=self.bot.user.avatar_url)
-
-        query = 'SELECT COUNT(user_id) FROM leaderboard WHERE privacy = 0'
-        leader_count = await self.bot.db.fetchval(query)
-
-        if leader_count >= 1:
-            for stat in stats:
-                rows = await self.bot.db.fetch(stat['query'])
-
-                scores = ''
-                for row in rows[:5]:
-                    scores += f'**{row["username"]}**: '
-                    result = row['result']
-                    if not isinstance(result, str):
-                        result = f'{round(result, 2):,}'
-                    scores += f'{result}\n'
-                embed.add_field(name=stat['category'], value=scores, inline=False)
-
-            if len(embed.fields) > 0:
-                await ctx.send(embed=embed)
 
 
 def setup(bot):
