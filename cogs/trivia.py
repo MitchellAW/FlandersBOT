@@ -361,8 +361,11 @@ class Trivia(commands.Cog):
 
                 scores = ''
                 for row in rows[:5]:
-                    scores += (f'**{row["username"]}**: '
-                               f'{round(row["result"], 2):,}\n')
+                    scores += f'**{row["username"]}**: '
+                    result = row['result']
+                    if not isinstance(result, str):
+                        result = f'{round(result, 2):,}'
+                    scores += f'{result}\n'
                 embed.add_field(name=stat['category'], value=scores, inline=False)
 
             if len(embed.fields) > 0:
