@@ -218,7 +218,7 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
 ## Support Server
 If you need any help with FlandersBOT, would like to provide feedback, suggestions or have any other questions regarding FlandersBOT, join the FlandersBOT Support Server on discord:
 
-[<img src="https://discordapp.com/api/guilds/403154226790006784/widget.png?style=shield">](https://discord.gg/xMmxMYg)
+[![FlandersBOT Support](https://discordapp.com/api/guilds/403154226790006784/widget.png?style=banner2)](https://discord.gg/xMmxMYg)
 
 
 ## Credits
