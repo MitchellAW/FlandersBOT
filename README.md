@@ -15,56 +15,6 @@ To invite Flanders to your own discord server and start using it now, [click her
 Thanks to https://discordbots.org/ for listing Flanders!  
 If you like Flanders, help the bot grow by voting [here](https://discordbots.org/bot/221609683562135553/vote)
 
-
-<a href="https://discordbots.org/bot/221609683562135553" >
-  <img src="https://discordbots.org/api/widget/221609683562135553.svg" alt="Discord Music Bot" />
-</a>
-
-## Requirements
-I'd prefer that instead of running an instance of Flanders yourself you'd just [Invite Flanders](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456) to your own server.   
-[Or go ahead anyway.](https://i.imgur.com/mSHi8.jpg)
-
-### Dependencies
-*Requires Python 3.5+*  
-`python3 -m pip install -U -r requirements.txt`
-
-*Utilises the latest version of [discord.py](https://github.com/Rapptz/discord.py) *  
-*Depends upon [CompuGlobal](https://github.com/MitchellAW/CompuGlobal/tree/async)*
-
-*Requires PostgreSQL 9.6+*  
-```sh
-$ sudo apt-get update
-$ sudo apt-get upgrade
-$ sudo apt-get install postgresql
-```  
-
-*Requires Node.js v11.6+ for dbl webhook*
-```sh
-$ npm install dblapi.js
-$ npm install pg
-```  
-
-### Config
-Update settings/config.json with required credentials.
-
-
-## Database Setup
-
-### Create Database
-```sh
-sudo -u postgres psql
-```  
-
-```sql
-CREATE ROLE ned WITH LOGIN PASSWORD '<password>';
-CREATE DATABASE flandersdb OWNER ned;
-```
-
-### Create Tables
-```sh
-$ psql -h 127.0.0.1 -d flandersdb -U ned -f bot.sql
-```  
-
 ## Usage
 The bot commands can be executed using several different methods/prefixes, to minimise clashing with other discord bots. Any command can be prefixed with an @mention, ned or diddly/doodly when you really want to flaunt those Flanders-isms.
 
@@ -219,6 +169,57 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
 If you need any help with Flanders, would like to provide feedback, suggestions or have any other questions regarding Flanders, join the Flanders Support Server on discord:
 
 [![Flanders Support](https://discordapp.com/api/guilds/403154226790006784/widget.png?style=banner2)](https://discord.gg/xMmxMYg)
+
+<a href="https://discordbots.org/bot/221609683562135553" >
+  <img src="https://discordbots.org/api/widget/221609683562135553.svg" alt="Flanders Discord Bot" />
+</a>
+
+## Requirements
+I'd prefer that instead of running an instance of Flanders yourself you'd just [Invite Flanders](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456) to your own server.   
+[Or go ahead anyway.](https://i.imgur.com/mSHi8.jpg)
+
+### Dependencies
+*Requires Python 3.5+*  
+`python3 -m pip install -U -r requirements.txt`
+
+*Utilises the latest version of [discord.py](https://github.com/Rapptz/discord.py) *  
+*Depends upon [CompuGlobal](https://github.com/MitchellAW/CompuGlobal/tree/async)*
+
+*Requires PostgreSQL 9.6+*  
+```sh
+$ sudo apt-get update
+$ sudo apt-get upgrade
+$ sudo apt-get install postgresql
+```  
+
+*Requires Node.js v11.6+ for dbl webhook*
+```sh
+$ npm install dblapi.js
+$ npm install pg
+```  
+
+### Config
+Update settings/config.json with required credentials.
+
+
+## Database Setup
+
+### Create Database
+```sh
+sudo -u postgres psql
+```  
+
+```sql
+CREATE ROLE ned WITH LOGIN PASSWORD '<password>';
+CREATE DATABASE flandersdb OWNER ned;
+```
+
+### Create Tables
+```sh
+$ psql -h 127.0.0.1 -d flandersdb -U ned -f bot.sql
+```  
+
+
 
 
 ## Credits
