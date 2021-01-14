@@ -1,19 +1,19 @@
 ![Flanders](https://github.com/MitchellAW/MitchellAW.github.io/blob/master/images/flanders-bannerBOT.png?raw=true)
 
-# FlandersBOT
+# Flanders
 ### A bot for sharing your favourite references! 
 
 A discord bot with commands surrounding The Simpsons, Futurama, Rick and Morty and more!
 
-FlandersBOT provides commands for The Simpsons, Futurama and Rick and Morty quoting/searching/content. FlandersBOT uses [Frinkiac](https://frinkiac.com/), [Morbotron](https://morbotron.com/) and [Master of All Science](https://masterofallscience.com/) to provide commands for both random and searchable Simpsons, Futurama and Rick and Morty images/gifs with their appropriate quotes embedded.
+Flanders provides commands for The Simpsons, Futurama and Rick and Morty quoting/searching/content. Flanders uses [Frinkiac](https://frinkiac.com/), [Morbotron](https://morbotron.com/) and [Master of All Science](https://masterofallscience.com/) to provide commands for both random and searchable Simpsons, Futurama and Rick and Morty images/gifs with their appropriate quotes embedded.
 
-## Add FlandersBOT to your Discord Server
+## Add Flanders to your Discord Server
 <img align="right" src="https://raw.githubusercontent.com/MitchellAW/MitchellAW.github.io/master/images/flanders-cirlce.png?raw=true" height="256" width="256"></img>
 
-To invite FlandersBOT to your own discord server and start using it now, [click here](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456)
+To invite Flanders to your own discord server and start using it now, [click here](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456)
 
-Thanks to https://discordbots.org/ for listing FlandersBOT!  
-If you like FlandersBOT, help the bot grow by voting [here](https://discordbots.org/bot/221609683562135553/vote)
+Thanks to https://discordbots.org/ for listing Flanders!  
+If you like Flanders, help the bot grow by voting [here](https://discordbots.org/bot/221609683562135553/vote)
 
 
 <a href="https://discordbots.org/bot/221609683562135553" >
@@ -21,7 +21,7 @@ If you like FlandersBOT, help the bot grow by voting [here](https://discordbots.
 </a>
 
 ## Requirements
-I'd prefer that instead of running an instance of FlandersBOT yourself you'd just [invite FlandersBOT](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456) to your own server.   
+I'd prefer that instead of running an instance of Flanders yourself you'd just [Invite Flanders](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456) to your own server.   
 [Or go ahead anyway.](https://i.imgur.com/mSHi8.jpg)
 
 ### Dependencies
@@ -72,7 +72,7 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
 
 **Usage Examples:**
 
-`@FlandersBOT#0680 info`  
+`@Flanders#0680 info`  
 `ned info`  
 `diddly info`  
 `doodly info`  
@@ -105,11 +105,11 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
     </tr>
     <tr>
       <td><b>prefix</b></td>
-      <td>Will post the prefixes FlandersBOT responds to on your server.</td>
+      <td>Will post the prefixes Flanders responds to on your server.</td>
     </tr>
     <tr>
       <td><b>setprefix [prefix]</b></td>
-      <td>Sets a prefix FlandersBOT will respond to on your server. (Manage Server Pemissions)</td>
+      <td>Sets a prefix Flanders will respond to on your server. (Manage Server Pemissions)</td>
     </tr>
     <tr>
       <td><b>feedback</b></td>
@@ -117,7 +117,7 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
     </tr>
     <tr>
       <td><b>stats</b></td>
-      <td>Will post some of FlandersBOT's statistics.</td>
+      <td>Will post some of Flanders's statistics.</td>
     </tr>
     <tr>
       <td><b>notifications</b></td>
@@ -125,11 +125,11 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
     </tr>
     <tr>
       <td><b>epinfo</b></td>
-      <td>Will post episode information on the last post made by FlandersBOT in the channel.</td>
+      <td>Will post episode information on the last post made by Flanders in the channel.</td>
     </tr>
     <tr>
       <td><b>meme [caption]</b></td>
-      <td>Will repost the last gif made by FlandersBOT in the channel with the new caption.</td>
+      <td>Will repost the last gif made by Flanders in the channel with the new caption.</td>
     </tr>
   </table>
 </div>
@@ -216,9 +216,9 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
 
 
 ## Support Server
-If you need any help with FlandersBOT, would like to provide feedback, suggestions or have any other questions regarding FlandersBOT, join the FlandersBOT Support Server on discord:
+If you need any help with Flanders, would like to provide feedback, suggestions or have any other questions regarding Flanders, join the Flanders Support Server on discord:
 
-[![FlandersBOT Support](https://discordapp.com/api/guilds/403154226790006784/widget.png?style=banner2)](https://discord.gg/xMmxMYg)
+[![Flanders Support](https://discordapp.com/api/guilds/403154226790006784/widget.png?style=banner2)](https://discord.gg/xMmxMYg)
 
 
 ## Credits
