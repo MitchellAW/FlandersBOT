@@ -412,8 +412,6 @@ class Trivia(commands.Cog):
         embed = discord.Embed(title='Trivia Scoreboard',
                               description=f'Congratulations to the top scorer, **{top_scorer}**! :trophy:\n',
                               color=category.colour)
-        # embed.set_author(name=f'{answer_count} question{"s" if answer_count > 1 else ""} answered.',
-        #                  icon_url=self.bot.user.avatar_url)
 
         # List scorers
         scorers = ''
