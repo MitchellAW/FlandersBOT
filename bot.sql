@@ -86,6 +86,17 @@ RETURNS boolean AS $$
 	END;
 $$ LANGUAGE plpgsql;
 
+-- Check if user has ever voted for the bot
+CREATE OR REPLACE FUNCTION has_voted(p_user_id bigint)
+RETURNS boolean AS $$
+	BEGIN
+		RETURN (
+			SELECT COUNT(v.voted_at) FROM vote_history v
+			WHERE v.user_id = p_user_id
+		) != 0;
+	END;
+$$ LANGUAGE plpgsql;
+
 -- Get the user_id of user that won match,
 -- Winner is determined based on correct answers, then fastest answer if tie
 CREATE OR REPLACE FUNCTION get_winner(p_match_id bigint)
@@ -182,7 +193,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION vote_multiply(p_user_id bigint, points bigint)
 RETURNS bigint as $$
 	DECLARE
-		vote_multiplier float := (CASE WHEN has_voted_today(p_user_id) THEN 1.5 ELSE 1 END);
+		vote_multiplier float := (CASE WHEN has_voted_today(p_user_id) THEN 2.0 WHEN has_voted(p_user_id) THEN 1.5 ELSE 1 END);
 		new_points int;
 	BEGIN
 		SELECT 5 * ROUND(vote_multiplier * points / 5) INTO new_points;
