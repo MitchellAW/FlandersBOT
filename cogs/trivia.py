@@ -2,6 +2,7 @@ import asyncio
 import json
 import random
 import time
+from datetime import datetime
 
 import discord
 from discord.ext import commands
@@ -235,14 +236,16 @@ class Trivia(commands.Cog):
         match_id = await self.bot.db.fetchval(query, ctx.guild.id, category.category_name)
 
         # Continue playing trivia until exit or out of questions
+        question_counter = 0
         while ctx.channel.id in self.channels_playing and len(questions) > 0:
+            question_counter += 1
             question_data = questions.pop()
-            await self.play_round(ctx, match_id, question_data, trivia, category)
+            await self.play_round(ctx, match_id, question_data, trivia, category, question_counter)
 
         await self.end_match(ctx, match_id, category)
 
     # Starts a round of trivia (single question)
-    async def play_round(self, ctx, match_id, question_data, trivia, category):
+    async def play_round(self, ctx, match_id, question_data, trivia, category, question_counter):
         question_index = trivia.index(question_data)
         question = question_data['question']
         answers = question_data['answers']
@@ -267,7 +270,7 @@ class Trivia(commands.Cog):
                       f'**C:** {answers[2]} \n\n'
                       f'React below to answer!')
 
-        embed = discord.Embed(title=question, colour=category.colour, description=answer_msg)
+        embed = discord.Embed(title=f'#{question_counter}: {question}', colour=category.colour, description=answer_msg)
         embed.set_thumbnail(url=category.thumbnail_url)
 
         # Send the trivia question
@@ -372,6 +375,14 @@ class Trivia(commands.Cog):
                 '''
         await self.bot.db.fetch(query, match_id)
 
+        # Get number of questions answered for match
+        query = '''SELECT COUNT(round_id) FROM rounds
+                   WHERE match_id = $1 AND round_id IN (
+                       SELECT DISTINCT round_id FROM answers
+                   )
+                '''
+        answer_count = await self.bot.db.fetchval(query, match_id)
+
         # Top Scorers (sorted by correct answers descending)
         query = '''SELECT user_id, username, COUNT(CASE WHEN is_correct THEN 1 END) 
                    AS correct FROM answers a
@@ -391,9 +402,11 @@ class Trivia(commands.Cog):
         top_scorer = top_scorers[0]["username"]
 
         # Scoreboard display embed
-        embed = discord.Embed(description=f'Congratulations to the top scorer, **{top_scorer}** :trophy:',
+        embed = discord.Embed(title='Trivia Scoreboard',
+                              description=f'Congratulations to the top scorer, **{top_scorer}**! :trophy:\n',
                               color=category.colour)
-        embed.set_author(name='Trivia Scoreboard', icon_url=self.bot.user.avatar_url)
+        # embed.set_author(name=f'{answer_count} question{"s" if answer_count > 1 else ""} answered.',
+        #                  icon_url=self.bot.user.avatar_url)
 
         # List scorers
         scorers = ''
@@ -442,6 +455,8 @@ class Trivia(commands.Cog):
                         value=f'*Enjoying {category.category_name} trivia? '
                               f'[Vote for {self.bot.user.name} here!](https://top.gg/bot/{self.bot.user.id}/vote)*',
                         inline=False)
+
+        embed.set_footer(text=f'{answer_count} question{"s" if answer_count > 1 else ""} answered.')
 
         # Display the scoreboard
         await ctx.send(embed=embed)
