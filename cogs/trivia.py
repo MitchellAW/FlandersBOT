@@ -215,6 +215,13 @@ class Trivia(commands.Cog):
                     scores += f'{result}\n'
                 embed.add_field(name=stat['category'], value=scores, inline=False)
 
+            # Display footer for trivia showing vote benefits
+            embed.add_field(name='\u200b',
+                            value=f'*Want 2x bonus score for 24 hours? '
+                                  f'[Vote for {self.bot.user.name} here!]'
+                                  f'(https://top.gg/bot/{self.bot.user.id}/vote)*',
+                            inline=False)
+
             if len(embed.fields) > 0:
                 await ctx.send(embed=embed)
 
