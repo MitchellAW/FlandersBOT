@@ -177,7 +177,8 @@ class General(commands.Cog):
     @commands.command(aliases=['github', 'repo'])
     @commands.cooldown(1, 3, BucketType.user)
     async def source(self, ctx):
-        await ctx.send('Github Repo Source: <https://github.com/MitchellAW/FlandersBOT>')
+        await ctx.send('Github Repository: <https://github.com/MitchellAW/FlandersBOT>\n'
+                       'If you like the project, consider giving the riddly-repo a star! :star: ')
 
     # Display information/news regarding the last update
     @commands.command(aliases=['news'])
