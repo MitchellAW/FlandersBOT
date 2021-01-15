@@ -381,18 +381,20 @@ class Trivia(commands.Cog):
         if len(top_scorers) == 0:
             return
 
-        scorers = ''
+        # Get top scorer
         top_scorer = top_scorers[0]["username"]
+
+        # Scoreboard display embed
+        embed = discord.Embed(description=f'Congratulations to the top scorer, **{top_scorer}** :trophy:',
+                              color=category.colour)
+        embed.set_author(name='Trivia Scoreboard', icon_url=self.bot.user.avatar_url)
+
+        # List scorers
+        scorers = ''
         for scorer in top_scorers[:5]:
             scorers += f'**{scorer["username"]}**: {round(scorer["correct"], 2):,}\n'
 
-        # Scoreboard display embed
-        embed = discord.Embed(description=f'**Congratulations to the top scorer, {top_scorer} :trophy:**',
-                              color=category.colour)
-
-        embed.set_author(name='Trivia Scoreboard', icon_url=self.bot.user.avatar_url)
-
-        embed.add_field(name='*:medal:Correct Answers*', value=scorers)
+        embed.add_field(name='\u200b\n*:medal:Correct Answers*', value=scorers)
 
         # Highest Accuracy (sorted by accuracy descending)
         query = '''SELECT user_id, username, 
@@ -409,7 +411,8 @@ class Trivia(commands.Cog):
         scorers = ''
         for scorer in highest_accuracy[:5]:
             scorers += f'**{scorer["username"]}**: {round(scorer["accuracy"] * 100.0, 2):,}%\n'
-        embed.add_field(name='*:bow_and_arrow: Highest Accuracy*', value=scorers)
+
+        embed.add_field(name='\u200b\n*:bow_and_arrow: Highest Accuracy*', value=scorers)
 
         # Fastest Answers (sorted by fastest time ascending)
         query = '''SELECT user_id, username,
@@ -425,8 +428,14 @@ class Trivia(commands.Cog):
 
         scorers = '' if len(fastest_answers) > 0 else '---'
         for scorer in fastest_answers[:5]:
-            scorers += f'**{scorer["username"]}**: {round(scorer["fastest_time"]/1000, 3):,}s\n'
-        embed.add_field(name='*:point_up: Fastest Answers*', value=scorers)
+            scorers += f'**{scorer["username"]}**: {round(scorer["fastest_time"] / 1000, 3):,}s\n'
+        embed.add_field(name='\u200b\n*:point_up: Fastest Answers*', value=scorers)
+
+        # Display footer for trivia
+        embed.add_field(name='\u200b',
+                        value=f'*Enjoying {category.category_name} trivia? '
+                              f'[Vote for {self.bot.user.name} here!](https://top.gg/bot/{self.bot.user.id}/vote)*',
+                        inline=False)
 
         # Display the scoreboard
         await ctx.send(embed=embed)
