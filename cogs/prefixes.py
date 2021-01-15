@@ -136,7 +136,7 @@ class Prefixes(commands.Cog):
         elif ctx.guild.id not in self.cached_prefixes:
             await ctx.send('This server does not have any custom prefixes to remove.')
 
-        elif old_prefix not in self.cached_prefixes[ctx.guild.id]:
+        elif old_prefix.lower() not in self.cached_prefixes[ctx.guild.id]:
             await ctx.send(f'This server does not have `{old_prefix}` as a custom prefix.\n'
                            f'Use `ned prefix` for more info.')
 
@@ -146,7 +146,7 @@ class Prefixes(commands.Cog):
                     '''
 
             await self.bot.db.execute(query, ctx.guild.id, old_prefix)
-            await ctx.send(f'Removed {old_prefix} as a custom prefix.')
+            await ctx.send(f'Removed {old_prefix.lower()} as a custom prefix.')
             await self.cache_prefixes()
 
     # Allows removal of all custom server command prefixes
