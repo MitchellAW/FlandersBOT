@@ -49,6 +49,28 @@ class Owner(commands.Cog):
         message = tabulate(command_data, headers=['Command Name', 'Count'], tablefmt='presto', colalign=('right',))
         await ctx.send(f'```{message}```')
 
+    # Get the number of commands executed in last month that weren't in support server
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def newstats(self, ctx):
+        # Get command counts ordered alphabetically
+        query = '''SELECT command, COUNT(command) AS command_count FROM command_history
+                   WHERE failed = false AND guild_id != 403154226790006784 AND used_at BETWEEN (
+                       NOW() AT time zone 'utc'
+                   ) - INTERVAL '30 DAYS' AND (
+                       NOW() AT time zone 'utc'
+                   ) 
+                   GROUP BY command
+                   ORDER BY command
+                '''
+
+        rows = await self.bot.db.fetch(query)
+
+        # Display each command stats on separate line and format using tabulate
+        command_data = map(lambda row: [row['command'], row['command_count']], rows)
+        message = tabulate(command_data, headers=['Command Name', 'Count'], tablefmt='presto', colalign=('right',))
+        await ctx.send(f'```{message}```')
+
     # Loads a cog (requires dot path)
     @commands.command(hidden=True)
     @commands.is_owner()
