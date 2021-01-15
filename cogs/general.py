@@ -79,7 +79,7 @@ __**INFO**__
 Framework: Discord.py (version={discord.__version__})
 Author: <@210898009242861568> (Discord)
 Support Server: <https://discord.gg/xMmxMYg>
-Invite URL: <https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456>
+Invite URL: <https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=281664>
 GitHub Source: <https://github.com/MitchellAW/FlandersBOT>
 If you'd like to hel-diddly-elp me grow in popularity, use `ned vote`
 '''
@@ -171,7 +171,7 @@ class General(commands.Cog):
     async def invite(self, ctx):
         await self.dm_author(ctx, 'You can add me to your own server using the link below:\n'
                                   f'<https://discordapp.com/oauth2/authorize?client_id={self.bot.user.id}'
-                                  '&scope=bot&permissions=19456>')
+                                  '&scope=bot&permissions=281664>')
 
     # Sends url to FlandersBOT github repo
     @commands.command(aliases=['github', 'repo'])
