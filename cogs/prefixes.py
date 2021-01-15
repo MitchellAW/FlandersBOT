@@ -82,7 +82,7 @@ class Prefixes(commands.Cog):
         await ctx.send(message)
 
     # Allows for a single custom prefix per-guild
-    @commands.command(aliases=['add-prefix'])
+    @commands.command(aliases=['add-prefix', 'setprefix', 'set-prefix'])
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     @commands.cooldown(3, 60, BucketType.guild)
