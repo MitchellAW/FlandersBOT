@@ -93,14 +93,14 @@ class Trivia(commands.Cog):
             await ctx.send('Trivia will terminate at the end of the current round.')
 
     # Display a users trivia stats
-    @commands.command(aliases=['mystatistics', 'mystats', 'mystat', 'triviastat', 'triviastatistics'])
+    @commands.command(aliases=['mystatistics', 'mystat', 'triviastat', 'triviastats', 'triviastatistics'])
     @commands.cooldown(1, 30, BucketType.user)
-    async def triviastats(self, ctx):
+    async def mystats(self, ctx):
         query = '''SELECT user_id, username, score, wins, losses, correct_answers, 
                    incorrect_answers, fastest_answer, longest_streak, current_streak
                    FROM leaderboard
                    WHERE user_id = $1
-                   '''
+                '''
         trivia_stats = await self.bot.db.fetchrow(query, ctx.author.id)
 
         get_rank = '''SELECT get_rank($1, $2)'''
@@ -146,6 +146,12 @@ class Trivia(commands.Cog):
             longest_streak = round(trivia_stats['longest_streak'], 2)
             embed.add_field(name=f':four_leaf_clover: Longest Streak (#{rank:,})',
                             value=f'{longest_streak:,}', inline=True)
+
+            # Display footer for trivia showing vote benefits
+            embed.add_field(name='\u200b',
+                            value=f'*Want 2x bonus score for 24 hours? '
+                                  f'[Vote for {self.bot.user.name} here!](https://top.gg/bot/{self.bot.user.id}/vote)*',
+                            inline=False)
 
             await ctx.send(embed=embed)
 
