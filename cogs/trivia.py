@@ -390,6 +390,13 @@ class Trivia(commands.Cog):
                 '''
         answer_count = await self.bot.db.fetchval(query, match_id)
 
+        query = '''SELECT COUNT(DISTINCT user_id) FROM answers a
+                   INNER JOIN rounds r
+                   ON a.round_id = r.round_id
+                   WHERE r.match_id = $1
+                '''
+        participant_count = await self.bot.db.fetchval(query, match_id)
+
         # Top Scorers (sorted by correct answers descending)
         query = '''SELECT user_id, username, COUNT(CASE WHEN is_correct THEN 1 END) 
                    AS correct FROM answers a
@@ -461,7 +468,8 @@ class Trivia(commands.Cog):
                               f'[Vote for {self.bot.user.name} here!](https://top.gg/bot/{self.bot.user.id}/vote)*',
                         inline=False)
 
-        embed.set_footer(text=f'{answer_count} question{"s" if answer_count > 1 else ""} answered.')
+        embed.set_footer(text=f'{participant_count} participant{"s" if participant_count > 1 else ""}, '
+                              f'{answer_count} question{"s" if answer_count > 1 else ""} answered.')
 
         # Display the scoreboard
         await ctx.send(embed=embed)
