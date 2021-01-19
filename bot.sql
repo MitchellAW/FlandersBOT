@@ -176,6 +176,19 @@ RETURNS int AS $$
 	END;
 $$ LANGUAGE plpgsql;
 
+-- Gets a users current level based on their score
+CREATE OR REPLACE FUNCTION get_participant_count(p_match_id bigint)
+RETURNS int AS $$
+	BEGIN
+	    RETURN (
+	        SELECT COUNT(DISTINCT user_id) FROM answers a
+            INNER JOIN rounds r
+            ON a.round_id = r.round_id
+            WHERE r.match_id = p_match_id
+	    );
+	END;
+$$ LANGUAGE plpgsql;
+
 -- Get the users rank in leaderboard (in case of ties, users share highest rank)
 CREATE OR REPLACE FUNCTION get_rank(p_user_id bigint, column_name varchar(30))
 RETURNS SETOF bigint AS $$

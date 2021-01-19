@@ -93,6 +93,33 @@ class Trivia(commands.Cog):
             self.channels_playing.remove(ctx.channel.id)
             await ctx.send('Trivia will terminate at the end of the current round.')
 
+    # Show the scoreboard for the latest match this guild has completed
+    @commands.command()
+    @commands.cooldown(1, 60, BucketType.channel)
+    @has_trivia_permissions()
+    async def scoreboard(self, ctx):
+        # Get latest match for guild
+        query = '''SELECT match_id, trivia_category FROM matches
+                   WHERE guild_id = $1 AND is_complete = true AND (
+                       SELECT get_participant_count(match_id)
+                   ) > 0
+                   ORDER BY match_id DESC
+                   LIMIT 1
+                '''
+        match = await self.bot.db.fetchrow(query, ctx.guild.id)
+
+        # Check if guild has participated
+        if match is not None:
+            category = SimpsonsTrivia()
+            if match['trivia_category'] == 'futurama':
+                category = FuturamaTrivia()
+
+            # Show scoreboard
+            await self.show_scoreboard(ctx, match['match_id'], category)
+
+        else:
+            await ctx.send('No previous match found.')
+
     # Display a users trivia stats
     @commands.command(aliases=['mystatistics', 'mystat', 'triviastat', 'triviastats', 'triviastatistics'])
     @commands.cooldown(1, 30, BucketType.user)
@@ -249,7 +276,12 @@ class Trivia(commands.Cog):
             question_data = questions.pop()
             await self.play_round(ctx, match_id, question_data, trivia, category, question_counter)
 
-        await self.end_match(ctx, match_id, category)
+        # Set the match as complete (Triggers leaderboard stat updates)
+        query = '''UPDATE matches SET is_complete = true
+                       WHERE match_id = $1
+                    '''
+        await self.bot.db.fetch(query, match_id)
+        await self.show_scoreboard(ctx, match_id, category)
 
     # Starts a round of trivia (single question)
     async def play_round(self, ctx, match_id, question_data, trivia, category, question_counter):
@@ -384,13 +416,8 @@ class Trivia(commands.Cog):
                     '''
             await self.bot.db.fetch(query, answer['username'], answer['user_id'])
 
-    async def end_match(self, ctx, match_id, category):
-        # Set the match as complete (Triggers leaderboard stat updates)
-        query = '''UPDATE matches SET is_complete = true
-                   WHERE match_id = $1
-                '''
-        await self.bot.db.fetch(query, match_id)
-
+    # Show an embed scoreboard for the given match_id
+    async def show_scoreboard(self, ctx, match_id, category):
         # Get number of questions answered for match
         query = '''SELECT COUNT(round_id) FROM rounds
                    WHERE match_id = $1 AND round_id IN (
