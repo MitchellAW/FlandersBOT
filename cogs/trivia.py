@@ -284,9 +284,18 @@ class Trivia(commands.Cog):
         question = await ctx.send(embed=embed, delete_after=self.TIMER_DURATION + 3)
 
         # Add the answer react boxes
-        await question.add_reaction('🇦')
-        await question.add_reaction('🇧')
-        await question.add_reaction('🇨')
+        try:
+            await question.add_reaction('🇦')
+            await question.add_reaction('🇧')
+            await question.add_reaction('🇨')
+
+        # Reaction permission removed after starting trivia
+        except discord.errors.Forbidden:
+            await question.delete()
+            await ctx.send('⛔ Sorry, I do not have the permissions riddly-required to continue!\n'
+                           'Requires: Add Reactions')
+            self.channels_playing.remove(ctx.channel.id)
+            return
 
         # Check for confirming a valid answer was made (A, B or C)
         def is_answer(reaction, user):
