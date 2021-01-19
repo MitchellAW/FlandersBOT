@@ -83,14 +83,19 @@ class Events(commands.Cog):
             paginator = commands.Paginator()
             if self.bot.logging is not None:
                 paginator.add_line(f'Command: {ctx.command.qualified_name}\n{error}')
-
                 for line in error_traceback:
-                    paginator.add_line(line)
+
+                    # Add traceback line in chunks if exceeds maximum page size of 1900
+                    if len(line) > 1900:
+                        max_page_size = 1900
+                        for i in range(0, len(line), max_page_size):
+                            paginator.add_line(line[i:i + max_page_size])
+
+                    else:
+                        paginator.add_line(line)
 
                 for page in paginator.pages:
                     await self.bot.logging.send(page)
-
-
 
     # Post guild count to update count for bot_listing sites
     async def update_guild_counts(self):
