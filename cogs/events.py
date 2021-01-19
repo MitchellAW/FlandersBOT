@@ -76,6 +76,9 @@ class Events(commands.Cog):
             # Send error traceback to logging channel
             error_traceback = traceback.format_exception(type(error), error, error.__traceback__)
 
+            # Print error traceback to console
+            traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+
             # Fill paginator with error traceback
             paginator = commands.Paginator()
             if self.bot.logging is not None:
@@ -87,8 +90,7 @@ class Events(commands.Cog):
                 for page in paginator.pages:
                     await self.bot.logging.send(page)
 
-            # Print error traceback to console
-            traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+
 
     # Post guild count to update count for bot_listing sites
     async def update_guild_counts(self):
