@@ -73,16 +73,18 @@ class Events(commands.Cog):
                 pass
 
         else:
-            # Send error traceback to logging channel
-            error_traceback = traceback.format_exception(type(error), error, error.__traceback__)
+            # Get timestamp of error
+            error_at = datetime.utcnow().strftime('%y-%m-%d %H:%M:%S')
 
-            # Print error traceback to console
+            # Print command error info and error traceback to console
+            print(f'[{error_at}] Command: {ctx.command.qualified_name}', file=sys.stderr)
+            error_traceback = traceback.format_exception(type(error), error, error.__traceback__)
             traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
             # Fill paginator with error traceback
             paginator = commands.Paginator()
             if self.bot.logging is not None:
-                paginator.add_line(f'Command: {ctx.command.qualified_name}\n{error}')
+                paginator.add_line(f'[{error_at}] Command: {ctx.command.qualified_name}\n{error}')
                 for line in error_traceback:
 
                     # Add traceback line in chunks if exceeds maximum page size of 1900
@@ -94,6 +96,7 @@ class Events(commands.Cog):
                     else:
                         paginator.add_line(line)
 
+                # Send error traceback to logging channel
                 for page in paginator.pages:
                     await self.bot.logging.send(page)
 
