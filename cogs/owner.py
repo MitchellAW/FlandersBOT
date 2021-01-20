@@ -138,11 +138,11 @@ class Owner(commands.Cog):
     @commands.bot_has_permissions(attach_files=True)
     async def guildlist(self, ctx):
         with open('cogs/data/guildlist.csv', 'w') as guild_list:
-            guild_list.write('Server Name,# of Users,Region,Features\n')
+            guild_list.write('Server ID,Server Name,# of Users,Region,Features\n')
             for guild in self.bot.guilds:
 
                 # Write to csv file (guild name, total member count, region and features)
-                guild_list.write(f'"{guild.name}",{guild.member_count},{guild.region},{guild.features}\n')
+                guild_list.write(f'{guild.id},"{guild.name}",{guild.member_count},{guild.region},{guild.features}\n')
 
         await ctx.send(file=discord.File('cogs/data/guildlist.csv'))
 
