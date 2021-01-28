@@ -1,3 +1,4 @@
+import re
 import sys
 import traceback
 from datetime import datetime
@@ -15,12 +16,28 @@ class Events(commands.Cog):
         self.status_index = 0
         self.status_formats = ['Ned help | {} Servers', 'Ned vote | {} Servers']
 
+        # Discord channel ids used for all error logging
+        self.LOGGING_CHANNEL = 797662079573557250
+        self.DEBUG_LOGGING_CHANNEL = 797656963311075339
+
         # Start task for cycling between status formats
         self.cycle_status_format.start()
+
+        # Load logging channel for error handling
+        self.bot.loop.create_task(self.configure_logging())
 
     # If cog is unloaded, cancel task for cycling between status formats
     def cog_unload(self):
         self.cycle_status_format.cancel()
+
+    # Load logging channels for error handling
+    async def configure_logging(self):
+        await self.bot.wait_until_ready()
+        if self.bot.debug_mode:
+            self.bot.logging = self.bot.get_channel(self.DEBUG_LOGGING_CHANNEL)
+
+        else:
+            self.bot.logging = self.bot.et_channel(self.LOGGING_CHANNEL)
 
     # Print bot information, update status and set uptime when bot is ready
     @commands.Cog.listener()
@@ -29,13 +46,6 @@ class Events(commands.Cog):
         print(f'Client ID: {self.bot.user.id}')
         if not hasattr(self, 'uptime'):
             self.bot.uptime = datetime.utcnow()
-
-        # Channel in FlandersBOT server for logging errors to
-        if self.bot.debug_mode:
-            self.bot.logging = self.bot.get_channel(self.bot.DEBUG_LOGGING_CHANNEL)
-
-        else:
-            self.bot.logging = self.bot.get_channel(self.bot.LOGGING_CHANNEL)
 
     # Commands error handler
     @commands.Cog.listener()
@@ -61,16 +71,13 @@ class Events(commands.Cog):
                            ', '.join(map(str, error.missing_perms)), delete_after=30)
 
         # Check for missing permissions
-        elif isinstance(error, commands.MissingPermissions) or isinstance(error, commands.errors.CheckFailure):
+        elif isinstance(error, (commands.MissingPermissions, commands.errors.CheckFailure)):
             await ctx.send('<:xmark:411718670482407424> Sorry, you don\'t have the permissions riddly-required for '
                            'that command-aroo! ', delete_after=10)
 
         # Check if private messages not allowed
         elif isinstance(error, commands.NoPrivateMessage):
-            try:
-                await ctx.author.send(f'{ctx.command} can not be used in Private Messages.')
-            except discord.HTTPException:
-                pass
+            await ctx.author.send(f'{ctx.command} can not be used in Private Messages.')
 
         else:
             # Get timestamp of error
@@ -78,27 +85,24 @@ class Events(commands.Cog):
 
             # Print command error info and error traceback to console
             print(f'[{error_at}] Command: {ctx.command.qualified_name}', file=sys.stderr)
-            error_traceback = traceback.format_exception(type(error), error, error.__traceback__)
             traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
             # Fill paginator with error traceback
+            error_traceback = traceback.format_exception(type(error), error, error.__traceback__)
             paginator = commands.Paginator()
-            if self.bot.logging is not None:
-                paginator.add_line(f'[{error_at}] Command: {ctx.command.qualified_name}\n{error}')
-                for line in error_traceback:
+            error_details = f'[{error_at}] Command: {ctx.command.qualified_name}\n{error}'
 
-                    # Add traceback line in chunks if exceeds maximum page size of 1900
-                    if len(line) > 1900:
-                        max_page_size = 1900
-                        for i in range(0, len(line), max_page_size):
-                            paginator.add_line(line[i:i + max_page_size])
+            # Add error details in chunks of max paginator size
+            for line in re.findall(f'.{{1,{paginator.max_size - 50}}}', error_details, flags=re.S):
+                paginator.add_line(line)
 
-                    else:
-                        paginator.add_line(line)
+            # Add traceback line in chunks of max paginator size
+            for line in re.findall(f'.{{1, {paginator.max_size - 50}}}', str(error_traceback), flags=re.S):
+                paginator.add_line(line)
 
-                # Send error traceback to logging channel
-                for page in paginator.pages:
-                    await self.bot.logging.send(page)
+            # Send error traceback to logging channel
+            for page in paginator.pages:
+                await self.bot.logging.send(page)
 
     # Post guild count to update count for bot_listing sites
     async def update_guild_counts(self):

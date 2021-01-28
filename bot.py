@@ -19,13 +19,6 @@ class FlandersBOT(commands.Bot):
         self.cached_screencaps = {}
         self.reminders = []
         self.uptime = datetime.utcnow()
-        self.db = None
-        self.db_conn = None
-        self.logging = None
-
-        # Discord channel id used for all error logging
-        self.LOGGING_CHANNEL = 797662079573557250
-        self.DEBUG_LOGGING_CHANNEL = 797656963311075339
 
         # Load config file
         with open('settings/config.json', 'r') as config_file:
