@@ -30,9 +30,6 @@ class TVShowCog(commands.Cog):
             )
 
         except compuglobal.APIPageStatusError as error:
-            if self.bot.logging is not None:
-                await self.bot.logging.send(error)
-
             await ctx.send(self.format_error(error))
 
         except compuglobal.NoSearchResultsFound as error:
@@ -73,9 +70,6 @@ class TVShowCog(commands.Cog):
                     await sent.edit(content=generated_url)
 
                 except compuglobal.APIPageStatusError as error:
-                    if self.bot.logging is not None:
-                        await self.bot.logging.send(error)
-
                     await sent.edit(content=self.format_error(error))
 
                 except discord.NotFound:
