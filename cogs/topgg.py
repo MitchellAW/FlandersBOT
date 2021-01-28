@@ -216,14 +216,8 @@ class TopGG(commands.Cog):
             query = '''INSERT INTO subscribers (user_id, dm_channel_id)
                        VALUES ($1, $2)
                     '''
-            # Insert new subscriber into table, log issue but continue
-            # Note: Shouldn't happen unless cache fails or subscriber is inserted into table from elsewhere
-            try:
-                await self.bot.db.execute(query, ctx.author.id, ctx.author.dm_channel.id)
-
-            except asyncpg.UniqueViolationError as e:
-                if self.bot.logging is not None:
-                    await self.bot.logging.send(str(e))
+            # Insert new subscriber into table
+            await self.bot.db.execute(query, ctx.author.id, ctx.author.dm_channel.id)
 
             # Cache new subscriber
             await self.cache_subscribers()
