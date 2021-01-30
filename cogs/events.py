@@ -37,7 +37,7 @@ class Events(commands.Cog):
             self.bot.logging = self.bot.get_channel(self.DEBUG_LOGGING_CHANNEL)
 
         else:
-            self.bot.logging = self.bot.et_channel(self.LOGGING_CHANNEL)
+            self.bot.logging = self.bot.get_channel(self.LOGGING_CHANNEL)
 
     # Print bot information, update status and set uptime when bot is ready
     @commands.Cog.listener()
