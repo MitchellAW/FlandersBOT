@@ -178,7 +178,7 @@ class Trivia(commands.Cog):
             # Display footer for trivia showing vote benefits
             embed.add_field(name='\u200b',
                             value=f'*Want 2x bonus score for 24 hours? '
-                                  f'[Vote for {self.bot.user.name} here!](https://top.gg/bot/{self.bot.user.id}/vote)*',
+                            f'[Vote for {self.bot.user.name} here!](https://top.gg/bot/{self.bot.user.id}/vote)*',
                             inline=False)
 
             await ctx.send(embed=embed)
@@ -245,8 +245,8 @@ class Trivia(commands.Cog):
             # Display footer for trivia showing vote benefits
             embed.add_field(name='\u200b',
                             value=f'*Want 2x bonus score for 24 hours? '
-                                  f'[Vote for {self.bot.user.name} here!]'
-                                  f'(https://top.gg/bot/{self.bot.user.id}/vote)*',
+                            f'[Vote for {self.bot.user.name} here!]'
+                            f'(https://top.gg/bot/{self.bot.user.id}/vote)*',
                             inline=False)
 
             if len(embed.fields) > 0:
@@ -501,11 +501,11 @@ class Trivia(commands.Cog):
         # Display footer for trivia
         embed.add_field(name='\u200b',
                         value=f'*Enjoying {category.category_name} trivia? '
-                              f'[Vote for {self.bot.user.name} here!](https://top.gg/bot/{self.bot.user.id}/vote)*',
+                        f'[Vote for {self.bot.user.name} here!](https://top.gg/bot/{self.bot.user.id}/vote)*',
                         inline=False)
 
         embed.set_footer(text=f'{participant_count} participant{"s" if participant_count > 1 else ""}, '
-                              f'{answer_count} question{"s" if answer_count > 1 else ""} answered.')
+                         f'{answer_count} question{"s" if answer_count > 1 else ""} answered.')
 
         # Display the scoreboard
         await ctx.send(embed=embed)

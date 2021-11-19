@@ -14,7 +14,7 @@ class Futurama(TVShowCog):
     @commands.command(aliases=['futuramagif', 'fgif', 'morbotron', 'morbo'])
     @commands.cooldown(1, 3, BucketType.channel)
     @commands.guild_only()
-    async def futurama(self, ctx, *, search_terms: str=None):
+    async def futurama(self, ctx, *, search_terms: str = None):
         # Handle possible custom captions
         if search_terms is not None and ' | ' in search_terms:
             args = search_terms.split(' | ', 1)

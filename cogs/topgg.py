@@ -203,7 +203,7 @@ class TopGG(commands.Cog):
             else:
                 hours, minutes, seconds = self.time_until_vote(seconds_remaining)
                 message += f'**You will be notified when you can vote again in: {hours} hours, {minutes} minutes, '\
-                           f'and {seconds} seconds.**'
+                    f'and {seconds} seconds.**'
 
             await ctx.author.send(message)
 
