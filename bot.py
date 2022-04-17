@@ -40,7 +40,7 @@ class FlandersBOT(commands.Bot):
 
         # Load all bot extensions from cogs folder
         for file in os.listdir("cogs"):
-            if file.endswith(".py"):
+            if file.endswith(".py") and not file.startswith('_'):
                 extension = file[:-3]
 
                 try:

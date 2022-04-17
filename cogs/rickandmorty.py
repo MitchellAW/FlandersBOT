@@ -2,7 +2,7 @@ from compuglobal.aio import MasterOfAllScience
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
-from cogs.tvshows import TVShowCog
+from cogs._tvshows import TVShowCog
 
 
 class RickAndMorty(TVShowCog):

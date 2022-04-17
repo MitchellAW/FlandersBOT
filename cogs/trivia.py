@@ -8,8 +8,8 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import BucketType
 
-from cogs.trivia_category import FuturamaTrivia
-from cogs.trivia_category import SimpsonsTrivia
+from cogs._trivia_category import FuturamaTrivia
+from cogs._trivia_category import SimpsonsTrivia
 
 TRIVIA_ROLE = 'Trivia Moderator'
 
