@@ -2,7 +2,7 @@ import asyncio
 from datetime import datetime
 
 import asyncpg
-import dbl
+import topgg
 import discord
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
@@ -33,7 +33,7 @@ class TopGG(commands.Cog):
         self.cached_subscribers = {}
 
         # Client for interacting with top.gg API
-        self.dblpy = dbl.DBLClient(
+        self.dblpy = topgg.DBLClient(
             self.bot,
             self.bot.config['dbl_token'],
             webhook_auth=self.bot.config['webhook']['webhookAuth'],
@@ -151,7 +151,7 @@ class TopGG(commands.Cog):
     async def on_dbl_vote(self, data):
         await self.log_and_thank(data)
 
-    # Event triggered for test upvotes, logs vote and thanks user
+    # # Event triggered for test upvotes, logs vote and thanks user
     @commands.Cog.listener()
     async def on_dbl_test(self, data):
         await self.log_and_thank(data)

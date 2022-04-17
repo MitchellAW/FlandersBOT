@@ -1,6 +1,6 @@
-aiohttp>=3.6.0,<3.8.0
+aiohttp
 asyncpg
-compuglobal>=0.2.5
-dblpy
-discord.py
+compuglobal>=0.2.6
+topggpy
+git+https://github.com/Rapptz/discord.py
 tabulate
