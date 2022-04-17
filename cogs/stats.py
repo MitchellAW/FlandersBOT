@@ -18,7 +18,7 @@ class Stats(commands.Cog):
 
         # Insert command updates in batches to prevent spam causing excessive inserts
         self._command_batch = []
-        self._batch_lock = asyncio.Lock(loop=self.bot.loop)
+        self._batch_lock = asyncio.Lock()
         self.batch_insert_loop.add_exception_type(asyncpg.PostgresConnectionError)
         self.batch_insert_loop.start()
 
