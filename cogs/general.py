@@ -158,7 +158,7 @@ class General(commands.Cog):
             embed = discord.Embed(title=f'📫 Feedback from: {ctx.author} ({ctx.author.id})',
                                   colour=discord.Colour(0x44981e), description=f'```{message}```')
 
-            embed.set_author(name=ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
+            embed.set_author(name=ctx.message.author.name, icon_url=ctx.message.author.avatar)
             await feedback_channel.send(embed=embed)
 
             # Thank for feedback and suggest vote

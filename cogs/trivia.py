@@ -135,7 +135,7 @@ class Trivia(commands.Cog):
 
         if trivia_stats is not None:
             embed = discord.Embed(colour=discord.Colour(0x44981e))
-            embed.set_author(name=f'Trivia Statistics for {ctx.author}', icon_url=ctx.author.avatar_url)
+            embed.set_author(name=f'Trivia Statistics for {ctx.author}', icon_url=ctx.author.avatar)
 
             # For all trivia statistics, calculate result, get current rank and add all to embed field
             score = round(trivia_stats['score'], 2)
@@ -224,7 +224,7 @@ class Trivia(commands.Cog):
 
         # Scoreboard display embed
         embed = discord.Embed(title='Trivia Leaderboard', colour=discord.Colour(0x44981e))
-        embed.set_thumbnail(url=self.bot.user.avatar_url)
+        embed.set_thumbnail(url=self.bot.user.avatar)
 
         query = 'SELECT COUNT(user_id) FROM leaderboard WHERE privacy = 0'
         leader_count = await self.bot.db.fetchval(query)

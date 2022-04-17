@@ -137,9 +137,9 @@ class Stats(commands.Cog):
 
         # Embed statistics output
         embed = discord.Embed(colour=discord.Colour(0x44981e))
-        embed.set_thumbnail(url=self.bot.user.avatar_url)
+        embed.set_thumbnail(url=self.bot.user.avatar)
         embed.set_author(name=f'{self.bot.user.name} Statistics', url='https://github.com/FlandersBOT',
-                         icon_url=self.bot.user.avatar_url)
+                         icon_url=self.bot.user.avatar)
 
         # Round latency to 2 decimal places and get milliseconds
         latency = round(self.bot.latency * 1000, 2)
