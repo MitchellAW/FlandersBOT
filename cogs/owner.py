@@ -111,6 +111,19 @@ class Owner(commands.Cog):
         else:
             await ctx.message.add_reaction('✅')
 
+    # Manually syncs commands to the guild, or globally if followed by global
+    @commands.command()
+    @commands.is_owner()
+    async def sync(self, ctx, *, globe: str = None):
+        if globe == "global":
+            synced = await ctx.bot.tree.sync()
+        else:
+            synced = await ctx.bot.tree.sync(guild=ctx.guild)
+
+        await ctx.send(
+            f"Synced {len(synced)} commands {'globally' if globe == 'global' else 'to the current guild.'}"
+        )
+
     # Shuts the bot down - usable by the bot owner - requires confirmation
     @commands.command(hidden=True)
     @commands.is_owner()
