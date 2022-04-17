@@ -52,8 +52,7 @@ class FlandersBOT(commands.Bot):
 
     # Default get prefixes method, is replaced once prefixes cog loads (custom guild prefixes)
     async def get_default_prefixes(self, bot, message):
-        default_prefixes = ['ned', 'diddly', 'doodly']
-        return commands.when_mentioned_or(*default_prefixes)(self, message)
+        return commands.when_mentioned(self, message)
 
 
 # Runs FlandersBOT

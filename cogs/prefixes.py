@@ -8,7 +8,7 @@ class Prefixes(commands.Cog):
         self.cached_prefixes = {}
         self.default_prefixes = [self.get_main_prefix(), 'diddly', 'doodly']
         self.bot.command_prefix = self.get_prefixes
-        self.bot.loop.create_task(self.cache_prefixes())
+        # self.bot.loop.create_task(self.cache_prefixes())
 
     # Gets all approved prefixes for a particular guild using the message received
     async def get_prefixes(self, bot, message):
@@ -62,27 +62,29 @@ class Prefixes(commands.Cog):
     @commands.command(aliases=['prefixes'])
     @commands.cooldown(1, 3, BucketType.channel)
     async def prefix(self, ctx):
-        # List default command prefixes
-        message = 'My default prefixes are: ' + ', '.join(
-            map(lambda prefix: f'`{prefix}`', self.default_prefixes)
-        )
-
-        # List custom guild prefixes
-        if ctx.guild is not None and ctx.guild.id in self.cached_prefixes:
-            guild_prefixes = self.cached_prefixes[ctx.guild.id]
-
-            message += '\nThis servers custom prefixes include: ' + ', '.join(
-                map(lambda prefix: f'`{prefix}`', guild_prefixes)
-            )
-
-        # No custom prefixes found
-        else:
-            message += '\nThis server doesn\'t have any custom prefixes.'
-
+        message = f'I can only respond to commands starting with {self.bot.user.mention}.'
         await ctx.send(message)
+        # # List default command prefixes
+        # message = 'My default prefixes are: ' + ', '.join(
+        #     map(lambda prefix: f'`{prefix}`', self.default_prefixes)
+        # )
+        #
+        # # List custom guild prefixes
+        # if ctx.guild is not None and ctx.guild.id in self.cached_prefixes:
+        #     guild_prefixes = self.cached_prefixes[ctx.guild.id]
+        #
+        #     message += '\nThis servers custom prefixes include: ' + ', '.join(
+        #         map(lambda prefix: f'`{prefix}`', guild_prefixes)
+        #     )
+        #
+        # # No custom prefixes found
+        # else:
+        #     message += '\nThis server doesn\'t have any custom prefixes.'
+        #
+        # await ctx.send(message)
 
     # Allows for a single custom prefix per-guild
-    @commands.command(aliases=['add-prefix', 'setprefix', 'set-prefix'])
+    @commands.command(aliases=['add-prefix', 'setprefix', 'set-prefix'], enabled=False)
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     @commands.cooldown(3, 60, BucketType.guild)
@@ -125,7 +127,7 @@ class Prefixes(commands.Cog):
             await ctx.send(f'This server now supports the custom prefix `{new_prefix.lower()}`.')
 
     # Allows removal of a specified custom server command prefix
-    @commands.command(aliases=['deleteprefix', 'eraseprefix'])
+    @commands.command(aliases=['deleteprefix', 'eraseprefix'], enabled=False)
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     @commands.cooldown(1, 3, BucketType.channel)
@@ -150,7 +152,8 @@ class Prefixes(commands.Cog):
             await self.cache_prefixes()
 
     # Allows removal of all custom server command prefixes
-    @commands.command(aliases=['deleteprefixes', 'clearprefixes', 'eraseprefixes', 'purgeprefixes', 'resetprefixes'])
+    @commands.command(aliases=['deleteprefixes', 'clearprefixes', 'eraseprefixes', 'purgeprefixes', 'resetprefixes'],
+                      enabled=False)
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     @commands.cooldown(1, 3, BucketType.channel)
