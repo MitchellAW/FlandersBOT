@@ -73,5 +73,5 @@ class Simpsons(TVShowCog):
             pass
 
 
-def setup(bot):
-    bot.add_cog(Simpsons(bot))
+async def setup(bot):
+    await bot.add_cog(Simpsons(bot))

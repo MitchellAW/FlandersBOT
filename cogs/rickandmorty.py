@@ -26,5 +26,5 @@ class RickAndMorty(TVShowCog):
             await self.post_gif(ctx, search_terms)
 
 
-def setup(bot):
-    bot.add_cog(RickAndMorty(bot))
+async def setup(bot):
+    await bot.add_cog(RickAndMorty(bot))

@@ -227,5 +227,5 @@ class TopGG(commands.Cog):
                 await self.notify_user(ctx.author.id, new_vote=True)
 
 
-def setup(bot):
-    bot.add_cog(TopGG(bot))
+async def setup(bot):
+    await bot.add_cog(TopGG(bot))

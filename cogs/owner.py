@@ -156,5 +156,5 @@ class Owner(commands.Cog):
             await ctx.message.add_reaction('✅')
 
 
-def setup(bot):
-    bot.add_cog(Owner(bot))
+async def setup(bot):
+    await bot.add_cog(Owner(bot))

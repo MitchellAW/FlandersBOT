@@ -169,5 +169,5 @@ class Prefixes(commands.Cog):
             await ctx.send('Removed all custom prefixes.')
 
 
-def setup(bot):
-    bot.add_cog(Prefixes(bot))
+async def setup(bot):
+    await bot.add_cog(Prefixes(bot))

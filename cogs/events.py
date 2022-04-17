@@ -27,7 +27,7 @@ class Events(commands.Cog):
         self.bot.loop.create_task(self.configure_logging())
 
     # If cog is unloaded, cancel task for cycling between status formats
-    def cog_unload(self):
+    async def cog_unload(self):
         self.cycle_status_format.cancel()
 
     # Load logging channels for error handling
@@ -170,5 +170,5 @@ class Events(commands.Cog):
         await ctx.send('Status reset!')
 
 
-def setup(bot):
-    bot.add_cog(Events(bot))
+async def setup(bot):
+    await bot.add_cog(Events(bot))
