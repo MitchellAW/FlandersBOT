@@ -63,7 +63,7 @@ class Trivia(commands.Cog):
     @commands.command(aliases=['ftrivia'])
     @commands.cooldown(10, 300, BucketType.channel)
     @commands.bot_has_permissions(add_reactions=True, embed_links=True)
-    @commands.check(has_trivia_permissions)
+    @has_trivia_permissions()
     async def futuramatrivia(self, ctx):
         if ctx.channel.id not in self.channels_playing:
             # Start the game
@@ -72,6 +72,7 @@ class Trivia(commands.Cog):
     # TODO: Starts a game of trivia using rick and morty trivia questions
     @commands.command(aliases=['ramtrivia'])
     @commands.cooldown(10, 300, BucketType.channel)
+    @has_trivia_permissions()
     async def rickandmortytrivia(self, ctx):
         await ctx.send('Coming Soon!')
 
