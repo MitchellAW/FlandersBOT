@@ -77,7 +77,7 @@ class Owner(commands.Cog):
     @commands.bot_has_permissions(add_reactions=True)
     async def load(self, ctx, *, cog: str):
         try:
-            self.bot.load_extension(cog)
+            await self.bot.load_extension(cog)
         except Exception as e:
             await ctx.message.add_reaction('❌')
             await ctx.send(e)
@@ -90,7 +90,7 @@ class Owner(commands.Cog):
     @commands.bot_has_permissions(add_reactions=True)
     async def unload(self, ctx, *, cog: str):
         try:
-            self.bot.unload_extension(cog)
+            await self.bot.unload_extension(cog)
         except Exception as e:
             await ctx.message.add_reaction('❌')
             await ctx.send(e)
@@ -103,8 +103,8 @@ class Owner(commands.Cog):
     @commands.bot_has_permissions(add_reactions=True)
     async def reload(self, ctx, *, cog: str):
         try:
-            self.bot.unload_extension(cog)
-            self.bot.load_extension(cog)
+            await self.bot.unload_extension(cog)
+            await self.bot.load_extension(cog)
         except Exception as e:
             await ctx.message.add_reaction('❌')
             await ctx.send(e)
