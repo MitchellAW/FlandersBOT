@@ -2,8 +2,10 @@ import random
 
 import compuglobal
 import discord
+
 from compuglobal.aio import Frinkiac
 from compuglobal.aio import FrinkiHams
+from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
@@ -71,6 +73,11 @@ class Simpsons(TVShowCog):
 
         except discord.NotFound:
             pass
+
+    @app_commands.command(name='simpsons', description='Posts a matching gif from The Simpsons using Frinkiac.')
+    @app_commands.describe(search='Search by quote (e.g. nothing at all)')
+    async def build_simpsons_gif(self, interaction: discord.Interaction, search: str):
+        await self.build_gif(interaction, search)
 
 
 async def setup(bot):

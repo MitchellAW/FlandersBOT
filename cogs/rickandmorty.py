@@ -1,4 +1,7 @@
+import discord
+
 from compuglobal.aio import MasterOfAllScience
+from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
@@ -24,6 +27,12 @@ class RickAndMorty(TVShowCog):
         # Use default caption
         else:
             await self.post_gif(ctx, search_terms)
+
+    @app_commands.command(name='rickandmorty',
+                          description='Posts a matching gif from Rick and Morty using MasterOfAllScience.')
+    @app_commands.describe(search='Search by quote (e.g. you pass butter)')
+    async def build_rick_and_morty_gif(self, interaction: discord.Interaction, search: str):
+        await self.build_gif(interaction, search)
 
 
 async def setup(bot):
