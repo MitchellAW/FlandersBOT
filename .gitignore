@@ -1,6 +1,7 @@
 .idea/
 __pycache__/
 cogs/api/__pycache__/
+cogs/cache/
 venv/
 settings/config.json
 cogs/data/guildlist.csv
