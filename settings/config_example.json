@@ -4,6 +4,7 @@
     "dbl_token": "DBL_TOKEN",
     "debug_mode": true,
     "owner_id": 100000000000000000,
+    "testing_guild": 100000000000000000,
     "webhook": {
         "webhookAuth": "PASSWORD",
         "webhookPort": "0000"
