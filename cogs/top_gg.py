@@ -44,7 +44,8 @@ class TopGG(commands.Cog):
         )
 
         # Update table with any missing votes
-        self.bot.loop.create_task(self.update_missing_votes())
+        if not self.bot.debug_mode:
+            self.bot.loop.create_task(self.update_missing_votes())
 
     # (Re) Populate cache using entries in subscribers table
     async def cache_subscribers(self):
