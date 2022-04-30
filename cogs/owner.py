@@ -115,6 +115,9 @@ class Owner(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def sync(self, ctx, *, globe: str = None):
+        guild = discord.Object(id=ctx.guild.id)
+        self.bot.tree.copy_global_to(guild=guild)
+
         if globe == "global":
             synced = await ctx.bot.tree.sync()
         else:
