@@ -231,8 +231,19 @@ class CustomiseCaptionModal(discord.ui.Modal, title='Add Caption'):
         if original is not None:
             await original.edit(content='', embed=gif_embed)
 
-        for child in self.view.children:
-            child.disabled = True
+        try:
+            # Disable generate gif button and dropdown once gif has been generated
+            for child in self.view.children:
+                child.disabled = True
+                await interaction.edit_original_response(view=self.view)
+            
+            # Delete gif generation view if not dismissed yet
+            await interaction.delete_original_response()
+            
+        except discord.NotFound:
+            pass
+            
+            
 
     async def on_error(self, error: Exception, interaction: discord.Interaction) -> None:
         await interaction.response.send_message('Oops! Something went wrong.', ephemeral=False)
