@@ -137,6 +137,10 @@ class Owner(commands.Cog):
             
         else:
             await ctx.bot.tree.sync(guild=ctx.guild)
+            
+        await ctx.send(
+            f"Unsynced commands {'globally' if globe == 'global' else 'to the current guild.'}"
+        )
         
     # Shuts the bot down - usable by the bot owner - requires confirmation
     @commands.command(hidden=True)
