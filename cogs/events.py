@@ -110,7 +110,9 @@ class Events(commands.Cog):
             async with aiohttp.ClientSession() as session:
                 url = listing['url'].format(str(self.bot.user.id))
                 data = {
-                    listing['payload']['guild_count']: len(self.bot.guilds)
+                    listing['payload']['guild_count']: len(self.bot.guilds),
+                    listing['payload']['shard_count']: discord.ShardInfo.shard_count,
+                    listing['payload']['shard_id']: discord.ShardInfo.id
                 }
                 headers = listing['headers']
 

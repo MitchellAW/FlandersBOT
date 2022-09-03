@@ -40,7 +40,8 @@ class TopGG(commands.Cog):
             webhook_port=self.bot.config['webhook']['webhookPort'],
             webhook_path='/dblwebhook',
             # Only auto post server count if not in debug mode
-            autopost=(not self.bot.debug_mode)
+            autopost=(not self.bot.debug_mode),
+            post_shard_count=True
         )
 
         # Update table with any missing votes
