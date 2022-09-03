@@ -1,4 +1,6 @@
 .idea/
+.vscode/
+.env
 __pycache__/
 cogs/api/__pycache__/
 cogs/cache/
