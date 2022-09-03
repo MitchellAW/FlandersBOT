@@ -112,28 +112,32 @@ class TVShowCog(commands.Cog):
                 await ctx.send(gif_url)
 
     async def build_gif(self, interaction: discord.Interaction, search: str):
-        search_results = await self.api.search(search)
-        unique_results = self.get_unique_results(search_results)
+        try: 
+            search_results = await self.api.search(search)
+            unique_results = self.get_unique_results(search_results)
 
-        state = TVReferenceState(frames=unique_results[:25], api=self.api)
+            state = TVReferenceState(frames=unique_results[:25], api=self.api)
 
-        # Get top 25 results
-        options = []
-        for i in range(min(25, len(unique_results))):
-            title = self.api
-            options.append(SearchResult(unique_results[i], i + 1, self.api_title))
+            # Get top 25 results
+            options = []
+            for i in range(min(25, len(unique_results))):
+                options.append(SearchResult(unique_results[i], i + 1, self.api_title))
 
-        options[0].default = True
+            options[0].default = True
 
-        # Create the view containing our dropdown and preview
-        gif_builder_view = GifBuilderView(options, state)
-        preview = await state.get_preview_embed()
+            # Create the view containing our dropdown and preview
+            gif_builder_view = GifBuilderView(options, state)
+            preview = await state.get_preview_embed()
 
-        # Sending a message containing our gif builder view
-        await interaction.response.send_message(embed=preview, view=gif_builder_view, ephemeral=True)
+            # Sending a message containing our gif builder view
+            await interaction.response.send_message(embed=preview, view=gif_builder_view, ephemeral=True)
 
-        # Pre-cache desired screencaps from search results
-        await state.populate()
+            # Pre-cache desired screencaps from search results
+            await state.populate()
+        
+        except compuglobal.NoSearchResultsFound:
+            await interaction.response.send_message('⚠️ No search results found.', ephemeral=True)
+            
 
 
 class TVReferenceState:
