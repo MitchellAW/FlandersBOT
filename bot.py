@@ -8,7 +8,7 @@ import discord
 from discord.ext import commands
 
 
-class FlandersBOT(commands.Bot):
+class FlandersBOT(commands.AutoShardedBot):
     def __init__(self, intents):
         super().__init__(command_prefix=self.get_default_prefixes, case_insensitive=True, intents=intents)
 
@@ -50,7 +50,7 @@ class FlandersBOT(commands.Bot):
                     exc = f'{type(e).__name__}: {e}'
                     print(f'Failed to load extension {extension}\n{exc}')
 
-    # Default get prefixes method, is replaced once prefixes cog loads (custom guild prefixes)
+    # Default get prefixes method, only supports mentions without message content privileges
     async def get_default_prefixes(self, bot, message):
         return commands.when_mentioned(self, message)
 
