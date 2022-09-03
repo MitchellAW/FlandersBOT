@@ -178,10 +178,12 @@ class TVReferenceState:
 
     async def get_preview_embed(self):
         screencap = await self.get_screencap()
-        preview_embed = discord.Embed(colour=discord.Colour(0x44981e))
+        api_title = type(self.api).__name__.lower()
+        view_url = f'https://{api_title}.com/caption/{screencap.key}/{screencap.timestamp}'
+        preview_embed = discord.Embed(colour=discord.Colour(0x44981e), 
+                                      title=f'{screencap.title} ({screencap.frame.get_real_timestamp()})', 
+                                      description=f'{screencap.caption}', url=view_url)
         preview_embed.set_image(url=screencap.frame.image_url)
-        preview_embed.add_field(name=f'{screencap.title} ({screencap.frame.get_real_timestamp()})',
-                                value=f'{screencap.caption})', inline=True)
         return preview_embed
 
     async def get_gif_embed(self, caption):
@@ -192,7 +194,7 @@ class TVReferenceState:
                                         f'({screencap.get_real_timestamp()})', url=screencap.wiki_url)
 
         # Retry Gif Generation 3 times, this can stall a long time
-        for i in range(3):
+        for _ in range(3):
             try:
                 # Only call API for gif the once
                 gif_url = await screencap.get_gif_url(caption=formatted_caption)
@@ -235,7 +237,7 @@ class CustomiseCaptionModal(discord.ui.Modal, title='Add Caption'):
             # Disable generate gif button and dropdown once gif has been generated
             for child in self.view.children:
                 if isinstance(child, discord.ui.Button):
-                    child.label = 'Gif generated!'
+                    child.label = 'Gif Generated'
                     child.style = discord.ButtonStyle.success
                 child.disabled = True
                 await interaction.edit_original_response(view=self.view)
@@ -245,8 +247,6 @@ class CustomiseCaptionModal(discord.ui.Modal, title='Add Caption'):
             
         except discord.NotFound:
             pass
-            
-            
 
     async def on_error(self, error: Exception, interaction: discord.Interaction) -> None:
         await interaction.response.send_message('Oops! Something went wrong.', ephemeral=False)
@@ -294,7 +294,7 @@ class GifBuilderView(discord.ui.View):
 class GenerateGifButton(discord.ui.Button):
     def __init__(self, state: TVReferenceState):
         self.state = state
-        super().__init__(label='Submit', style=discord.ButtonStyle.primary)
+        super().__init__(label='Generate Gif', style=discord.ButtonStyle.primary)
 
     async def callback(self, interaction: discord.Interaction):
         modal = CustomiseCaptionModal(self.state, self.view)
