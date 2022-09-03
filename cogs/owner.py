@@ -126,7 +126,18 @@ class Owner(commands.Cog):
         await ctx.send(
             f"Synced {len(synced)} commands {'globally' if globe == 'global' else 'to the current guild.'}"
         )
-
+        
+    # Manually unsyncs all commands from the guild, or globally if followed by global
+    @commands.command()
+    @commands.is_owner()
+    async def unsync(self, ctx, *, globe: str = None):
+        self.bot.tree.clear_commands(guild=None)
+        if globe == 'global':
+            await ctx.bot.tree.sync()
+            
+        else:
+            await ctx.bot.tree.sync(guild=ctx.guild)
+        
     # Shuts the bot down - usable by the bot owner - requires confirmation
     @commands.command(hidden=True)
     @commands.is_owner()
