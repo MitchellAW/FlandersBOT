@@ -6,20 +6,13 @@ COMMANDS_LIST = '''
 Hi-diddly-ho, neighborino! Here are the commands, shout them out anytime and
 I'll happily oblige! Well, so long as the reverend approves of course.
 
-**COMMAND PREFIXES**
-
-`ned`, `diddly`, `doodly`
-
 **COMMANDS**
-*All commands must start with one of the command prefixes or 
-<@221609683562135553>!*
+*All commands must start with <@221609683562135553>!*
 
 **GENERAL**
 
 **help** - Will send this list of commands.
 **info** - Will send a personal message with more information about me.
-**prefix** - Will post the prefixes I respond to on your server.
-**setprefix [prefix]** - Sets a prefix I will respond to on your server.
 **feedback [message]** - Send a feedback message or suggestions.
 **invite** - Will post an invite link for me to join your server.
 **vote** - Will post the benefits of voting for me and a link to vote.
@@ -35,7 +28,7 @@ I'll happily oblige! Well, so long as the reverend approves of course.
 
 *I currently support commands for The Simpsons, Futurama, Rick and Morty.*
 
-**For Example:** `ned info`, `diddly help tvshows`, `doodly-trivia`
+**For Example:** `@Flanders info`, `@Flanders help tvshows`, `@Flanders trivia`
 '''
 
 TV_SHOW_COMMANDS = '''
@@ -52,7 +45,7 @@ TV_SHOW_COMMANDS = '''
 
 **epinfo** - Will post episode information on the last post made in the channel.
 
-**For Example:** `ned simpsons nothing at all`, `ned futurama`
+**For Example:** `@Flanders simpsons nothing at all`, `@Flanders futurama`
 '''
 
 TRIVIA_COMMANDS = '''
