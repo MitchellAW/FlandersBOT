@@ -2,5 +2,5 @@ aiohttp
 asyncpg
 compuglobal==0.2.7
 topggpy
-git+https://github.com/Rapptz/discord.py
+discord.py
 tabulate
