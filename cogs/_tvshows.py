@@ -234,6 +234,9 @@ class CustomiseCaptionModal(discord.ui.Modal, title='Add Caption'):
         try:
             # Disable generate gif button and dropdown once gif has been generated
             for child in self.view.children:
+                if isinstance(child, discord.ui.Button):
+                    child.label = 'Gif generated!'
+                    child.style = discord.ButtonStyle.success
                 child.disabled = True
                 await interaction.edit_original_response(view=self.view)
             
