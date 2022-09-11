@@ -14,7 +14,7 @@ class Events(commands.Cog):
 
         # Default status configuration
         self.status_index = 0
-        self.status_formats = ['/simpsons | {} servers', '/futurama | {} servers', '/rickandmorty | {} servers']
+        self.status_formats = ['/simpsons', '/futurama', '/rickandmorty']
 
         # Discord channel ids used for all error logging
         self.LOGGING_CHANNEL = 797662079573557250
@@ -129,14 +129,19 @@ class Events(commands.Cog):
     async def cycle_status_format(self):
         await self.bot.wait_until_ready()
         if self.status_index >= len(self.status_formats) - 1:
-            self.status_index = 0
+            self.status_index = 0            
 
-        else:
-            self.status_index += 1
-
-        # Update presence/status
-        status = discord.Game(name=self.status_formats[self.status_index].format(str(len(self.bot.guilds))))
-        await self.bot.change_presence(activity=status)
+        # Update presence/status        
+        status = self.status_formats[self.status_index]
+        if '{}' in status:
+            status = status.format(len(self.bot.guilds))
+        
+        # Display status as 'Watching for /simpsons'
+        presence = discord.Activity(type=discord.ActivityType.watching, name=f'for {status}')
+        await self.bot.change_presence(activity=presence)
+        
+        # Only increment status index after a status change
+        self.status_index += 1
 
     # Checks if bot has permission to use external emojis in the guild, returns external emoji if permitted
     # otherwise, returns the fallback emoji
