@@ -219,6 +219,13 @@ class CustomiseCaptionModal(discord.ui.Modal, title='Add Caption'):
         super().__init__()
 
     async def on_submit(self, interaction: discord.Interaction):
+        # Tell users which episode is being generated
+        custom_caption = str(self.children[0])
+        screencap = await self.state.get_screencap()
+        await interaction.response.defer(thinking=False, ephemeral=False)
+        emoji = await Events.use_emoji(interaction, '<a:loading:410316176510418955>', '⌛')
+        original = await interaction.channel.send(f'Generating {screencap.key}... {emoji}')
+        
         # On submit, disable gif generator view
         try:
             # Disable generate gif button and dropdown once gif has been generated
@@ -231,13 +238,6 @@ class CustomiseCaptionModal(discord.ui.Modal, title='Add Caption'):
             
         except discord.NotFound:
             pass
-        
-        # Tell users which episode is being generated
-        custom_caption = str(self.children[0])
-        screencap = await self.state.get_screencap()
-        await interaction.response.defer(thinking=False, ephemeral=False)
-        emoji = await Events.use_emoji(interaction, '<a:loading:410316176510418955>', '⌛')
-        original = await interaction.channel.send(f'Generating {screencap.key}... {emoji}')
 
         # Generate gif and get embed
         gif_embed = await self.state.get_gif_embed(custom_caption)
