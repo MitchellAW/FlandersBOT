@@ -42,6 +42,28 @@ class Stats(commands.Cog):
                    WHERE failed = false
                 '''
         self.command_count = await self.bot.db.fetchval(query)
+        
+    @commands.Cog.listener()
+    async def on_app_command_completion(self, interaction: discord.Interaction, command: discord.app_commands.Command):
+        # Ensure command is recorded
+        if command is None:
+            return
+        
+        # Cache command to batch for insertion
+        self._command_batch.append(
+            {
+                'command': command.name,
+                'prefix': '/',
+                'guild_id': interaction.guild_id,
+                'used_at': interaction.created_at.isoformat(),
+                'failed': interaction.command_failed
+            }
+        )
+        
+        # Update command count
+        if not interaction.command_failed:
+            self.command_count += 1
+        
 
     # On each command, add attributes of command to batch to be logged by task loop
     @commands.Cog.listener()
