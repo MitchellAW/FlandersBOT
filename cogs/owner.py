@@ -33,8 +33,6 @@ class Owner(commands.Cog):
                        GROUP BY command
                        ORDER BY command
                     '''
-            rows = await self.bot.db.fetch(query)
-
         # Get command counts ordered by command count
         else:
             query = '''SELECT command, COUNT(command) AS command_count FROM command_history
@@ -42,7 +40,32 @@ class Owner(commands.Cog):
                        GROUP BY command
                        ORDER BY command_count DESC
                     '''
-            rows = await self.bot.db.fetch(query)
+        rows = await self.bot.db.fetch(query)
+
+        # Display each command stats on separate line and format using tabulate
+        command_data = map(lambda row: [row['command'], row['command_count']], rows)
+        message = tabulate(command_data, headers=['Command Name', 'Count'], tablefmt='presto', colalign=('right',))
+        await ctx.send(f'```{message}```')
+        
+        # Get the number of all the commands executed
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def appcommandstats(self, ctx, *, modifier: str = None):
+        # Get command counts ordered alphabetically
+        if modifier is None or modifier != 'count':
+            query = '''SELECT command, COUNT(command) AS command_count FROM command_history
+                       WHERE failed = false AND prefix = '/'
+                       GROUP BY command
+                       ORDER BY command
+                    '''
+        # Get command counts ordered by command count
+        else:
+            query = '''SELECT command, COUNT(command) AS command_count FROM command_history
+                       WHERE failed = false AND prefix = '/'
+                       GROUP BY command
+                       ORDER BY command_count DESC
+                    '''
+        rows = await self.bot.db.fetch(query)
 
         # Display each command stats on separate line and format using tabulate
         command_data = map(lambda row: [row['command'], row['command_count']], rows)
