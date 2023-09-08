@@ -10,6 +10,7 @@ Flanders provides commands for The Simpsons, Futurama and Rick and Morty quoting
 ## Add Flanders to your Discord Server
 <img align="right" src="https://raw.githubusercontent.com/MitchellAW/MitchellAW.github.io/master/images/flanders-cirlce.png?raw=true" height="256" width="256"></img>
 
+To view Flanders in Discord's application directory and more easily add Flanders to your own servers, [click here](https://discord.com/application-directory/221609683562135553)
 To invite Flanders to your own discord server and start using it now, [click here](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=281664)
 
 Thanks to https://discordbots.org/ for listing Flanders!  
