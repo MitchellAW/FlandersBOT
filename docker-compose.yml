@@ -9,3 +9,4 @@ services:
     volumes:
       - /apps/postgresql/data:/var/lib/postgresql/data
       - /apps/postgresql/scripts/:/scripts
+    restart: always
