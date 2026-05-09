@@ -24,7 +24,7 @@ class Stats(commands.Cog):
 
     # Get the uptime of the bot. In a short description format by default.
     def get_uptime(self, full=False):
-        current_time = datetime.datetime.utcnow()
+        current_time = datetime.datetime.now(datetime.UTC)
         delta = current_time - self.bot.uptime
         hours, remainder = divmod(int(delta.total_seconds()), 3600)
         minutes, seconds = divmod(remainder, 60)

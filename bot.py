@@ -1,7 +1,6 @@
-import asyncio
 import json
 import os
-from datetime import datetime
+import datetime
 
 import asyncpg
 import discord
@@ -18,7 +17,7 @@ class FlandersBOT(commands.AutoShardedBot):
         # Default configuration with cache
         self.cached_screencaps = {}
         self.reminders = []
-        self.uptime = datetime.utcnow()
+        self.uptime = datetime.datetime.now(datetime.UTC)
         self.db = None
 
         # Load config file

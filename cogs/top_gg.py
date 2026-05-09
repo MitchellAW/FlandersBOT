@@ -1,5 +1,5 @@
 import asyncio
-from datetime import datetime
+import datetime
 
 import asyncpg
 import topgg
@@ -125,7 +125,7 @@ class TopGG(commands.Cog):
 
         # Return seconds until next vote (subtract from 12 hours)
         if voted_at is not None:
-            time_diff = (datetime.utcnow() - voted_at)
+            time_diff = (datetime.datetime.now(datetime.UTC) - voted_at)
 
             # Seconds until user can vote again
             time_between_votes = (12 * 60 * 60)

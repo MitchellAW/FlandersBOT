@@ -1,7 +1,7 @@
 import re
 import sys
 import traceback
-from datetime import datetime
+import datetime
 
 import aiohttp
 import discord
@@ -45,7 +45,7 @@ class Events(commands.Cog):
         print(f'Username: {self.bot.user.name}')
         print(f'Client ID: {self.bot.user.id}')
         if not hasattr(self, 'uptime'):
-            self.bot.uptime = datetime.utcnow()
+            self.bot.uptime = datetime.datetime.now(datetime.UTC)
 
     # Commands error handler
     @commands.Cog.listener()
@@ -81,7 +81,7 @@ class Events(commands.Cog):
 
         else:
             # Get timestamp of error
-            error_at = datetime.utcnow().strftime('%y-%m-%d %H:%M:%S')
+            error_at = datetime.datetime.now(datetime.UTC).strftime('%y-%m-%d %H:%M:%S')
 
             # Print command error info and error traceback to console
             print(f'[{error_at}] Command: {ctx.command.qualified_name}', file=sys.stderr)
