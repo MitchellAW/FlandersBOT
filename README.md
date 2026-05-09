@@ -13,9 +13,6 @@ Flanders provides commands for The Simpsons, Futurama and Rick and Morty quoting
 To view Flanders in Discord's application directory and more easily add Flanders to your own servers, [click here](https://discord.com/application-directory/221609683562135553)  
 To invite Flanders to your own discord server and start using it now, [click here](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=281664)  
 
-Thanks to https://discordbots.org/ for listing Flanders!  
-If you like Flanders, help the bot grow by voting [here](https://discordbots.org/bot/221609683562135553/vote)
-
 ## Usage
 The bot commands can be executed using several different methods/prefixes, to minimise clashing with other discord bots. Any command can be prefixed with an @mention, ned or diddly/doodly when you really want to flaunt those Flanders-isms.
 
@@ -69,10 +66,6 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
     <tr>
       <td><b>stats</b></td>
       <td>Will post some of Flanders's statistics.</td>
-    </tr>
-    <tr>
-      <td><b>notifications</b></td>
-      <td>Toggle notifications for when you are able to vote.</td>
     </tr>
     <tr>
       <td><b>epinfo</b></td>
@@ -171,10 +164,6 @@ If you need any help with Flanders, would like to provide feedback, suggestions 
 
 [![Flanders Support](https://discordapp.com/api/guilds/403154226790006784/widget.png?style=banner2)](https://discord.gg/xMmxMYg)
 
-<a href="https://discordbots.org/bot/221609683562135553" >
-  <img src="https://discordbots.org/api/widget/221609683562135553.svg" alt="Flanders Discord Bot" />
-</a>
-
 ## Requirements
 I'd prefer that instead of running an instance of Flanders yourself you'd just [Invite Flanders](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456) to your own server.   
 [Or go ahead anyway.](https://i.imgur.com/mSHi8.jpg)
@@ -191,12 +180,6 @@ I'd prefer that instead of running an instance of Flanders yourself you'd just [
 $ sudo apt-get update
 $ sudo apt-get upgrade
 $ sudo apt-get install postgresql
-```  
-
-*Requires Node.js v11.6+ for dbl webhook*
-```sh
-$ npm install dblapi.js
-$ npm install pg
 ```  
 
 ### Config

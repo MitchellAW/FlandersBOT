@@ -175,12 +175,6 @@ class Trivia(commands.Cog):
             embed.add_field(name=f':four_leaf_clover: Longest Streak (#{rank:,})',
                             value=f'{longest_streak:,}', inline=True)
 
-            # Display footer for trivia showing vote benefits
-            embed.add_field(name='\u200b',
-                            value=f'*Want 2x bonus score for 24 hours? '
-                            f'[Vote for {self.bot.user.name} here!](https://top.gg/bot/{self.bot.user.id}/vote)*',
-                            inline=False)
-
             await ctx.send(embed=embed)
 
         else:
@@ -241,13 +235,6 @@ class Trivia(commands.Cog):
                         result = f'{round(result, 2):,}'
                     scores += f'{result}\n'
                 embed.add_field(name=stat['category'], value=scores, inline=False)
-
-            # Display footer for trivia showing vote benefits
-            embed.add_field(name='\u200b',
-                            value=f'*Want 2x bonus score for 24 hours? '
-                            f'[Vote for {self.bot.user.name} here!]'
-                            f'(https://top.gg/bot/{self.bot.user.id}/vote)*',
-                            inline=False)
 
             if len(embed.fields) > 0:
                 await ctx.send(embed=embed)
@@ -497,12 +484,6 @@ class Trivia(commands.Cog):
         for scorer in fastest_answers[:5]:
             scorers += f'**{scorer["username"]}**: {round(scorer["fastest_time"] / 1000, 3):,}s\n'
         embed.add_field(name='\u200b\n*:point_up: Fastest Answers*', value=scorers)
-
-        # Display footer for trivia
-        embed.add_field(name='\u200b',
-                        value=f'*Enjoying {category.category_name} trivia? '
-                        f'[Vote for {self.bot.user.name} here!](https://top.gg/bot/{self.bot.user.id}/vote)*',
-                        inline=False)
 
         embed.set_footer(text=f'{participant_count} participant{"s" if participant_count > 1 else ""}, '
                          f'{answer_count} question{"s" if answer_count > 1 else ""} answered.')

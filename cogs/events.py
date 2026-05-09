@@ -104,25 +104,6 @@ class Events(commands.Cog):
             for page in paginator.pages:
                 await self.bot.logging.send(page)
 
-    # Post guild count to update count for bot_listing sites
-    async def update_guild_counts(self):
-        for listing in self.bot.config['bot_listings']:
-            async with aiohttp.ClientSession() as session:
-                url = listing['url'].format(str(self.bot.user.id))
-                data = {
-                    listing['payload']['guild_count']: len(self.bot.guilds),
-                    listing['payload']['shard_count']: discord.ShardInfo.shard_count,
-                    listing['payload']['shard_id']: discord.ShardInfo.id
-                }
-                headers = listing['headers']
-
-                # Check if api needs payload posted as data or json
-                if listing['posts_data']:
-                    await session.post(url, data=data, headers=headers, timeout=15)
-
-                else:
-                    await session.post(url, json=data, headers=headers, timeout=15)
-
     # Cycle through all status formats, waits 5 minutes between status changes
     # Formats status/presence with the current guild count
     @tasks.loop(minutes=5)
@@ -168,13 +149,6 @@ class Events(commands.Cog):
     async def addstatus(self, ctx, *, message: str):
         self.bot.status_formats.append(message)
         await ctx.send('Status added!')
-
-    # Resets the status/presence formats to cycle through two original formats
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    async def resetstatus(self, ctx):
-        self.bot.status_formats = ['Ned vote | {} Servers', 'Ned help | {} Servers']
-        await ctx.send('Status reset!')
 
 
 async def setup(bot):

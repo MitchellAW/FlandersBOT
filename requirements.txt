@@ -1,6 +1,5 @@
 aiohttp
 asyncpg
 compuglobal==0.3.0
-topggpy
 discord.py
 tabulate
