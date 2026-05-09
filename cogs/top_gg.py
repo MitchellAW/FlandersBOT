@@ -1,7 +1,6 @@
 import asyncio
 import datetime
 
-import asyncpg
 import topgg
 import discord
 from discord.ext import commands

@@ -4,7 +4,6 @@ import compuglobal
 import discord
 
 from compuglobal.aio import Frinkiac
-from compuglobal.aio import FrinkiHams
 from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
@@ -16,7 +15,6 @@ from cogs.events import Events
 class Simpsons(TVShowCog):
     def __init__(self, bot):
         super().__init__(bot, Frinkiac())
-        self.frinkihams = FrinkiHams()
         self.frinkiac = Frinkiac()
 
     # Messages a random Simpsons quote with gif if no search terms are given, otherwise, search for Simpsons quote using
