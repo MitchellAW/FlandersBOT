@@ -172,7 +172,7 @@ class Stats(commands.Cog):
         latency = round(self.bot.latency * 1000, 2)
 
         # Add all statistics
-        embed.add_field(name="Bot Owner", value="Mitch#8293", inline=True)
+        embed.add_field(name="Bot Owner", value="mitchaw", inline=True)
         embed.add_field(name="Server Count", value=f"{guild_count:,}", inline=True)
         embed.add_field(name="Total Members", value=f"{total_members:,}", inline=True)
         embed.add_field(name="Uptime", value=self.get_uptime(), inline=True)
