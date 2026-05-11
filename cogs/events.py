@@ -124,9 +124,10 @@ class Events(commands.Cog):
         if "{}" in status:
             status = status.format(len(self.bot.guilds))
 
-        # Display status as 'Watching for /simpsons'
-        presence = discord.Activity(type=discord.ActivityType.watching, name=f"for {status}")
-        await self.bot.change_presence(activity=presence)
+        # Display status as 'Try /simpsons' etc.
+        status = f"Try {status}"
+        activity = discord.CustomActivity(name=status)
+        await self.bot.change_presence(activity=activity)
 
         # Only increment status index after a status change
         self.status_index += 1
