@@ -13,7 +13,7 @@ class Events(commands.Cog):
 
         # Default status configuration
         self.status_index = 0
-        self.status_formats = ["/simpsons", "/futurama", "/rickandmorty"]
+        self.status_formats = ["/simpsons", "/futurama"]
 
         # Discord channel ids used for all error logging
         self.LOGGING_CHANNEL = 797662079573557250
