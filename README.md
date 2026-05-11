@@ -1,7 +1,7 @@
 ![Flanders](https://github.com/MitchellAW/MitchellAW.github.io/blob/master/images/flanders-bannerBOT.png?raw=true)
 
 # Flanders
-### A bot for sharing your favourite references! 
+### A bot for sharing your favourite references!
 
 A discord bot with commands surrounding The Simpsons, Futurama, Rick and Morty and more!
 
@@ -10,8 +10,8 @@ Flanders provides commands for The Simpsons, Futurama and Rick and Morty quoting
 ## Add Flanders to your Discord Server
 <img align="right" src="https://raw.githubusercontent.com/MitchellAW/MitchellAW.github.io/master/images/flanders-cirlce.png?raw=true" height="256" width="256"></img>
 
-To view Flanders in Discord's application directory and more easily add Flanders to your own servers, [click here](https://discord.com/application-directory/221609683562135553)  
-To invite Flanders to your own discord server and start using it now, [click here](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=281664)  
+To view Flanders in Discord's application directory and more easily add Flanders to your own servers, [click here](https://discord.com/application-directory/221609683562135553)
+To invite Flanders to your own discord server and start using it now, [click here](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=281664)
 
 ## Usage
 The bot commands can be executed using several different methods/prefixes, to minimise clashing with other discord bots. Any command can be prefixed with an @mention, ned or diddly/doodly when you really want to flaunt those Flanders-isms.
@@ -20,11 +20,11 @@ If you're not a fan of any of these prefixes, you can add a new prefix to your s
 
 **Usage Examples:**
 
-`@Flanders#0680 info`  
-`ned info`  
-`diddly info`  
-`doodly info`  
-`diddly-info`  
+`@Flanders#0680 info`
+`ned info`
+`diddly info`
+`doodly info`
+`diddly-info`
 `doodly-info`
 
 *All examples above are valid methods of executing any command below.*
@@ -165,22 +165,22 @@ If you need any help with Flanders, would like to provide feedback, suggestions 
 [![Flanders Support](https://discordapp.com/api/guilds/403154226790006784/widget.png?style=banner2)](https://discord.gg/xMmxMYg)
 
 ## Requirements
-I'd prefer that instead of running an instance of Flanders yourself you'd just [Invite Flanders](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456) to your own server.   
+I'd prefer that instead of running an instance of Flanders yourself you'd just [Invite Flanders](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456) to your own server.
 [Or go ahead anyway.](https://i.imgur.com/mSHi8.jpg)
 
 ### Dependencies
-*Requires Python 3.5+*  
+*Requires Python 3.5+*
 `python3 -m pip install -U -r requirements.txt`
 
-*Utilises the latest version of [discord.py](https://github.com/Rapptz/discord.py) *  
+*Utilises the latest version of [discord.py](https://github.com/Rapptz/discord.py) *
 *Depends upon [CompuGlobal](https://github.com/MitchellAW/CompuGlobal/tree/async)*
 
-*Requires PostgreSQL 9.6+*  
+*Requires PostgreSQL 9.6+*
 ```sh
 $ sudo apt-get update
 $ sudo apt-get upgrade
 $ sudo apt-get install postgresql
-```  
+```
 
 ### Config
 Update settings/config.json with required credentials.
@@ -191,7 +191,7 @@ Update settings/config.json with required credentials.
 ### Create Database
 ```sh
 sudo -u postgres psql
-```  
+```
 
 ```sql
 CREATE ROLE ned WITH LOGIN PASSWORD '<password>';
@@ -201,16 +201,14 @@ CREATE DATABASE flandersdb OWNER ned;
 ### Create Tables
 ```sh
 $ psql -h 127.0.0.1 -d flandersdb -U ned -f bot.sql
-```  
-
-
+```
 
 
 ## Credits
 **Creators of [Frinkiac](https://frinkiac.com/), [Morbotron](https://morbotron.com/), [Master of All Science](https://masterofallscience.com/), [GoodGod Lemon](https://goodgodlemon.com/) and [Capital Beat Us](https://capitalbeat.us/):**
 
 [Paul Kehrer](https://twitter.com/reaperhulk)
-[Sean Schulte](https://twitter.com/sirsean)  
-[Allie Young](https://twitter.com/seriousallie)  
-**Source of the higher quality Adventures of Ned Flanders image**  
+[Sean Schulte](https://twitter.com/sirsean)
+[Allie Young](https://twitter.com/seriousallie)
+**Source of the higher quality Adventures of Ned Flanders image**
 [/u/nmcfaden](https://i.redd.it/3m7txitrcjgy.png)
