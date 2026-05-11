@@ -1,7 +1,7 @@
 services:
   flandersdb:
     container_name: flandersdb
-    image: postgres:latest
+    image: postgres:17
     ports:
       - 5432:5432
     env_file:
@@ -9,11 +9,11 @@ services:
     volumes:
       - /apps/postgresql/data:/var/lib/postgresql/data
       - /apps/postgresql/scripts/:/scripts
-    restart: always
+    restart: unless-stopped
 
   flanders:
     container_name: flanders
     image: flanders:latest
     depends_on:
       - flandersdb
-    restart: always
+    restart: unless-stopped

@@ -1,13 +1,8 @@
 import random
 
-import compuglobal
 import discord
-
 from compuglobal.aio import Frinkiac
-from compuglobal.aio import FrinkiHams
 from discord import app_commands
-from discord.ext import commands
-from discord.ext.commands.cooldowns import BucketType
 
 from cogs._tvshows import TVShowCog
 from cogs.events import Events
@@ -15,69 +10,44 @@ from cogs.events import Events
 
 class Simpsons(TVShowCog):
     def __init__(self, bot):
-        super().__init__(bot, Frinkiac())
-        self.frinkihams = FrinkiHams()
-        self.frinkiac = Frinkiac()
+        super().__init__(bot, Frinkiac(session=bot.session))
+        self.frinkiac = Frinkiac(session=self.bot.session)
 
-    # Messages a random Simpsons quote with gif if no search terms are given, otherwise, search for Simpsons quote using
-    # search terms and post gif
-    @commands.command(aliases=['simpsonsgif', 'simpson', 'sgif'])
-    @commands.cooldown(1, 3, BucketType.channel)
-    @commands.guild_only()
-    async def simpsons(self, ctx, *, search_terms: str = None):
-        # Handle possible custom captions
-        if search_terms is not None and ' | ' in search_terms:
-            args = search_terms.split(' | ', 1)
-            await self.post_gif(ctx, args[0], args[1])
+    @app_commands.command(name="simpsons", description="Posts a matching gif from The Simpsons using Frinkiac.")
+    @app_commands.describe(search="Search by quote (e.g. nothing at all)")
+    @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
+    async def build_simpsons_gif(self, interaction: discord.Interaction, search: str):
+        await self.build_gif(interaction, search)
 
-        # Use default caption
-        else:
-            await self.post_gif(ctx, search_terms)
-
-    # Generate a random Steamed Hams gif and post it
-    @commands.command(aliases=['steamed', 'steam', 'hams', 'ham', 'aurora', 'borealis', 'frinkiac', 'frink'])
-    @commands.cooldown(1, 3, BucketType.channel)
-    async def steamedhams(self, ctx):
+    @app_commands.command(name="steamedhams", description="Posts a random gif from the iconic steamed hams skit.")
+    @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
+    async def post_steamed_hams(self, interaction: discord.Interaction):
         # Steamed hams episode key
-        steamed_hams_key = 'S07E21'
+        steamed_hams_key = "S07E21"
 
         # The middle timestamp of the skit  (start: 483532, end: 652200)
         middle_timestamp = 567866
 
         # Send gif generation message, will be later edited to display generated gif url
-        emoji = await Events.use_emoji(ctx, '<a:loading:410316176510418955>', '⌛ ')
-        sent = await ctx.send(f'Steaming your hams... {emoji}')
+        emoji = await Events.use_emoji(interaction, "<a:loading:410316176510418955>", "⌛ ")
+        await interaction.response.send_message(f"Steaming your hams... {emoji}")
 
         # Get all frames for the steamed hams skit
         # Skit duration is 2:48 (168 seconds), get frames 80 seconds before and 80 seconds after mid point
         # 4 seconds are subtracted from start and end to allow for 7 second gif length and prevent displaying parts of
         # other skits
-        try:
-            frames = await self.frinkiac.get_frames(steamed_hams_key, middle_timestamp, 80000, 80000)
+        frames = await self.frinkiac.get_frames(steamed_hams_key, middle_timestamp, 80000, 80000)
 
-            # Check frames are returned
-            if len(frames) > 0:
-                steamed_ham = random.choice(frames)
-                screencap = await self.frinkiac.get_screencap(steamed_hams_key, steamed_ham.timestamp)
+        # Check frames are returned
+        if len(frames) > 0:
+            steamed_ham = random.choice(frames)
+            screencap = await self.frinkiac.get_screencap(steamed_hams_key, steamed_ham.timestamp)
 
-                # Ensure valid screencap
-                if screencap is not None:
-                    gif_url = await screencap.get_gif_url()
-
-                    # Generate the gif and replace loading message with generated url
-                    generated_url = await self.frinkiac.generate_gif(gif_url)
-                    await sent.edit(content=generated_url)
-
-        except compuglobal.APIPageStatusError as error:
-            await sent.edit(content=TVShowCog.format_error(error))
-
-        except discord.NotFound:
-            pass
-
-    @app_commands.command(name='simpsons', description='Posts a matching gif from The Simpsons using Frinkiac.')
-    @app_commands.describe(search='Search by quote (e.g. nothing at all)')
-    async def build_simpsons_gif(self, interaction: discord.Interaction, search: str):
-        await self.build_gif(interaction, search)
+            # Ensure valid screencap
+            if screencap is not None:
+                # Generate the gif and replace loading message with generated url
+                generated_url = await self.frinkiac.get_gif_url(screencap)
+                await interaction.edit_original_response(content=generated_url)
 
 
 async def setup(bot):
