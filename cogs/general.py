@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
-COMMANDS_LIST = '''
+COMMANDS_LIST = """
 Hi-diddly-ho, neighborino! Here are the commands, shout them out anytime and
 I'll happily oblige! Well, so long as the reverend approves of course.
 
@@ -27,9 +27,9 @@ I'll happily oblige! Well, so long as the reverend approves of course.
 *I currently support commands for The Simpsons, Futurama, Rick and Morty.*
 
 **For Example:** `@Flanders info`, `@Flanders help tvshows`, `@Flanders trivia`
-'''
+"""
 
-TV_SHOW_COMMANDS = '''
+TV_SHOW_COMMANDS = """
 **TV SHOWS**
 
 **simpsons** - Will post a random Simpsons gif with caption.
@@ -44,9 +44,9 @@ TV_SHOW_COMMANDS = '''
 **epinfo** - Will post episode information on the last post made in the channel.
 
 **For Example:** `@Flanders simpsons nothing at all`, `@Flanders futurama`
-'''
+"""
 
-TRIVIA_COMMANDS = '''
+TRIVIA_COMMANDS = """
 **TRIVIA**
 
 **simpsonstrivia** - Play a trivia game using 100+ questions from The Simpsons.
@@ -56,12 +56,12 @@ TRIVIA_COMMANDS = '''
 **scoreboard** - Shows a scoreboard of trivia users in the server.
 **score** - Shows your trivia score and statistics, used in the leaderboards.
 
-**For Example:** `ned simpsonstrivia`, `ned leaderboard`, `ned suggest` 
-'''
+**For Example:** `ned simpsonstrivia`, `ned leaderboard`, `ned suggest`
+"""
 
-BOT_INFO = f'''Hi-diddly-ho, neighborino! I hear you wanted some 
+BOT_INFO = f"""Hi-diddly-ho, neighborino! I hear you wanted some
 mor-diddly-ore information...
-Well, If it's clear and yella', you've got juice there, fella. If it's tangy 
+Well, If it's clear and yella', you've got juice there, fella. If it's tangy
 and brown, you're in cider town.
 Now, there's two exceptions and it gets kinda tricky here...
 
@@ -72,7 +72,7 @@ Author: <@210898009242861568> (Discord)
 Support Server: <https://discord.gg/xMmxMYg>
 Invite URL: <https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=281664>
 GitHub Source: <https://github.com/MitchellAW/FlandersBOT>
-'''
+"""
 
 
 class General(commands.Cog):
@@ -94,40 +94,39 @@ class General(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 3, BucketType.user)
     async def info(self, ctx):
-        await self.dm_author(ctx, BOT_INFO + f'\n***Currently active in {len(self.bot.guilds)} servers***')
+        await self.dm_author(ctx, BOT_INFO + f"\n***Currently active in {len(self.bot.guilds)} servers***")
 
     # Whispers a list of the bot commands, If the user has DMs disabled,
     # sends the message in the channel
-    @commands.command(aliases=['helper', 'tutorial'])
+    @commands.command(aliases=["helper", "tutorial"])
     @commands.cooldown(1, 3, BucketType.user)
-    async def help(self, ctx, *, category: str = None):
+    async def help(self, ctx, *, category: str | None = None):
         # Post general help commands
         if category is None:
             await self.dm_author(ctx, COMMANDS_LIST)
 
         # Post help commands for all tv shows
-        elif category.lower() == 'tvshows' or category.lower() == 'tv shows':
+        elif category.lower() == "tvshows" or category.lower() == "tv shows":
             await self.dm_author(ctx, TV_SHOW_COMMANDS)
 
     # Whispers a list of help commands for all tv shows
-    @commands.command(aliases=['tv', 'tv-shows'])
+    @commands.command(aliases=["tv", "tv-shows"])
     @commands.cooldown(1, 3, BucketType.user)
     async def tvshows(self, ctx):
         await self.dm_author(ctx, TV_SHOW_COMMANDS)
 
     # Will get the last screencap posted in the channel and post a new gif
     # of the same moment with meme_caption as the new caption
-    @commands.command(aliases=['caption', 'subtitles', 'custom'])
+    @commands.command(aliases=["caption", "subtitles", "custom"])
     @commands.cooldown(1, 3, BucketType.channel)
     @commands.guild_only()
-    async def meme(self, ctx, *, meme_caption: str = None):
-        if (ctx.channel.id in self.bot.cached_screencaps
-                and meme_caption is not None):
+    async def meme(self, ctx, *, meme_caption: str | None = None):
+        if ctx.channel.id in self.bot.cached_screencaps and meme_caption is not None:
             screencap = self.bot.cached_screencaps[ctx.channel.id]
 
             if screencap is not None:
                 gif_url = await screencap.get_gif_url(meme_caption)
-                sent = await ctx.send('Generating meme... <a:loading:410316176510418955>')
+                sent = await ctx.send("Generating meme... <a:loading:410316176510418955>")
                 generated_url = await screencap.api.generate_gif(gif_url)
                 try:
                     await sent.edit(content=generated_url)
@@ -139,49 +138,58 @@ class General(commands.Cog):
     @commands.command()
     @commands.cooldown(2, 600, BucketType.user)
     @commands.bot_has_permissions(embed_links=True)
-    async def feedback(self, ctx, *, message: str = None):
+    async def feedback(self, ctx, *, message: str | None = None):
         if message is None:
-            await ctx.send('Sorry, I noodily-need some feedback to send.\n'
-                           'Usage: `ned feedback [feedback message here]`')
+            await ctx.send(
+                "Sorry, I noodily-need some feedback to send.\n" "Usage: `ned feedback [feedback message here]`"
+            )
         else:
             feedback_channel = self.bot.get_channel(self.FEEDBACK_CHANNEL)
-            embed = discord.Embed(title=f'📫 Feedback from: {ctx.author} ({ctx.author.id})',
-                                  colour=discord.Colour(0x44981e), description=f'```{message}```')
+            embed = discord.Embed(
+                title=f"📫 Feedback from: {ctx.author} ({ctx.author.id})",
+                colour=discord.Colour(0x44981E),
+                description=f"```{message}```",
+            )
 
             embed.set_author(name=ctx.message.author.name, icon_url=ctx.message.author.avatar)
             await feedback_channel.send(embed=embed)
 
             # Thank for feedback
-            await ctx.send('Thanks neighbourino! 📫 The feedback has been sent to my support serveroo!')
+            await ctx.send("Thanks neighbourino! 📫 The feedback has been sent to my support serveroo!")
 
     # DM user with an invite link for the bot
     @commands.command()
     @commands.cooldown(1, 3, BucketType.user)
     async def invite(self, ctx):
-        await self.dm_author(ctx, 'You can add me to your own server using the link below:\n'
-                                  f'<https://discordapp.com/oauth2/authorize?client_id={self.bot.user.id}'
-                                  '&scope=bot&permissions=281664>')
+        await self.dm_author(
+            ctx,
+            "You can add me to your own server using the link below:\n"
+            f"<https://discordapp.com/oauth2/authorize?client_id={self.bot.user.id}"
+            "&scope=bot&permissions=281664>",
+        )
 
     # Sends url to FlandersBOT github repo
-    @commands.command(aliases=['github', 'repo'])
+    @commands.command(aliases=["github", "repo"])
     @commands.cooldown(1, 3, BucketType.user)
     async def source(self, ctx):
-        await ctx.send('Github Repository: <https://github.com/MitchellAW/FlandersBOT>\n'
-                       'If you like the project, consider giving the riddly-repo a star! :star: ')
+        await ctx.send(
+            "Github Repository: <https://github.com/MitchellAW/FlandersBOT>\n"
+            "If you like the project, consider giving the riddly-repo a star! :star: "
+        )
 
     # Display information/news regarding the last update
-    @commands.command(aliases=['news'])
+    @commands.command(aliases=["news"])
     @commands.cooldown(1, 3, BucketType.user)
     async def update(self, ctx):
-        last_update = '2020-12-27'
-        await ctx.send(f'- Added privacy settings, use `ned privacy` for more info!\nLast Update: {last_update}')
+        last_update = "2020-12-27"
+        await ctx.send(f"- Added privacy settings, use `ned privacy` for more info!\nLast Update: {last_update}")
 
     # Allow administrators to make ned leave the server
     @commands.command()
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
     async def leave(self, ctx):
-        await ctx.send('Okilly-dokilly! 👋')
+        await ctx.send("Okilly-dokilly! 👋")
         await ctx.guild.leave()
 
 

@@ -7,10 +7,10 @@ class Prefixes(commands.Cog):
         self.bot = bot
 
     # Display the prefixes used on the current guild
-    @commands.command(aliases=['prefixes', 'add-prefix', 'setprefix', 'addprefix', 'set-prefix'])
+    @commands.command(aliases=["prefixes", "add-prefix", "setprefix", "addprefix", "set-prefix"])
     @commands.cooldown(1, 3, BucketType.channel)
     async def prefix(self, ctx):
-        message = f'I can only respond to commands starting with {self.bot.user.mention}.'
+        message = f"I can only respond to commands starting with {self.bot.user.mention}."
         await ctx.send(message)
 
 
