@@ -1,5 +1,8 @@
 aiohttp
 asyncpg
-compuglobal==0.3.0
+compuglobal==0.3.5
 discord.py
 tabulate
+black>=26.3.0
+flake8>=7.3.0
+isort>=8.0.0
