@@ -38,11 +38,17 @@ def has_trivia_permissions():
 
 
 class Trivia(commands.Cog):
+    DISABLED = True
+    DISABLED_MESSAGE = "Sorry, trivia is currently under maintenance at the moment!"
+
     def __init__(self, bot):
         self.bot = bot
         self.TIMER_DURATION = 16
         self.channels_playing = []
         self.answer_key = {"🇦": 0, "🇧": 1, "🇨": 2}
+
+    async def sorry_message(self, ctx):
+        await ctx.send(self.DISABLED_MESSAGE, silent=True, delete_after=10)
 
     # Starts a game of trivia using the simpsons trivia questions
     @commands.command(aliases=["strivia", "simpsontrivia"])
@@ -50,6 +56,10 @@ class Trivia(commands.Cog):
     @commands.bot_has_permissions(add_reactions=True, embed_links=True)
     @has_trivia_permissions()
     async def simpsonstrivia(self, ctx):
+        if self.DISABLED:
+            await self.sorry_message(ctx)
+            return
+
         if ctx.channel.id not in self.channels_playing:
             await self.start_trivia(ctx, SimpsonsTrivia())
 
@@ -59,8 +69,11 @@ class Trivia(commands.Cog):
     @commands.bot_has_permissions(add_reactions=True, embed_links=True)
     @has_trivia_permissions()
     async def futuramatrivia(self, ctx):
+        if self.DISABLED:
+            await self.sorry_message(ctx)
+            return
+
         if ctx.channel.id not in self.channels_playing:
-            # Start the game
             await self.start_trivia(ctx, FuturamaTrivia())
 
     # TODO: Starts a game of trivia using rick and morty trivia questions
@@ -68,7 +81,7 @@ class Trivia(commands.Cog):
     @commands.cooldown(10, 300, BucketType.channel)
     @has_trivia_permissions()
     async def rickandmortytrivia(self, ctx):
-        await ctx.send("Coming Soon!")
+        await ctx.send("Coming Soon!", silent=True, delete_after=10)
 
     # Explain how trivia games end  to users trying to use a stop command
     @commands.command()
@@ -93,13 +106,17 @@ class Trivia(commands.Cog):
     @commands.cooldown(1, 60, BucketType.channel)
     @has_trivia_permissions()
     async def scoreboard(self, ctx):
+        if self.DISABLED:
+            await self.sorry_message(ctx)
+            return
+
         # Get latest match for guild
         query = """SELECT match_id, trivia_category FROM matches
-                   WHERE guild_id = $1 AND is_complete = true AND (
-                       SELECT get_participant_count(match_id)
-                   ) > 0
-                   ORDER BY match_id DESC
-                   LIMIT 1
+                WHERE guild_id = $1 AND is_complete = true AND (
+                    SELECT get_participant_count(match_id)
+                ) > 0
+                ORDER BY match_id DESC
+                LIMIT 1
                 """
         match = await self.bot.db.fetchrow(query, ctx.guild.id)
 
@@ -119,10 +136,14 @@ class Trivia(commands.Cog):
     @commands.command(aliases=["mystatistics", "mystat", "triviastat", "triviastats", "triviastatistics"])
     @commands.cooldown(1, 30, BucketType.user)
     async def mystats(self, ctx):
+        if self.DISABLED:
+            await self.sorry_message(ctx)
+            return
+
         query = """SELECT user_id, username, score, wins, losses, correct_answers,
-                   incorrect_answers, fastest_answer, longest_streak, current_streak
-                   FROM leaderboard
-                   WHERE user_id = $1
+                incorrect_answers, fastest_answer, longest_streak, current_streak
+                FROM leaderboard
+                WHERE user_id = $1
                 """
         trivia_stats = await self.bot.db.fetchrow(query, ctx.author.id)
 
@@ -163,7 +184,9 @@ class Trivia(commands.Cog):
             rank = await self.bot.db.fetchval(get_rank, ctx.author.id, "current_streak")
             current_streak = round(trivia_stats["current_streak"], 2)
             embed.add_field(
-                name=f":chart_with_upwards_trend: Current Streak (#{rank:,})", value=f"{current_streak:,}", inline=True
+                name=f":chart_with_upwards_trend: Current Streak (#{rank:,})",
+                value=f"{current_streak:,}",
+                inline=True,
             )
 
             rank = await self.bot.db.fetchval(get_rank, ctx.author.id, "longest_streak")
@@ -181,6 +204,8 @@ class Trivia(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 30, BucketType.channel)
     async def leaderboard(self, ctx):
+        if self.DISABLED:
+            await self.sorry_message(ctx)
         stats = [
             {
                 "query": "SELECT username, score AS result "
@@ -237,6 +262,10 @@ class Trivia(commands.Cog):
 
     # Starts a match of trivia (multiple rounds of questions)
     async def start_trivia(self, ctx, category):
+        if self.DISABLED:
+            await self.sorry_message(ctx)
+            return
+
         self.channels_playing.append(ctx.channel.id)
 
         # Load question data from trivia file
