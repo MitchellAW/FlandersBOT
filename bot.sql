@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS answers (
 );
 
 -- Leaderboard of trivia players and their stats
-CREATE TABLE IF NOT EXISTS leaderboard ( 
+CREATE TABLE IF NOT EXISTS leaderboard (
 	user_id bigint PRIMARY KEY,
 	username text NOT NULL,
 	privacy int DEFAULT 0 NOT NULL,
@@ -73,11 +73,11 @@ CREATE TABLE IF NOT EXISTS command_history (
 );
 
 -- Check if user has voted in the last 24 hours
-CREATE OR REPLACE FUNCTION has_voted_today(p_user_id bigint) 
+CREATE OR REPLACE FUNCTION has_voted_today(p_user_id bigint)
 RETURNS boolean AS $$
 	BEGIN
 		RETURN (
-			SELECT COUNT(v.voted_at) FROM vote_history v 
+			SELECT COUNT(v.voted_at) FROM vote_history v
 			WHERE v.user_id = p_user_id
 			AND v.voted_at BETWEEN (
 				NOW() AT time zone 'utc') - INTERVAL '24 HOURS' AND (
@@ -133,21 +133,21 @@ RETURNS bigint AS $$
 $$ LANGUAGE plpgsql;
 
 -- Check if answer is a new unique answer
-CREATE OR REPLACE FUNCTION is_unique_answer(p_user_id bigint, p_question_index int) 
+CREATE OR REPLACE FUNCTION is_unique_answer(p_user_id bigint, p_question_index int)
 RETURNS boolean AS $$
 	BEGIN
 		RETURN (
 		 	SELECT COUNT(a.user_id) FROM answers a
 		 	INNER JOIN rounds r
-		 	ON a.round_id = r.round_id 
-		 	WHERE r.question_index = p_question_index AND 
+		 	ON a.round_id = r.round_id
+		 	WHERE r.question_index = p_question_index AND
 		 		a.is_correct = true AND a.user_id = p_user_id
 		) = 0;
 	END;
 $$ LANGUAGE plpgsql;
 
 -- Calculates the level using a users score
-CREATE OR REPLACE FUNCTION calculate_level(score bigint) 
+CREATE OR REPLACE FUNCTION calculate_level(score bigint)
 RETURNS int AS $$
 	DECLARE
 		level int := 0;
@@ -163,7 +163,7 @@ RETURNS int AS $$
 $$ LANGUAGE plpgsql;
 
 -- Gets a users current level based on their score
-CREATE OR REPLACE FUNCTION get_level(p_user_id bigint) 
+CREATE OR REPLACE FUNCTION get_level(p_user_id bigint)
 RETURNS int AS $$
 	DECLARE
 		level int;
@@ -216,13 +216,13 @@ $$ LANGUAGE plpgsql;
 
 -- Update a users statistics when a user answers
 CREATE OR REPLACE FUNCTION update_stats() RETURNS TRIGGER AS $BODY$
-	DECLARE 
-		question int := (SELECT question_index 
-			             FROM rounds 
+	DECLARE
+		question int := (SELECT question_index
+			             FROM rounds
 			             WHERE round_id = new.round_id);
 	BEGIN
 		-- Insert user that answers into leaderboard
-		INSERT INTO leaderboard (user_id, username) 
+		INSERT INTO leaderboard (user_id, username)
 		VALUES (new.user_id, new.username) ON CONFLICT DO NOTHING;
 
 		-- Update stats for correct answer (100 points for correct, increase streak)
@@ -235,19 +235,19 @@ CREATE OR REPLACE FUNCTION update_stats() RETURNS TRIGGER AS $BODY$
 			END IF;
 
 			-- 100 points for correct answer, 10 bonus points multiplier for each correct in a row
-		    UPDATE leaderboard SET score = score + (SELECT vote_multiply(user_id, 100 + (10 * current_streak))), 
+		    UPDATE leaderboard SET score = score + (SELECT vote_multiply(user_id, 100 + (10 * current_streak))),
 		        correct_answers = correct_answers + 1,
 		        -- New fastest answer
-		        fastest_answer = LEAST(fastest_answer, new.answer_time), 
+		        fastest_answer = LEAST(fastest_answer, new.answer_time),
 		        -- Update consecutive answer streaks
-		        current_streak = current_streak + 1, 
+		        current_streak = current_streak + 1,
 		        longest_streak = GREATEST(longest_streak, current_streak + 1)
 		    WHERE user_id = new.user_id;
 
 		-- Update stats for incorrect answer (5 points, reset streak)
 		ELSE
-	        UPDATE leaderboard SET score = score + (SELECT vote_multiply(user_id, 5)), 
-	        incorrect_answers = incorrect_answers + 1, 
+	        UPDATE leaderboard SET score = score + (SELECT vote_multiply(user_id, 5)),
+	        incorrect_answers = incorrect_answers + 1,
 	        current_streak = 0
 	        WHERE user_id = new.user_id;
 		END IF;
@@ -295,7 +295,7 @@ CREATE OR REPLACE FUNCTION end_match() RETURNS TRIGGER AS $BODY$
 	DECLARE
 		-- Get number of rounds
 		round_count int := (SELECT COUNT(DISTINCT round_id) AS round_count
-						    FROM rounds 
+						    FROM rounds
 						    WHERE match_id = new.match_id);
 
 		-- Get number of players that participated
@@ -310,7 +310,7 @@ CREATE OR REPLACE FUNCTION end_match() RETURNS TRIGGER AS $BODY$
 	    -- Get user_id of fastest answer in match
 	    fastest_user bigint := (SELECT get_fastest_answer(new.match_id));
 	BEGIN
-		-- Check that it counts as a valid multiplayer match 
+		-- Check that it counts as a valid multiplayer match
 		-- (more than 1 player, at least 5 rounds)
 		IF (round_count >= 5 AND player_count > 1) THEN
 
@@ -355,4 +355,3 @@ CREATE TRIGGER update_match
 	BEFORE UPDATE ON matches
 	FOR EACH ROW
 	EXECUTE FUNCTION end_match();
-
