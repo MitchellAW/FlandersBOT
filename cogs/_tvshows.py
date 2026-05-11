@@ -1,5 +1,4 @@
 from abc import abstractmethod
-from tkinter import FALSE
 
 import compuglobal
 import discord
@@ -445,7 +444,7 @@ class CustomiseCaptionModal(discord.ui.Modal, title="Customise caption:"):
         ]
 
     async def on_submit(self, interaction: discord.Interaction):
-        await interaction.response.defer(ephemeral=FALSE)
+        await interaction.response.defer(ephemeral=True)
 
         self.state.custom_subtitles = (
             await self.get_merged_subtitles() if self.merge_caption_checkbox.value else await self.get_subtitles()
