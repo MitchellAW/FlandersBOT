@@ -115,25 +115,6 @@ class General(commands.Cog):
     async def tvshows(self, ctx):
         await self.dm_author(ctx, TV_SHOW_COMMANDS)
 
-    # Will get the last screencap posted in the channel and post a new gif
-    # of the same moment with meme_caption as the new caption
-    @commands.command(aliases=["caption", "subtitles", "custom"])
-    @commands.cooldown(1, 3, BucketType.channel)
-    @commands.guild_only()
-    async def meme(self, ctx, *, meme_caption: str | None = None):
-        if ctx.channel.id in self.bot.cached_screencaps and meme_caption is not None:
-            screencap = self.bot.cached_screencaps[ctx.channel.id]
-
-            if screencap is not None:
-                gif_url = await screencap.get_gif_url(meme_caption)
-                sent = await ctx.send("Generating meme... <a:loading:410316176510418955>")
-                generated_url = await screencap.api.generate_gif(gif_url)
-                try:
-                    await sent.edit(content=generated_url)
-
-                except discord.NotFound:
-                    pass
-
     # Sends the feedback to the feedback channel of support server
     @commands.command()
     @commands.cooldown(2, 600, BucketType.user)
