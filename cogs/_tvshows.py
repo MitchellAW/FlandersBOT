@@ -52,67 +52,6 @@ class TVShowCog(commands.Cog):
 
         return unique_results
 
-    # Get random or searched screencap based on search parameter and update cached_screencaps
-    async def get_screencap(self, ctx, search=None):
-        screencap = None
-        try:
-            if search is None:
-                screencap = await self.api.get_random_screencap()
-
-            else:
-                screencap = await self.api.search_for_screencap(search)
-
-            self.bot.cached_screencaps.update({ctx.message.channel.id: screencap})
-
-        except compuglobal.APIPageStatusError as error:
-            await ctx.send(self.format_error(error))
-
-        except compuglobal.NoSearchResultsFound as error:
-            await ctx.send(error)
-
-        return screencap
-
-    # Post a random screencap image with caption
-    async def post_image(self, ctx, search=None, caption=None):
-        try:
-            screencap = await self.get_screencap(ctx, search)
-
-            if screencap is not None:
-                await ctx.send(await self.api.get_comic_strip_url(screencap))
-
-        except compuglobal.APIPageStatusError as error:
-            await ctx.send(self.format_error(error))
-
-    # Post a gif, if generating, post generating loading message and then edit message to include gif with the
-    # generated url
-    async def post_gif(self, ctx, search=None, caption=None, generate=True):
-        screencap = None
-        try:
-            screencap = await self.get_screencap(ctx, search)
-
-        except compuglobal.APIPageStatusError as error:
-            await ctx.send(self.format_error(error))
-
-        if screencap is not None:
-            comic_url = await self.api.get_comic_strip_url(screencap)
-
-            if generate:
-                emoji = await Events.use_emoji(ctx, "<a:loading:410316176510418955>", "⌛")
-                sent = await ctx.send(f"Generating {screencap.frame.key}... {emoji}")
-
-                try:
-                    generated_url = await self.api.get_gif_url(screencap)
-                    await sent.edit(content=generated_url)
-
-                except compuglobal.APIPageStatusError as error:
-                    await sent.edit(content=self.format_error(error))
-
-                except discord.NotFound:
-                    pass
-
-            else:
-                await ctx.send(comic_url)
-
     async def build_gif(self, interaction: discord.Interaction, search: str):
         try:
             search_results = await self.api.search(search)
@@ -131,7 +70,7 @@ class TVShowCog(commands.Cog):
             options[0].default = True
 
             # Create the view containing our dropdown and preview
-            gif_builder_view = GifBuilderView(options, state, await state.get_preview_embed())
+            gif_builder_view = GifBuilderView(options, state, await state.get_comic_strip_url())
 
             # Sending a message containing our gif builder view
             await interaction.response.send_message(view=gif_builder_view, ephemeral=True)
@@ -194,9 +133,6 @@ class TVReferenceState:
 
         self._index = index
 
-    async def get_frame(self):
-        return self.frames[self._index]
-
     async def get_screencap(self) -> compuglobal.Screencap:
         frame = self.frames[self._index]
 
@@ -211,20 +147,6 @@ class TVReferenceState:
         for frame in self.frames:
             screencap = await self.api.get_screencap(frame.key, frame.timestamp)
             self.screencaps.update({frame: screencap})
-
-    async def get_preview_embed(self):
-        screencap = await self.get_screencap()
-        view_url = await self.api.get_comic_strip_url(screencap, self.custom_subtitles)
-        return view_url
-
-    async def get_embed(self) -> discord.Embed:
-        screencap = await self.get_screencap()
-        embed = discord.Embed(
-            title=f"{screencap.frame.key}: {screencap.episode.title} " f"({screencap.get_real_timestamp()})",
-            url=screencap.episode.wiki_link,
-        )
-
-        return embed
 
     async def get_subtitles(self) -> list[compuglobal.Subtitle]:
         screencap = await self.get_screencap()
@@ -320,7 +242,7 @@ class SearchResultDropdown(discord.ui.Select):
 
         # Update selected index state
         self.state.set_index(selected_index)
-        self.view.update_image(await self.state.get_preview_embed())
+        self.view.update_image(await self.state.get_comic_strip_url())
         await interaction.edit_original_response(view=self.view)
 
 
@@ -459,5 +381,5 @@ class CustomiseCaptionModal(discord.ui.Modal, title="Customise caption:"):
         )
 
         # Update image/comic preview
-        self.view.update_image(await self.state.get_preview_embed())
+        self.view.update_image(await self.state.get_comic_strip_url())
         await interaction.edit_original_response(view=self.view)
