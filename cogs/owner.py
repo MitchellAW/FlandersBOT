@@ -152,7 +152,8 @@ class Owner(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def unsync(self, ctx, *, globe: str | None = None):
-        self.bot.tree.clear_commands(guild=None)
+        guild = discord.Object(id=ctx.guild.id)
+        self.bot.tree.clear_commands(guild=guild)
         if globe == "global":
             await ctx.bot.tree.sync()
 
