@@ -149,6 +149,11 @@ class TVReferenceState:
         if self.channel is not None:
             self.bot.cached_screencaps.update({self.channel: (screencap, self.api.BASE_URL)})
 
+    async def populate(self):
+        for frame in self.frames:
+            screencap = await self.api.get_screencap(frame.key, frame.timestamp)
+            self.screencaps.update({frame: screencap})
+
     async def get_screencap(self) -> compuglobal.Screencap:
         frame = self.frames[self._index]
 
@@ -158,11 +163,6 @@ class TVReferenceState:
             screencap = await self.api.get_screencap(frame.key, frame.timestamp)
 
         return screencap
-
-    async def populate(self):
-        for frame in self.frames:
-            screencap = await self.api.get_screencap(frame.key, frame.timestamp)
-            self.screencaps.update({frame: screencap})
 
     async def get_subtitles(self) -> list[compuglobal.Subtitle]:
         screencap = await self.get_screencap()
@@ -178,23 +178,10 @@ class TVReferenceState:
         subtitles = await self.get_subtitles()
         return await self.api.get_gif_url(screencap, subtitles=subtitles)
 
-    async def get_comic_strip_view(self) -> TVContentView:
+    async def get_content_view(self, url: str) -> TVContentView:
         screencap = await self.get_screencap()
-        comic_url = await self.get_comic_strip_url()
         return TVContentView(
-            content_url=comic_url,
-            episode_title=screencap.episode.title,
-            episode_url=f"{self.api.BASE_URL}/episode/{screencap.frame.key}/{screencap.frame.timestamp}",
-            episode_details=f"{screencap.frame.key} - {screencap.get_real_timestamp()}",
-            author=self.author,
-        )
-
-    async def get_gif_view(self) -> TVContentView:
-        screencap = await self.get_screencap()
-        gif_url = await self.get_gif_url()
-
-        return TVContentView(
-            content_url=gif_url,
+            content_url=url,
             episode_title=screencap.episode.title,
             episode_url=f"{self.api.BASE_URL}/episode/{screencap.frame.key}/{screencap.frame.timestamp}",
             episode_details=f"{screencap.frame.key} - {screencap.get_real_timestamp()}",
@@ -290,13 +277,14 @@ class GenerateButton(discord.ui.Button):
             original = await interaction_channel.send(f"Generating {screencap.frame.key}... {emoji}")
 
         await self.state.cache_screencap()
-        content_view = await self.get_content_view()
+        content_url = await self.get_content_url()
+        content_view = await self.state.get_content_view(content_url)
 
         if original is not None:
             await original.edit(content=None, view=content_view, allowed_mentions=discord.AllowedMentions.none())
 
     @abstractmethod
-    async def get_content_view(self) -> TVContentView:
+    async def get_content_url(self) -> str:
         pass
 
 
@@ -304,16 +292,16 @@ class GenerateComicButton(GenerateButton):
     def __init__(self, state: TVReferenceState):
         super().__init__(label="Send Comic", style=discord.ButtonStyle.secondary, state=state)
 
-    async def get_content_view(self):
-        return await self.state.get_comic_strip_view()
+    async def get_content_url(self):
+        return await self.state.get_comic_strip_url()
 
 
 class GenerateGifButton(GenerateButton):
     def __init__(self, state: TVReferenceState):
         super().__init__(label="Send Gif", style=discord.ButtonStyle.primary, state=state)
 
-    async def get_content_view(self):
-        return await self.state.get_gif_view()
+    async def get_content_url(self):
+        return await self.state.get_gif_url()
 
 
 class CustomiseCaptionButton(GenerateButton):
