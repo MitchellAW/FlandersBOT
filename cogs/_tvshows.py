@@ -57,9 +57,16 @@ class TVShowCog(commands.Cog):
             search_results = await self.api.search(search)
             unique_results = self.get_unique_results(search_results)
 
+            channel_id = interaction.channel.id if interaction.channel is not None else None
+
             username = interaction.user.mention
             state = TVReferenceState(
-                frames=unique_results[:25], api=self.api, api_cache=self.api_cache, author=username
+                frames=unique_results[:25],
+                api=self.api,
+                api_cache=self.api_cache,
+                author=username,
+                bot=self.bot,
+                channel=channel_id,
             )
 
             # Get top 25 results
@@ -116,12 +123,16 @@ class TVReferenceState:
         api: compuglobal.AsyncCompuGlobalAPI,
         api_cache: dict[str, compuglobal.EpisodeSummary],
         author: str,
+        bot,
+        channel: int | None = None,
     ):
         self.frames = frames
         self.api = api
         self.api_cache = api_cache
+        self.channel = channel
         self.author = author
-        self.gif_builder = None
+        self.bot = bot
+
         self.custom_subtitles: list[compuglobal.Subtitle] | None = None
 
         self._index = 0
@@ -132,6 +143,11 @@ class TVReferenceState:
             raise ValueError(f"Index {index} is out of bounds, must be between 0-{len(self.frames)}")
 
         self._index = index
+
+    async def cache_screencap(self):
+        screencap = await self.get_screencap()
+        if self.channel is not None:
+            self.bot.cached_screencaps.update({self.channel: (screencap, self.api.BASE_URL)})
 
     async def get_screencap(self) -> compuglobal.Screencap:
         frame = self.frames[self._index]
@@ -176,6 +192,7 @@ class TVReferenceState:
     async def get_gif_view(self) -> TVContentView:
         screencap = await self.get_screencap()
         gif_url = await self.get_gif_url()
+
         return TVContentView(
             content_url=gif_url,
             episode_title=screencap.episode.title,
@@ -272,7 +289,9 @@ class GenerateButton(discord.ui.Button):
         if isinstance(interaction_channel, discord.TextChannel):
             original = await interaction_channel.send(f"Generating {screencap.frame.key}... {emoji}")
 
+        await self.state.cache_screencap()
         content_view = await self.get_content_view()
+
         if original is not None:
             await original.edit(content=None, view=content_view, allowed_mentions=discord.AllowedMentions.none())
 

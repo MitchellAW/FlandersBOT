@@ -4,6 +4,7 @@ import json
 
 import asyncpg
 import discord
+from discord import app_commands
 from discord.ext import commands, tasks
 from discord.ext.commands.cooldowns import BucketType
 
@@ -121,31 +122,39 @@ class Stats(commands.Cog):
         latency = round(self.bot.latency * 1000, 2)
         await ctx.send(f"🏓 Latency: {str(latency)}ms")
 
-    # Get all episode information of the last screencap that was posted in the
-    # channel
-    @commands.command(aliases=["episodeinfo"])
-    @commands.cooldown(1, 3, BucketType.channel)
-    @commands.bot_has_permissions(embed_links=True)
-    async def epinfo(self, ctx):
-        if ctx.channel.id in self.bot.cached_screencaps:
-            # Get screencap and its timestamp
-            screencap = self.bot.cached_screencaps[ctx.channel.id]
-            real_timestamp = screencap.get_real_timestamp()
+    @app_commands.command(name="epinfo", description="See more details of the last episode posted in this channel.")
+    @app_commands.checks.cooldown(1, 3.0, key=lambda i: (i.guild_id, i.user.id))
+    async def share_episode_details(self, interaction: discord.Interaction):
+        channel_id = interaction.channel.id if interaction.channel is not None else None
+        if channel_id in self.bot.cached_screencaps:
+            screencap, api_url = self.bot.cached_screencaps[channel_id]
 
             # Create embed for episode information, links to wiki of episode
             embed = discord.Embed(
-                title=f"{screencap.api.title}: {screencap.title}",
+                title=f"{screencap.episode.title}",
                 colour=discord.Colour(0x44981E),
-                url=screencap.wiki_url,
+                url=screencap.episode.wiki_link,
             )
+            image_url = f"{api_url}/img/{screencap.frame.key}/{screencap.frame.timestamp}.jpg"
+            episode_url = f"{api_url}/episode/{screencap.frame.key}/{screencap.frame.timestamp}"
+            similar_url = f"{api_url}/similar/{screencap.frame.key}/{screencap.frame.timestamp}"
+
+            links = f"[Browse Episode]({episode_url})\n[Find Similar]({similar_url})"
 
             # Add episode information
-            embed.add_field(name="Episode", value=screencap.key, inline=True)
-            embed.add_field(name="Air Date", value=screencap.air_date, inline=True)
-            embed.add_field(name="Timestamp", value=real_timestamp, inline=True)
-            embed.add_field(name="Director(s)", value=screencap.director)
-            embed.add_field(name="Writer(s)", value=screencap.writer)
-            await ctx.send(embed=embed)
+            embed.add_field(name="Episode", value=screencap.frame.key, inline=True)
+            embed.add_field(name="Air Date", value=screencap.episode.original_air_date, inline=True)
+            embed.add_field(name="Timestamp", value=screencap.get_real_timestamp(), inline=True)
+            embed.add_field(name="Director(s)", value=screencap.episode.director)
+            embed.add_field(name="Writer(s)", value=screencap.episode.writer)
+            embed.add_field(name="More Links", value=links)
+
+            embed.set_thumbnail(url=image_url)
+
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+
+        else:
+            await interaction.response.send_message("Sorry, I failed to find any recent posts!", ephemeral=True)
 
     # Display statistics for the bot
     @commands.command(aliases=["statistics"])
