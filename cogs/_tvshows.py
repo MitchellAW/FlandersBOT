@@ -283,7 +283,7 @@ class GenerateButton(discord.ui.Button):
 
 class GenerateComicButton(GenerateButton):
     def __init__(self, state: TVReferenceState):
-        super().__init__(label="Send Comic", style=discord.ButtonStyle.success, state=state)
+        super().__init__(label="Send Comic", style=discord.ButtonStyle.secondary, state=state)
 
     async def get_content_view(self):
         return await self.state.get_comic_strip_view()
