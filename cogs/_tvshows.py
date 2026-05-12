@@ -196,14 +196,14 @@ class GifBuilderView(discord.ui.LayoutView):
         super().__init__()
         self.state = state
 
-        self.gallery = discord.ui.MediaGallery()
-        self.gallery.add_item(media=image_url)
-        self.add_item(self.gallery)
-
         # Add the search results dropdown
         action_row = discord.ui.ActionRow()
         action_row.add_item(SearchResultDropdown(options, state))
         self.add_item(action_row)
+
+        self.gallery = discord.ui.MediaGallery()
+        self.gallery.add_item(media=image_url)
+        self.add_item(self.gallery)
 
         # Add the customisation and post content buttons
         action_row = discord.ui.ActionRow()
@@ -283,7 +283,7 @@ class GenerateButton(discord.ui.Button):
 
 class GenerateComicButton(GenerateButton):
     def __init__(self, state: TVReferenceState):
-        super().__init__(label="Generate Comic", style=discord.ButtonStyle.success, state=state)
+        super().__init__(label="Send Comic", style=discord.ButtonStyle.success, state=state)
 
     async def get_content_view(self):
         return await self.state.get_comic_strip_view()
@@ -291,7 +291,7 @@ class GenerateComicButton(GenerateButton):
 
 class GenerateGifButton(GenerateButton):
     def __init__(self, state: TVReferenceState):
-        super().__init__(label="Generate Gif", style=discord.ButtonStyle.primary, state=state)
+        super().__init__(label="Send Gif", style=discord.ButtonStyle.primary, state=state)
 
     async def get_content_view(self):
         return await self.state.get_gif_view()
