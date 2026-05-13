@@ -342,7 +342,7 @@ class CustomiseCaptionModal(discord.ui.Modal, title="Customise caption:"):
                 default=subtitle.content,
                 style=discord.TextStyle.short,
                 placeholder="Enter your caption...",
-                required=True,
+                required=False,
                 max_length=150,
             )
             self.add_item(custom_caption)
