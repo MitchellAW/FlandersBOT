@@ -1,4 +1,6 @@
 import discord
+
+# pyrefly: ignore [deprecated]
 from compuglobal.aio import MasterOfAllScience
 from discord import app_commands
 

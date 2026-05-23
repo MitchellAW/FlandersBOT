@@ -2,6 +2,7 @@ import asyncio
 import datetime
 import json
 import os
+import sys
 
 import aiohttp
 import asyncpg
@@ -64,7 +65,7 @@ async def run_bot():
         bot.db = await asyncpg.create_pool(**config["db_credentials"])
     except Exception as e:
         print(f"Failed to connect PostgreSQL. Terminating.\n{type(e).__name__}: {e}")
-        exit()
+        sys.exit()
 
     # Initialise bot with aiohttp session
     async with aiohttp.ClientSession() as session:

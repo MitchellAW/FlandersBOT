@@ -66,7 +66,6 @@ class Events(commands.Cog):
             )
 
         elif isinstance(error, commands.BotMissingPermissions):
-
             # List all missing permissions
             await ctx.send(
                 "⛔ Sorry, I do not have the permissions riddly-required for that command-aroo!\nRequires: "
@@ -86,7 +85,7 @@ class Events(commands.Cog):
         elif isinstance(error, commands.NoPrivateMessage):
             await ctx.author.send(f"{ctx.command} can not be used in Private Messages.")
 
-        else:
+        elif isinstance(error, Exception):
             # Get timestamp of error
             error_at = datetime.datetime.now(datetime.UTC).strftime("%y-%m-%d %H:%M:%S")
 

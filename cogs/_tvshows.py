@@ -1,4 +1,5 @@
 from abc import abstractmethod
+from typing import Sequence
 
 import compuglobal
 import discord
@@ -38,7 +39,8 @@ class TVShowCog(commands.Cog):
         return str(error).replace("http", "<http").replace(".com/", ".com/>")
 
     @staticmethod
-    def get_unique_results(search_results: list[compuglobal.Frame]):
+    def get_unique_results(search_results: list[compuglobal.FrameResult]):
+        timestamp_diff_required = 50000
         unique = {}
 
         # Filter out similar results
@@ -46,7 +48,7 @@ class TVShowCog(commands.Cog):
         for result in search_results:
             check = unique.get(result.key)
 
-            if check is None or abs(check.timestamp - result.timestamp) > 50000:
+            if check is None or abs(check.timestamp - result.timestamp) > timestamp_diff_required:
                 unique.update({result.key: result})
                 unique_results.append(result)
 
@@ -60,14 +62,7 @@ class TVShowCog(commands.Cog):
             channel_id = interaction.channel.id if interaction.channel is not None else None
 
             username = interaction.user.mention
-            state = TVReferenceState(
-                frames=unique_results[:25],
-                api=self.api,
-                api_cache=self.api_cache,
-                author=username,
-                bot=self.bot,
-                channel=channel_id,
-            )
+            state = TVReferenceState(self, frames=unique_results[:25], author=username, channel=channel_id)
 
             # Get top 25 results
             options = []
@@ -85,7 +80,7 @@ class TVShowCog(commands.Cog):
             # Pre-cache desired screencaps from search results
             await state.populate()
 
-        except compuglobal.NoSearchResultsFound:
+        except compuglobal.NoSearchResultsFoundError:
             await interaction.response.send_message("⚠️ No search results found.", ephemeral=True)
 
 
@@ -119,19 +114,17 @@ class TVContentView(discord.ui.LayoutView):
 class TVReferenceState:
     def __init__(
         self,
-        frames: list[compuglobal.Frame],
-        api: compuglobal.AsyncCompuGlobalAPI,
-        api_cache: dict[str, compuglobal.EpisodeSummary],
+        cog: TVShowCog,
+        frames: list[compuglobal.FrameResult],
         author: str,
-        bot,
         channel: int | None = None,
     ):
         self.frames = frames
-        self.api = api
-        self.api_cache = api_cache
+        self.api = cog.api
+        self.api_cache = cog.api_cache
         self.channel = channel
         self.author = author
-        self.bot = bot
+        self.bot = cog.bot
 
         self.custom_subtitles: list[compuglobal.Subtitle] | None = None
 
@@ -195,8 +188,15 @@ class TVReferenceState:
         return end_timestamp - start_timestamp
 
 
+class SearchResult(discord.SelectOption):
+    def __init__(self, frame: compuglobal.Frame, index: int, api_title: str, state: TVReferenceState):
+        summary = state.api_cache.get(frame.key)
+        title = summary.title if summary is not None else "Unknown Title"
+        super().__init__(label=f"{index}. {title}", description=f"{frame.key} - {frame.get_real_timestamp()}")
+
+
 class GifBuilderView(discord.ui.LayoutView):
-    def __init__(self, options: list[discord.SelectOption], state: TVReferenceState, image_url: str):
+    def __init__(self, options: Sequence[discord.SelectOption], state: TVReferenceState, image_url: str):
         super().__init__()
         self.state = state
 
@@ -221,18 +221,10 @@ class GifBuilderView(discord.ui.LayoutView):
         self.gallery.add_item(media=image_url)
 
 
-class SearchResult(discord.SelectOption):
-    def __init__(self, frame: compuglobal.Frame, index: int, api_title: str, state: TVReferenceState):
-        summary = state.api_cache.get(frame.key)
-        title = summary.title if summary is not None else "Unknown Title"
-        super().__init__(label=f"{index}. {title}", description=f"{frame.key} - {frame.get_real_timestamp()}")
-
-
 class SearchResultDropdown(discord.ui.Select):
-    def __init__(self, options: list[discord.SelectOption], state: TVReferenceState):
-        self.view: GifBuilderView
+    def __init__(self, options: Sequence[discord.SelectOption], state: TVReferenceState):
         self.state = state
-        super().__init__(placeholder="Choose the best match...", min_values=1, max_values=1, options=options)
+        super().__init__(placeholder="Choose the best match...", min_values=1, max_values=1, options=list(options))
 
     async def callback(self, interaction: discord.Interaction):
         await interaction.response.defer(ephemeral=True)
@@ -246,13 +238,13 @@ class SearchResultDropdown(discord.ui.Select):
 
         # Update selected index state
         self.state.set_index(selected_index)
-        self.view.update_image(await self.state.get_comic_strip_url())
-        await interaction.edit_original_response(view=self.view)
+        if self.view is not None:
+            self.view.update_image(await self.state.get_comic_strip_url())
+            await interaction.edit_original_response(view=self.view)
 
 
 class GenerateButton(discord.ui.Button):
     def __init__(self, label: str, style: discord.ButtonStyle, state: TVReferenceState):
-        self.view: GifBuilderView
         self.state = state
         super().__init__(label=label, style=style)
 
@@ -260,11 +252,12 @@ class GenerateButton(discord.ui.Button):
         await interaction.response.defer(ephemeral=True)
 
         # Disable comic/gif builder view elements
-        for child in self.view.walk_children():
-            if isinstance(child, (discord.ui.Button, discord.ui.Select)):
-                child.disabled = True
+        if self.view is not None:
+            for child in self.view.walk_children():
+                if isinstance(child, (discord.ui.Button, discord.ui.Select)):
+                    child.disabled = True
 
-        await interaction.edit_original_response(view=self.view)
+            await interaction.edit_original_response(view=self.view)
 
         # Generate gif
         screencap = await self.state.get_screencap()
@@ -349,7 +342,7 @@ class CustomiseCaptionModal(discord.ui.Modal, title="Customise caption:"):
 
         self.merge_caption_checkbox = discord.ui.Checkbox(default=False)
         merge_caption = discord.ui.Label(
-            text=f"Combine above captions ({total_duration/1000:.1f} sec)",
+            text=f"Combine above captions ({total_duration / 1000:.1f} sec)",
             component=self.merge_caption_checkbox,
         )
         self.add_item(merge_caption)
@@ -362,8 +355,8 @@ class CustomiseCaptionModal(discord.ui.Modal, title="Customise caption:"):
     async def get_subtitles(self) -> list[compuglobal.Subtitle]:
         screencap = await self.state.get_screencap()
         return [
-            subtitle.model_copy(update={"content": str(new_content)})
-            for subtitle, new_content in zip(screencap.subtitles, self.get_captions())
+            subtitle.model_copy(update={"content": new_content})
+            for subtitle, new_content in zip(screencap.subtitles, self.get_captions(), strict=True)
         ]
 
     async def get_merged_subtitles(self) -> list[compuglobal.Subtitle]:
