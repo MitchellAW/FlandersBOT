@@ -1,0 +1,32 @@
+[project]
+name = "flandersbot"
+version = "0.1.0"
+description = "A discord bot with commands surrounding The Simpsons, Futurama and Rick and Morty and more! "
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aiohttp>=3.13.5",
+    "asyncpg>=0.31.0",
+    "compuglobal>=0.3.6",
+    "discord-py>=2.7.1",
+    "tabulate>=0.10.0",
+]
+
+[dependency-groups]
+dev = [
+    "pyrefly>=1.0.0",
+    "ruff>=0.15.14",
+]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "N", "B", "S", "PL"]
+ignore = ["S311"]
+
+[tool.pyrefly]
+project-includes = [
+    "**/*.py*",
+    "**/*.ipynb",
+]
