@@ -1,8 +1,0 @@
-aiohttp>=3.13.5,<3.14
-asyncpg>=0.31.0,<0.32.0
-compuglobal @ git+https://github.com/MitchellAW/CompuGlobal
-discord.py>=2.7.0,<2.8.0
-tabulate==0.10.0
-black>=26.3.0
-flake8>=7.3.0
-isort>=8.0.0
