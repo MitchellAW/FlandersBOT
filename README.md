@@ -1,9 +1,9 @@
 ![Flanders](https://github.com/MitchellAW/MitchellAW.github.io/blob/master/images/flanders-bannerBOT.png?raw=true)
 
 # Flanders
-![Python Versions](https://img.shields.io/pypi/pyversions/compuglobal.svg)
-![Discord Support Server](https://img.shields.io/discord/403154226790006784?label=support)
-![FlandersBOT License MIT](https://img.shields.io/github/license/MitchellAW/FlandersBOT)
+[![Python Versions](https://img.shields.io/pypi/pyversions/compuglobal.svg)](https://pypi.org/project/compuglobal)
+[![Discord Support Server](https://img.shields.io/discord/403154226790006784?label=support)](https://discord.gg/xMmxMYg)
+[![FlandersBOT License MIT](https://img.shields.io/github/license/MitchellAW/FlandersBOT)](https://github.com/MitchellAW/FlandersBOT/blob/main/LICENSE)
 
 ### A bot for sharing your favourite references!
 
