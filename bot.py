@@ -1,6 +1,5 @@
 import asyncio
 import datetime
-import json
 import os
 import sys
 
@@ -9,10 +8,14 @@ import asyncpg
 import discord
 from discord.ext import commands
 
+from settings.config import FlandersConfig
+
 
 class FlandersBOT(commands.AutoShardedBot):
-    def __init__(self, intents):
+    def __init__(self, config: FlandersConfig, intents: discord.Intents):
         super().__init__(command_prefix=self.get_default_prefixes, case_insensitive=True, intents=intents)
+
+        self.config = config
 
         # Remove default help command
         self.remove_command("help")
@@ -23,13 +26,6 @@ class FlandersBOT(commands.AutoShardedBot):
         self.uptime = datetime.datetime.now(datetime.UTC)
         self.db: asyncpg.Pool | None = None
         self.session: aiohttp.ClientSession | None = None
-
-        # Load config file
-        with open("settings/config.json", "r") as config_file:
-            self.config = json.load(config_file)
-
-        # Configure debug mode
-        self.debug_mode = self.config["debug_mode"]
 
     async def setup_hook(self):
         # Load all bot extensions from cogs folder
@@ -54,15 +50,15 @@ async def run_bot():
     # Requires members intents for leaderboard username display
     intents = discord.Intents.default()
 
-    bot = FlandersBOT(intents)
+    # Load config from .env
+    config = FlandersConfig()
 
-    # Load config file for token
-    with open("settings/config.json", "r") as conf:
-        config = json.load(conf)
+    # Configure bot with config/intents
+    bot = FlandersBOT(config=config, intents=intents)
 
     # Initialise bot with db pool
     try:
-        bot.db = await asyncpg.create_pool(**config["db_credentials"])
+        bot.db = await asyncpg.create_pool(dsn=config.postgres_dsn)
     except Exception as e:
         print(f"Failed to connect PostgreSQL. Terminating.\n{type(e).__name__}: {e}")
         sys.exit()
@@ -71,9 +67,9 @@ async def run_bot():
     async with aiohttp.ClientSession() as session:
         bot.session = session
 
-        # Run FlandersBOT
+        # Start FlandersBOT
         try:
-            await bot.start(config["bot_token"])
+            await bot.start(config.bot_token)
 
         finally:
             await bot.close()
