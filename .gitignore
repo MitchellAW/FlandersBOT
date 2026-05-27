@@ -5,6 +5,7 @@ __pycache__/
 cogs/api/__pycache__/
 cogs/cache/
 venv/
+.venv/
 settings/config.json
 cogs/data/guildlist.csv
 node_modules/
