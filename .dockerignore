@@ -1,0 +1,8 @@
+.env
+.env.*
+__pycache__/
+.git/
+.vscode/
+.idea/
+*.pyc
+cogs/data/guildlist.csv

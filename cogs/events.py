@@ -32,7 +32,7 @@ class Events(commands.Cog):
     # Load logging channels for error handling
     async def configure_logging(self):
         await self.bot.wait_until_ready()
-        if self.bot.debug_mode:
+        if self.bot.config.debug_mode:
             self.bot.logging = self.bot.get_channel(self.DEBUG_LOGGING_CHANNEL)
 
         else:

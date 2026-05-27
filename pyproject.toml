@@ -9,6 +9,8 @@ dependencies = [
     "asyncpg>=0.31.0",
     "compuglobal>=0.3.6",
     "discord-py>=2.7.1",
+    "pydantic>=2.13.4",
+    "pydantic-settings>=2.14.1",
     "tabulate>=0.10.0",
 ]
 

@@ -1,10 +1,11 @@
 import asyncio
-import json
 
 import aiohttp
 import discord
 from discord.ext import commands
 from tabulate import tabulate
+
+from settings.config import FlandersConfig
 
 
 class Owner(commands.Cog):
@@ -169,7 +170,7 @@ class Owner(commands.Cog):
     async def shutdown(self, ctx):
         # Make confirmation message based on bots username to prevent myself from shutting wrong bot down.
         def check(message):
-            return message.author.id == self.bot.config["owner_id"]
+            return message.author.id == self.bot.config.owner_id
 
         try:
             await ctx.send("Reply in 10 seconds to shutdown.", delete_after=10)
@@ -189,7 +190,6 @@ class Owner(commands.Cog):
         with open("cogs/data/guildlist.csv", "w") as guild_list:
             guild_list.write("Server ID,Server Name,# of Users,Features\n")
             for guild in self.bot.guilds:
-
                 # Write to csv file (guild name, total member count, region and features)
                 guild_list.write(f'{guild.id},"{guild.name}",{guild.member_count},{guild.features}\n')
 
@@ -200,9 +200,8 @@ class Owner(commands.Cog):
     @commands.is_owner()
     @commands.bot_has_permissions(add_reactions=True)
     async def reloadconfig(self, ctx):
-        with open("settings/config.json", "r") as config_file:
-            self.bot.config = json.load(config_file)
-            await ctx.message.add_reaction("✅")
+        self.bot.config = FlandersConfig()
+        await ctx.message.add_reaction("✅")
 
 
 async def setup(bot):

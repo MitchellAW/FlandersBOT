@@ -2,18 +2,29 @@ services:
   flandersdb:
     container_name: flandersdb
     image: postgres:17
-    ports:
-      - 5432:5432
     env_file:
       - .env
     volumes:
       - /apps/postgresql/data:/var/lib/postgresql/data
       - /apps/postgresql/scripts/:/scripts
+    ports:
+      - 5432:5432
     restart: unless-stopped
+    healthcheck:
+      test: "pg_isready -U ned -d flandersdb"
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   flanders:
     container_name: flanders
     image: flanders:latest
+    build: .
     depends_on:
-      - flandersdb
-    restart: unless-stopped
+      flandersdb:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_HOST=flandersdb
+    restart: on-failure
