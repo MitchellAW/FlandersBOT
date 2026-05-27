@@ -7,9 +7,11 @@ services:
     volumes:
       - /apps/postgresql/data:/var/lib/postgresql/data
       - /apps/postgresql/scripts/:/scripts
+    ports:
+      - 5432:5432
     restart: unless-stopped
     healthcheck:
-      test: "pg_isready -U postgres"
+      test: "pg_isready -U ned -d flandersdb"
       interval: 5s
       timeout: 5s
       retries: 5
@@ -23,4 +25,6 @@ services:
         condition: service_healthy
     env_file:
       - .env
-    restart: unless-stopped
+    environment:
+      - POSTGRES_HOST=flandersdb
+    restart: on-failure
