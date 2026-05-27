@@ -1,6 +1,7 @@
 import asyncio
 import datetime
 import os
+import signal
 import sys
 
 import aiohttp
@@ -28,6 +29,9 @@ class FlandersBOT(commands.AutoShardedBot):
         self.session: aiohttp.ClientSession | None = None
 
     async def setup_hook(self):
+        # Handle sigterm from Docker
+        self.loop.add_signal_handler(signal.SIGTERM, lambda: asyncio.create_task(self.close()))
+
         # Load all bot extensions from cogs folder
         for file in os.listdir("cogs"):
             if file.endswith(".py") and not file.startswith("_"):
@@ -39,6 +43,13 @@ class FlandersBOT(commands.AutoShardedBot):
                 except Exception as e:
                     exc = f"{type(e).__name__}: {e}"
                     print(f"Failed to load extension {extension}\n{exc}")
+
+    async def close(self):
+        # Close db connection
+        if self.db is not None:
+            await self.db.close()
+
+        await super().close()
 
     # Default get prefixes method, only supports mentions without message content privileges
     async def get_default_prefixes(self, bot, message):
