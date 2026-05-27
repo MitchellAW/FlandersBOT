@@ -56,12 +56,15 @@ I'd prefer that instead of running an instance of Flanders yourself you'd just [
 Building and running with docker recommended:
 
 ```sh
-docker build -t flanders .
+docker compose build
 docker compose up -d
 ```
 
 ### Config
-Update settings/config.json with required credentials.
+Copy example.env file and fill it with required credentials.
+```sh
+cp example.env .env
+```
 
 ## Database Setup
 
