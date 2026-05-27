@@ -6,4 +6,3 @@ __pycache__/
 .idea/
 *.pyc
 cogs/data/guildlist.csv
-settings/*
