@@ -5,8 +5,7 @@ services:
     env_file:
       - .env
     volumes:
-      - /apps/postgresql/data:/var/lib/postgresql/data
-      - /apps/postgresql/scripts/:/scripts
+      - flandersdb_data:/var/lib/postgresql/data
     ports:
       - 5432:5432
     restart: unless-stopped
@@ -28,3 +27,6 @@ services:
     environment:
       - POSTGRES_HOST=flandersdb
     restart: on-failure
+
+volumes:
+  flandersdb_data:

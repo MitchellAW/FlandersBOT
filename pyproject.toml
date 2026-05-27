@@ -5,6 +5,7 @@ description = "A discord bot with commands surrounding The Simpsons, Futurama an
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "aiofiles>=25.1.0",
     "aiohttp>=3.13.5",
     "asyncpg>=0.31.0",
     "compuglobal>=0.3.6",
@@ -18,6 +19,7 @@ dependencies = [
 dev = [
     "pyrefly>=1.0.0",
     "ruff>=0.15.14",
+    "types-aiofiles>=25.1.0.20260518",
 ]
 
 [tool.ruff]

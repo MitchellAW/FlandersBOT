@@ -339,18 +339,21 @@ $BODY$
 language plpgsql;
 
 -- Trigger stats update on inserted answer
+DROP TRIGGER IF EXISTS insert_answer ON answers;
 CREATE TRIGGER insert_answer
 	BEFORE INSERT ON answers
 	FOR EACH ROW
 	EXECUTE FUNCTION update_stats();
 
 -- Trigger stat updates on round end
+DROP TRIGGER IF EXISTS update_round ON rounds;
 CREATE TRIGGER update_round
 	BEFORE UPDATE ON rounds
 	FOR EACH ROW
 	EXECUTE FUNCTION end_round();
 
 -- Trigger stat updates on match end
+DROP TRIGGER IF EXISTS update_match ON matches;
 CREATE TRIGGER update_match
 	BEFORE UPDATE ON matches
 	FOR EACH ROW

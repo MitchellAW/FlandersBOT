@@ -4,6 +4,7 @@ import os
 import signal
 import sys
 
+import aiofiles
 import aiohttp
 import asyncpg
 import discord
@@ -32,6 +33,9 @@ class FlandersBOT(commands.AutoShardedBot):
         # Handle sigterm from Docker
         self.loop.add_signal_handler(signal.SIGTERM, lambda: asyncio.create_task(self.close()))
 
+        # Initialise database
+        await self.init_db()
+
         # Load all bot extensions from cogs folder
         for file in os.listdir("cogs"):
             if file.endswith(".py") and not file.startswith("_"):
@@ -43,6 +47,29 @@ class FlandersBOT(commands.AutoShardedBot):
                 except Exception as e:
                     exc = f"{type(e).__name__}: {e}"
                     print(f"Failed to load extension {extension}\n{exc}")
+
+    async def db_failure(self, error_msg: str) -> None:
+        print(f"Could not initialise the database. Closing...\n{error_msg}")
+        await self.close()
+
+    async def init_db(self):
+        print("Initialising database...")
+
+        async with aiofiles.open("bot.sql") as schema_file:
+            schema = await schema_file.read()
+
+        if self.db is not None:
+            try:
+                async with self.db.acquire() as conn:
+                    async with conn.transaction():
+                        await conn.execute(schema)
+                print("Database initialised.")
+
+            except Exception as e:
+                await self.db_failure(f"{type(e).__name__}: {e}")
+
+        else:
+            await self.db_failure("DB pool was not created.")
 
     async def close(self):
         # Close db connection
