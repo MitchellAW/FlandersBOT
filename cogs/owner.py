@@ -1,6 +1,5 @@
 import asyncio
 
-import aiohttp
 import discord
 from discord.ext import commands
 from tabulate import tabulate
@@ -16,11 +15,10 @@ class Owner(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     async def avatar(self, ctx, avatar_url):
-        async with aiohttp.ClientSession() as aioClient:
-            async with aioClient.get(avatar_url) as resp:
-                new_avatar = await resp.read()
-                await self.bot.user.edit(avatar=new_avatar)
-                await ctx.send("Avatar changed!")
+        async with self.bot.session.get(avatar_url) as resp:
+            new_avatar = await resp.read()
+            await self.bot.user.edit(avatar=new_avatar)
+            await ctx.send("Avatar changed!")
 
     # Get the number of all the commands executed
     @commands.command(hidden=True)
@@ -47,8 +45,7 @@ class Owner(commands.Cog):
         message = tabulate(command_data, headers=["Command Name", "Count"], tablefmt="presto", colalign=("right",))
         await ctx.send(f"```{message}```")
 
-        # Get the number of all the commands executed
-
+    # Get the number of all the commands executed
     @commands.command(hidden=True)
     @commands.is_owner()
     async def appcommandstats(self, ctx, *, modifier: str | None = None):
