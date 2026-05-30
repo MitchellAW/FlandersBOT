@@ -2,7 +2,6 @@ import asyncio
 import datetime
 import os
 import signal
-import sys
 
 import aiofiles
 import aiohttp
@@ -14,10 +13,18 @@ from settings.config import FlandersConfig
 
 
 class FlandersBOT(commands.AutoShardedBot):
-    def __init__(self, config: FlandersConfig, intents: discord.Intents):
-        super().__init__(command_prefix=self.get_default_prefixes, case_insensitive=True, intents=intents)
+    def __init__(
+        self,
+        config: FlandersConfig,
+        session: aiohttp.ClientSession,
+        db: asyncpg.Pool,
+        intents: discord.Intents,
+    ):
+        super().__init__(command_prefix=commands.when_mentioned, case_insensitive=True, intents=intents)
 
         self.config = config
+        self.session = session
+        self.db = db
 
         # Remove default help command
         self.remove_command("help")
@@ -26,8 +33,6 @@ class FlandersBOT(commands.AutoShardedBot):
         self.cached_screencaps = {}
         self.reminders = []
         self.uptime = datetime.datetime.now(datetime.UTC)
-        self.db: asyncpg.Pool | None = None
-        self.session: aiohttp.ClientSession | None = None
 
     async def setup_hook(self):
         # Handle sigterm from Docker
@@ -77,40 +82,3 @@ class FlandersBOT(commands.AutoShardedBot):
             await self.db.close()
 
         await super().close()
-
-    # Default get prefixes method, only supports mentions without message content privileges
-    async def get_default_prefixes(self, bot, message):
-        return commands.when_mentioned(self, message)
-
-
-# Runs FlandersBOT
-async def run_bot():
-    # Requires members intents for leaderboard username display
-    intents = discord.Intents.default()
-
-    # Load config from .env
-    config = FlandersConfig()
-
-    # Configure bot with config/intents
-    bot = FlandersBOT(config=config, intents=intents)
-
-    # Initialise bot with db pool
-    try:
-        bot.db = await asyncpg.create_pool(dsn=config.postgres_dsn)
-    except Exception as e:
-        print(f"Failed to connect PostgreSQL. Terminating.\n{type(e).__name__}: {e}")
-        sys.exit()
-
-    # Initialise bot with aiohttp session
-    async with aiohttp.ClientSession() as session:
-        bot.session = session
-
-        # Start FlandersBOT
-        try:
-            await bot.start(config.bot_token)
-
-        finally:
-            await bot.close()
-
-
-asyncio.run(run_bot())
