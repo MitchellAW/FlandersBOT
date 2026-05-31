@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS leaderboard (
 	wins int DEFAULT 0 NOT NULL,
 	losses int DEFAULT 0 NOT NULL,
 	correct_answers int DEFAULT 0 NOT NULL,
+	incorrect_answers int DEFAULT 0 NOT NULL,
 	fastest_answer int DEFAULT 20000 NOT NULL,
 	current_streak int DEFAULT 0 NOT NULL,
 	longest_streak int DEFAULT 0 NOT NULL
