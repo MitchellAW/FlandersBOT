@@ -4,7 +4,7 @@ import discord
 from compuglobal.aio import MasterOfAllScience
 from discord import app_commands
 
-from cogs._tvshows import TVShowCog
+from flanders.cogs._tvshows import TVShowCog
 
 
 class RickAndMorty(TVShowCog):

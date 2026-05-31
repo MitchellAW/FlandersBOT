@@ -6,8 +6,8 @@ import aiohttp
 import asyncpg
 import discord
 
-from bot import FlandersBOT
-from settings.config import FlandersConfig
+from flanders.bot import FlandersBOT
+from flanders.settings.config import FlandersConfig
 
 
 async def run_bot():

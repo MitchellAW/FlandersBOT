@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 from tabulate import tabulate
 
-from settings.config import FlandersConfig
+from flanders.settings.config import FlandersConfig
 
 
 class Owner(commands.Cog):
@@ -184,13 +184,13 @@ class Owner(commands.Cog):
     @commands.is_owner()
     @commands.bot_has_permissions(attach_files=True)
     async def guildlist(self, ctx):
-        with open("cogs/data/guildlist.csv", "w") as guild_list:
+        with open("flanders/cogs/data/guildlist.csv", "w") as guild_list:
             guild_list.write("Server ID,Server Name,# of Users,Features\n")
             for guild in self.bot.guilds:
                 # Write to csv file (guild name, total member count, region and features)
                 guild_list.write(f'{guild.id},"{guild.name}",{guild.member_count},{guild.features}\n')
 
-        await ctx.send(file=discord.File("cogs/data/guildlist.csv"))
+        await ctx.send(file=discord.File("flanders/cogs/data/guildlist.csv"))
 
     # Reload config json file, allows regen of bot listing tokens without taking bot down
     @commands.command(hidden=True)

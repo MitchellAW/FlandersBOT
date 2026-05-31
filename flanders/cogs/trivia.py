@@ -7,7 +7,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import BucketType
 
-from cogs._trivia_category import FuturamaTrivia, SimpsonsTrivia
+from flanders.cogs._trivia_category import FuturamaTrivia, SimpsonsTrivia
 
 TRIVIA_ROLE = "Trivia Moderator"
 
@@ -208,13 +208,11 @@ class Trivia(commands.Cog):
             await self.sorry_message(ctx)
         stats = [
             {
-                "query": "SELECT username, score AS result "
-                "FROM leaderboard WHERE privacy = 0 "
-                "ORDER BY score DESC",
+                "query": "SELECT username, score AS result FROM leaderboard WHERE privacy = 0 ORDER BY score DESC",
                 "category": ":trophy: High Scores",
             },
             {
-                "query": "SELECT username, wins AS result " "FROM leaderboard WHERE privacy = 0 " "ORDER BY wins DESC",
+                "query": "SELECT username, wins AS result FROM leaderboard WHERE privacy = 0 ORDER BY wins DESC",
                 "category": ":first_place: Wins",
             },
             {
@@ -250,7 +248,7 @@ class Trivia(commands.Cog):
 
                 scores = ""
                 for row in rows[:5]:
-                    scores += f'**{row["username"]}**: '
+                    scores += f"**{row['username']}**: "
                     result = row["result"]
                     if not isinstance(result, str):
                         result = f"{round(result, 2):,}"
@@ -269,7 +267,7 @@ class Trivia(commands.Cog):
         self.channels_playing.append(ctx.channel.id)
 
         # Load question data from trivia file
-        with open(f"cogs/data/{category.file_name}", "r") as trivia_data:
+        with open(f"flanders/cogs/data/{category.file_name}", "r") as trivia_data:
             trivia = json.load(trivia_data)
             questions = trivia.copy()
             random.shuffle(questions)
@@ -316,9 +314,7 @@ class Trivia(commands.Cog):
         round_id = await self.bot.db.fetchval(query, match_id, question_index)
 
         # Display the question and answers
-        answer_msg = (
-            f"**A:** {answers[0]} \n" f"**B:** {answers[1]} \n" f"**C:** {answers[2]} \n\n" f"React below to answer!"
-        )
+        answer_msg = f"**A:** {answers[0]} \n**B:** {answers[1]} \n**C:** {answers[2]} \n\nReact below to answer!"
 
         embed = discord.Embed(title=f"#{question_counter}: {question}", colour=category.colour, description=answer_msg)
         embed.set_thumbnail(url=category.thumbnail_url)
@@ -336,7 +332,7 @@ class Trivia(commands.Cog):
         except discord.errors.Forbidden:
             await question.delete()
             await ctx.send(
-                "⛔ Sorry, I do not have the permissions riddly-required to continue!\n" "Requires: Add Reactions"
+                "⛔ Sorry, I do not have the permissions riddly-required to continue!\nRequires: Add Reactions"
             )
             self.channels_playing.remove(ctx.channel.id)
             return
@@ -392,7 +388,7 @@ class Trivia(commands.Cog):
 
         # Check the results of the trivia question
         embed.set_thumbnail(url="")
-        embed.description = f"**{correct_choice}:** {correct_answer}\n" f"**Source:** <{source}> \n\n"
+        embed.description = f"**{correct_choice}:** {correct_answer}\n**Source:** <{source}> \n\n"
 
         # Give statement about result based on # of correct answers recorded
         if len(user_answers) == 0:
@@ -473,7 +469,7 @@ class Trivia(commands.Cog):
         # List scorers
         scorers = ""
         for scorer in top_scorers[:5]:
-            scorers += f'**{scorer["username"]}**: {round(scorer["correct"], 2):,}\n'
+            scorers += f"**{scorer['username']}**: {round(scorer['correct'], 2):,}\n"
 
         embed.add_field(name="\u200b\n*:medal:Correct Answers*", value=scorers)
 
@@ -491,7 +487,7 @@ class Trivia(commands.Cog):
 
         scorers = ""
         for scorer in highest_accuracy[:5]:
-            scorers += f'**{scorer["username"]}**: {round(scorer["accuracy"] * 100.0, 2):,}%\n'
+            scorers += f"**{scorer['username']}**: {round(scorer['accuracy'] * 100.0, 2):,}%\n"
 
         embed.add_field(name="\u200b\n*:bow_and_arrow: Highest Accuracy*", value=scorers)
 
@@ -509,12 +505,12 @@ class Trivia(commands.Cog):
 
         scorers = "" if len(fastest_answers) > 0 else "---"
         for scorer in fastest_answers[:5]:
-            scorers += f'**{scorer["username"]}**: {round(scorer["fastest_time"] / 1000, 3):,}s\n'
+            scorers += f"**{scorer['username']}**: {round(scorer['fastest_time'] / 1000, 3):,}s\n"
         embed.add_field(name="\u200b\n*:point_up: Fastest Answers*", value=scorers)
 
         embed.set_footer(
-            text=f'{participant_count} participant{"s" if participant_count > 1 else ""}, '
-            f'{answer_count} question{"s" if answer_count > 1 else ""} answered.'
+            text=f"{participant_count} participant{'s' if participant_count > 1 else ''}, "
+            f"{answer_count} question{'s' if answer_count > 1 else ''} answered."
         )
 
         # Display the scoreboard

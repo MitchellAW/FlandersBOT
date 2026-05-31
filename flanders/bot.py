@@ -9,7 +9,7 @@ import asyncpg
 import discord
 from discord.ext import commands
 
-from settings.config import FlandersConfig
+from flanders.settings.config import FlandersConfig
 
 
 class FlandersBOT(commands.AutoShardedBot):
@@ -42,12 +42,12 @@ class FlandersBOT(commands.AutoShardedBot):
         await self.init_db()
 
         # Load all bot extensions from cogs folder
-        for file in os.listdir("cogs"):
+        for file in os.listdir("flanders/cogs"):
             if file.endswith(".py") and not file.startswith("_"):
                 extension = file[:-3]
 
                 try:
-                    await self.load_extension(f"cogs.{extension}")
+                    await self.load_extension(f"flanders.cogs.{extension}")
 
                 except Exception as e:
                     exc = f"{type(e).__name__}: {e}"

@@ -2,12 +2,11 @@
 .vscode/
 .env
 __pycache__/
-cogs/api/__pycache__/
-cogs/cache/
+flanders/cogs/cache/
 venv/
 .venv/
-settings/config.json
-cogs/data/guildlist.csv
+flanders/settings/config.json
+flanders/cogs/data/guildlist.csv
 node_modules/
 *.min.js
 backups/

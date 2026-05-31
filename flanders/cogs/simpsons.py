@@ -4,8 +4,8 @@ import discord
 from compuglobal.aio import Frinkiac
 from discord import app_commands
 
-from cogs._tvshows import TVShowCog
-from cogs.events import Events
+from flanders.cogs._tvshows import TVShowCog
+from flanders.cogs.events import Events
 
 
 class Simpsons(TVShowCog):

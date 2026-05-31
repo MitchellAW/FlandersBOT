@@ -6,7 +6,7 @@ import discord
 from discord.app_commands import AppCommandError, CommandOnCooldown
 from discord.ext import commands
 
-from cogs.events import Events
+from flanders.cogs.events import Events
 
 
 class TVShowCog(commands.Cog):
