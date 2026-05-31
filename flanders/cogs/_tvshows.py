@@ -3,7 +3,7 @@ import discord
 from discord.app_commands import AppCommandError, CommandOnCooldown
 from discord.ext import commands
 
-from flanders.components.tv import GifBuilderView, SearchResult
+from flanders.components import BuilderView
 from flanders.models import TVReferenceState
 
 
@@ -63,15 +63,8 @@ class TVShowCog(commands.Cog):
                 bot=self.bot, frames=unique_results[:25], api=self.api, api_cache=self.api_cache, channel=channel_id
             )
 
-            # Get top 25 results
-            options = []
-            for i in range(min(25, len(unique_results))):
-                options.append(SearchResult(unique_results[i], i + 1, self.api_title, state))
-
-            options[0].default = True
-
             # Create the view containing our dropdown and preview
-            gif_builder_view = GifBuilderView(options, state, await state.get_comic_strip_url())
+            gif_builder_view = BuilderView(unique_results, state, await state.get_comic_strip_url())
 
             # Sending a message containing our gif builder view
             await interaction.response.send_message(view=gif_builder_view, ephemeral=True)
