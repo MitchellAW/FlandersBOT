@@ -7,7 +7,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import BucketType
 
-from flanders.cogs._trivia_category import FuturamaTrivia, SimpsonsTrivia
+from flanders.models import FuturamaTrivia, SimpsonsTrivia
 
 TRIVIA_ROLE = "Trivia Moderator"
 
