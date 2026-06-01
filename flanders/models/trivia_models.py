@@ -1,6 +1,8 @@
 import json
 import random
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from enum import StrEnum
 
 import discord
 from pydantic import BaseModel
@@ -9,10 +11,21 @@ from pydantic.functional_validators import model_validator
 REQUIRED_ANSWERS = 3
 
 
-class TriviaAnswerRecord:
+class TriviaLeaderboardType(StrEnum):
+    SCORE = "score"
+    WINS = "wins"
+    CORRECT_ANSWERS = "correct_answers"
+    FASTEST_ANSWER = "fastest_answer"
+    LONGEST_STREAK = "longest_streak"
+
+
+@dataclass
+class TriviaAnswer:
     user_id: int
+    username: str
+    answer_index: int
     is_correct: bool
-    elapsed_milliseconds: int
+    answer_time: int
 
 
 class TriviaQuestion(BaseModel, frozen=True):
@@ -82,29 +95,95 @@ class RickAndMortyTrivia(TriviaCategory):
 
 
 @dataclass
-class TriviaSession:
+class TriviaRound:
+    question: TriviaQuestion
+    started_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    _answers: dict[int, TriviaAnswer] = field(default_factory=dict, repr=False)
+
+    @property
+    def elapsed_milliseconds(self) -> int:
+        return int((datetime.now(timezone.utc) - self.started_at).total_seconds() * 1000)
+
+    def log_answer(self, user_id: int, username: str, answer_index: int) -> None:
+        is_correct = answer_index == self.question.correct_index
+        answer = TriviaAnswer(
+            user_id=user_id,
+            username=username,
+            answer_index=answer_index,
+            is_correct=is_correct,
+            answer_time=self.elapsed_milliseconds,
+        )
+        self._answers[user_id] = answer
+
+    @property
+    def answers(self):
+        return self._answers.values()
+
+    @property
+    def correct_answers(self) -> list[TriviaAnswer]:
+        return [answer for answer in self._answers.values() if answer.is_correct]
+
+    @property
+    def incorrect_answers(self) -> list[TriviaAnswer]:
+        return [answer for answer in self._answers.values() if not answer.is_correct]
+
+    @property
+    def total_answers(self) -> int:
+        return len(self._answers)
+
+
+@dataclass
+class TriviaMatch:
     match_id: int
-    trivia_questions: list[TriviaQuestion]
+    questions: list[TriviaQuestion]
     category: TriviaCategory
-    asked_questions: list[TriviaQuestion] = field(default_factory=list)
 
-    def next_question(self) -> TriviaQuestion | None:
-        if len(self.trivia_questions) > 0:
-            question = self.trivia_questions.pop()
-            self.asked_questions.append(question)
-            return question
-        else:
-            return None
+    _current_round: TriviaRound | None = field(default=None, repr=False)
+    _completed_rounds: list[TriviaRound] = field(default_factory=list, repr=False)
 
-    def current_question(self) -> TriviaQuestion | None:
-        if len(self.asked_questions) > 0:
-            return self.asked_questions[-1]
+    def start_round(self) -> TriviaRound | None:
+        if self._current_round is not None:
+            raise RuntimeError("A round is already in progress. Call end_round() first.")
+        if not self.questions:
+            raise RuntimeError("No questions remaining in this match.")
 
-        else:
-            return None
+        question = self.questions.pop()
+        self._current_round = TriviaRound(question=question)
+        return self._current_round
+
+    def end_round(self) -> TriviaRound:
+        if self._current_round is None:
+            raise RuntimeError("No round is currently in progress.")
+
+        completed = self._current_round
+        self._completed_rounds.append(completed)
+        self._current_round = None
+        return completed
+
+    @property
+    def current_round(self) -> TriviaRound | None:
+        return self._current_round
+
+    @property
+    def completed_rounds(self) -> list[TriviaRound]:
+        return list(self._completed_rounds)
+
+    @property
+    def is_finished(self) -> bool:
+        """True when all questions have been played and no round is open."""
+        return not self.questions and self._current_round is None
 
     def questions_remaining(self) -> int:
-        return len(self.trivia_questions)
+        return len(self.questions)
 
-    def questions_asked(self) -> int:
-        return len(self.asked_questions)
+    def rounds_played(self) -> int:
+        return len(self._completed_rounds)
+
+
+@dataclass
+class TriviaScoreboard:
+    participant_count: int
+    question_count: int
+    top_scorers: list[tuple[str, int]]
+    highest_accuracy: list[tuple[str, float]]
+    fastest_answers: list[tuple[str, int]]

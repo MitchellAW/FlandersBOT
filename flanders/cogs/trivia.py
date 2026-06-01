@@ -5,7 +5,9 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import BucketType, Context
 
-from flanders.models import FuturamaTrivia, SimpsonsTrivia, TriviaCategory, TriviaQuestion, TriviaSession
+from flanders.models import FuturamaTrivia, SimpsonsTrivia, TriviaCategory, TriviaMatch, TriviaQuestion, TriviaRound
+from flanders.utils import TriviaDB
+from flanders.utils.trivia_db import TriviaLeaderboardType
 
 TRIVIA_ROLE = "Trivia Moderator"
 
@@ -44,6 +46,7 @@ class Trivia(commands.Cog):
         self.TIMER_DURATION = 16
         self.channels_playing = []
         self.answer_key = {"🇦": 0, "🇧": 1, "🇨": 2}
+        self.trivia_db = TriviaDB(db=self.bot.db)
 
     async def sorry_message(self, ctx):
         await ctx.send(self.DISABLED_MESSAGE, silent=True, delete_after=10)
@@ -108,24 +111,17 @@ class Trivia(commands.Cog):
             await self.sorry_message(ctx)
             return
 
-        # Get latest match for guild
-        query = """SELECT match_id, trivia_category FROM matches
-                WHERE guild_id = $1 AND is_complete = true AND (
-                    SELECT get_participant_count(match_id)
-                ) > 0
-                ORDER BY match_id DESC
-                LIMIT 1
-                """
-        match = await self.bot.db.fetchrow(query, ctx.guild.id)
-
         # Check if guild has participated
-        if match is not None:
+        if result := await self.trivia_db.get_latest_match_details(ctx.guild.id):
+            # Get latest match for guild
+            match_id, category = result
+
             category = SimpsonsTrivia()
-            if match["trivia_category"] == "futurama":
+            if category == "futurama":
                 category = FuturamaTrivia()
 
             # Show scoreboard
-            await self.show_scoreboard(ctx, match["match_id"], category)
+            await self.show_scoreboard(ctx, match_id, category)
 
         else:
             await ctx.send("No previous match found.")
@@ -137,15 +133,7 @@ class Trivia(commands.Cog):
         if self.DISABLED:
             await self.sorry_message(ctx)
             return
-
-        query = """SELECT user_id, username, score, wins, losses, correct_answers,
-                incorrect_answers, fastest_answer, longest_streak, current_streak
-                FROM leaderboard
-                WHERE user_id = $1
-                """
-        trivia_stats = await self.bot.db.fetchrow(query, ctx.author.id)
-
-        get_rank = """SELECT get_rank($1, $2)"""
+        trivia_stats = await self.trivia_db.get_user_stats(ctx.user.id)
 
         if trivia_stats is not None:
             embed = discord.Embed(colour=discord.Colour(0x44981E))
@@ -153,44 +141,50 @@ class Trivia(commands.Cog):
 
             # For all trivia statistics, calculate result, get current rank and add all to embed field
             score = round(trivia_stats["score"], 2)
-            rank = await self.bot.db.fetchval(get_rank, ctx.author.id, "score")
-            embed.add_field(name=f":trophy: Score (#{rank:,})", value=f"{score:,}", inline=True)
+            embed.add_field(name=f":trophy: Score (#{trivia_stats['score_rank']:,})", value=f"{score:,}", inline=True)
 
             wins = round(trivia_stats["wins"], 2)
-            rank = await self.bot.db.fetchval(get_rank, ctx.author.id, "wins")
-            embed.add_field(name=f":first_place: Wins (#{rank:,})", value=f"{wins:,}", inline=True)
+            embed.add_field(name=f":first_place: Wins (#{trivia_stats['wins_rank']:,})", value=f"{wins:,}", inline=True)
 
             losses = round(trivia_stats["losses"], 2)
-            rank = await self.bot.db.fetchval(get_rank, ctx.author.id, "losses")
-            embed.add_field(name=f":poop: Losses (#{rank:,})", value=f"{losses:,}", inline=True)
+            embed.add_field(name=f":poop: Losses (#{trivia_stats['losses_rank']:,})", value=f"{losses:,}", inline=True)
 
-            rank = await self.bot.db.fetchval(get_rank, ctx.author.id, "correct_answers")
             correct_answers = round(trivia_stats["correct_answers"], 2)
-            embed.add_field(name=f":white_check_mark: Correct (#{rank:,})", value=f"{correct_answers:,}", inline=True)
+            embed.add_field(
+                name=f":white_check_mark: Correct (#{trivia_stats['correct_answers_rank']:,})",
+                value=f"{correct_answers:,}",
+                inline=True,
+            )
 
-            rank = await self.bot.db.fetchval(get_rank, ctx.author.id, "incorrect_answers")
             incorrect_answers = round(trivia_stats["incorrect_answers"], 2)
-            embed.add_field(name=f":no_entry: Incorrect (#{rank:,})", value=f"{incorrect_answers:,}", inline=True)
+            embed.add_field(
+                name=f":no_entry: Incorrect (#{trivia_stats['incorrect_answers_rank']:,})",
+                value=f"{incorrect_answers:,}",
+                inline=True,
+            )
 
             accuracy = round(correct_answers / (incorrect_answers + correct_answers) * 100.0, 2)
             embed.add_field(name=":bow_and_arrow: Accuracy", value=f"{accuracy:,}%", inline=True)
 
-            rank = await self.bot.db.fetchval(get_rank, ctx.author.id, "fastest_answer")
             fastest_answer = round(trivia_stats["fastest_answer"] / 1000, 3)
-            embed.add_field(name=f":point_up: Fastest Answer (#{rank:,})", value=f"{fastest_answer:,}s", inline=True)
+            embed.add_field(
+                name=f":point_up: Fastest Answer (#{trivia_stats['fastest_answer_rank']:,})",
+                value=f"{fastest_answer:,}s",
+                inline=True,
+            )
 
-            rank = await self.bot.db.fetchval(get_rank, ctx.author.id, "current_streak")
             current_streak = round(trivia_stats["current_streak"], 2)
             embed.add_field(
-                name=f":chart_with_upwards_trend: Current Streak (#{rank:,})",
+                name=f":chart_with_upwards_trend: Current Streak (#{trivia_stats['current_streak_rank']:,})",
                 value=f"{current_streak:,}",
                 inline=True,
             )
 
-            rank = await self.bot.db.fetchval(get_rank, ctx.author.id, "longest_streak")
             longest_streak = round(trivia_stats["longest_streak"], 2)
             embed.add_field(
-                name=f":four_leaf_clover: Longest Streak (#{rank:,})", value=f"{longest_streak:,}", inline=True
+                name=f":four_leaf_clover: Longest Streak (#{trivia_stats['longest_streak_rank']:,})",
+                value=f"{longest_streak:,}",
+                inline=True,
             )
 
             await ctx.send(embed=embed)
@@ -204,54 +198,31 @@ class Trivia(commands.Cog):
     async def leaderboard(self, ctx):
         if self.DISABLED:
             await self.sorry_message(ctx)
-        stats = [
-            {
-                "query": "SELECT username, score AS result FROM leaderboard WHERE privacy = 0 ORDER BY score DESC",
-                "category": ":trophy: High Scores",
-            },
-            {
-                "query": "SELECT username, wins AS result FROM leaderboard WHERE privacy = 0 ORDER BY wins DESC",
-                "category": ":first_place: Wins",
-            },
-            {
-                "query": "SELECT username, correct_answers AS result "
-                "FROM leaderboard WHERE privacy = 0 "
-                "ORDER BY correct_answers DESC",
-                "category": ":white_check_mark:  Correct Answers",
-            },
-            {
-                "query": "SELECT username, CONCAT(CAST(fastest_answer AS FLOAT) / 1000, 's') AS result "
-                "FROM leaderboard WHERE privacy = 0 "
-                "ORDER BY fastest_answer ASC",
-                "category": ":point_up: Fastest Answers",
-            },
-            {
-                "query": "SELECT username, longest_streak AS result "
-                "FROM leaderboard WHERE privacy = 0 "
-                "ORDER BY longest_streak DESC",
-                "category": ":four_leaf_clover: Longest Streak",
-            },
-        ]
 
         # Scoreboard display embed
         embed = discord.Embed(title="Trivia Leaderboard", colour=discord.Colour(0x44981E))
         embed.set_thumbnail(url=self.bot.user.avatar)
 
-        query = "SELECT COUNT(user_id) FROM leaderboard WHERE privacy = 0"
-        leader_count = await self.bot.db.fetchval(query)
+        leader_count = await self.trivia_db.get_leaderboard_count()
 
+        stats = [
+            (TriviaLeaderboardType.SCORE, ":trophy: High Scores"),
+            (TriviaLeaderboardType.WINS, ":first_place: Wins"),
+            (TriviaLeaderboardType.CORRECT_ANSWERS, ":white_check_mark:  Correct Answers"),
+            (TriviaLeaderboardType.FASTEST_ANSWER, ":point_up: Fastest Answers"),
+            (TriviaLeaderboardType.LONGEST_STREAK, ":four_leaf_clover: Longest Streak"),
+        ]
         if leader_count >= 1:
-            for stat in stats:
-                rows = await self.bot.db.fetch(stat["query"])
+            for stat, category in stats:
+                scorers = await self.trivia_db.get_leaderboard_results(stat)
 
                 scores = ""
-                for row in rows[:5]:
-                    scores += f"**{row['username']}**: "
-                    result = row["result"]
-                    if not isinstance(result, str):
-                        result = f"{round(result, 2):,}"
+                for scorer, score in scorers[:5]:
+                    scores += f"**{scorer}**: "
+                    result = f"{round(score, 2):,}" if isinstance(score, str) else score
                     scores += f"{result}\n"
-                embed.add_field(name=stat["category"], value=scores, inline=False)
+
+                embed.add_field(name=category, value=scores, inline=False)
 
             if len(embed.fields) > 0:
                 await ctx.send(embed=embed)
@@ -268,27 +239,26 @@ class Trivia(commands.Cog):
         questions = category.load_questions()
 
         # Insert new trivia match into DB
-        query = """INSERT INTO matches (guild_id, trivia_category)
-                   VALUES ($1, $2) RETURNING match_id
-                """
-        match_id = await self.bot.db.fetchval(query, ctx.guild.id, category.category_name)
+        match_id = await self.trivia_db.insert_match(guild_id=ctx.guild.id, category=category)
 
         # Continue playing trivia until exit or out of questions
-        trivia_session = TriviaSession(match_id=match_id, category=category, trivia_questions=questions)
+        trivia_session = TriviaMatch(match_id=match_id, category=category, questions=questions)
 
         while ctx.channel.id in self.channels_playing and trivia_session.questions_remaining() > 0:
             await self.play_round(ctx, trivia_session)
 
         # Set the match as complete (Triggers leaderboard stat updates)
-        query = """UPDATE matches SET is_complete = true
-                       WHERE match_id = $1
-                    """
-        await self.bot.db.fetch(query, match_id)
+        await self.trivia_db.complete_match(match_id=match_id)
+
         await self.show_scoreboard(ctx, match_id, category)
 
     # Starts a round of trivia (single question)
-    async def play_round(self, ctx, trivia_session: TriviaSession):
-        trivia_question = trivia_session.next_question()
+    async def play_round(self, ctx, trivia_session: TriviaMatch):
+        trivia_round = trivia_session.start_round()
+        if trivia_round is None:
+            return
+
+        trivia_question = trivia_round.question
         if trivia_question is None:
             return
 
@@ -298,12 +268,9 @@ class Trivia(commands.Cog):
         correct_choice = chr(correct_index + 65)
 
         # Insert new trivia round into DB
-        query = """INSERT INTO rounds (match_id, question_index) VALUES ($1, $2)
-                   RETURNING round_id
-                """
-        round_id = await self.bot.db.fetchval(query, trivia_session.match_id, trivia_question.id)
-
-        # Display the question and answers
+        round_id = await self.trivia_db.insert_round(
+            match_id=trivia_session.match_id, question_index=trivia_question.id
+        )
 
         # Send the trivia question
         embed = await self.build_question_embed(
@@ -311,16 +278,16 @@ class Trivia(commands.Cog):
         )
         question = await ctx.send(embed=embed, delete_after=self.TIMER_DURATION + 3)
 
-        user_answers, correct_count = await self.gather_answers(ctx, question, trivia_session, trivia_question)
+        await self.gather_answers(ctx, question, trivia_round)
 
-        # Update usernames in the leaderboard
-        await self.update_usernames(ctx, round_id)
+        trivia_session.end_round()
+
+        answers = trivia_round.answers
+        for answer in answers:
+            await self.trivia_db.insert_answer(round_id, answer)
 
         # Set round as complete (Triggers leaderboard stat updates)
-        query = """UPDATE rounds SET is_complete = true
-                   WHERE round_id = $1
-                """
-        await self.bot.db.fetch(query, round_id)
+        await self.trivia_db.complete_round(round_id)
 
         # Check the results of the trivia question
         # embed.set_thumbnail(url="")
@@ -328,23 +295,25 @@ class Trivia(commands.Cog):
             f"**{correct_choice}:** {trivia_question.correct_answer}\n**Source:** <{trivia_question.source}> \n\n"
         )
 
+        answer_count = trivia_round.total_answers
+        correct_answers = trivia_round.correct_answers
+
         # Give statement about result based on # of correct answers recorded
-        if len(user_answers) == 0:
+        if answer_count == 0:
             embed.description += "⛔ **No answers given! Trivia has ended.**"
             if ctx.channel.id in self.channels_playing:
                 self.channels_playing.remove(ctx.channel.id)
 
-        elif len(user_answers) > 0 and correct_count == 0:
+        elif answer_count > 0 and len(correct_answers) == 0:
             embed.description += "**No correct answers!**"
 
-        elif len(user_answers) == 1 and correct_count == 1:
+        elif answer_count == 1 and len(correct_answers) == 1:
             embed.description += "**Correct!**"
 
         else:
-            embed.description += f"**{str(correct_count)} correct answers!**"
-            for key in user_answers:
-                if user_answers[key]["answer"] == correct_choice:
-                    embed.description += f"\n{key.name}"
+            embed.description += f"**{str(len(correct_answers))} correct answers!**"
+            for answer in correct_answers:
+                embed.description += f"\n{answer.username}"
 
         await ctx.send(embed=embed, delete_after=self.TIMER_DURATION + 3)
 
@@ -352,9 +321,8 @@ class Trivia(commands.Cog):
         self,
         ctx: Context,
         question: discord.Message,
-        trivia_session: TriviaSession,
-        trivia_question: TriviaQuestion,
-    ) -> tuple[dict, int]:
+        trivia_round: TriviaRound,
+    ) -> None:
 
         # Add the answer react boxes
         answer_reactions = ["🇦", "🇧", "🇨"]
@@ -374,10 +342,6 @@ class Trivia(commands.Cog):
         def is_answer(reaction, user):
             return not user.bot and str(reaction.emoji) in ["🇦", "🇧", "🇨"] and reaction.message.channel == ctx.channel
 
-        # Track some important round data
-        user_answers = {}
-        correct_count = 0
-
         # Start timer
         end_time = time.time() + self.TIMER_DURATION
 
@@ -385,45 +349,19 @@ class Trivia(commands.Cog):
             # Wait until timer ends for each question before displaying results
             while time.time() < end_time:
                 react, user = await self.bot.wait_for("reaction_add", check=is_answer, timeout=end_time - time.time())
-
-                # Only accept users first answer
-                if user.id not in user_answers:
-                    answer_index = self.answer_key[str(react.emoji)]
-
-                    # Check if correct answer
-                    is_correct = answer_index == trivia_question.correct_index
-                    if is_correct:
-                        correct_count += 1
-                    answer_time = int((time.time() - (end_time - self.TIMER_DURATION)) * 1000)
-
-                    # Insert answer into DB
-                    query = """INSERT INTO answers (round_id, user_id, username,
-                               is_correct, answer_index, answer_time)
-                               VALUES ($1, $2, $3, $4, $5, $6)
-                            """
-                    await self.bot.db.fetch(
-                        query,
-                        trivia_session.questions_asked(),
-                        int(user.id),
-                        str(user),
-                        is_correct,
-                        answer_index,
-                        answer_time,
-                    )
-
-                    user_answers.update({user.id: {"answer": str(react.emoji)}})
+                answer_index = self.answer_key[str(react.emoji)]
+                trivia_round.log_answer(user_id=user.id, username=user.name, answer_index=answer_index)
 
         except asyncio.TimeoutError:
             pass
-        return user_answers, correct_count
 
     async def build_question_embed(
-        self, trivia_session: TriviaSession, trivia_question: TriviaQuestion, answers: tuple[str, str, str]
+        self, trivia_session: TriviaMatch, trivia_question: TriviaQuestion, answers: tuple[str, str, str]
     ) -> discord.Embed:
         answer_msg = f"**A:** {answers[0]} \n**B:** {answers[1]} \n**C:** {answers[2]} \n\nReact below to answer!"
 
         embed = discord.Embed(
-            title=f"#{trivia_session.questions_asked()}: {trivia_question.question}",
+            title=f"#{trivia_session.rounds_played() + 1}: {trivia_question.question}",
             colour=trivia_session.category.colour,
             description=answer_msg,
         )
@@ -431,54 +369,20 @@ class Trivia(commands.Cog):
 
         return embed
 
-    # Update usernames in leaderboard
-    async def update_usernames(self, ctx, round_id):
-        # Get answers from the round
-        query = "SELECT * FROM answers WHERE round_id = $1"
-        answers = await self.bot.db.fetch(query, round_id)
-
-        # For each answer in round, update username
-        for answer in answers:
-            # Add points to score
-            query = """UPDATE leaderboard SET username = $1
-                       WHERE user_id = $2
-                    """
-            await self.bot.db.fetch(query, answer["username"], answer["user_id"])
-
     # Show an embed scoreboard for the given match_id
     async def show_scoreboard(self, ctx, match_id, category):
-        # Get number of questions answered for match
-        query = """SELECT COUNT(round_id) FROM rounds
-                   WHERE match_id = $1 AND round_id IN (
-                       SELECT DISTINCT round_id FROM answers
-                   )
-                """
-        answer_count = await self.bot.db.fetchval(query, match_id)
+        scoreboard = await self.trivia_db.get_scoreboard(match_id)
 
-        query = """SELECT COUNT(DISTINCT user_id) FROM answers a
-                   INNER JOIN rounds r
-                   ON a.round_id = r.round_id
-                   WHERE r.match_id = $1
-                """
-        participant_count = await self.bot.db.fetchval(query, match_id)
-
-        # Top Scorers (sorted by correct answers descending)
-        query = """SELECT user_id, username, COUNT(CASE WHEN is_correct THEN 1 END)
-                   AS correct FROM answers a
-                   INNER JOIN rounds r
-                   ON a.round_id = r.round_id
-                   WHERE r.match_id = $1
-                   GROUP BY a.user_id, a.username
-                   ORDER BY correct DESC;
-                """
-        top_scorers = await self.bot.db.fetch(query, match_id)
+        # Check if match occurred
+        if scoreboard is None:
+            return None
 
         # Check if there were anyone competing in the match
-        if len(top_scorers) == 0:
+        if len(scoreboard.top_scorers) == 0:
             return
 
         # Get top scorer
-        top_scorer = top_scorers[0]["username"]
+        top_scorer, top_score = scoreboard.top_scorers[0]
 
         # Scoreboard display embed
         embed = discord.Embed(
@@ -489,49 +393,25 @@ class Trivia(commands.Cog):
 
         # List scorers
         scorers = ""
-        for scorer in top_scorers[:5]:
-            scorers += f"**{scorer['username']}**: {round(scorer['correct'], 2):,}\n"
-
+        for scorer, score in scoreboard.top_scorers[:5]:
+            scorers += f"**{scorer}**: {round(score, 2):,}\n"
         embed.add_field(name="\u200b\n*:medal:Correct Answers*", value=scorers)
 
-        # Highest Accuracy (sorted by accuracy descending)
-        query = """SELECT user_id, username,
-                   CAST(COUNT(CASE WHEN is_correct THEN 1 END) AS FLOAT) /
-                   CAST(COUNT(user_id) AS FLOAT) AS accuracy FROM answers a
-                   INNER JOIN rounds r
-                   ON a.round_id = r.round_id
-                   WHERE r.match_id = $1
-                   GROUP BY a.user_id, a.username
-                   ORDER BY accuracy DESC
-                """
-        highest_accuracy = await self.bot.db.fetch(query, match_id)
-
+        # List highest accuracies
         scorers = ""
-        for scorer in highest_accuracy[:5]:
-            scorers += f"**{scorer['username']}**: {round(scorer['accuracy'] * 100.0, 2):,}%\n"
-
+        for scorer, score in scoreboard.highest_accuracy[:5]:
+            scorers += f"**{scorer}**: {round(score * 100.0, 2):,}%\n"
         embed.add_field(name="\u200b\n*:bow_and_arrow: Highest Accuracy*", value=scorers)
 
-        # Fastest Answers (sorted by fastest time ascending)
-        query = """SELECT user_id, username,
-                   MIN(answer_time) AS fastest_time
-                   FROM answers a
-                   INNER JOIN rounds r
-                   ON a.round_id = r.round_id
-                   WHERE a.is_correct = true and r.match_id = $1
-                   GROUP BY a.user_id, a.username
-                   ORDER BY fastest_time ASC
-                """
-        fastest_answers = await self.bot.db.fetch(query, match_id)
-
-        scorers = "" if len(fastest_answers) > 0 else "---"
-        for scorer in fastest_answers[:5]:
-            scorers += f"**{scorer['username']}**: {round(scorer['fastest_time'] / 1000, 3):,}s\n"
+        # List Fastest Answers
+        scorers = "" if len(scoreboard.fastest_answers) > 0 else "---"
+        for scorer, score in scoreboard.fastest_answers[:5]:
+            scorers += f"**{scorer}**: {round(score / 1000, 3):,}s\n"
         embed.add_field(name="\u200b\n*:point_up: Fastest Answers*", value=scorers)
 
         embed.set_footer(
-            text=f"{participant_count} participant{'s' if participant_count > 1 else ''}, "
-            f"{answer_count} question{'s' if answer_count > 1 else ''} answered."
+            text=f"{scoreboard.participant_count} participant{'s' if scoreboard.participant_count > 1 else ''}, "
+            f"{scoreboard.question_count} question{'s' if scoreboard.question_count > 1 else ''} answered."
         )
 
         # Display the scoreboard

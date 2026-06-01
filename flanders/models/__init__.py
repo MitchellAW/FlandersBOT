@@ -3,17 +3,25 @@ from flanders.models.trivia_models import (
     FuturamaTrivia,
     RickAndMortyTrivia,
     SimpsonsTrivia,
+    TriviaAnswer,
     TriviaCategory,
+    TriviaLeaderboardType,
+    TriviaMatch,
     TriviaQuestion,
-    TriviaSession,
+    TriviaRound,
+    TriviaScoreboard,
 )
 
 __all__ = [
     "FuturamaTrivia",
     "RickAndMortyTrivia",
     "SimpsonsTrivia",
+    "TriviaAnswer",
     "TriviaCategory",
+    "TriviaLeaderboardType",
+    "TriviaMatch",
     "TriviaQuestion",
-    "TriviaSession",
+    "TriviaRound",
+    "TriviaScoreboard",
     "TVReferenceState",
 ]
