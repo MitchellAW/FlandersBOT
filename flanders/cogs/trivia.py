@@ -1,13 +1,11 @@
 import asyncio
-import json
-import random
 import time
 
 import discord
 from discord.ext import commands
-from discord.ext.commands import BucketType
+from discord.ext.commands import BucketType, Context
 
-from flanders.models import FuturamaTrivia, SimpsonsTrivia
+from flanders.models import FuturamaTrivia, SimpsonsTrivia, TriviaCategory, TriviaQuestion, TriviaSession
 
 TRIVIA_ROLE = "Trivia Moderator"
 
@@ -55,7 +53,7 @@ class Trivia(commands.Cog):
     @commands.cooldown(10, 300, BucketType.channel)
     @commands.bot_has_permissions(add_reactions=True, embed_links=True)
     @has_trivia_permissions()
-    async def simpsonstrivia(self, ctx):
+    async def simpsonstrivia(self, ctx: Context):
         if self.DISABLED:
             await self.sorry_message(ctx)
             return
@@ -259,7 +257,7 @@ class Trivia(commands.Cog):
                 await ctx.send(embed=embed)
 
     # Starts a match of trivia (multiple rounds of questions)
-    async def start_trivia(self, ctx, category):
+    async def start_trivia(self, ctx, category: TriviaCategory):
         if self.DISABLED:
             await self.sorry_message(ctx)
             return
@@ -267,11 +265,7 @@ class Trivia(commands.Cog):
         self.channels_playing.append(ctx.channel.id)
 
         # Load question data from trivia file
-        with open(f"flanders/cogs/data/{category.file_name}", "r") as trivia_data:
-            trivia = json.load(trivia_data)
-            questions = trivia.copy()
-            random.shuffle(questions)
-            trivia_data.close()
+        questions = category.load_questions()
 
         # Insert new trivia match into DB
         query = """INSERT INTO matches (guild_id, trivia_category)
@@ -280,11 +274,10 @@ class Trivia(commands.Cog):
         match_id = await self.bot.db.fetchval(query, ctx.guild.id, category.category_name)
 
         # Continue playing trivia until exit or out of questions
-        question_counter = 0
-        while ctx.channel.id in self.channels_playing and len(questions) > 0:
-            question_counter += 1
-            question_data = questions.pop()
-            await self.play_round(ctx, match_id, question_data, trivia, category, question_counter)
+        trivia_session = TriviaSession(match_id=match_id, category=category, trivia_questions=questions)
+
+        while ctx.channel.id in self.channels_playing and trivia_session.questions_remaining() > 0:
+            await self.play_round(ctx, trivia_session)
 
         # Set the match as complete (Triggers leaderboard stat updates)
         query = """UPDATE matches SET is_complete = true
@@ -294,88 +287,31 @@ class Trivia(commands.Cog):
         await self.show_scoreboard(ctx, match_id, category)
 
     # Starts a round of trivia (single question)
-    async def play_round(self, ctx, match_id, question_data, trivia, category, question_counter):
-        question_index = trivia.index(question_data)
-        question = question_data["question"]
-        answers = question_data["answers"]
-        source = question_data["source"]
-        correct_answer = answers[0]
+    async def play_round(self, ctx, trivia_session: TriviaSession):
+        trivia_question = trivia_session.next_question()
+        if trivia_question is None:
+            return
 
-        # Shuffle the possible answers
-        random.shuffle(answers)
+        answers = trivia_question.shuffled_answers
 
-        correct_index = answers.index(correct_answer)
+        correct_index = answers.index(trivia_question.correct_answer)
         correct_choice = chr(correct_index + 65)
 
         # Insert new trivia round into DB
         query = """INSERT INTO rounds (match_id, question_index) VALUES ($1, $2)
                    RETURNING round_id
                 """
-        round_id = await self.bot.db.fetchval(query, match_id, question_index)
+        round_id = await self.bot.db.fetchval(query, trivia_session.match_id, trivia_question.id)
 
         # Display the question and answers
-        answer_msg = f"**A:** {answers[0]} \n**B:** {answers[1]} \n**C:** {answers[2]} \n\nReact below to answer!"
-
-        embed = discord.Embed(title=f"#{question_counter}: {question}", colour=category.colour, description=answer_msg)
-        embed.set_thumbnail(url=category.thumbnail_url)
 
         # Send the trivia question
+        embed = await self.build_question_embed(
+            trivia_session=trivia_session, trivia_question=trivia_question, answers=answers
+        )
         question = await ctx.send(embed=embed, delete_after=self.TIMER_DURATION + 3)
 
-        # Add the answer react boxes
-        try:
-            await question.add_reaction("🇦")
-            await question.add_reaction("🇧")
-            await question.add_reaction("🇨")
-
-        # Reaction permission removed after starting trivia
-        except discord.errors.Forbidden:
-            await question.delete()
-            await ctx.send(
-                "⛔ Sorry, I do not have the permissions riddly-required to continue!\nRequires: Add Reactions"
-            )
-            self.channels_playing.remove(ctx.channel.id)
-            return
-
-        # Check for confirming a valid answer was made (A, B or C)
-        def is_answer(reaction, user):
-            return not user.bot and str(reaction.emoji) in ["🇦", "🇧", "🇨"] and reaction.message.channel == ctx.channel
-
-        # Track some important round data
-        user_answers = {}
-        correct_count = 0
-
-        # Start timer
-        end_time = time.time() + self.TIMER_DURATION
-
-        try:
-            # Wait until timer ends for each question before displaying results
-            while time.time() < end_time:
-                react, user = await self.bot.wait_for("reaction_add", check=is_answer, timeout=end_time - time.time())
-
-                # Only accept users first answer
-                if user.id not in user_answers:
-                    answer_index = trivia[question_index]["answers"].index(answers[self.answer_key[str(react.emoji)]])
-
-                    # Check if correct answer
-                    is_correct = answer_index == correct_index
-                    if is_correct:
-                        correct_count += 1
-                    answer_time = int((time.time() - (end_time - self.TIMER_DURATION)) * 1000)
-
-                    # Insert answer into DB
-                    query = """INSERT INTO answers (round_id, user_id, username,
-                               is_correct, answer_index, answer_time)
-                               VALUES ($1, $2, $3, $4, $5, $6)
-                            """
-                    await self.bot.db.fetch(
-                        query, round_id, int(user.id), str(user), is_correct, answer_index, answer_time
-                    )
-
-                    user_answers.update({user.id: {"answer": str(react.emoji)}})
-
-        except asyncio.TimeoutError:
-            pass
+        user_answers, correct_count = await self.gather_answers(ctx, question, trivia_session, trivia_question)
 
         # Update usernames in the leaderboard
         await self.update_usernames(ctx, round_id)
@@ -387,8 +323,10 @@ class Trivia(commands.Cog):
         await self.bot.db.fetch(query, round_id)
 
         # Check the results of the trivia question
-        embed.set_thumbnail(url="")
-        embed.description = f"**{correct_choice}:** {correct_answer}\n**Source:** <{source}> \n\n"
+        # embed.set_thumbnail(url="")
+        embed.description = (
+            f"**{correct_choice}:** {trivia_question.correct_answer}\n**Source:** <{trivia_question.source}> \n\n"
+        )
 
         # Give statement about result based on # of correct answers recorded
         if len(user_answers) == 0:
@@ -409,6 +347,89 @@ class Trivia(commands.Cog):
                     embed.description += f"\n{key.name}"
 
         await ctx.send(embed=embed, delete_after=self.TIMER_DURATION + 3)
+
+    async def gather_answers(
+        self,
+        ctx: Context,
+        question: discord.Message,
+        trivia_session: TriviaSession,
+        trivia_question: TriviaQuestion,
+    ) -> tuple[dict, int]:
+
+        # Add the answer react boxes
+        answer_reactions = ["🇦", "🇧", "🇨"]
+        try:
+            for reaction in answer_reactions:
+                await question.add_reaction(reaction)
+
+        # Reaction permission removed after starting trivia
+        except discord.errors.Forbidden:
+            await question.delete()
+            await ctx.send(
+                "⛔ Sorry, I do not have the permissions riddly-required to continue!\nRequires: Add Reactions"
+            )
+            self.channels_playing.remove(ctx.channel.id)
+
+        # Check for confirming a valid answer was made (A, B or C)
+        def is_answer(reaction, user):
+            return not user.bot and str(reaction.emoji) in ["🇦", "🇧", "🇨"] and reaction.message.channel == ctx.channel
+
+        # Track some important round data
+        user_answers = {}
+        correct_count = 0
+
+        # Start timer
+        end_time = time.time() + self.TIMER_DURATION
+
+        try:
+            # Wait until timer ends for each question before displaying results
+            while time.time() < end_time:
+                react, user = await self.bot.wait_for("reaction_add", check=is_answer, timeout=end_time - time.time())
+
+                # Only accept users first answer
+                if user.id not in user_answers:
+                    answer_index = self.answer_key[str(react.emoji)]
+
+                    # Check if correct answer
+                    is_correct = answer_index == trivia_question.correct_index
+                    if is_correct:
+                        correct_count += 1
+                    answer_time = int((time.time() - (end_time - self.TIMER_DURATION)) * 1000)
+
+                    # Insert answer into DB
+                    query = """INSERT INTO answers (round_id, user_id, username,
+                               is_correct, answer_index, answer_time)
+                               VALUES ($1, $2, $3, $4, $5, $6)
+                            """
+                    await self.bot.db.fetch(
+                        query,
+                        trivia_session.questions_asked(),
+                        int(user.id),
+                        str(user),
+                        is_correct,
+                        answer_index,
+                        answer_time,
+                    )
+
+                    user_answers.update({user.id: {"answer": str(react.emoji)}})
+
+        except asyncio.TimeoutError:
+            pass
+        return user_answers, correct_count
+
+    async def build_question_embed(
+        self, trivia_session: TriviaSession, trivia_question: TriviaQuestion, answers: tuple[str, str, str]
+    ) -> discord.Embed:
+        answer_msg = f"**A:** {answers[0]} \n**B:** {answers[1]} \n**C:** {answers[2]} \n\nReact below to answer!"
+
+        embed = discord.Embed(
+            title=f"#{trivia_session.questions_asked()}: {trivia_question.question}",
+            colour=trivia_session.category.colour,
+            description=answer_msg,
+        )
+        embed.set_thumbnail(url=trivia_session.category.thumbnail_url)
+
+        return embed
 
     # Update usernames in leaderboard
     async def update_usernames(self, ctx, round_id):
