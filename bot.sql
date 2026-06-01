@@ -224,7 +224,8 @@ CREATE OR REPLACE FUNCTION update_stats() RETURNS TRIGGER AS $BODY$
 	BEGIN
 		-- Insert user that answers into leaderboard
 		INSERT INTO leaderboard (user_id, username)
-		VALUES (new.user_id, new.username) ON CONFLICT DO NOTHING;
+		VALUES (new.user_id, new.username)
+		ON CONFLICT (user_id) DO UPDATE SET username = EXCLUDED.username;
 
 		-- Update stats for correct answer (100 points for correct, increase streak)
 		IF new.is_correct THEN
