@@ -62,6 +62,7 @@ class TriviaCategory:
     colour: discord.Colour
     thumbnail_url: str
     end_thumbnail_url: str
+    TIMER_DURATION: int = 20
 
     def load_questions(self) -> list[TriviaQuestion]:
         with open(f"flanders/cogs/data/{self.file_name}", "r") as trivia_data:
@@ -146,6 +147,7 @@ class TriviaRound:
 
 @dataclass
 class TriviaMatch:
+    host: int
     match_id: int
     questions: list[TriviaQuestion]
     category: TriviaCategory
@@ -153,6 +155,7 @@ class TriviaMatch:
     _current_round: TriviaRound | None = field(default=None, repr=False)
     _completed_rounds: list[TriviaRound] = field(default_factory=list, repr=False)
     _is_idle: bool = False
+    _force_ended: bool = False
 
     def start_round(self) -> TriviaRound | None:
         if self._current_round is not None:
@@ -177,6 +180,9 @@ class TriviaMatch:
     def end_match_due_to_inactivity(self) -> None:
         self._is_idle = True
 
+    def force_end_match(self) -> None:
+        self._force_ended = True
+
     @property
     def current_round(self) -> TriviaRound | None:
         return self._current_round
@@ -188,7 +194,10 @@ class TriviaMatch:
     @property
     def is_finished(self) -> bool:
         """True when all questions have been played and no round is open."""
-        return self._is_idle or (not self.questions and self._current_round is None)
+        return self._is_idle or self._force_ended or (not self.questions and self._current_round is None)
+
+    def was_force_ended(self) -> bool:
+        return self._force_ended
 
     def questions_remaining(self) -> int:
         return len(self.questions)

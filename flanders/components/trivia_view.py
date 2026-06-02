@@ -81,11 +81,14 @@ class TriviaView(discord.ui.LayoutView):
         if len(answers) == 0:
             answer_content += "\n\n⛔ **No answers given! Trivia has ended.**"
 
-        elif len(answers) == 0 and len(correct_answers) == 0:
+        elif self.trivia_match.was_force_ended():
+            answer_content += "\n\n⛔ Trivia was stopped with the `/trivia stop` command."
+
+        if len(answers) != 0 and len(correct_answers) == 0:
             answer_content += "\n\n**No correct answers!**"
 
         else:
-            answer_content += f"\n\n**{str(len(correct_answers))} correct answers!**\n"
+            answer_content += f"\n\n**{len(correct_answers)} correct answers!**\n"
             answer_content += ", ".join(answer.mention for answer in correct_answers)
 
         # Show question and answer content, (with thumbnail alongside) and add it to self
@@ -101,7 +104,9 @@ class TriviaView(discord.ui.LayoutView):
         if previous_round.ended_at is not None:
             ended_at = discord.utils.format_dt(previous_round.ended_at, style="R")
             if self.trivia_match.is_finished:
-                scoreboard_time = datetime.now(tz=timezone.utc) + timedelta(seconds=10)
+                scoreboard_time = datetime.now(tz=timezone.utc) + timedelta(
+                    seconds=int(self.trivia_category.TIMER_DURATION / 2)
+                )
                 show_in = discord.utils.format_dt(scoreboard_time, style="R")
                 content = discord.ui.TextDisplay(content=f"-# Match ended {ended_at}! Showing results {show_in}...")
 
@@ -128,7 +133,7 @@ class TriviaButton(discord.ui.Button):
 
 
 class TriviaScoreboardView(discord.ui.LayoutView):
-    def __init__(self, scoreboard: TriviaScoreboard, trivia_category: TriviaCategory):
+    def __init__(self, scoreboard: TriviaScoreboard | None, trivia_category: TriviaCategory):
         super().__init__()
 
         container = discord.ui.Container()
@@ -137,10 +142,8 @@ class TriviaScoreboardView(discord.ui.LayoutView):
 
         content = "## Trivia Scoreboard"
 
-        participant_count = scoreboard.participant_count
-
-        if participant_count == 0:
-            content += "Unfortunately there were no participants in the trivia."
+        if scoreboard is None or scoreboard.participant_count == 0:
+            content += "\nUnfortunately, there were no participants in the trivia."
 
         else:
             top_scorers = scoreboard.top_scorers

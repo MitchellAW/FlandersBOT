@@ -1,149 +1,33 @@
 import asyncio
-import time
 from datetime import datetime, timedelta, timezone
 from typing import Literal
 
 import discord
 from discord import app_commands
 from discord.ext import commands
-from discord.ext.commands import BucketType, Context
+from discord.ext.commands import BucketType
 
 from flanders.components import TriviaScoreboardView, TriviaView
 from flanders.models import (
     FuturamaTrivia,
     SimpsonsTrivia,
-    TriviaCategory,
     TriviaLeaderboardType,
     TriviaMatch,
-    TriviaQuestion,
-    TriviaRound,
 )
 from flanders.utils import TriviaDB
 
-TRIVIA_ROLE = "Trivia Moderator"
 
-
-# If guild has trivia mod role, require users to have role to start matches, otherwise anyone can start matches
-def has_trivia_permissions():
-    def predicate(ctx):
-        # Get custom trivia role from guild and user
-        guild_role = discord.utils.get(ctx.guild.roles, name=TRIVIA_ROLE)
-        user_role = discord.utils.get(ctx.author.roles, name=TRIVIA_ROLE)
-
-        # Get manage messages permission from user
-        manage_messages_perm = ctx.author.guild_permissions.manage_messages
-
-        # If guild doesn't have trivia role, then stop command requires manage messages permissions
-        if guild_role is None and ctx.command.qualified_name == "forcestop":
-            return manage_messages_perm
-
-        # If guild doesn't have trivia role, then trivia can be started by anyone
-        elif guild_role is None:
-            return True
-
-        # If guild has role, trivia role is required to start/stop trivia matches
-        else:
-            return user_role is not None
-
-    return commands.check(predicate)
-
-
-class Trivia(commands.Cog):
-    DISABLED = False
-    DISABLED_MESSAGE = "Sorry, trivia is currently under maintenance at the moment!"
-
+class Trivia(commands.GroupCog, name="trivia", description="All commands related to trivia!"):
     def __init__(self, bot):
         self.bot = bot
-        self.TIMER_DURATION = 16
-        self.channels_playing = []
-        self.answer_key = {"🇦": 0, "🇧": 1, "🇨": 2}
         self.trivia_db = TriviaDB(db=self.bot.db)
 
-    async def sorry_message(self, ctx):
-        await ctx.send(self.DISABLED_MESSAGE, silent=True, delete_after=10)
-
-    # Starts a game of trivia using the simpsons trivia questions
-    @commands.command(aliases=["strivia", "simpsontrivia"])
-    @commands.cooldown(10, 300, BucketType.channel)
-    @commands.bot_has_permissions(add_reactions=True, embed_links=True)
-    @has_trivia_permissions()
-    async def simpsonstrivia(self, ctx: Context):
-        if self.DISABLED:
-            await self.sorry_message(ctx)
-            return
-
-        if ctx.channel.id not in self.channels_playing:
-            await self.start_trivia(ctx, SimpsonsTrivia())
-
-    # Starts a game of trivia using the futurama trivia questions
-    @commands.command(aliases=["ftrivia"])
-    @commands.cooldown(10, 300, BucketType.channel)
-    @commands.bot_has_permissions(add_reactions=True, embed_links=True)
-    @has_trivia_permissions()
-    async def futuramatrivia(self, ctx):
-        if self.DISABLED:
-            await self.sorry_message(ctx)
-            return
-
-        if ctx.channel.id not in self.channels_playing:
-            await self.start_trivia(ctx, FuturamaTrivia())
-
-    # TODO: Starts a game of trivia using rick and morty trivia questions
-    @commands.command(aliases=["ramtrivia"])
-    @commands.cooldown(10, 300, BucketType.channel)
-    @has_trivia_permissions()
-    async def rickandmortytrivia(self, ctx):
-        await ctx.send("Coming Soon!", silent=True, delete_after=10)
-
-    # Explain how trivia games end  to users trying to use a stop command
-    @commands.command()
-    @commands.cooldown(1, 3, BucketType.channel)
-    async def stop(self, ctx):
-        if ctx.channel.id in self.channels_playing:
-            await ctx.send(
-                "The game of trivia will end once nobody answers a question or a member with manage server permissions "
-                "uses the forcestop command."
-            )
-
-    # Allow users with manage server permissions to force stop trivia games
-    @commands.command()
-    @has_trivia_permissions()
-    async def forcestop(self, ctx):
-        if ctx.channel.id in self.channels_playing:
-            self.channels_playing.remove(ctx.channel.id)
-            await ctx.send("Trivia will terminate at the end of the current round.")
-
-    # Show the scoreboard for the latest match this guild has completed
-    @commands.command()
-    @commands.cooldown(1, 60, BucketType.channel)
-    @has_trivia_permissions()
-    async def scoreboard(self, ctx):
-        if self.DISABLED:
-            await self.sorry_message(ctx)
-            return
-
-        # Check if guild has participated
-        if result := await self.trivia_db.get_latest_match_details(ctx.guild.id):
-            # Get latest match for guild
-            match_id, category = result
-
-            category = SimpsonsTrivia()
-            if category == "futurama":
-                category = FuturamaTrivia()
-
-            # Show scoreboard
-            await self.show_scoreboard(ctx, match_id, category)
-
-        else:
-            await ctx.send("No previous match found.")
+        self.matches_in_progress: dict[int, TriviaMatch] = {}
 
     # Display a users trivia stats
     @commands.command(aliases=["mystatistics", "mystat", "triviastat", "triviastats", "triviastatistics"])
     @commands.cooldown(1, 30, BucketType.user)
     async def mystats(self, ctx):
-        if self.DISABLED:
-            await self.sorry_message(ctx)
-            return
         trivia_stats = await self.trivia_db.get_user_stats(ctx.user.id)
 
         if trivia_stats is not None:
@@ -207,9 +91,6 @@ class Trivia(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 30, BucketType.channel)
     async def leaderboard(self, ctx):
-        if self.DISABLED:
-            await self.sorry_message(ctx)
-
         # Scoreboard display embed
         embed = discord.Embed(title="Trivia Leaderboard", colour=discord.Colour(0x44981E))
         embed.set_thumbnail(url=self.bot.user.avatar)
@@ -238,19 +119,19 @@ class Trivia(commands.Cog):
             if len(embed.fields) > 0:
                 await ctx.send(embed=embed)
 
-    @app_commands.command(name="trivia", description="Starts a trivia match.")
-    @app_commands.describe(show="The television show to use for the Trivia questions")
+    @app_commands.command(name="start", description="Starts a trivia match with questions from the chosen category.")
+    @app_commands.describe(category="The television category to use for the trivia questions.")
     @app_commands.checks.cooldown(1, 120.0, key=lambda i: (i.guild_id, i.user.id))
-    async def trivia(self, interaction: discord.Interaction, show: Literal["The Simpsons", "Futurama"]):
+    async def start_trivia(self, interaction: discord.Interaction, category: Literal["The Simpsons", "Futurama"]):
         if interaction.guild_id is None or interaction.channel is None:
             return None
 
-        if show == "The Simpsons":
-            category = SimpsonsTrivia()
-        elif show == "Futurama":
-            category = FuturamaTrivia()
+        if category == "The Simpsons":
+            trivia_category = SimpsonsTrivia()
+        elif category == "Futurama":
+            trivia_category = FuturamaTrivia()
         else:
-            category = SimpsonsTrivia()
+            trivia_category = SimpsonsTrivia()
 
         await interaction.response.send_message(
             content="Starting a trivia match!",
@@ -258,22 +139,26 @@ class Trivia(commands.Cog):
         )
 
         # Load question data from trivia file
-        questions = category.load_questions()
+        questions = trivia_category.load_questions()
 
         # Insert new trivia match into DB
-        match_id = await self.trivia_db.insert_match(guild_id=interaction.guild_id, category=category)
+        match_id = await self.trivia_db.insert_match(guild_id=interaction.guild_id, category=trivia_category)
 
         # Continue playing trivia until exit or out of questions
-        trivia_session = TriviaMatch(match_id=match_id, category=category, questions=questions)
+        trivia_match = TriviaMatch(
+            host=interaction.user.id, match_id=match_id, category=trivia_category, questions=questions
+        )
 
-        while not trivia_session.is_finished:
+        self.matches_in_progress.update({interaction.channel.id: trivia_match})
+
+        while not trivia_match.is_finished:
             # Insert new trivia round into DB
-            trivia_round = trivia_session.start_round()
+            trivia_round = trivia_match.start_round()
             if trivia_round is None:
                 return
 
-            end_time = datetime.now(tz=timezone.utc) + timedelta(seconds=self.TIMER_DURATION)
-            question_view = TriviaView(trivia_category=category, trivia_match=trivia_session, end_time=end_time)
+            end_time = datetime.now(tz=timezone.utc) + timedelta(seconds=trivia_category.TIMER_DURATION)
+            question_view = TriviaView(trivia_category=trivia_category, trivia_match=trivia_match, end_time=end_time)
             await interaction.edit_original_response(
                 content=None,
                 view=question_view,
@@ -283,20 +168,21 @@ class Trivia(commands.Cog):
             trivia_question = trivia_round.question
 
             round_id = await self.trivia_db.insert_round(
-                match_id=trivia_session.match_id, question_index=trivia_question.id
+                match_id=trivia_match.match_id, question_index=trivia_question.id
             )
 
-            await asyncio.sleep(self.TIMER_DURATION)
-            trivia_session.end_round()
+            await asyncio.sleep(trivia_category.TIMER_DURATION)
+
+            trivia_match.end_round()
 
             if trivia_round.total_answers == 0:
-                trivia_session.end_match_due_to_inactivity()
+                trivia_match.end_match_due_to_inactivity()
 
             answers = trivia_round.answers
             for answer in answers:
                 await self.trivia_db.insert_answer(round_id, answer)
 
-            answer_view = TriviaView(trivia_category=category, trivia_match=trivia_session, end_time=end_time)
+            answer_view = TriviaView(trivia_category=trivia_category, trivia_match=trivia_match, end_time=end_time)
             await interaction.edit_original_response(
                 content=None,
                 view=answer_view,
@@ -309,206 +195,39 @@ class Trivia(commands.Cog):
         # Set the match as complete (Triggers leaderboard stat updates)
         await self.trivia_db.complete_match(match_id=match_id)
 
-        await asyncio.sleep(10)
+        # Remove from active matches if not force stopped already
+        if interaction.channel.id in self.matches_in_progress:
+            self.matches_in_progress.pop(interaction.channel.id, None)
+
+        await asyncio.sleep(trivia_category.TIMER_DURATION / 2)
         scoreboard = await self.trivia_db.get_scoreboard(match_id)
-        if scoreboard is not None:
-            scoreboard_view = TriviaScoreboardView(scoreboard=scoreboard, trivia_category=category)
-            await interaction.edit_original_response(
-                content=None, view=scoreboard_view, allowed_mentions=discord.AllowedMentions.none()
-            )
+        scoreboard_view = TriviaScoreboardView(scoreboard=scoreboard, trivia_category=trivia_category)
+        await interaction.edit_original_response(
+            content=None, view=scoreboard_view, allowed_mentions=discord.AllowedMentions.none()
+        )
+
+    @app_commands.command(name="stop", description="Stops any trivia match in progress in this channel.")
+    @app_commands.checks.cooldown(1, 3.0, key=lambda i: (i.guild_id, i.user.id))
+    async def stop_trivia(self, interaction: discord.Interaction):
+        if interaction.channel is None:
+            await interaction.response.send_message("No trivia matches are in progress here.", ephemeral=True)
 
         else:
-            await interaction.edit_original_response(content="Sorry, I failed to build the scoreboard! :(", view=None)
+            match = self.matches_in_progress.get(interaction.channel.id)
+            if match is None or match.is_finished:
+                await interaction.response.send_message("No trivia matches are in progress here.", ephemeral=True)
 
-    # Starts a match of trivia (multiple rounds of questions)
-    async def start_trivia(self, ctx, category: TriviaCategory):
-        if self.DISABLED:
-            await self.sorry_message(ctx)
-            return
+            elif match.host != interaction.user.id:
+                await interaction.response.send_message(
+                    "Sorry, you are not the host of this trivia match.", ephemeral=True
+                )
 
-        self.channels_playing.append(ctx.channel.id)
-
-        # Load question data from trivia file
-        questions = category.load_questions()
-
-        # Insert new trivia match into DB
-        match_id = await self.trivia_db.insert_match(guild_id=ctx.guild.id, category=category)
-
-        # Continue playing trivia until exit or out of questions
-        trivia_session = TriviaMatch(match_id=match_id, category=category, questions=questions)
-
-        while ctx.channel.id in self.channels_playing and trivia_session.questions_remaining() > 0:
-            await self.play_round(ctx, trivia_session)
-
-        # Set the match as complete (Triggers leaderboard stat updates)
-        await self.trivia_db.complete_match(match_id=match_id)
-
-        await self.show_scoreboard(ctx, match_id, category)
-
-    # Starts a round of trivia (single question)
-    async def play_round(self, ctx, trivia_session: TriviaMatch):
-        trivia_round = trivia_session.start_round()
-        if trivia_round is None:
-            return
-
-        trivia_question = trivia_round.question
-        if trivia_question is None:
-            return
-
-        answers = trivia_question.shuffled_answers
-
-        correct_index = answers.index(trivia_question.correct_answer)
-        correct_choice = chr(correct_index + 65)
-
-        # Insert new trivia round into DB
-        round_id = await self.trivia_db.insert_round(
-            match_id=trivia_session.match_id, question_index=trivia_question.id
-        )
-
-        # Send the trivia question
-        embed = await self.build_question_embed(
-            trivia_session=trivia_session, trivia_question=trivia_question, answers=answers
-        )
-        question = await ctx.send(embed=embed, delete_after=self.TIMER_DURATION + 3)
-
-        await self.gather_answers(ctx, question, trivia_round)
-
-        trivia_session.end_round()
-
-        answers = trivia_round.answers
-        for answer in answers:
-            await self.trivia_db.insert_answer(round_id, answer)
-
-        # Set round as complete (Triggers leaderboard stat updates)
-        await self.trivia_db.complete_round(round_id)
-
-        # Check the results of the trivia question
-        # embed.set_thumbnail(url="")
-        embed.description = (
-            f"**{correct_choice}:** {trivia_question.correct_answer}\n**Source:** <{trivia_question.source}> \n\n"
-        )
-
-        answer_count = trivia_round.total_answers
-        correct_answers = trivia_round.correct_answers
-
-        # Give statement about result based on # of correct answers recorded
-        if answer_count == 0:
-            embed.description += "⛔ **No answers given! Trivia has ended.**"
-            if ctx.channel.id in self.channels_playing:
-                self.channels_playing.remove(ctx.channel.id)
-
-        elif answer_count > 0 and len(correct_answers) == 0:
-            embed.description += "**No correct answers!**"
-
-        elif answer_count == 1 and len(correct_answers) == 1:
-            embed.description += "**Correct!**"
-
-        else:
-            embed.description += f"**{str(len(correct_answers))} correct answers!**"
-            for answer in correct_answers:
-                embed.description += f"\n{answer.username}"
-
-        await ctx.send(embed=embed, delete_after=self.TIMER_DURATION + 3)
-
-    async def gather_answers(
-        self,
-        ctx: Context,
-        question: discord.Message,
-        trivia_round: TriviaRound,
-    ) -> None:
-
-        # Add the answer react boxes
-        answer_reactions = ["🇦", "🇧", "🇨"]
-        try:
-            for reaction in answer_reactions:
-                await question.add_reaction(reaction)
-
-        # Reaction permission removed after starting trivia
-        except discord.errors.Forbidden:
-            await question.delete()
-            await ctx.send(
-                "⛔ Sorry, I do not have the permissions riddly-required to continue!\nRequires: Add Reactions"
-            )
-            self.channels_playing.remove(ctx.channel.id)
-
-        # Check for confirming a valid answer was made (A, B or C)
-        def is_answer(reaction, user):
-            return not user.bot and str(reaction.emoji) in ["🇦", "🇧", "🇨"] and reaction.message.channel == ctx.channel
-
-        # Start timer
-        end_time = time.time() + self.TIMER_DURATION
-
-        try:
-            # Wait until timer ends for each question before displaying results
-            while time.time() < end_time:
-                react, user = await self.bot.wait_for("reaction_add", check=is_answer, timeout=end_time - time.time())
-                answer_index = self.answer_key[str(react.emoji)]
-                trivia_round.log_answer(user=user, answer_index=answer_index)
-
-        except asyncio.TimeoutError:
-            pass
-
-    async def build_question_embed(
-        self, trivia_session: TriviaMatch, trivia_question: TriviaQuestion, answers: tuple[str, str, str]
-    ) -> discord.Embed:
-        answer_msg = f"**A:** {answers[0]} \n**B:** {answers[1]} \n**C:** {answers[2]} \n\nReact below to answer!"
-
-        embed = discord.Embed(
-            title=f"#{trivia_session.rounds_played() + 1}: {trivia_question.question}",
-            colour=trivia_session.category.colour,
-            description=answer_msg,
-        )
-        embed.set_thumbnail(url=trivia_session.category.thumbnail_url)
-
-        return embed
-
-    # Show an embed scoreboard for the given match_id
-    async def show_scoreboard(self, ctx, match_id, category):
-        scoreboard = await self.trivia_db.get_scoreboard(match_id)
-
-        # Check if match occurred
-        if scoreboard is None:
-            return None
-
-        # Check if there were anyone competing in the match
-        if len(scoreboard.top_scorers) == 0:
-            return
-
-        # Get top scorer
-        top_scorer, top_score = scoreboard.top_scorers[0]
-
-        # Scoreboard display embed
-        embed = discord.Embed(
-            title="Trivia Scoreboard",
-            description=f"Congratulations to the top scorer, **{top_scorer}**! :trophy:\n",
-            color=category.colour,
-        )
-
-        # List scorers
-        scorers = ""
-        for scorer, score in scoreboard.top_scorers[:5]:
-            scorers += f"**{scorer}**: {round(score, 2):,}\n"
-        embed.add_field(name="\u200b\n*:medal:Correct Answers*", value=scorers)
-
-        # List highest accuracies
-        scorers = ""
-        for scorer, score in scoreboard.highest_accuracy[:5]:
-            scorers += f"**{scorer}**: {round(score * 100.0, 2):,}%\n"
-        embed.add_field(name="\u200b\n*:bow_and_arrow: Highest Accuracy*", value=scorers)
-
-        # List Fastest Answers
-        scorers = "" if len(scoreboard.fastest_answers) > 0 else "---"
-        for scorer, score in scoreboard.fastest_answers[:5]:
-            scorers += f"**{scorer}**: {round(score / 1000, 3):,}s\n"
-        embed.add_field(name="\u200b\n*:point_up: Fastest Answers*", value=scorers)
-
-        embed.set_footer(
-            text=f"{scoreboard.participant_count} participant{'s' if scoreboard.participant_count > 1 else ''}, "
-            f"{scoreboard.question_count} question{'s' if scoreboard.question_count > 1 else ''} answered."
-        )
-
-        # Display the scoreboard
-        await ctx.send(embed=embed)
+            else:
+                match.force_end_match()
+                await interaction.response.send_message(
+                    "The trivia match will end once the current round ends.", ephemeral=True
+                )
+                self.matches_in_progress.pop(interaction.channel.id)
 
 
 async def setup(bot):
