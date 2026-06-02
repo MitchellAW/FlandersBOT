@@ -5,7 +5,7 @@ from flanders.components.caption_button import CustomiseCaptionButton
 from flanders.components.content_view import TVContentView
 from flanders.components.generate_button import GenerateButton, GenerateComicButton, GenerateGifButton
 from flanders.components.search_dropdown import SearchResult, SearchResultDropdown
-from flanders.components.trivia_view import TriviaScoreboardView, TriviaView
+from flanders.components.trivia_view import TriviaLeaderboardView, TriviaScoreboardView, TriviaUserStatsView, TriviaView
 
 __all__ = [
     "BuilderView",
@@ -16,6 +16,8 @@ __all__ = [
     "GenerateGifButton",
     "SearchResult",
     "SearchResultDropdown",
+    "TriviaLeaderboardView",
     "TriviaScoreboardView",
+    "TriviaUserStatsView",
     "TriviaView",
 ]

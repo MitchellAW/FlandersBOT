@@ -5,9 +5,8 @@ from typing import Literal
 import discord
 from discord import app_commands
 from discord.ext import commands
-from discord.ext.commands import BucketType
 
-from flanders.components import TriviaScoreboardView, TriviaView
+from flanders.components import TriviaLeaderboardView, TriviaScoreboardView, TriviaUserStatsView, TriviaView
 from flanders.models import (
     FuturamaTrivia,
     SimpsonsTrivia,
@@ -23,101 +22,6 @@ class Trivia(commands.GroupCog, name="trivia", description="All commands related
         self.trivia_db = TriviaDB(db=self.bot.db)
 
         self.matches_in_progress: dict[int, TriviaMatch] = {}
-
-    # Display a users trivia stats
-    @commands.command(aliases=["mystatistics", "mystat", "triviastat", "triviastats", "triviastatistics"])
-    @commands.cooldown(1, 30, BucketType.user)
-    async def mystats(self, ctx):
-        trivia_stats = await self.trivia_db.get_user_stats(ctx.user.id)
-
-        if trivia_stats is not None:
-            embed = discord.Embed(colour=discord.Colour(0x44981E))
-            embed.set_author(name=f"Trivia Statistics for {ctx.author}", icon_url=ctx.author.avatar)
-
-            # For all trivia statistics, calculate result, get current rank and add all to embed field
-            score = round(trivia_stats["score"], 2)
-            embed.add_field(name=f":trophy: Score (#{trivia_stats['score_rank']:,})", value=f"{score:,}", inline=True)
-
-            wins = round(trivia_stats["wins"], 2)
-            embed.add_field(name=f":first_place: Wins (#{trivia_stats['wins_rank']:,})", value=f"{wins:,}", inline=True)
-
-            losses = round(trivia_stats["losses"], 2)
-            embed.add_field(name=f":poop: Losses (#{trivia_stats['losses_rank']:,})", value=f"{losses:,}", inline=True)
-
-            correct_answers = round(trivia_stats["correct_answers"], 2)
-            embed.add_field(
-                name=f":white_check_mark: Correct (#{trivia_stats['correct_answers_rank']:,})",
-                value=f"{correct_answers:,}",
-                inline=True,
-            )
-
-            incorrect_answers = round(trivia_stats["incorrect_answers"], 2)
-            embed.add_field(
-                name=f":no_entry: Incorrect (#{trivia_stats['incorrect_answers_rank']:,})",
-                value=f"{incorrect_answers:,}",
-                inline=True,
-            )
-
-            accuracy = round(correct_answers / (incorrect_answers + correct_answers) * 100.0, 2)
-            embed.add_field(name=":bow_and_arrow: Accuracy", value=f"{accuracy:,}%", inline=True)
-
-            fastest_answer = round(trivia_stats["fastest_answer"] / 1000, 3)
-            embed.add_field(
-                name=f":point_up: Fastest Answer (#{trivia_stats['fastest_answer_rank']:,})",
-                value=f"{fastest_answer:,}s",
-                inline=True,
-            )
-
-            current_streak = round(trivia_stats["current_streak"], 2)
-            embed.add_field(
-                name=f":chart_with_upwards_trend: Current Streak (#{trivia_stats['current_streak_rank']:,})",
-                value=f"{current_streak:,}",
-                inline=True,
-            )
-
-            longest_streak = round(trivia_stats["longest_streak"], 2)
-            embed.add_field(
-                name=f":four_leaf_clover: Longest Streak (#{trivia_stats['longest_streak_rank']:,})",
-                value=f"{longest_streak:,}",
-                inline=True,
-            )
-
-            await ctx.send(embed=embed)
-
-        else:
-            await ctx.send("You have not participated in any trivia.")
-
-    # Display the global trivia leaderboard
-    @commands.command()
-    @commands.cooldown(1, 30, BucketType.channel)
-    async def leaderboard(self, ctx):
-        # Scoreboard display embed
-        embed = discord.Embed(title="Trivia Leaderboard", colour=discord.Colour(0x44981E))
-        embed.set_thumbnail(url=self.bot.user.avatar)
-
-        leader_count = await self.trivia_db.get_leaderboard_count()
-
-        stats = [
-            (TriviaLeaderboardType.SCORE, ":trophy: High Scores"),
-            (TriviaLeaderboardType.WINS, ":first_place: Wins"),
-            (TriviaLeaderboardType.CORRECT_ANSWERS, ":white_check_mark:  Correct Answers"),
-            (TriviaLeaderboardType.FASTEST_ANSWER, ":point_up: Fastest Answers"),
-            (TriviaLeaderboardType.LONGEST_STREAK, ":four_leaf_clover: Longest Streak"),
-        ]
-        if leader_count >= 1:
-            for stat, category in stats:
-                scorers = await self.trivia_db.get_leaderboard_results(stat)
-
-                scores = ""
-                for scorer, score in scorers[:5]:
-                    scores += f"**{scorer}**: "
-                    result = f"{round(score, 2):,}" if isinstance(score, str) else score
-                    scores += f"{result}\n"
-
-                embed.add_field(name=category, value=scores, inline=False)
-
-            if len(embed.fields) > 0:
-                await ctx.send(embed=embed)
 
     @app_commands.command(name="start", description="Starts a trivia match with questions from the chosen category.")
     @app_commands.describe(category="The television category to use for the trivia questions.")
@@ -228,6 +132,35 @@ class Trivia(commands.GroupCog, name="trivia", description="All commands related
                     "The trivia match will end once the current round ends.", ephemeral=True
                 )
                 self.matches_in_progress.pop(interaction.channel.id)
+
+    @app_commands.command(name="stats", description="Shows all of your trivia statistics.")
+    @app_commands.checks.cooldown(1, 3.0, key=lambda i: (i.guild_id, i.user.id))
+    async def trivia_stats(self, interaction: discord.Interaction):
+        await interaction.response.defer(ephemeral=True)
+        user_stats = await self.trivia_db.get_user_stats(interaction.user.id)
+        if user_stats is None:
+            await interaction.edit_original_response(content="Sorry, I was unable to find any statistics for you.")
+        else:
+            user_stats_view = TriviaUserStatsView(user_stats=user_stats, user=interaction.user)
+            await interaction.edit_original_response(
+                view=user_stats_view,
+                allowed_mentions=discord.AllowedMentions.none(),
+            )
+
+    @app_commands.command(name="leaderboard", description="Shows the trivia leaderboard for many categories.")
+    @app_commands.checks.cooldown(1, 3.0, key=lambda i: (i.guild_id, i.user.id))
+    async def trivia_leaderboard(self, interaction: discord.Interaction):
+        await interaction.response.defer(ephemeral=True)
+        leader_count = await self.trivia_db.get_leaderboard_count()
+        stats = [stat for stat in TriviaLeaderboardType]
+
+        scorers: dict[TriviaLeaderboardType, list[tuple[str, int]]] = {}
+        if leader_count >= 1:
+            for stat in stats:
+                scorers.update({stat: await self.trivia_db.get_leaderboard_results(stat, limit=10)})
+
+        view = TriviaLeaderboardView(leaderboard=scorers)
+        await interaction.edit_original_response(view=view)
 
 
 async def setup(bot):
