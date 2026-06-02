@@ -1,13 +1,24 @@
 import asyncio
 import time
+from datetime import datetime, timedelta, timezone
+from typing import Literal
 
 import discord
+from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands import BucketType, Context
 
-from flanders.models import FuturamaTrivia, SimpsonsTrivia, TriviaCategory, TriviaMatch, TriviaQuestion, TriviaRound
+from flanders.components import TriviaScoreboardView, TriviaView
+from flanders.models import (
+    FuturamaTrivia,
+    SimpsonsTrivia,
+    TriviaCategory,
+    TriviaLeaderboardType,
+    TriviaMatch,
+    TriviaQuestion,
+    TriviaRound,
+)
 from flanders.utils import TriviaDB
-from flanders.utils.trivia_db import TriviaLeaderboardType
 
 TRIVIA_ROLE = "Trivia Moderator"
 
@@ -38,7 +49,7 @@ def has_trivia_permissions():
 
 
 class Trivia(commands.Cog):
-    DISABLED = True
+    DISABLED = False
     DISABLED_MESSAGE = "Sorry, trivia is currently under maintenance at the moment!"
 
     def __init__(self, bot):
@@ -227,6 +238,88 @@ class Trivia(commands.Cog):
             if len(embed.fields) > 0:
                 await ctx.send(embed=embed)
 
+    @app_commands.command(name="trivia", description="Starts a trivia match.")
+    @app_commands.describe(show="The television show to use for the Trivia questions")
+    @app_commands.checks.cooldown(1, 120.0, key=lambda i: (i.guild_id, i.user.id))
+    async def trivia(self, interaction: discord.Interaction, show: Literal["The Simpsons", "Futurama"]):
+        if interaction.guild_id is None or interaction.channel is None:
+            return None
+
+        if show == "The Simpsons":
+            category = SimpsonsTrivia()
+        elif show == "Futurama":
+            category = FuturamaTrivia()
+        else:
+            category = SimpsonsTrivia()
+
+        await interaction.response.send_message(
+            content="Starting a trivia match!",
+            allowed_mentions=discord.AllowedMentions.none(),
+        )
+
+        # Load question data from trivia file
+        questions = category.load_questions()
+
+        # Insert new trivia match into DB
+        match_id = await self.trivia_db.insert_match(guild_id=interaction.guild_id, category=category)
+
+        # Continue playing trivia until exit or out of questions
+        trivia_session = TriviaMatch(match_id=match_id, category=category, questions=questions)
+
+        while not trivia_session.is_finished:
+            # Insert new trivia round into DB
+            trivia_round = trivia_session.start_round()
+            if trivia_round is None:
+                return
+
+            end_time = datetime.now(tz=timezone.utc) + timedelta(seconds=self.TIMER_DURATION)
+            question_view = TriviaView(trivia_category=category, trivia_match=trivia_session, end_time=end_time)
+            await interaction.edit_original_response(
+                content=None,
+                view=question_view,
+                allowed_mentions=discord.AllowedMentions.none(),
+            )
+
+            trivia_question = trivia_round.question
+
+            round_id = await self.trivia_db.insert_round(
+                match_id=trivia_session.match_id, question_index=trivia_question.id
+            )
+
+            await asyncio.sleep(self.TIMER_DURATION)
+            trivia_session.end_round()
+
+            if trivia_round.total_answers == 0:
+                trivia_session.end_match_due_to_inactivity()
+
+            answers = trivia_round.answers
+            for answer in answers:
+                await self.trivia_db.insert_answer(round_id, answer)
+
+            answer_view = TriviaView(trivia_category=category, trivia_match=trivia_session, end_time=end_time)
+            await interaction.edit_original_response(
+                content=None,
+                view=answer_view,
+                allowed_mentions=discord.AllowedMentions.none(),
+            )
+
+            # Set round as complete (Triggers leaderboard stat updates)
+            await self.trivia_db.complete_round(round_id)
+
+        # Set the match as complete (Triggers leaderboard stat updates)
+        await self.trivia_db.complete_match(match_id=match_id)
+
+        await asyncio.sleep(10)
+        scoreboard = await self.trivia_db.get_scoreboard(match_id)
+        if scoreboard is not None:
+            scoreboard_view = TriviaScoreboardView(scoreboard=scoreboard, trivia_category=category)
+            await interaction.edit_original_response(
+                content=None, view=scoreboard_view, allowed_mentions=discord.AllowedMentions.none()
+            )
+
+        else:
+            await interaction.edit_original_response(content="Sorry, I failed to build the scoreboard! :(", view=None)
+
     # Starts a match of trivia (multiple rounds of questions)
     async def start_trivia(self, ctx, category: TriviaCategory):
         if self.DISABLED:
@@ -350,7 +443,7 @@ class Trivia(commands.Cog):
             while time.time() < end_time:
                 react, user = await self.bot.wait_for("reaction_add", check=is_answer, timeout=end_time - time.time())
                 answer_index = self.answer_key[str(react.emoji)]
-                trivia_round.log_answer(user_id=user.id, username=user.name, answer_index=answer_index)
+                trivia_round.log_answer(user=user, answer_index=answer_index)
 
         except asyncio.TimeoutError:
             pass

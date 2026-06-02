@@ -23,6 +23,7 @@ class TriviaLeaderboardType(StrEnum):
 class TriviaAnswer:
     user_id: int
     username: str
+    mention: str
     answer_index: int
     is_correct: bool
     answer_time: int
@@ -72,7 +73,7 @@ class TriviaCategory:
 class FuturamaTrivia(TriviaCategory):
     def __init__(self):
         fry_red = discord.Colour(0x9B2525)
-        thumb = "https://raw.githubusercontent.com/MitchellAW/MitchellAW.github.io/master/images/hypnotoad-timer.gif"
+        thumb = "https://raw.githubusercontent.com/MitchellAW/MitchellAW.github.io/refs/heads/main/gifs/hypnotoad.gif?raw=true"
         end_thumb = "https://raw.githubusercontent.com/MitchellAW/MitchellAW.github.io/master/images/hypnotoad-end.png"
         super().__init__("futurama", "futurama_trivia.json", fry_red, thumb, end_thumb)
 
@@ -80,18 +81,20 @@ class FuturamaTrivia(TriviaCategory):
 class SimpsonsTrivia(TriviaCategory):
     def __init__(self):
         simpsons_yellow = discord.Colour(0xFFEF06)
-        thumbnail = "https://raw.githubusercontent.com/MitchellAW/MitchellAW.github.io/master/images/donut-timer.gif"
-        end_thumbnail = "https://raw.githubusercontent.com/MitchellAW/MitchellAW.github.io/master/images/donut-end.png"
-        super().__init__("simpsons", "simpsons_trivia.json", simpsons_yellow, thumbnail, end_thumbnail)
+        thumb = (
+            "https://raw.githubusercontent.com/MitchellAW/MitchellAW.github.io/refs/heads/main/gifs/donut.gif?raw=true"
+        )
+        end_thumb = "https://raw.githubusercontent.com/MitchellAW/MitchellAW.github.io/master/images/donut-end.png"
+        super().__init__("simpsons", "simpsons_trivia.json", simpsons_yellow, thumb, end_thumb)
 
 
 class RickAndMortyTrivia(TriviaCategory):
     def __init__(self):
         rick_blue = discord.Colour(0xAAD3EA)
-        thumbnail = (
-            "https://github.com/MitchellAW/MitchellAW.github.io/blob/master/images/rick-morty-portal.gif?raw=true"
+        thumb = (
+            "https://raw.githubusercontent.com/MitchellAW/MitchellAW.github.io/refs/heads/main/gifs/portal.gif?raw=true"
         )
-        super().__init__("rickandmorty", "ram_trivia.json", rick_blue, thumbnail, thumbnail)
+        super().__init__("rickandmorty", "ram_trivia.json", rick_blue, thumb, thumb)
 
 
 @dataclass
@@ -99,21 +102,30 @@ class TriviaRound:
     question: TriviaQuestion
     started_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     _answers: dict[int, TriviaAnswer] = field(default_factory=dict, repr=False)
+    ended_at: datetime | None = None
 
     @property
     def elapsed_milliseconds(self) -> int:
         return int((datetime.now(timezone.utc) - self.started_at).total_seconds() * 1000)
 
-    def log_answer(self, user_id: int, username: str, answer_index: int) -> None:
+    def log_answer(self, user: discord.User | discord.Member, answer_index: int) -> None:
         is_correct = answer_index == self.question.correct_index
         answer = TriviaAnswer(
-            user_id=user_id,
-            username=username,
+            user_id=user.id,
+            username=user.name,
+            mention=user.mention,
             answer_index=answer_index,
             is_correct=is_correct,
             answer_time=self.elapsed_milliseconds,
         )
-        self._answers[user_id] = answer
+        self._answers[user.id] = answer
+
+    def end_round(self) -> None:
+        self.ended_at = datetime.now(timezone.utc)
+
+    @property
+    def is_completed(self) -> bool:
+        return self.ended_at is not None
 
     @property
     def answers(self):
@@ -140,6 +152,7 @@ class TriviaMatch:
 
     _current_round: TriviaRound | None = field(default=None, repr=False)
     _completed_rounds: list[TriviaRound] = field(default_factory=list, repr=False)
+    _is_idle: bool = False
 
     def start_round(self) -> TriviaRound | None:
         if self._current_round is not None:
@@ -157,8 +170,12 @@ class TriviaMatch:
 
         completed = self._current_round
         self._completed_rounds.append(completed)
+        completed.end_round()
         self._current_round = None
         return completed
+
+    def end_match_due_to_inactivity(self) -> None:
+        self._is_idle = True
 
     @property
     def current_round(self) -> TriviaRound | None:
@@ -171,7 +188,7 @@ class TriviaMatch:
     @property
     def is_finished(self) -> bool:
         """True when all questions have been played and no round is open."""
-        return not self.questions and self._current_round is None
+        return self._is_idle or (not self.questions and self._current_round is None)
 
     def questions_remaining(self) -> int:
         return len(self.questions)
