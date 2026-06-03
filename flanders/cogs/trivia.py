@@ -7,7 +7,13 @@ from discord import app_commands
 from discord.ext import commands
 
 from flanders.bot import FlandersBOT
-from flanders.components import TriviaLeaderboardView, TriviaScoreboardView, TriviaUserStatsView, TriviaView
+from flanders.components import (
+    TriviaLeaderboardView,
+    TriviaPrivacyView,
+    TriviaScoreboardView,
+    TriviaUserStatsView,
+    TriviaView,
+)
 from flanders.models import (
     FuturamaTrivia,
     SimpsonsTrivia,
@@ -173,6 +179,16 @@ class Trivia(commands.GroupCog, name="trivia", description="All commands related
         footer = f"{leader_count:,} participants, {round_count:,} questions answered, across {match_count:,} matches."
 
         view = TriviaLeaderboardView(leaderboard=scorers, footer=footer, thumbnail_url=avatar_url)
+        await interaction.edit_original_response(view=view)
+
+    @app_commands.command(name="privacy", description="Adjust your privacy settings.")
+    @app_commands.checks.cooldown(1, 30.0, key=lambda i: (i.guild_id, i.user.id))
+    async def privacy(self, interaction: discord.Interaction):
+        await interaction.response.defer(ephemeral=True)
+        current_setting = await self.trivia_db.get_user_privacy_setting(interaction.user.id)
+        current_setting = current_setting if current_setting is not None else 1
+
+        view = TriviaPrivacyView(privacy_setting=current_setting, trivia_db=self.trivia_db)
         await interaction.edit_original_response(view=view)
 
 
