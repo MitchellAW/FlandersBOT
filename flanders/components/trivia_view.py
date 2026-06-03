@@ -228,9 +228,14 @@ class TriviaUserStatsView(discord.ui.LayoutView):
 
 
 class TriviaLeaderboardView(discord.ui.LayoutView):
-    def __init__(self, leaderboard: dict[TriviaLeaderboardType, list[tuple[str, int]]]):
+    def __init__(
+        self, leaderboard: dict[TriviaLeaderboardType, list[tuple[str, int]]], thumbnail_url: str | None, footer: str
+    ):
         super().__init__()
+
         self.leaderboard = leaderboard
+        self.thumbnail_url = thumbnail_url
+        self.footer = footer
 
         self.action_row = discord.ui.ActionRow()
         self.dropdown = TriviaDropdown()
@@ -252,16 +257,25 @@ class TriviaLeaderboardView(discord.ui.LayoutView):
             TriviaLeaderboardType.FASTEST_ANSWER: ":point_up: Fastest Answers",
             TriviaLeaderboardType.LONGEST_STREAK: ":four_leaf_clover: Longest Streak",
         }
-        board = f"## {stats.get(category)}\n"
+        board = f"## {stats.get(category)}\n\n"
         scorers = self.leaderboard.get(category, [])
 
         board += "\n".join(
             f"{i}. **{scorer}**: {score if isinstance(score, str) else f'{score:,}'}"
             for i, (scorer, score) in enumerate(scorers)
         )
-        category_content = discord.ui.TextDisplay(content=board)
 
-        container.add_item(category_content)
+        category_content = discord.ui.TextDisplay(content=f"{board}\n\n-# {self.footer}")
+
+        if self.thumbnail_url is not None:
+            thumbnail = discord.ui.Thumbnail(media=self.thumbnail_url)
+            section = discord.ui.Section(accessory=thumbnail)
+            section.add_item(category_content)
+            container.add_item(section)
+
+        else:
+            container.add_item(category_content)
+
         self.add_item(container)
 
 

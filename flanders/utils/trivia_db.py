@@ -61,8 +61,16 @@ class TriviaDB:
                 """
         await self.db.fetch(query, round_id)
 
-    async def get_leaderboard_count(self) -> int:
+    async def get_leaderboard_user_count(self) -> int:
         query = "SELECT COUNT(user_id) FROM leaderboard WHERE privacy = 0"
+        return await self.db.fetchval(query)
+
+    async def get_round_count(self) -> int:
+        query = "SELECT COUNT(round_id) FROM rounds"
+        return await self.db.fetchval(query)
+
+    async def get_match_count(self) -> int:
+        query = "SELECT COUNT(match_id) FROM matches"
         return await self.db.fetchval(query)
 
     # Get the username and result for the top N (limit) users from the leaderboard

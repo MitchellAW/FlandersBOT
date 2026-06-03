@@ -6,6 +6,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+from flanders.bot import FlandersBOT
 from flanders.components import TriviaLeaderboardView, TriviaScoreboardView, TriviaUserStatsView, TriviaView
 from flanders.models import (
     FuturamaTrivia,
@@ -18,7 +19,7 @@ from flanders.utils import TriviaDB
 
 class Trivia(commands.GroupCog, name="trivia", description="All commands related to trivia!"):
     def __init__(self, bot):
-        self.bot = bot
+        self.bot: FlandersBOT = bot
         self.trivia_db = TriviaDB(db=self.bot.db)
 
         self.matches_in_progress: dict[int, TriviaMatch] = {}
@@ -153,15 +154,25 @@ class Trivia(commands.GroupCog, name="trivia", description="All commands related
     @app_commands.checks.cooldown(1, 3.0, key=lambda i: (i.guild_id, i.user.id))
     async def trivia_leaderboard(self, interaction: discord.Interaction):
         await interaction.response.defer(ephemeral=True)
-        leader_count = await self.trivia_db.get_leaderboard_count()
+
+        # Get some miscellaneous statistics for the footer
+        leader_count = await self.trivia_db.get_leaderboard_user_count()
+        match_count = await self.trivia_db.get_match_count()
+        round_count = await self.trivia_db.get_round_count()
+
         stats = [stat for stat in TriviaLeaderboardType]
+
+        avatar = self.bot.user.avatar if self.bot.user is not None else None
+        avatar_url = avatar.url if avatar is not None else None
 
         scorers: dict[TriviaLeaderboardType, list[tuple[str, int]]] = {}
         if leader_count >= 1:
             for stat in stats:
                 scorers.update({stat: await self.trivia_db.get_leaderboard_results(stat, limit=10)})
 
-        view = TriviaLeaderboardView(leaderboard=scorers)
+        footer = f"{leader_count:,} participants, {round_count:,} questions answered, across {match_count:,} matches."
+
+        view = TriviaLeaderboardView(leaderboard=scorers, footer=footer, thumbnail_url=avatar_url)
         await interaction.edit_original_response(view=view)
 
 
