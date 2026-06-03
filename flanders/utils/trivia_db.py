@@ -73,6 +73,31 @@ class TriviaDB:
         query = "SELECT COUNT(match_id) FROM matches"
         return await self.db.fetchval(query)
 
+    async def get_user_privacy_setting(self, user_id: int) -> int | None:
+        query = "SELECT privacy FROM leaderboard WHERE user_id = $1"
+        return await self.db.fetchval(query, user_id)
+
+    async def set_user_privacy_setting(self, user_id: int, privacy_setting: int) -> None:
+        query = "UPDATE leaderboard SET privacy = $1 WHERE user_id = $2"
+        await self.db.execute(query, privacy_setting, user_id)
+
+    async def delete_all_user_answers(self, user_id: int) -> None:
+        query = "DELETE FROM answers WHERE user_id = $1"
+        await self.db.execute(query, user_id)
+
+    async def delete_user_from_leaderboard(self, user_id: int) -> None:
+        query = "DELETE FROM leaderboard WHERE user_id = $1"
+        await self.db.execute(query, user_id)
+
+    async def delete_all_user_vote_history(self, user_id: int) -> None:
+        query = "UPDATE vote_history SET user_id = NULL WHERE user_id = $1"
+        await self.db.execute(query, user_id)
+
+    async def delete_all_user_data(self, user_id: int) -> None:
+        await self.delete_all_user_answers(user_id)
+        await self.delete_user_from_leaderboard(user_id)
+        await self.delete_all_user_vote_history(user_id)
+
     # Get the username and result for the top N (limit) users from the leaderboard
     async def get_leaderboard_results(
         self, leaderboard_type: TriviaLeaderboardType, limit: int = 5
