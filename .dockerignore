@@ -5,4 +5,4 @@ __pycache__/
 .vscode/
 .idea/
 *.pyc
-cogs/data/guildlist.csv
+flanders/cogs/data/guildlist.csv

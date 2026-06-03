@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS leaderboard (
 	wins int DEFAULT 0 NOT NULL,
 	losses int DEFAULT 0 NOT NULL,
 	correct_answers int DEFAULT 0 NOT NULL,
+	incorrect_answers int DEFAULT 0 NOT NULL,
 	fastest_answer int DEFAULT 20000 NOT NULL,
 	current_streak int DEFAULT 0 NOT NULL,
 	longest_streak int DEFAULT 0 NOT NULL
@@ -223,7 +224,8 @@ CREATE OR REPLACE FUNCTION update_stats() RETURNS TRIGGER AS $BODY$
 	BEGIN
 		-- Insert user that answers into leaderboard
 		INSERT INTO leaderboard (user_id, username)
-		VALUES (new.user_id, new.username) ON CONFLICT DO NOTHING;
+		VALUES (new.user_id, new.username)
+		ON CONFLICT (user_id) DO UPDATE SET username = EXCLUDED.username;
 
 		-- Update stats for correct answer (100 points for correct, increase streak)
 		IF new.is_correct THEN

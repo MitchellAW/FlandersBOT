@@ -12,4 +12,4 @@ RUN uv sync --locked
 
 # Run in unbuffered mode for stdout
 ENV PYTHONUNBUFFERED=1
-CMD ["uv", "run", "bot.py"]
+CMD ["uv", "run", "main.py"]

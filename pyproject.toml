@@ -20,6 +20,7 @@ dev = [
     "pyrefly>=1.0.0",
     "ruff>=0.15.14",
     "types-aiofiles>=25.1.0.20260518",
+    "types-tabulate>=0.10.0.20260508",
 ]
 
 [tool.ruff]

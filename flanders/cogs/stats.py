@@ -223,7 +223,6 @@ class Stats(commands.Cog):
 
             # Affirmative reaction, drop all data for that user
             if react.emoji == "🇦":
-
                 # Set privacy setting for profile to public
                 query = """UPDATE leaderboard
                            SET privacy = 0
@@ -260,7 +259,6 @@ class Stats(commands.Cog):
 
             # Affirmative reaction, drop all data for that user
             if react.emoji == "✅":
-
                 # Delete all records of user from leaderboard
                 query = """DELETE FROM leaderboard
                            WHERE user_id = $1
