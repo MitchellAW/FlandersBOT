@@ -195,7 +195,7 @@ class TriviaUserStatsView(discord.ui.LayoutView):
                 f":poop: **Losses (#{user_stats['losses_rank']})**: {user_stats['losses']}",
                 (
                     f":white_check_mark: **Correct Answers (#{user_stats['correct_answers_rank']})**: "
-                    "{user_stats['correct_answers']}"
+                    f"{user_stats['correct_answers']}"
                 ),
                 f":bow_and_arrow: **Accuracy**: {accuracy:.2f}%",
                 (
