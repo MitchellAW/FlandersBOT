@@ -51,7 +51,7 @@
     },
     {
         "question":"What religion does Bender turn to in order to overcome his addiction?",
-        "answers":["Temple of Robotology", "Church of Roboism", "Order of Mechanology"],
+        "answers":["Temple of Robotology", "Church of Robotism", "Order of Mechanology"],
         "source":"https://morbotron.com/caption/S01E09/638431"
     },
     {
@@ -100,7 +100,7 @@
         "source":"https://morbotron.com/caption/S05E05/751216"
     },
     {
-        "question":"What is Bender's super hero alter ego in the episdoe, 'Less Than a Hero'",
+        "question":"What is Bender's super hero alter ego in the episode, 'Less Than a Hero'",
         "answers":["Super King", "The Masked Unit", "Bender the Offender"],
         "source":"https://morbotron.com/caption/S05E06/441156"
     },
@@ -161,7 +161,7 @@
     },
     {
         "question":"What planet is the home of the Yarn people?",
-        "answers":["Nylar 4", "Cygnus 5", "Chapek 9"],
+        "answers":["Nylar IV", "Cygnus V", "Chapek IX"],
         "source":"https://morbotron.com/caption/S02E06/196968"
     },
     {
@@ -206,7 +206,7 @@
     },
     {
         "question":"Which apartment complex did Fry and Bender share?",
-        "answers":["Robot Arms Apts", "The Robo-Complex", "Robo-Units"],
+        "answers":["Robot Arms Apts.", "The Robo-Complex", "Robo-Units"],
         "source":"https://morbotron.com/caption/S01E06/4404"
     },
     {
@@ -231,7 +231,7 @@
     },
     {
         "question":"Which celebration was going on when Fry fell in to the cryogenic chamber and was frozen?",
-        "answers":["New Year's Eve", "Christmas", "Independance Day"],
+        "answers":["New Year's Eve", "Christmas", "Independence Day"],
         "source":"https://morbotron.com/caption/S01E01/96312"
     },
     {
@@ -272,7 +272,7 @@
     {
         "question":"What planet is at the exact center of the universe?",
         "answers":["Eternium", "Near Death Star", "Omicron Persei 8"],
-        "source":"https://futurama.fandom.com/wiki/Eternium"
+        "source":"https://www.theinfosphere.org/Eternium"
     },
     {
         "question":"What language is said to be dead in the English version of the show?",
@@ -301,7 +301,7 @@
     },
     {
         "question":"What species runs the pizzeria in 'A Leela of her Own'?",
-        "answers":["Cygnoids", "Decapodians", "Trisolians"],
+        "answers":["Signoids", "Decapodians", "Trisolians"],
         "source":"https://futurama.fandom.com/wiki/Cygnoid"
     },
     {
@@ -310,8 +310,8 @@
         "source":"https://futurama.fandom.com/wiki/Suicide_booth"
     },
     {
-        "question":"Which of these is NOT a political party?",
-        "answers":["Whigbots", "National Ray-Gun Association", "Bull Space Moose Party"],
+        "question":"In 'A Head in the Polls', which of these was NOT a political party?",
+        "answers":["Robots for the ethical treatment of robots", "National Ray-Gun Association", "Bull Space Moose Party"],
         "source":"https://futurama.fandom.com/wiki/Political_parties"
     },
     {
@@ -345,13 +345,13 @@
         "source":"https://morbotron.com/caption/S02E08/738302"
     },
     {
-        "question":"In 'Futurestock', how many stocks of Planet Express does Scruffy reveal that he has?",
+        "question":"In 'Future Stock', how many stocks of Planet Express does Scruffy reveal that he has?",
         "answers":["40,000", "20,000", "10,000"],
         "source":"https://morbotron.com/caption/S04E06/369301"
     },
     {
         "question":"Which of the following is NOT one of the names of Professor Farnsworth's atomic supermen?",
-        "answers":["Gallactico", "Arachnion", "Thorias"],
+        "answers":["Galactico", "Arachneon", "Thorias"],
         "source":"https://futurama.fandom.com/wiki/Atomic_Supermen"
     },
     {
@@ -415,7 +415,7 @@
         "source":"https://morbotron.com/caption/S01E02/36252"
     },
     {
-        "question":"What is the name of Captian Zapp Brannigan's assistant?",
+        "question":"What is the name of Captain Zapp Brannigan's assistant?",
         "answers":["Kif", "Zif", "Gif"],
         "source":"https://morbotron.com/caption/S02E01/367446"
     },
@@ -441,17 +441,17 @@
     },
     {
         "question":"Why did Fry and Bender enlist in the US army?",
-        "answers":["Military discount for chewing gum", "The Rolling Stones were due to entertain the troops", "They thought it was the queue for the Kwik-E-mart"],
+        "answers":["Military discount for chewing gum", "The Rolling Stones were due to entertain the troops", "They thought it was the queue for the Kwik-E-Mart"],
         "source":"https://morbotron.com/caption/S03E01/103552"
     },
     {
         "question":"Why was Tuesday special to Leela as a child?",
-        "answers":["It was double-soup Tuesday at the Orphinarium", "The Wizard of Oz was on TV every Tuesday", "The prospective parents would visit"],
+        "answers":["It was double-soup Tuesday at the Orphanarium", "The Wizard of Oz was on TV every Tuesday", "The prospective parents would visit"],
         "source":"https://morbotron.com/caption/S03E04/990905"
     },
     {
         "question":"What did Fry and his brother hope to win in the Break-Dancing competition?",
-        "answers":["A pair of authographed parachute pants", "A seven-leafed lucky clover", "Gravity Boots"],
+        "answers":["A pair of autographed parachute pants", "A seven-leafed lucky clover", "Gravity Boots"],
         "source":"https://morbotron.com/caption/S03E08/536218"
     },
     {
@@ -475,8 +475,8 @@
         "source":"https://morbotron.com/caption/S05E05/755804"
     },
     {
-        "question":"What is planet Uranus called in Futurama?",
-        "answers":["Urectum", "Bluto", "Juniper"],
+        "question":"What is planet Uranus renamed to in Futurama?",
+        "answers":["Urectum", "Urethra", "Urenis"],
         "source":"https://morbotron.com/caption/S01E08/456488"
     },
     {
@@ -536,7 +536,7 @@
     },
     {
         "question":"What was the replacement show for 'All My Circuits' when the robot playing Calculon's child malfunctioned?",
-        "answers":["Everybody Loves Hypnotoad", "Morbo and Friends", "Rumbledy-Hump"],
+        "answers":["Everybody Loves Hypnotoad", "The Scary Door", "Iron Cook"],
         "source":"https://morbotron.com/caption/S05E15/238254"
     },
     {
@@ -545,4 +545,3 @@
         "source":"https://morbotron.com/img/S05E12/724406.jpg"
     }
 ]
-
