@@ -117,13 +117,15 @@ class Trivia(commands.GroupCog, name="trivia", description="All commands related
             await interaction.response.send_message("No trivia matches are in progress here.", ephemeral=True)
 
         else:
+            guild_owner_id = interaction.guild.owner_id if interaction.guild is not None else None
+
             match = self.matches_in_progress.get(interaction.channel.id)
             if match is None or match.is_finished:
                 await interaction.response.send_message("No trivia matches are in progress here.", ephemeral=True)
 
-            elif match.host != interaction.user.id:
+            elif interaction.user.id not in (match.host, guild_owner_id):
                 await interaction.response.send_message(
-                    "Sorry, you are not the host of this trivia match.", ephemeral=True
+                    "Sorry, you are not the host of this trivia match or the server owner.", ephemeral=True
                 )
 
             else:
