@@ -151,6 +151,7 @@ class TriviaMatch:
     match_id: int
     questions: list[TriviaQuestion]
     category: TriviaCategory
+    jump_url: str
 
     _current_round: TriviaRound | None = field(default=None, repr=False)
     _completed_rounds: list[TriviaRound] = field(default_factory=list, repr=False)

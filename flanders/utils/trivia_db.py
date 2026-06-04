@@ -149,20 +149,20 @@ class TriviaDB:
     async def get_scoreboard(self, match_id: int) -> TriviaScoreboard | None:
         query = """
             WITH match_answers AS (
-                SELECT a.user_id, a.username, a.is_correct, a.answer_time
+                SELECT a.user_id, a.is_correct, a.answer_time
                 FROM answers a
                 INNER JOIN rounds r ON a.round_id = r.round_id
                 WHERE r.match_id = $1
             ),
             player_stats AS (
                 SELECT
-                    username,
+                    user_id,
                     COUNT(CASE WHEN is_correct THEN 1 END) AS correct,
                     CAST(COUNT(CASE WHEN is_correct THEN 1 END) AS FLOAT) /
                         CAST(COUNT(user_id) AS FLOAT) AS accuracy,
                     MIN(CASE WHEN is_correct THEN answer_time END) AS fastest_time
                 FROM match_answers
-                GROUP BY user_id, username
+                GROUP BY user_id
             )
             SELECT
                 (SELECT COUNT(DISTINCT user_id) FROM match_answers) AS participant_count,
@@ -171,7 +171,7 @@ class TriviaDB:
                         SELECT DISTINCT round_id FROM answers
                     )
                 ) AS question_count,
-                username,
+                user_id,
                 correct,
                 accuracy,
                 fastest_time
@@ -185,12 +185,12 @@ class TriviaDB:
         return TriviaScoreboard(
             participant_count=rows[0]["participant_count"],
             question_count=rows[0]["question_count"],
-            top_scorers=[(r["username"], r["correct"]) for r in sorted(rows, key=lambda r: r["correct"], reverse=True)],
+            top_scorers=[(r["user_id"], r["correct"]) for r in sorted(rows, key=lambda r: r["correct"], reverse=True)],
             highest_accuracy=[
-                (r["username"], r["accuracy"]) for r in sorted(rows, key=lambda r: r["accuracy"], reverse=True)
+                (r["user_id"], r["accuracy"]) for r in sorted(rows, key=lambda r: r["accuracy"], reverse=True)
             ],
             fastest_answers=[
-                (r["username"], r["fastest_time"])
+                (r["user_id"], r["fastest_time"])
                 for r in sorted(rows, key=lambda r: r["fastest_time"])
                 if r["fastest_time"] is not None
             ],

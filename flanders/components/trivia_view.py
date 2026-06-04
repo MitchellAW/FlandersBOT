@@ -148,27 +148,28 @@ class TriviaScoreboardView(discord.ui.LayoutView):
 
         else:
             top_scorers = scoreboard.top_scorers
-            top_scorer, score = top_scorers[0]
+            scorer_id, score = top_scorers[0]
 
-            content += f"\nCongratulations to the top scorer, **{top_scorer}**!"
+            content += f"\nCongratulations to the top scorer, **<@!{scorer_id}>**!"
 
             # List scorers
             scorers = "\n\n### :medal: Correct Answers\n"
-            for i, (scorer, score) in enumerate(scoreboard.top_scorers[:5]):
-                scorers += f"{i}. **{scorer}**: {round(score, 2):,}\n"
+            for i, (scorer_id, score) in enumerate(scoreboard.top_scorers[:5]):
+                scorers += f"{i}. <@!{scorer_id}>: {round(score, 2):,}\n"
 
             content += scorers
 
             # List highest accuracies
             scorers = "\n### :bow_and_arrow: Highest Accuracy\n"
-            for i, (scorer, score) in enumerate(scoreboard.highest_accuracy[:5]):
-                scorers += f"{i}. **{scorer}**: {round(score * 100.0, 2):,}%\n"
+            for i, (scorer_id, score) in enumerate(scoreboard.highest_accuracy[:5]):
+                scorers += f"{i}. <@!{scorer_id}>: {round(score * 100.0, 2):,}%\n"
             content += scorers
 
             # List Fastest Answers
             scorers = "\n### :point_up: Fastest Answers\n"
-            for i, (scorer, score) in enumerate(scoreboard.fastest_answers[:5]):
-                scorers += f"{i}. **{scorer}**: {round(score / 1000, 3):,}s\n"
+            scorers += "-----\n" if len(scoreboard.fastest_answers) == 0 else ""
+            for i, (scorer_id, score) in enumerate(scoreboard.fastest_answers[:5]):
+                scorers += f"{i}. <@!{scorer_id}>: {round(score / 1000, 3):,}s\n"
             content += scorers
 
             content += (

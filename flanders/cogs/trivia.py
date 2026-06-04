@@ -35,7 +35,20 @@ class Trivia(commands.GroupCog, name="trivia", description="All commands related
     @app_commands.checks.cooldown(1, 120.0, key=lambda i: (i.guild_id, i.user.id))
     async def start_trivia(self, interaction: discord.Interaction, category: Literal["The Simpsons", "Futurama"]):
         if interaction.guild_id is None or interaction.channel is None:
+            await interaction.response.send_message(
+                content="Sorry, trivia can only be played in a server text channel", ephemeral=True
+            )
             return None
+
+        if interaction.channel.id in self.matches_in_progress:
+            in_progress = self.matches_in_progress.get(interaction.channel.id)
+            if in_progress is not None:
+                await interaction.response.send_message(
+                    content="There is already a trivia match in progress in this channel!"
+                    f"\n[Click here]({in_progress.jump_url}) to view the match.",
+                    ephemeral=True,
+                )
+                return None
 
         if category == "The Simpsons":
             trivia_category = SimpsonsTrivia()
@@ -49,6 +62,8 @@ class Trivia(commands.GroupCog, name="trivia", description="All commands related
             allowed_mentions=discord.AllowedMentions.none(),
         )
 
+        match_message = await interaction.original_response()
+
         # Load question data from trivia file
         questions = trivia_category.load_questions()
 
@@ -57,7 +72,11 @@ class Trivia(commands.GroupCog, name="trivia", description="All commands related
 
         # Continue playing trivia until exit or out of questions
         trivia_match = TriviaMatch(
-            host=interaction.user.id, match_id=match_id, category=trivia_category, questions=questions
+            host=interaction.user.id,
+            match_id=match_id,
+            category=trivia_category,
+            questions=questions,
+            jump_url=match_message.jump_url,
         )
 
         self.matches_in_progress.update({interaction.channel.id: trivia_match})
