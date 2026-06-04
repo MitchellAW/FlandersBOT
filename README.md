@@ -9,15 +9,22 @@
 
 A discord bot with commands surrounding The Simpsons, Futurama, Rick and Morty and more!
 
-Flanders provides commands for sharing gifs and comics from The Simpsons, Futurama and Rick and Morty. Flanders uses [Frinkiac](https://frinkiac.com/), [Morbotron](https://morbotron.com/) and [Master of All Science](https://masterofallscience.com/) to share the requested Simpsons, Futurama and Rick and Morty images/gifs with their subtitles.
+Flanders provides commands for sharing gifs and comics from The Simpsons, Futurama and Rick and Morty.
+
+Flanders uses [Frinkiac](https://frinkiac.com/), [Morbotron](https://morbotron.com/) and [Master of All Science](https://masterofallscience.com/) to share the requested Simpsons, Futurama and Rick and Morty images/gifs with their subtitles.
 
 ## Add Flanders to your Discord Server
 
 To view Flanders in Discord's application directory and more easily add Flanders to your own servers, [click here](https://discord.com/application-directory/221609683562135553).
+
 To invite Flanders to your own discord server and start using it now, [click here](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=281664)
 
+## Preview
+<img src="https://raw.githubusercontent.com/MitchellAW/MitchellAW.github.io/master/images/flanders-preview-new.gif">
 
 ## Usage
+
+### Sharing References
 To share references from The Simpsons, Futurama, or Rick and Morty, you can use the `/simpsons`, `/futurama`, and `/rickandmorty` commands, followed by the quote that you'd like to search.
 
 For example:
@@ -33,62 +40,57 @@ Then press the **Send Gif** or **Send Comic** button to share the reference in t
 > [!TIP]
 > You can also edit the captions used in the gif/comic before sending by using the **Edit Captions** button!
 
-## Preview
-<img src="https://raw.githubusercontent.com/MitchellAW/MitchellAW.github.io/master/images/flanders-preview-new.gif">
+### Trivia
+
+To start a trivia match, you can use the `/trivia start` command, and pick your preferred category (The Simpsons or Futurama):
+
+For example:
+
+`/trivia start The Simpsons`
+
+> [!TIP]
+> You can end the match using `/trivia stop`
+
 
 ## Support Server
 If you need any help with Flanders, would like to provide feedback, suggestions or have any other questions regarding Flanders, join the Flanders Support Server on discord:
 
 [![Flanders Support](https://discordapp.com/api/guilds/403154226790006784/widget.png?style=banner2)](https://discord.gg/xMmxMYg)
 
-## Requirements
+## Running
 I'd prefer that instead of running an instance of Flanders yourself you'd just [Invite Flanders](https://discordapp.com/oauth2/authorize?client_id=221609683562135553&scope=bot&permissions=19456) to your own server.
+
 [Or go ahead anyway.](https://raw.githubusercontent.com/MitchellAW/MitchellAW.github.io/refs/heads/master/images/im-a-sign-not-a-cop.jpg)
 
 ### Dependencies
-*Requires Python 3.13+ and uv*
+- Requires Python 3.13+
+- Utilises the latest version of [discord.py](https://github.com/Rapptz/discord.py)
+- Depends upon [CompuGlobal](https://github.com/MitchellAW/CompuGlobal)
+- Requires PostgreSQL 17
 
-*Utilises the latest version of [discord.py](https://github.com/Rapptz/discord.py)*
-*Depends upon [CompuGlobal](https://github.com/MitchellAW/CompuGlobal)*
+> [!IMPORTANT]
+> Installation using docker compose is recommended
 
-*Requires PostgreSQL 17*
+### Running
+Copy example.env file and fill it with required credentials:
 
-Building and running with docker recommended:
+```sh
+cp example.env .env
+```
+
+Build and run with docker compose:
 
 ```sh
 docker compose build
 docker compose up -d
 ```
 
-### Config
-Copy example.env file and fill it with required credentials.
-```sh
-cp example.env .env
-```
-
-## Database Setup
-
-### Create Database
-```sh
-sudo -u postgres psql
-```
-
-```sql
-CREATE ROLE ned WITH LOGIN PASSWORD '<password>';
-CREATE DATABASE flandersdb OWNER ned;
-```
-
-### Create Tables
-```sh
-$ psql -h 127.0.0.1 -d flandersdb -U ned -f bot.sql
-```
-
-
 ## Credits
-**Creators of [Frinkiac](https://frinkiac.com/), [Morbotron](https://morbotron.com/), [Master of All Science](https://masterofallscience.com/), [GoodGod Lemon](https://goodgodlemon.com/) and [Capital Beat Us](https://capitalbeat.us/):**
+**Creators of [Frinkiac](https://frinkiac.com/), [Morbotron](https://morbotron.com/), [Master of All Science](https://masterofallscience.com/), and [Capital Beat](https://capitalbeat.us/):**
 
 [Paul Kehrer](https://twitter.com/reaperhulk)
 [Sean Schulte](https://twitter.com/sirsean)
 [Allie Young](https://twitter.com/seriousallie)
+
 **Source of the higher quality Adventures of Ned Flanders image**
 [/u/nmcfaden](https://i.redd.it/3m7txitrcjgy.png)
