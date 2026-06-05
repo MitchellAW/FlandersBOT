@@ -271,7 +271,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "aiofiles", specifier = ">=25.1.0" },
-    { name = "aiohttp", specifier = ">=3.13.5" },
+    { name = "aiohttp", specifier = ">=3.14.0" },
     { name = "asyncpg", specifier = ">=0.31.0" },
     { name = "compuglobal", specifier = ">=0.3.8" },
     { name = "discord-py", specifier = ">=2.7.1" },
