@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING
 
 import discord
@@ -8,6 +9,8 @@ from flanders.components.caption_modal import CustomiseCaptionModal
 
 if TYPE_CHECKING:
     from flanders.models import TVReferenceState
+
+log = logging.getLogger(__name__)
 
 
 class CustomiseCaptionButton(discord.ui.Button):
@@ -27,4 +30,4 @@ class CustomiseCaptionButton(discord.ui.Button):
                 await interaction.response.send_modal(modal)
 
             except Exception as e:
-                print(e)
+                log.error(e)

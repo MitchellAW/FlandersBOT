@@ -1,6 +1,5 @@
 import compuglobal
 import discord
-from discord.app_commands import AppCommandError, CommandOnCooldown
 from discord.ext import commands
 
 from flanders.components import BuilderView
@@ -19,13 +18,6 @@ class TVShowCog(commands.Cog):
     async def cog_load(self):
         if "masterofallscience" not in self.api_title and (self.api_cache is None or len(self.api_cache.keys()) == 0):
             self.api_cache = await self.build_cache()
-
-    # Handle slash command cooldowns for tv shows
-    async def cog_app_command_error(self, interaction: discord.Interaction, error: AppCommandError):
-        if isinstance(error, CommandOnCooldown):
-            await interaction.response.send_message(
-                ":hourglass: Sorry, command on cooldown. Please slow diddly-ding-dong down.", ephemeral=True
-            )
 
     async def build_cache(self) -> dict[str, compuglobal.EpisodeSummary]:
         episodes: list[compuglobal.EpisodeSummary] = await self.api.navigator()
