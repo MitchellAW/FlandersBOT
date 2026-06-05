@@ -45,6 +45,7 @@ class TVShowCog(commands.Cog):
         return unique_results
 
     async def build_gif(self, interaction: discord.Interaction, search: str):
+        await interaction.response.defer(ephemeral=True)
         try:
             search_results = await self.api.search(search)
             unique_results = self.get_unique_results(search_results)
@@ -56,13 +57,15 @@ class TVShowCog(commands.Cog):
             )
 
             # Create the view containing our dropdown and preview
-            gif_builder_view = BuilderView(unique_results, state, await state.get_comic_strip_url())
+            top_result = unique_results[0]
+            transcript = await self.api.get_transcript(episode=top_result.key, timestamp=top_result.timestamp)
+            gif_builder_view = BuilderView(unique_results, transcript, state, await state.get_comic_strip_url())
 
             # Sending a message containing our gif builder view
-            await interaction.response.send_message(view=gif_builder_view, ephemeral=True)
+            await interaction.edit_original_response(content=None, view=gif_builder_view)
 
             # Pre-cache desired screencaps from search results
             await state.populate()
 
         except compuglobal.NoSearchResultsFoundError:
-            await interaction.response.send_message("⚠️ No search results found.", ephemeral=True)
+            await interaction.edit_original_response(content="⚠️ No search results found.")
