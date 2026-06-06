@@ -4,88 +4,23 @@ import discord
 from discord.ext import commands
 from tabulate import tabulate
 
-from flanders.settings.config import FlandersConfig
-
 
 class Owner(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # Change the bot's avatar
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    async def avatar(self, ctx, avatar_url):
-        async with self.bot.session.get(avatar_url) as resp:
-            new_avatar = await resp.read()
-            await self.bot.user.edit(avatar=new_avatar)
-            await ctx.send("Avatar changed!")
-
     # Get the number of all the commands executed
-    @commands.command(hidden=True)
+    @commands.command(name="history", hidden=True)
     @commands.is_owner()
-    async def commandstats(self, ctx, *, modifier: str | None = None):
-        # Get command counts ordered alphabetically
-        if modifier is None or modifier != "count":
-            query = """SELECT command, COUNT(command) AS command_count FROM command_history
-                       WHERE failed = false
-                       GROUP BY command
-                       ORDER BY command
-                    """
-        # Get command counts ordered by command count
-        else:
-            query = """SELECT command, COUNT(command) AS command_count FROM command_history
-                       WHERE failed = false
-                       GROUP BY command
-                       ORDER BY command_count DESC
-                    """
-        rows = await self.bot.db.fetch(query)
-
-        # Display each command stats on separate line and format using tabulate
-        command_data = map(lambda row: [row["command"], row["command_count"]], rows)
-        message = tabulate(command_data, headers=["Command Name", "Count"], tablefmt="presto", colalign=("right",))
-        await ctx.send(f"```{message}```")
-
-    # Get the number of all the commands executed
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    async def appcommandstats(self, ctx, *, modifier: str | None = None):
-        # Get command counts ordered alphabetically
-        if modifier is None or modifier != "count":
-            query = """SELECT command, COUNT(command) AS command_count FROM command_history
-                       WHERE failed = false AND prefix = '/'
-                       GROUP BY command
-                       ORDER BY command
-                    """
-        # Get command counts ordered by command count
-        else:
-            query = """SELECT command, COUNT(command) AS command_count FROM command_history
-                       WHERE failed = false AND prefix = '/'
-                       GROUP BY command
-                       ORDER BY command_count DESC
-                    """
-        rows = await self.bot.db.fetch(query)
-
-        # Display each command stats on separate line and format using tabulate
-        command_data = map(lambda row: [row["command"], row["command_count"]], rows)
-        message = tabulate(command_data, headers=["Command Name", "Count"], tablefmt="presto", colalign=("right",))
-        await ctx.send(f"```{message}```")
-
-    # Get the number of commands executed in last month that weren't in support server
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    async def newstats(self, ctx):
+    async def command_history(self, ctx, *, modifier: str | None = None):
         # Get command counts ordered alphabetically
         query = """SELECT command, COUNT(command) AS command_count FROM command_history
-                   WHERE failed = false AND guild_id != 403154226790006784 AND used_at BETWEEN (
-                       NOW() AT time zone 'utc'
-                   ) - INTERVAL '30 DAYS' AND (
-                       NOW() AT time zone 'utc'
-                   )
-                   GROUP BY command
-                   ORDER BY command
+                    WHERE failed = false AND ($1::text IS NULL or prefix = $1)
+                    GROUP BY command
+                    ORDER BY command
                 """
 
-        rows = await self.bot.db.fetch(query)
+        rows = await self.bot.db.fetch(query, modifier)
 
         # Display each command stats on separate line and format using tabulate
         command_data = map(lambda row: [row["command"], row["command_count"]], rows)
@@ -178,27 +113,6 @@ class Owner(commands.Cog):
 
         except asyncio.TimeoutError:
             pass
-
-    # Generates a list of guilds the bot is in, contains name, bot and user counts
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    @commands.bot_has_permissions(attach_files=True)
-    async def guildlist(self, ctx):
-        with open("flanders/cogs/data/guildlist.csv", "w") as guild_list:
-            guild_list.write("Server ID,Server Name,# of Users,Features\n")
-            for guild in self.bot.guilds:
-                # Write to csv file (guild name, total member count, region and features)
-                guild_list.write(f'{guild.id},"{guild.name}",{guild.member_count},{guild.features}\n')
-
-        await ctx.send(file=discord.File("flanders/cogs/data/guildlist.csv"))
-
-    # Reload config json file, allows regen of bot listing tokens without taking bot down
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    @commands.bot_has_permissions(add_reactions=True)
-    async def reloadconfig(self, ctx):
-        self.bot.config = FlandersConfig()
-        await ctx.message.add_reaction("✅")
 
 
 async def setup(bot):
