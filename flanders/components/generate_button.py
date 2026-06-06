@@ -47,7 +47,11 @@ class GenerateButton(discord.ui.Button):
                 summary = f"Generated {self.content_type}."
 
         except discord.Forbidden:
-            pass
+            try:
+                await interaction.followup.send(view=content_view, allowed_mentions=discord.AllowedMentions.none())
+                summary = f"Generated {self.content_type}."
+            except discord.Forbidden:
+                pass
 
         self.view.show_summary(summary=summary, content_url=content_url, component=self)
         await interaction.edit_original_response(view=self.view)
