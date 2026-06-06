@@ -27,8 +27,8 @@ dev = [
 line-length = 120
 
 [tool.ruff.lint]
-select = ["E", "W", "F", "I", "N", "B", "S", "PL"]
-ignore = ["S311"]
+select = ["ALL"]
+ignore = ["D100", "D101", "D102", "D103", "D107"]
 
 [tool.pyrefly]
 project-includes = [
