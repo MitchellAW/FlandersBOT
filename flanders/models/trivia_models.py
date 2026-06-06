@@ -3,8 +3,8 @@ import random
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from enum import StrEnum
-from pathlib import Path
 
+import anyio
 import discord
 from pydantic import BaseModel
 from pydantic.functional_validators import model_validator
@@ -65,9 +65,10 @@ class TriviaCategory:
     end_thumbnail_url: str
     TIMER_DURATION: int = 20
 
-    def load_questions(self) -> list[TriviaQuestion]:
-        with Path(f"flanders/cogs/data/{self.file_name}").open() as trivia_data:
-            questions = json.load(trivia_data)
+    async def load_questions(self) -> list[TriviaQuestion]:
+        async with await anyio.open_file(f"flanders/cogs/data/{self.file_name}") as trivia_file:
+            trivia_data = await trivia_file.read()
+            questions = json.loads(trivia_data)
             trivia_questions = [TriviaQuestion(id=i, **question) for i, question in enumerate(questions)]
             return random.sample(trivia_questions, len(trivia_questions))
 

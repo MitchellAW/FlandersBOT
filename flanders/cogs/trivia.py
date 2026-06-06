@@ -69,7 +69,7 @@ class Trivia(commands.GroupCog, name="trivia", description="All commands related
         match_message = await interaction.original_response()
 
         # Load question data from trivia file
-        questions = trivia_category.load_questions()
+        questions = await trivia_category.load_questions()
 
         # Insert new trivia match into DB
         match_id = await self.trivia_db.insert_match(guild_id=interaction.guild_id, category=trivia_category)
