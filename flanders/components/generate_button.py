@@ -18,9 +18,8 @@ class GenerateButton(discord.ui.Button):
             raise ValueError(msg)
 
         await interaction.response.defer(ephemeral=True)
-        if self.view is not None:
-            self.view.show_summary(summary=f"Generating {self.content_type}...", component=self)
-            await interaction.edit_original_response(view=self.view)
+        self.view.show_summary(summary=f"Generating {self.content_type}...", component=self)
+        await interaction.edit_original_response(view=self.view)
 
         # Cache screencap
         screencap = await self.state.get_screencap()
@@ -35,12 +34,20 @@ class GenerateButton(discord.ui.Button):
             author=interaction.user.mention,
         )
 
-        summary = f"Sorry neighborino, I can't share {self.content_type}s here."
-        if interaction.channel is not None and isinstance(
-            interaction.channel, (discord.TextChannel, discord.Thread, discord.DMChannel)
-        ):
-            await interaction.channel.send(view=content_view, allowed_mentions=discord.AllowedMentions.none())
-            summary = f"Generated {self.content_type}."
+        summary = (
+            "Sorry neighborino, I'm noodly-not allowed to talk here.\n"
+            "But ding-dong-diddily don't worry, you can check it out with the button below!"
+        )
+
+        try:
+            if interaction.channel is not None and isinstance(
+                interaction.channel, (discord.TextChannel, discord.Thread, discord.DMChannel)
+            ):
+                await interaction.channel.send(view=content_view, allowed_mentions=discord.AllowedMentions.none())
+                summary = f"Generated {self.content_type}."
+
+        except discord.Forbidden:
+            pass
 
         self.view.show_summary(summary=summary, content_url=content_url, component=self)
         await interaction.edit_original_response(view=self.view)
