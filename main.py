@@ -1,5 +1,6 @@
 # Runs FlandersBOT
 import asyncio
+import logging
 import sys
 
 import aiohttp
@@ -9,21 +10,24 @@ import discord
 from flanders.bot import FlandersBOT
 from flanders.settings.config import FlandersConfig
 
+# Use default logging configuration
+discord.utils.setup_logging()
+log = logging.getLogger(__name__)
+
 
 async def run_bot():
+
     # Requires members intents for leaderboard username display
     intents = discord.Intents.default()
 
     # Load config from .env
     config = FlandersConfig()
 
-    # Configure bot with config/intents
-
     # Initialise bot with db pool
     try:
         db = await asyncpg.create_pool(dsn=config.postgres_dsn)
     except Exception as e:
-        print(f"Failed to connect PostgreSQL. Terminating.\n{type(e).__name__}: {e}")
+        log.error(f"Failed to connect PostgreSQL. Terminating.\n{type(e).__name__}: {e}")
         sys.exit()
 
     # Initialise bot with aiohttp session

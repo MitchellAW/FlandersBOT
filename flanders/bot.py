@@ -1,5 +1,6 @@
 import asyncio
 import datetime
+import logging
 import os
 import signal
 
@@ -10,6 +11,8 @@ import discord
 from discord.ext import commands
 
 from flanders.settings.config import FlandersConfig
+
+log = logging.getLogger(__name__)
 
 
 class FlandersBOT(commands.AutoShardedBot):
@@ -51,14 +54,14 @@ class FlandersBOT(commands.AutoShardedBot):
 
                 except Exception as e:
                     exc = f"{type(e).__name__}: {e}"
-                    print(f"Failed to load extension {extension}\n{exc}")
+                    log.error(f"Failed to load extension {extension}\n{exc}")
 
     async def db_failure(self, error_msg: str) -> None:
-        print(f"Could not initialise the database. Closing...\n{error_msg}")
+        log.error(f"Could not initialise the database. Closing...\n{error_msg}")
         await self.close()
 
     async def init_db(self):
-        print("Initialising database...")
+        log.info("Initialising database...")
 
         async with aiofiles.open("bot.sql") as schema_file:
             schema = await schema_file.read()
@@ -68,7 +71,7 @@ class FlandersBOT(commands.AutoShardedBot):
                 async with self.db.acquire() as conn:
                     async with conn.transaction():
                         await conn.execute(schema)
-                print("Database initialised.")
+                log.info("Database initialised.")
 
             except Exception as e:
                 await self.db_failure(f"{type(e).__name__}: {e}")

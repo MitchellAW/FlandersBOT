@@ -20,14 +20,16 @@ class TVReferenceState:
 
         self.custom_subtitles: list[compuglobal.Subtitle] | None = None
 
-        self._index = 0
-        self.screencaps: dict[compuglobal.Frame, compuglobal.Screencap] = {}
+        self.frame_key: str = self.frames[0].key
+        self.frame_timestamp: int = self.frames[0].timestamp
 
-    def set_index(self, index):
-        if index < 0 or index > len(self.frames):
-            raise ValueError(f"Index {index} is out of bounds, must be between 0-{len(self.frames)}")
+        # Cache screencaps and subtitles using key + timestamp
+        self.screencaps: dict[tuple[str, int], compuglobal.Screencap] = {}
+        self.transcripts: dict[tuple[str, int], list[compuglobal.Subtitle]] = {}
 
-        self._index = index
+    def set_frame(self, key: str, timestamp: int):
+        self.frame_key = key
+        self.frame_timestamp = timestamp
 
     async def cache_screencap(self):
         screencap = await self.get_screencap()
@@ -37,17 +39,26 @@ class TVReferenceState:
     async def populate(self):
         for frame in self.frames:
             screencap = await self.api.get_screencap(frame.key, frame.timestamp)
-            self.screencaps.update({frame: screencap})
+            self.screencaps.update({(frame.key, frame.timestamp): screencap})
+
+            transcript = await self.api.get_transcript(frame.key, frame.timestamp)
+            self.transcripts.update({(frame.key, frame.timestamp): transcript})
 
     async def get_screencap(self) -> compuglobal.Screencap:
-        frame = self.frames[self._index]
-
-        screencap = self.screencaps.get(frame)
+        screencap = self.screencaps.get((self.frame_key, self.frame_timestamp))
 
         if screencap is None:
-            screencap = await self.api.get_screencap(frame.key, frame.timestamp)
+            screencap = await self.api.get_screencap(episode=self.frame_key, timestamp=self.frame_timestamp)
 
         return screencap
+
+    async def get_transcript(self) -> list[compuglobal.Subtitle]:
+        transcript = self.transcripts.get((self.frame_key, self.frame_timestamp))
+
+        if transcript is None:
+            transcript = await self.api.get_transcript(episode=self.frame_key, timestamp=self.frame_timestamp)
+
+        return transcript
 
     async def get_subtitles(self) -> list[compuglobal.Subtitle]:
         screencap = await self.get_screencap()

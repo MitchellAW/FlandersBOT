@@ -1,10 +1,10 @@
 import datetime
-import re
-import sys
-import traceback
+import logging
 
 import discord
 from discord.ext import commands, tasks
+
+log = logging.getLogger(__name__)
 
 
 class Events(commands.Cog):
@@ -38,77 +38,13 @@ class Events(commands.Cog):
         else:
             self.bot.logging = self.bot.get_channel(self.LOGGING_CHANNEL)
 
-    # Print bot information, update status and set uptime when bot is ready
+    # Log bot information, update status and set uptime when bot is ready
     @commands.Cog.listener()
     async def on_ready(self):
-        print(f"Username: {self.bot.user.name}")
-        print(f"Client ID: {self.bot.user.id}")
+        log.info(f"Username: {self.bot.user.name}")
+        log.info(f"Client ID: {self.bot.user.id}")
         if not hasattr(self, "uptime"):
             self.bot.uptime = datetime.datetime.now(datetime.UTC)
-
-    # Commands error handler
-    @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):
-        # Allows us to check for original exceptions raised and sent to CommandInvokeError. If nothing is found.
-        # We keep the exception passed to on_command_error.
-        error = getattr(error, "original", error)
-
-        # Ignore non-existent commands
-        if isinstance(error, commands.CommandNotFound):
-            return
-
-        # Check if command cooldown error
-        if isinstance(error, commands.CommandOnCooldown):
-            time_left = round(error.retry_after, 2)
-            await ctx.send(
-                f":hourglass: Sorry, command on cooldown. Please slow diddly-ding-dong down. ({time_left}s)",
-                delete_after=max(error.retry_after, 5),
-            )
-
-        elif isinstance(error, commands.BotMissingPermissions):
-            # List all missing permissions
-            await ctx.send(
-                "⛔ Sorry, I do not have the permissions riddly-required for that command-aroo!\nRequires: "
-                + ", ".join(map(str, error.missing_permissions)),
-                delete_after=30,
-            )
-
-        # Check for missing permissions
-        elif isinstance(error, (commands.MissingPermissions, commands.errors.CheckFailure)):
-            await ctx.send(
-                "<:xmark:411718670482407424> Sorry, you don't have the permissions riddly-required for "
-                "that command-aroo! ",
-                delete_after=10,
-            )
-
-        # Check if private messages not allowed
-        elif isinstance(error, commands.NoPrivateMessage):
-            await ctx.author.send(f"{ctx.command} can not be used in Private Messages.")
-
-        elif isinstance(error, Exception):
-            # Get timestamp of error
-            error_at = datetime.datetime.now(datetime.UTC).strftime("%y-%m-%d %H:%M:%S")
-
-            # Print command error info and error traceback to console
-            print(f"[{error_at}] Command: {ctx.command.qualified_name}", file=sys.stderr)
-            traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
-
-            # Fill paginator with error traceback
-            error_traceback = traceback.format_exception(type(error), error, error.__traceback__)
-            paginator = commands.Paginator()
-            error_details = f"[{error_at}] Command: {ctx.command.qualified_name}\n{error}"
-
-            # Add error details in chunks of max paginator size
-            for line in re.findall(f".{{1,{paginator.max_size - 50}}}", error_details, flags=re.S):
-                paginator.add_line(line)
-
-            # Add traceback line in chunks of max paginator size
-            for line in re.findall(f".{{1, {paginator.max_size - 50}}}", str(error_traceback), flags=re.S):
-                paginator.add_line(line)
-
-            # Send error traceback to logging channel
-            for page in paginator.pages:
-                await self.bot.logging.send(page)
 
     # Cycle through all status formats, waits 5 minutes between status changes
     # Formats status/presence with the current guild count

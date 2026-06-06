@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING
 
 import discord
@@ -9,11 +10,14 @@ from flanders.components.caption_modal import CustomiseCaptionModal
 if TYPE_CHECKING:
     from flanders.models import TVReferenceState
 
+log = logging.getLogger(__name__)
+
 
 class CustomiseCaptionButton(discord.ui.Button):
     def __init__(self, state: TVReferenceState):
         self.state = state
-        super().__init__(label="Edit Captions", style=discord.ButtonStyle.secondary)
+        emoji = "<:edit:1512642373597794344>"
+        super().__init__(emoji=emoji, style=discord.ButtonStyle.secondary)
 
     async def callback(self, interaction: discord.Interaction):
         if self.view is not None:
@@ -27,4 +31,16 @@ class CustomiseCaptionButton(discord.ui.Button):
                 await interaction.response.send_modal(modal)
 
             except Exception as e:
-                print(e)
+                log.error(e)
+
+
+class ToggleTimingButton(discord.ui.Button):
+    def __init__(self) -> None:
+        emoji = "<:advanced:1512642321621979246"
+        super().__init__(emoji=emoji, style=discord.ButtonStyle.secondary)
+
+    async def callback(self, interaction: discord.Interaction) -> None:
+        await interaction.response.defer(ephemeral=True)
+        if self.view is not None:
+            self.view.toggle_timing_dropdown()
+            await interaction.edit_original_response(view=self.view)

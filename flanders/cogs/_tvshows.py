@@ -1,6 +1,5 @@
 import compuglobal
 import discord
-from discord.app_commands import AppCommandError, CommandOnCooldown
 from discord.ext import commands
 
 from flanders.components import BuilderView
@@ -19,13 +18,6 @@ class TVShowCog(commands.Cog):
     async def cog_load(self):
         if "masterofallscience" not in self.api_title and (self.api_cache is None or len(self.api_cache.keys()) == 0):
             self.api_cache = await self.build_cache()
-
-    # Handle slash command cooldowns for tv shows
-    async def cog_app_command_error(self, interaction: discord.Interaction, error: AppCommandError):
-        if isinstance(error, CommandOnCooldown):
-            await interaction.response.send_message(
-                ":hourglass: Sorry, command on cooldown. Please slow diddly-ding-dong down.", ephemeral=True
-            )
 
     async def build_cache(self) -> dict[str, compuglobal.EpisodeSummary]:
         episodes: list[compuglobal.EpisodeSummary] = await self.api.navigator()
@@ -53,6 +45,7 @@ class TVShowCog(commands.Cog):
         return unique_results
 
     async def build_gif(self, interaction: discord.Interaction, search: str):
+        await interaction.response.defer(ephemeral=True)
         try:
             search_results = await self.api.search(search)
             unique_results = self.get_unique_results(search_results)
@@ -64,13 +57,15 @@ class TVShowCog(commands.Cog):
             )
 
             # Create the view containing our dropdown and preview
-            gif_builder_view = BuilderView(unique_results, state, await state.get_comic_strip_url())
+            top_result = unique_results[0]
+            transcript = await self.api.get_transcript(episode=top_result.key, timestamp=top_result.timestamp)
+            gif_builder_view = BuilderView(unique_results, transcript, state, await state.get_comic_strip_url())
 
             # Sending a message containing our gif builder view
-            await interaction.response.send_message(view=gif_builder_view, ephemeral=True)
+            await interaction.edit_original_response(content=None, view=gif_builder_view)
 
             # Pre-cache desired screencaps from search results
             await state.populate()
 
         except compuglobal.NoSearchResultsFoundError:
-            await interaction.response.send_message("⚠️ No search results found.", ephemeral=True)
+            await interaction.edit_original_response(content="⚠️ No search results found.")
