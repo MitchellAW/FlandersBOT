@@ -24,6 +24,10 @@ class SearchResultDropdown(discord.ui.Select):
         super().__init__(placeholder="Choose the best match...", min_values=1, max_values=1, options=list(options))
 
     async def callback(self, interaction: discord.Interaction):
+        if self.view is None:
+            msg = "Dropdown must be added to a view before its callback can be invoked"
+            raise ValueError(msg)
+
         await interaction.response.defer(ephemeral=True)
         chosen_frame = self.search_options[0].frame
         for search_option, option in zip(self.search_options, self.options, strict=True):
@@ -35,10 +39,9 @@ class SearchResultDropdown(discord.ui.Select):
 
         # Update selected frame state
         self.state.set_frame(chosen_frame.key, chosen_frame.timestamp)
-        if self.view is not None:
-            self.view.update_image(await self.state.get_comic_strip_url())
-            await self.view.update_timestamp_dropdown()
-            await interaction.edit_original_response(view=self.view)
+        self.view.update_image(await self.state.get_comic_strip_url())
+        await self.view.update_timestamp_dropdown()
+        await interaction.edit_original_response(view=self.view)
 
 
 class TimingOption(discord.SelectOption):
@@ -78,6 +81,10 @@ class TimingDropdown(discord.ui.Select):
         return options[start : start + size]
 
     async def callback(self, interaction: discord.Interaction):
+        if self.view is None:
+            msg = "Dropdown must be added to a view before its callback can be invoked"
+            raise ValueError(msg)
+
         await interaction.response.defer(ephemeral=True)
         chosen_subtitle = self.search_options[0].subtitle
         for search_option, option in zip(self.search_options, self.options, strict=True):
@@ -89,6 +96,5 @@ class TimingDropdown(discord.ui.Select):
 
         # Update selected frame state
         self.state.set_frame(chosen_subtitle.key, timestamp=chosen_subtitle.representative_timestamp)
-        if self.view is not None:
-            self.view.update_image(await self.state.get_comic_strip_url())
-            await interaction.edit_original_response(view=self.view)
+        self.view.update_image(await self.state.get_comic_strip_url())
+        await interaction.edit_original_response(view=self.view)
