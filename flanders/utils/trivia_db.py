@@ -7,7 +7,7 @@ LEADERBOARD_SORT_ORDERS: dict[TriviaLeaderboardType, str] = {
 }
 
 LEADERBOARD_EXPRESSIONS: dict[TriviaLeaderboardType, str] = {
-    TriviaLeaderboardType.FASTEST_ANSWER: "CONCAT(CAST(fastest_answer AS FLOAT) / 1000, 's')"
+    TriviaLeaderboardType.FASTEST_ANSWER: "CONCAT(CAST(fastest_answer AS FLOAT) / 1000, 's')",
 }
 
 
@@ -20,16 +20,14 @@ class TriviaDB:
         query = """INSERT INTO matches (guild_id, trivia_category)
                    VALUES ($1, $2) RETURNING match_id
                 """
-        match_id = await self.db.fetchval(query, guild_id, category.category_name)
-        return match_id
+        return await self.db.fetchval(query, guild_id, category.category_name)
 
     # Insert new trivia round into DB
     async def insert_round(self, match_id: int, question_index: int) -> int:
         query = """INSERT INTO rounds (match_id, question_index) VALUES ($1, $2)
                    RETURNING round_id
                 """
-        round_id = await self.db.fetchval(query, match_id, question_index)
-        return round_id
+        return await self.db.fetchval(query, match_id, question_index)
 
     # Insert answer for round into DB
     async def insert_answer(self, round_id: int, answer: TriviaAnswer) -> None:
@@ -100,7 +98,9 @@ class TriviaDB:
 
     # Get the username and result for the top N (limit) users from the leaderboard
     async def get_leaderboard_results(
-        self, leaderboard_type: TriviaLeaderboardType, limit: int = 5
+        self,
+        leaderboard_type: TriviaLeaderboardType,
+        limit: int = 5,
     ) -> list[tuple[str, int]]:
         order = LEADERBOARD_SORT_ORDERS.get(leaderboard_type, "DESC")
         column = LEADERBOARD_EXPRESSIONS.get(leaderboard_type, leaderboard_type)
