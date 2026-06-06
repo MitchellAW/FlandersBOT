@@ -15,7 +15,7 @@ discord.utils.setup_logging()
 log = logging.getLogger(__name__)
 
 
-async def run_bot():
+async def run_bot() -> None:
 
     # Requires members intents for leaderboard username display
     intents = discord.Intents.default()
@@ -26,8 +26,8 @@ async def run_bot():
     # Initialise bot with db pool
     try:
         db = await asyncpg.create_pool(dsn=config.postgres_dsn)
-    except Exception as e:
-        log.error(f"Failed to connect PostgreSQL. Terminating.\n{type(e).__name__}: {e}")
+    except Exception:
+        log.exception("Failed to connect to PostgreSQL. Terminating...")
         sys.exit()
 
     # Initialise bot with aiohttp session
