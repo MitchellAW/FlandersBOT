@@ -111,6 +111,7 @@ class BuilderView(discord.ui.LayoutView):
 
         self.remove_item(self.button_row)
         self.remove_item(self.search_row)
+        self.remove_item(self.timestamp_row)
         self.remove_item(self.gallery)
 
         self.button_row.clear_items()
