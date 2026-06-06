@@ -16,6 +16,7 @@ __all__ = [
     "FuturamaTrivia",
     "RickAndMortyTrivia",
     "SimpsonsTrivia",
+    "TVReferenceState",
     "TriviaAnswer",
     "TriviaCategory",
     "TriviaLeaderboardType",
@@ -23,5 +24,4 @@ __all__ = [
     "TriviaQuestion",
     "TriviaRound",
     "TriviaScoreboard",
-    "TVReferenceState",
 ]

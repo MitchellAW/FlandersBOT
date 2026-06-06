@@ -11,7 +11,7 @@ class TVReferenceState:
         api_cache: dict[str, compuglobal.EpisodeSummary],
         frames: list[compuglobal.FrameResult],
         channel: int | None = None,
-    ):
+    ) -> None:
         self.frames = frames
         self.api = api
         self.api_cache = api_cache
@@ -27,16 +27,16 @@ class TVReferenceState:
         self.screencaps: dict[tuple[str, int], compuglobal.Screencap] = {}
         self.transcripts: dict[tuple[str, int], list[compuglobal.Subtitle]] = {}
 
-    def set_frame(self, key: str, timestamp: int):
+    def set_frame(self, key: str, timestamp: int) -> None:
         self.frame_key = key
         self.frame_timestamp = timestamp
 
-    async def cache_screencap(self):
+    async def cache_screencap(self) -> None:
         screencap = await self.get_screencap()
         if self.channel is not None:
             self.bot.cached_screencaps.update({self.channel: (screencap, self.api.BASE_URL)})
 
-    async def populate(self):
+    async def populate(self) -> None:
         for frame in self.frames:
             screencap = await self.api.get_screencap(frame.key, frame.timestamp)
             self.screencaps.update({(frame.key, frame.timestamp): screencap})

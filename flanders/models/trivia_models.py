@@ -1,8 +1,9 @@
 import json
 import random
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import StrEnum
+from pathlib import Path
 
 import discord
 from pydantic import BaseModel
@@ -39,7 +40,7 @@ class TriviaQuestion(BaseModel, frozen=True):
 
     @model_validator(mode="before")
     @classmethod
-    def derived_fields(cls, data) -> list[str]:
+    def derived_fields(cls, data: dict) -> dict:
         answers = data["answers"]
         shuffled = random.sample(answers, len(answers))
         if "shuffled_answers" not in data:
@@ -65,14 +66,14 @@ class TriviaCategory:
     TIMER_DURATION: int = 20
 
     def load_questions(self) -> list[TriviaQuestion]:
-        with open(f"flanders/cogs/data/{self.file_name}", "r") as trivia_data:
+        with Path(f"flanders/cogs/data/{self.file_name}").open() as trivia_data:
             questions = json.load(trivia_data)
             trivia_questions = [TriviaQuestion(id=i, **question) for i, question in enumerate(questions)]
             return random.sample(trivia_questions, len(trivia_questions))
 
 
 class FuturamaTrivia(TriviaCategory):
-    def __init__(self):
+    def __init__(self) -> None:
         fry_red = discord.Colour(0x9B2525)
         thumb = "https://raw.githubusercontent.com/MitchellAW/MitchellAW.github.io/refs/heads/main/gifs/hypnotoad.gif?raw=true"
         end_thumb = "https://raw.githubusercontent.com/MitchellAW/MitchellAW.github.io/master/images/hypnotoad-end.png"
@@ -80,7 +81,7 @@ class FuturamaTrivia(TriviaCategory):
 
 
 class SimpsonsTrivia(TriviaCategory):
-    def __init__(self):
+    def __init__(self) -> None:
         simpsons_yellow = discord.Colour(0xFFEF06)
         thumb = (
             "https://raw.githubusercontent.com/MitchellAW/MitchellAW.github.io/refs/heads/main/gifs/donut.gif?raw=true"
@@ -90,7 +91,7 @@ class SimpsonsTrivia(TriviaCategory):
 
 
 class RickAndMortyTrivia(TriviaCategory):
-    def __init__(self):
+    def __init__(self) -> None:
         rick_blue = discord.Colour(0xAAD3EA)
         thumb = (
             "https://raw.githubusercontent.com/MitchellAW/MitchellAW.github.io/refs/heads/main/gifs/portal.gif?raw=true"
@@ -101,13 +102,13 @@ class RickAndMortyTrivia(TriviaCategory):
 @dataclass
 class TriviaRound:
     question: TriviaQuestion
-    started_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    started_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     _answers: dict[int, TriviaAnswer] = field(default_factory=dict, repr=False)
     ended_at: datetime | None = None
 
     @property
     def elapsed_milliseconds(self) -> int:
-        return int((datetime.now(timezone.utc) - self.started_at).total_seconds() * 1000)
+        return int((datetime.now(UTC) - self.started_at).total_seconds() * 1000)
 
     def log_answer(self, user: discord.User | discord.Member, answer_index: int) -> None:
         is_correct = answer_index == self.question.correct_index
@@ -122,15 +123,15 @@ class TriviaRound:
         self._answers[user.id] = answer
 
     def end_round(self) -> None:
-        self.ended_at = datetime.now(timezone.utc)
+        self.ended_at = datetime.now(UTC)
 
     @property
     def is_completed(self) -> bool:
         return self.ended_at is not None
 
     @property
-    def answers(self):
-        return self._answers.values()
+    def answers(self) -> list[TriviaAnswer]:
+        return list(self._answers.values())
 
     @property
     def correct_answers(self) -> list[TriviaAnswer]:
@@ -160,9 +161,11 @@ class TriviaMatch:
 
     def start_round(self) -> TriviaRound | None:
         if self._current_round is not None:
-            raise RuntimeError("A round is already in progress. Call end_round() first.")
+            msg = "A round is already in progress. Call end_round() first."
+            raise RuntimeError(msg)
         if not self.questions:
-            raise RuntimeError("No questions remaining in this match.")
+            msg = "A round is already in progress. Call end_round() first."
+            raise RuntimeError(msg)
 
         question = self.questions.pop()
         self._current_round = TriviaRound(question=question)
@@ -170,7 +173,8 @@ class TriviaMatch:
 
     def end_round(self) -> TriviaRound:
         if self._current_round is None:
-            raise RuntimeError("No round is currently in progress.")
+            msg = "No round is currently in progress."
+            raise RuntimeError(msg)
 
         completed = self._current_round
         self._completed_rounds.append(completed)
