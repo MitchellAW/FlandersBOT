@@ -2,7 +2,14 @@ import discord
 
 
 class TVContentView(discord.ui.LayoutView):
-    def __init__(self, content_url: str, episode_title: str, episode_url: str, episode_details: str, author: str):
+    def __init__(
+        self,
+        content_url: str,
+        episode_title: str,
+        episode_url: str,
+        episode_details: str,
+        author: str,
+    ) -> None:
         super().__init__()
         self.content_url = content_url
 

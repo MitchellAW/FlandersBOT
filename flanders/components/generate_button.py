@@ -7,12 +7,12 @@ from flanders.models import TVReferenceState
 
 
 class GenerateButton(discord.ui.Button):
-    def __init__(self, label: str, style: discord.ButtonStyle, content_type: str, state: TVReferenceState):
+    def __init__(self, label: str, style: discord.ButtonStyle, content_type: str, state: TVReferenceState) -> None:
         self.state = state
         self.content_type = content_type
         super().__init__(label=label, style=style)
 
-    async def callback(self, interaction: discord.Interaction):
+    async def callback(self, interaction: discord.Interaction) -> None:
         if self.view is None:
             msg = "Button must be added to a view before its callback can be invoked"
             raise ValueError(msg)
@@ -41,7 +41,8 @@ class GenerateButton(discord.ui.Button):
 
         try:
             if interaction.channel is not None and isinstance(
-                interaction.channel, (discord.TextChannel, discord.Thread, discord.DMChannel)
+                interaction.channel,
+                (discord.TextChannel, discord.Thread, discord.DMChannel),
             ):
                 await interaction.channel.send(view=content_view, allowed_mentions=discord.AllowedMentions.none())
                 summary = f"Generated {self.content_type}."
@@ -62,16 +63,16 @@ class GenerateButton(discord.ui.Button):
 
 
 class GenerateComicButton(GenerateButton):
-    def __init__(self, state: TVReferenceState):
+    def __init__(self, state: TVReferenceState) -> None:
         super().__init__(label="Send Comic", style=discord.ButtonStyle.secondary, content_type="comic", state=state)
 
-    async def get_content_url(self):
+    async def get_content_url(self) -> str:
         return await self.state.get_comic_strip_url()
 
 
 class GenerateGifButton(GenerateButton):
-    def __init__(self, state: TVReferenceState):
+    def __init__(self, state: TVReferenceState) -> None:
         super().__init__(label="Send Gif", style=discord.ButtonStyle.primary, content_type="gif", state=state)
 
-    async def get_content_url(self):
+    async def get_content_url(self) -> str:
         return await self.state.get_gif_url()

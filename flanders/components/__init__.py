@@ -16,12 +16,12 @@ from flanders.components.trivia_view import (
 __all__ = [
     "BuilderView",
     "CustomiseCaptionButton",
-    "TVContentView",
     "GenerateButton",
     "GenerateComicButton",
     "GenerateGifButton",
     "SearchResult",
     "SearchResultDropdown",
+    "TVContentView",
     "ToggleTimingButton",
     "TriviaLeaderboardView",
     "TriviaPrivacyView",

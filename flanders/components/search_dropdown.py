@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class SearchResult(discord.SelectOption):
-    def __init__(self, frame: compuglobal.Frame, index: int, state: TVReferenceState):
+    def __init__(self, frame: compuglobal.Frame, index: int, state: TVReferenceState) -> None:
         self.frame = frame
         summary = state.api_cache.get(frame.key)
         title = summary.title if summary is not None else "Unknown Title"
@@ -18,12 +18,12 @@ class SearchResult(discord.SelectOption):
 
 
 class SearchResultDropdown(discord.ui.Select):
-    def __init__(self, options: list[SearchResult], state: TVReferenceState):
+    def __init__(self, options: list[SearchResult], state: TVReferenceState) -> None:
         self.search_options = options
         self.state = state
         super().__init__(placeholder="Choose the best match...", min_values=1, max_values=1, options=list(options))
 
-    async def callback(self, interaction: discord.Interaction):
+    async def callback(self, interaction: discord.Interaction) -> None:
         if self.view is None:
             msg = "Dropdown must be added to a view before its callback can be invoked"
             raise ValueError(msg)
@@ -45,7 +45,7 @@ class SearchResultDropdown(discord.ui.Select):
 
 
 class TimingOption(discord.SelectOption):
-    def __init__(self, subtitle: compuglobal.Subtitle):
+    def __init__(self, subtitle: compuglobal.Subtitle) -> None:
         self.subtitle = subtitle
         self.MAX_CHARS = 100
 
@@ -59,7 +59,7 @@ class TimingOption(discord.SelectOption):
 
 
 class TimingDropdown(discord.ui.Select):
-    def __init__(self, options: list[TimingOption], state: TVReferenceState):
+    def __init__(self, options: list[TimingOption], state: TVReferenceState) -> None:
         self.state = state
 
         options = self.shorten_options(options)
@@ -80,7 +80,7 @@ class TimingDropdown(discord.ui.Select):
 
         return options[start : start + size]
 
-    async def callback(self, interaction: discord.Interaction):
+    async def callback(self, interaction: discord.Interaction) -> None:
         if self.view is None:
             msg = "Dropdown must be added to a view before its callback can be invoked"
             raise ValueError(msg)

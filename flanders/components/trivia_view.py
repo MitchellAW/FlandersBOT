@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import discord
 
@@ -7,7 +7,7 @@ from flanders.utils import TriviaDB
 
 
 class TriviaView(discord.ui.LayoutView):
-    def __init__(self, trivia_category: TriviaCategory, trivia_match: TriviaMatch, end_time: datetime):
+    def __init__(self, trivia_category: TriviaCategory, trivia_match: TriviaMatch, end_time: datetime) -> None:
         self.trivia_category = trivia_category
         self.trivia_match = trivia_match
         self.end_time = end_time
@@ -105,8 +105,8 @@ class TriviaView(discord.ui.LayoutView):
         if previous_round.ended_at is not None:
             ended_at = discord.utils.format_dt(previous_round.ended_at, style="R")
             if self.trivia_match.is_finished:
-                scoreboard_time = datetime.now(tz=timezone.utc) + timedelta(
-                    seconds=int(self.trivia_category.TIMER_DURATION / 2)
+                scoreboard_time = datetime.now(tz=UTC) + timedelta(
+                    seconds=int(self.trivia_category.TIMER_DURATION / 2),
                 )
                 show_in = discord.utils.format_dt(scoreboard_time, style="R")
                 content = discord.ui.TextDisplay(content=f"-# Match ended {ended_at}! Showing results {show_in}...")
@@ -119,7 +119,7 @@ class TriviaView(discord.ui.LayoutView):
 
 
 class TriviaButton(discord.ui.Button):
-    def __init__(self, key: str, index: int, trivia_round: TriviaRound):
+    def __init__(self, key: str, index: int, trivia_round: TriviaRound) -> None:
         self.view: TriviaView
         self.key = key
         self.index = index
@@ -127,14 +127,14 @@ class TriviaButton(discord.ui.Button):
 
         super().__init__(label=f"{key}", style=discord.ButtonStyle.secondary)
 
-    async def callback(self, interaction: discord.Interaction):
+    async def callback(self, interaction: discord.Interaction) -> None:
         await interaction.response.defer(ephemeral=True)
         if not self.trivia_round.is_completed:
             self.trivia_round.log_answer(interaction.user, self.index)
 
 
 class TriviaScoreboardView(discord.ui.LayoutView):
-    def __init__(self, scoreboard: TriviaScoreboard | None, trivia_category: TriviaCategory):
+    def __init__(self, scoreboard: TriviaScoreboard | None, trivia_category: TriviaCategory) -> None:
         super().__init__()
 
         container = discord.ui.Container()
@@ -185,7 +185,7 @@ class TriviaScoreboardView(discord.ui.LayoutView):
 
 
 class TriviaUserStatsView(discord.ui.LayoutView):
-    def __init__(self, user_stats: dict[str, int], user: discord.User | discord.Member):
+    def __init__(self, user_stats: dict[str, int], user: discord.User | discord.Member) -> None:
         super().__init__()
         content = "## :bar_chart: Trivia Statistics\n"
         content += f"### {user.mention}\n\n"
@@ -212,7 +212,7 @@ class TriviaUserStatsView(discord.ui.LayoutView):
                     f":four_leaf_clover: **Longest Streak (#{user_stats['longest_streak_rank']})**: "
                     f"{user_stats['longest_streak']}"
                 ),
-            ]
+            ],
         )
         container = discord.ui.Container()
 
@@ -231,8 +231,11 @@ class TriviaUserStatsView(discord.ui.LayoutView):
 
 class TriviaLeaderboardView(discord.ui.LayoutView):
     def __init__(
-        self, leaderboard: dict[TriviaLeaderboardType, list[tuple[str, int]]], thumbnail_url: str | None, footer: str
-    ):
+        self,
+        leaderboard: dict[TriviaLeaderboardType, list[tuple[str, int]]],
+        thumbnail_url: str | None,
+        footer: str,
+    ) -> None:
         super().__init__()
 
         self.leaderboard = leaderboard
@@ -282,7 +285,7 @@ class TriviaLeaderboardView(discord.ui.LayoutView):
 
 
 class TriviaDropdown(discord.ui.Select):
-    def __init__(self):
+    def __init__(self) -> None:
         self.view: TriviaLeaderboardView
         options = [
             discord.SelectOption(
@@ -340,7 +343,7 @@ class TriviaDropdown(discord.ui.Select):
 
 
 class TriviaPrivacyView(discord.ui.LayoutView):
-    def __init__(self, privacy_setting: int, trivia_db: TriviaDB):
+    def __init__(self, privacy_setting: int, trivia_db: TriviaDB) -> None:
         super().__init__()
         self.ALLOWED_CHANGES = 4
         self.HEADER = "## Privacy and Data Collection\n"
@@ -350,7 +353,8 @@ class TriviaPrivacyView(discord.ui.LayoutView):
         self.change_count = 0
 
         self.policy_button = discord.ui.Button(
-            label="Privacy Policy", url="https://github.com/MitchellAW/FlandersBOT/blob/main/privacy-policy.md"
+            label="Privacy Policy",
+            url="https://github.com/MitchellAW/FlandersBOT/blob/main/privacy-policy.md",
         )
 
         self.action_row = discord.ui.ActionRow()
@@ -360,7 +364,7 @@ class TriviaPrivacyView(discord.ui.LayoutView):
 
         self.repopulate_self()
 
-    async def toggle_privacy_setting(self, user_id: int):
+    async def toggle_privacy_setting(self, user_id: int) -> None:
         self.change_count += 1
 
         if self.privacy_setting == 1:
@@ -386,9 +390,8 @@ class TriviaPrivacyView(discord.ui.LayoutView):
 
     def disable_buttons(self) -> None:
         for button in self.action_row.walk_children():
-            if isinstance(button, discord.ui.Button):
-                if button.url is None:
-                    button.disabled = True
+            if isinstance(button, discord.ui.Button) and button.url is None:
+                button.disabled = True
 
     def repopulate_self(self) -> None:
         self.clear_items()
@@ -412,10 +415,10 @@ class TriviaPrivacyView(discord.ui.LayoutView):
 
 
 class TriviaPrivacyToggleButton(discord.ui.Button):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(label="Toggle Privacy", style=discord.ButtonStyle.secondary)
 
-    async def callback(self, interaction: discord.Interaction):
+    async def callback(self, interaction: discord.Interaction) -> None:
         if self.view is None:
             msg = "Button must be added to a view before its callback can be invoked"
             raise ValueError(msg)
@@ -431,10 +434,10 @@ class TriviaPrivacyToggleButton(discord.ui.Button):
 
 
 class TriviaPrivacyDeleteButton(discord.ui.Button):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(label="Delete My Data", style=discord.ButtonStyle.danger)
 
-    async def callback(self, interaction: discord.Interaction):
+    async def callback(self, interaction: discord.Interaction) -> None:
         if self.view is None:
             msg = "Button must be added to a view before its callback can be invoked"
             raise ValueError(msg)
@@ -444,7 +447,7 @@ class TriviaPrivacyDeleteButton(discord.ui.Button):
 
 
 class TriviaDataDeletionModal(discord.ui.Modal):
-    def __init__(self, view: TriviaPrivacyView):
+    def __init__(self, view: TriviaPrivacyView) -> None:
         super().__init__(title="Confirm Data Deletion")
         self.view = view
 
@@ -453,7 +456,7 @@ class TriviaDataDeletionModal(discord.ui.Modal):
                 "By confirming below, you understand that all of your data will be permanently deleted. "
                 "This includes all of your progress being removed from the leaderboards.\n\n"
                 "-# :warning: This action cannot be undone."
-            )
+            ),
         )
         self.add_item(text_display)
         self.confirmation = discord.ui.Checkbox(default=False)
@@ -463,7 +466,7 @@ class TriviaDataDeletionModal(discord.ui.Modal):
         )
         self.add_item(self.confirmation_label)
 
-    async def on_submit(self, interaction: discord.Interaction):
+    async def on_submit(self, interaction: discord.Interaction) -> None:
         if self.confirmation.value:
             await interaction.response.defer()
             await self.view.delete_data(interaction.user.id)

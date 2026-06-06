@@ -2,19 +2,25 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import compuglobal
 import discord
 
-from flanders.models import TVReferenceState
-
 if TYPE_CHECKING:
+    from collections.abc import Generator
+
+    import compuglobal
+
     from flanders.components.builder_view import BuilderView
+    from flanders.models import TVReferenceState
 
 
 class CustomiseCaptionModal(discord.ui.Modal, title="Customise caption:"):
     def __init__(
-        self, total_duration: int, state: TVReferenceState, view: BuilderView, subtitles: list[compuglobal.Subtitle]
-    ):
+        self,
+        total_duration: int,
+        state: TVReferenceState,
+        view: BuilderView,
+        subtitles: list[compuglobal.Subtitle],
+    ) -> None:
         super().__init__()
         self.state = state
         self.view = view
@@ -41,7 +47,7 @@ class CustomiseCaptionModal(discord.ui.Modal, title="Customise caption:"):
         )
         self.add_item(merge_caption)
 
-    def get_captions(self):
+    def get_captions(self) -> Generator[str]:
         for child in self.children:
             if isinstance(child, discord.ui.TextInput):
                 yield child.value
@@ -62,12 +68,12 @@ class CustomiseCaptionModal(discord.ui.Modal, title="Customise caption:"):
 
         return [
             subtitle.model_copy(
-                update={"content": content, "start_timestamp": start_timestamp, "end_timestamp": end_timestamp}
+                update={"content": content, "start_timestamp": start_timestamp, "end_timestamp": end_timestamp},
             )
             for subtitle in subtitles
         ]
 
-    async def on_submit(self, interaction: discord.Interaction):
+    async def on_submit(self, interaction: discord.Interaction) -> None:
         await interaction.response.defer(ephemeral=True)
 
         self.state.custom_subtitles = (

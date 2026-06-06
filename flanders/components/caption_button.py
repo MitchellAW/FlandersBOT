@@ -14,12 +14,12 @@ log = logging.getLogger(__name__)
 
 
 class CustomiseCaptionButton(discord.ui.Button):
-    def __init__(self, state: TVReferenceState):
+    def __init__(self, state: TVReferenceState) -> None:
         self.state = state
         emoji = "<:edit:1512642373597794344>"
         super().__init__(emoji=emoji, style=discord.ButtonStyle.secondary)
 
-    async def callback(self, interaction: discord.Interaction):
+    async def callback(self, interaction: discord.Interaction) -> None:
         if self.view is None:
             msg = "Button must be added to a view before its callback can be invoked"
             raise ValueError(msg)
@@ -31,8 +31,8 @@ class CustomiseCaptionButton(discord.ui.Button):
         try:
             await interaction.response.send_modal(modal)
 
-        except Exception as e:
-            log.error(e)
+        except Exception:
+            log.exception("Button could not send caption modal")
 
 
 class ToggleTimingButton(discord.ui.Button):

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import compuglobal
 import discord
 
 from flanders.components.caption_button import CustomiseCaptionButton, ToggleTimingButton
@@ -10,11 +9,19 @@ from flanders.components.generate_button import GenerateComicButton, GenerateGif
 from flanders.components.search_dropdown import SearchResult, SearchResultDropdown, TimingDropdown, TimingOption
 
 if TYPE_CHECKING:
+    import compuglobal
+
     from flanders.models import TVReferenceState
 
 
 class BuilderView(discord.ui.LayoutView):
-    def __init__(self, unique_results, transcript: list[compuglobal.Subtitle], state: TVReferenceState, image_url: str):
+    def __init__(
+        self,
+        unique_results: list[compuglobal.FrameResult],
+        transcript: list[compuglobal.Subtitle],
+        state: TVReferenceState,
+        image_url: str,
+    ) -> None:
         super().__init__(timeout=600)
         self.unique_results = unique_results
         self.transcript = transcript
@@ -53,17 +60,16 @@ class BuilderView(discord.ui.LayoutView):
         self.button_row.add_item(self.toggle_timing_button)
         self.add_item(self.button_row)
 
-    def build_search_dropdown(self, unique_results: list[compuglobal.Frame]) -> SearchResultDropdown:
+    def build_search_dropdown(self, unique_results: list[compuglobal.FrameResult]) -> SearchResultDropdown:
         # Get top 10 results
-        options = []
-        for i in range(min(10, len(unique_results))):
-            options.append(SearchResult(unique_results[i], i + 1, self.state))
-
+        options = [
+            SearchResult(unique_result, i + 1, self.state) for i, unique_result in enumerate(unique_results[:10])
+        ]
         options[0].default = True
 
         return SearchResultDropdown(options, self.state)
 
-    def build_timestamp_dropdown(self, transcript: list[compuglobal.Subtitle]):
+    def build_timestamp_dropdown(self, transcript: list[compuglobal.Subtitle]) -> TimingDropdown:
         options = []
 
         for i in range(len(transcript)):
@@ -75,7 +81,7 @@ class BuilderView(discord.ui.LayoutView):
 
         return TimingDropdown(options, self.state)
 
-    def update_image(self, image_url: str):
+    def update_image(self, image_url: str) -> None:
         self.image_url = image_url
         self.gallery.clear_items()
         self.gallery.add_item(media=self.image_url)
