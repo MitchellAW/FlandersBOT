@@ -20,18 +20,19 @@ class CustomiseCaptionButton(discord.ui.Button):
         super().__init__(emoji=emoji, style=discord.ButtonStyle.secondary)
 
     async def callback(self, interaction: discord.Interaction):
-        if self.view is not None:
-            subtitles = await self.state.get_subtitles()
-            duration = await self.state.get_total_duration()
-            modal = CustomiseCaptionModal(
-                total_duration=duration, state=self.state, view=self.view, subtitles=subtitles
-            )
+        if self.view is None:
+            msg = "Button must be added to a view before its callback can be invoked"
+            raise ValueError(msg)
 
-            try:
-                await interaction.response.send_modal(modal)
+        subtitles = await self.state.get_subtitles()
+        duration = await self.state.get_total_duration()
+        modal = CustomiseCaptionModal(total_duration=duration, state=self.state, view=self.view, subtitles=subtitles)
 
-            except Exception as e:
-                log.error(e)
+        try:
+            await interaction.response.send_modal(modal)
+
+        except Exception as e:
+            log.error(e)
 
 
 class ToggleTimingButton(discord.ui.Button):
@@ -40,7 +41,10 @@ class ToggleTimingButton(discord.ui.Button):
         super().__init__(emoji=emoji, style=discord.ButtonStyle.secondary)
 
     async def callback(self, interaction: discord.Interaction) -> None:
+        if self.view is None:
+            msg = "Button must be added to a view before its callback can be invoked"
+            raise ValueError(msg)
+
         await interaction.response.defer(ephemeral=True)
-        if self.view is not None:
-            self.view.toggle_timing_dropdown()
-            await interaction.edit_original_response(view=self.view)
+        self.view.toggle_timing_dropdown()
+        await interaction.edit_original_response(view=self.view)

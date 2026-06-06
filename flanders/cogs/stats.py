@@ -109,19 +109,6 @@ class Stats(commands.Cog):
                 await self.bot.db.execute(query, json.dumps(self._command_batch))
                 self._command_batch.clear()
 
-    # Posts the bots uptime to the channel
-    @commands.command()
-    @commands.cooldown(1, 3, BucketType.user)
-    async def uptime(self, ctx):
-        await ctx.send(f"🔌 Uptime: **{self.get_uptime(True)}**")
-
-    # Check the latency of the bot
-    @commands.command()
-    @commands.cooldown(1, 3, BucketType.channel)
-    async def ping(self, ctx):
-        latency = round(self.bot.latency * 1000, 2)
-        await ctx.send(f"🏓 Latency: {str(latency)}ms")
-
     @app_commands.command(name="epinfo", description="See more details of the last episode posted in this channel.")
     @app_commands.checks.cooldown(1, 3.0, key=lambda i: (i.guild_id, i.user.id))
     async def share_episode_details(self, interaction: discord.Interaction):

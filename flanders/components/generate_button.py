@@ -2,37 +2,27 @@ from abc import abstractmethod
 
 import discord
 
-from flanders.cogs.events import Events
 from flanders.components.content_view import TVContentView
 from flanders.models import TVReferenceState
 
 
 class GenerateButton(discord.ui.Button):
-    def __init__(self, label: str, style: discord.ButtonStyle, state: TVReferenceState):
+    def __init__(self, label: str, style: discord.ButtonStyle, content_type: str, state: TVReferenceState):
         self.state = state
+        self.content_type = content_type
         super().__init__(label=label, style=style)
 
     async def callback(self, interaction: discord.Interaction):
+        if self.view is None:
+            msg = "Button must be added to a view before its callback can be invoked"
+            raise ValueError(msg)
+
         await interaction.response.defer(ephemeral=True)
+        self.view.show_summary(summary=f"Generating {self.content_type}...", component=self)
+        await interaction.edit_original_response(view=self.view)
 
-        # Disable comic/gif builder view elements
-        if self.view is not None:
-            for child in self.view.walk_children():
-                if isinstance(child, (discord.ui.Button, discord.ui.Select)):
-                    child.disabled = True
-
-            await interaction.edit_original_response(view=self.view)
-
-        # Generate gif
+        # Cache screencap
         screencap = await self.state.get_screencap()
-        emoji = await Events.use_emoji(interaction, "<a:loading:410316176510418955>", "⌛")
-
-        interaction_channel = interaction.channel
-
-        original = None
-        if isinstance(interaction_channel, discord.TextChannel):
-            original = await interaction_channel.send(f"Generating {screencap.frame.key}... {emoji}")
-
         await self.state.cache_screencap()
 
         content_url = await self.get_content_url()
@@ -44,8 +34,23 @@ class GenerateButton(discord.ui.Button):
             author=interaction.user.mention,
         )
 
-        if original is not None:
-            await original.edit(content=None, view=content_view, allowed_mentions=discord.AllowedMentions.none())
+        summary = (
+            "Sorry neighborino, I'm noodly-not allowed to talk here.\n"
+            "But ding-dong-diddily don't worry, you can check it out with the button below!"
+        )
+
+        try:
+            if interaction.channel is not None and isinstance(
+                interaction.channel, (discord.TextChannel, discord.Thread, discord.DMChannel)
+            ):
+                await interaction.channel.send(view=content_view, allowed_mentions=discord.AllowedMentions.none())
+                summary = f"Generated {self.content_type}."
+
+        except discord.Forbidden:
+            pass
+
+        self.view.show_summary(summary=summary, content_url=content_url, component=self)
+        await interaction.edit_original_response(view=self.view)
 
     @abstractmethod
     async def get_content_url(self) -> str:
@@ -54,7 +59,7 @@ class GenerateButton(discord.ui.Button):
 
 class GenerateComicButton(GenerateButton):
     def __init__(self, state: TVReferenceState):
-        super().__init__(label="Send Comic", style=discord.ButtonStyle.secondary, state=state)
+        super().__init__(label="Send Comic", style=discord.ButtonStyle.secondary, content_type="comic", state=state)
 
     async def get_content_url(self):
         return await self.state.get_comic_strip_url()
@@ -62,7 +67,7 @@ class GenerateComicButton(GenerateButton):
 
 class GenerateGifButton(GenerateButton):
     def __init__(self, state: TVReferenceState):
-        super().__init__(label="Send Gif", style=discord.ButtonStyle.primary, state=state)
+        super().__init__(label="Send Gif", style=discord.ButtonStyle.primary, content_type="gif", state=state)
 
     async def get_content_url(self):
         return await self.state.get_gif_url()

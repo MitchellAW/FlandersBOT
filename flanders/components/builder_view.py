@@ -23,6 +23,8 @@ class BuilderView(discord.ui.LayoutView):
 
         self.show_timing = False
 
+        self.summary = discord.ui.TextDisplay(content="")
+
         self.search_row = discord.ui.ActionRow()
 
         self.gallery = discord.ui.MediaGallery()
@@ -31,13 +33,11 @@ class BuilderView(discord.ui.LayoutView):
         self.button_row = discord.ui.ActionRow()
 
         # Add the search results dropdown
-        self.search_row.clear_items()
         dropdown = self.build_search_dropdown(self.unique_results)
         self.search_row.add_item(dropdown)
         self.add_item(self.search_row)
 
         # Add the preview image
-        self.gallery.clear_items()
         self.gallery.add_item(media=self.image_url)
         self.add_item(self.gallery)
 
@@ -47,7 +47,6 @@ class BuilderView(discord.ui.LayoutView):
 
         # Add the customisation and post content buttons
         self.toggle_timing_button = ToggleTimingButton()
-        self.button_row.clear_items()
         self.button_row.add_item(GenerateGifButton(self.state))
         self.button_row.add_item(GenerateComicButton(self.state))
         self.button_row.add_item(CustomiseCaptionButton(self.state))
@@ -98,3 +97,22 @@ class BuilderView(discord.ui.LayoutView):
         else:
             self.toggle_timing_button.style = discord.ButtonStyle.secondary
             self.remove_item(self.timestamp_row)
+
+    def show_summary(self, summary: str, component: discord.ui.Button, content_url: str | None = None) -> None:
+        self.remove_item(self.summary)
+        self.summary.content = summary
+        self.add_item(self.summary)
+
+        self.remove_item(self.button_row)
+        self.remove_item(self.search_row)
+        self.remove_item(self.gallery)
+
+        self.button_row.clear_items()
+
+        if content_url is not None:
+            self.button_row.add_item(discord.ui.Button(label="View Content", url=content_url))
+
+        component.disabled = True
+        self.button_row.add_item(component)
+
+        self.add_item(self.button_row)

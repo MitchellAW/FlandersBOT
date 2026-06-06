@@ -67,32 +67,6 @@ class Events(commands.Cog):
         # Only increment status index after a status change
         self.status_index += 1
 
-    # Checks if bot has permission to use external emojis in the guild, returns external emoji if permitted
-    # otherwise, returns the fallback emoji
-    @staticmethod
-    async def use_emoji(ctx, external_emoji, fallback_emoji):
-        perms = ctx.channel.permissions_for(ctx.guild.me)
-
-        if perms.use_external_emojis:
-            return external_emoji
-
-        else:
-            return fallback_emoji
-
-    # Change the bot's status/presence to only cycle through given message
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    async def status(self, ctx, *, message: str):
-        self.status_formats = [message]
-        await ctx.send("Status changed! You will see an update in < 5 minutes.")
-
-    # Add a status/presence format to the status cycle
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    async def addstatus(self, ctx, *, message: str):
-        self.bot.status_formats.append(message)
-        await ctx.send("Status added!")
-
 
 async def setup(bot):
     await bot.add_cog(Events(bot))
