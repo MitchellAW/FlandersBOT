@@ -1,3 +1,5 @@
+"""All models used by FlandersBOT."""
+
 from flanders.models.reference import TVReferenceState
 from flanders.models.trivia_models import (
     FuturamaTrivia,
