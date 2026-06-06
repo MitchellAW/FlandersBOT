@@ -17,7 +17,11 @@ async def run_bot() -> None:
     # Load config from .env
     config = FlandersConfig()
 
-    # Use default logging configuration
+    # Disable voice warnings - never used in this bot
+    discord.VoiceClient.warn_dave = False
+    discord.VoiceClient.warn_nacl = False
+
+    # Setup default discord.py logging
     discord.utils.setup_logging(level=config.log_level_int)
 
     # Requires members intents for leaderboard username display
