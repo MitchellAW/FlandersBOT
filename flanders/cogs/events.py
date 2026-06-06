@@ -4,11 +4,13 @@ import logging
 import discord
 from discord.ext import commands, tasks
 
+from flanders.bot import FlandersBOT
+
 log = logging.getLogger(__name__)
 
 
 class Events(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: FlandersBOT) -> None:
         self.bot = bot
 
         # Default status configuration
@@ -22,34 +24,26 @@ class Events(commands.Cog):
         # Start task for cycling between status formats
         self.cycle_status_format.start()
 
-        # Load logging channel for error handling
-        self.bot.loop.create_task(self.configure_logging())
-
     # If cog is unloaded, cancel task for cycling between status formats
-    async def cog_unload(self):
+    async def cog_unload(self) -> None:
         self.cycle_status_format.cancel()
-
-    # Load logging channels for error handling
-    async def configure_logging(self):
-        await self.bot.wait_until_ready()
-        if self.bot.config.debug_mode:
-            self.bot.logging = self.bot.get_channel(self.DEBUG_LOGGING_CHANNEL)
-
-        else:
-            self.bot.logging = self.bot.get_channel(self.LOGGING_CHANNEL)
 
     # Log bot information, update status and set uptime when bot is ready
     @commands.Cog.listener()
-    async def on_ready(self):
-        log.info(f"Username: {self.bot.user.name}")
-        log.info(f"Client ID: {self.bot.user.id}")
+    async def on_ready(self) -> None:
+        if self.bot.user is not None:
+            log.info("Username: %s", self.bot.user.name)
+            log.info("Client ID: %s", str(self.bot.user.id))
+
+        else:
+            log.error("Bot User does not exist")
         if not hasattr(self, "uptime"):
             self.bot.uptime = datetime.datetime.now(datetime.UTC)
 
     # Cycle through all status formats, waits 5 minutes between status changes
     # Formats status/presence with the current guild count
     @tasks.loop(minutes=5)
-    async def cycle_status_format(self):
+    async def cycle_status_format(self) -> None:
         await self.bot.wait_until_ready()
         if self.status_index >= len(self.status_formats) - 1:
             self.status_index = 0
@@ -68,5 +62,5 @@ class Events(commands.Cog):
         self.status_index += 1
 
 
-async def setup(bot):
+async def setup(bot: FlandersBOT) -> None:
     await bot.add_cog(Events(bot))

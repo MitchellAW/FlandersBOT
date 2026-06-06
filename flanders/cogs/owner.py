@@ -1,18 +1,22 @@
-import asyncio
+import logging
 
 import discord
 from discord.ext import commands
 from tabulate import tabulate
 
+from flanders.bot import FlandersBOT
+
+log = logging.getLogger(__name__)
+
 
 class Owner(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: FlandersBOT) -> None:
         self.bot = bot
 
     # Get the number of all the commands executed
     @commands.command(name="history", hidden=True)
     @commands.is_owner()
-    async def command_history(self, ctx, *, modifier: str | None = None):
+    async def command_history(self, ctx: commands.Context, *, modifier: str | None = None) -> None:
         # Get command counts ordered alphabetically
         query = """SELECT command, COUNT(command) AS command_count FROM command_history
                     WHERE failed = false AND ($1::text IS NULL or prefix = $1)
@@ -23,7 +27,7 @@ class Owner(commands.Cog):
         rows = await self.bot.db.fetch(query, modifier)
 
         # Display each command stats on separate line and format using tabulate
-        command_data = map(lambda row: [row["command"], row["command_count"]], rows)
+        command_data = ([row["command"], row["command_count"]] for row in rows)
         message = tabulate(command_data, headers=["Command Name", "Count"], tablefmt="presto", colalign=("right",))
         await ctx.send(f"```{message}```")
 
@@ -31,12 +35,12 @@ class Owner(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     @commands.bot_has_permissions(add_reactions=True)
-    async def load(self, ctx, *, cog: str):
+    async def load(self, ctx: commands.Context, *, cog: str) -> None:
         try:
             await self.bot.load_extension(cog)
-        except Exception as e:
+        except Exception:
             await ctx.message.add_reaction("❌")
-            await ctx.send(e)
+            log.exception("Error loading extension")
         else:
             await ctx.message.add_reaction("✅")
 
@@ -44,12 +48,12 @@ class Owner(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     @commands.bot_has_permissions(add_reactions=True)
-    async def unload(self, ctx, *, cog: str):
+    async def unload(self, ctx: commands.Context, *, cog: str) -> None:
         try:
             await self.bot.unload_extension(cog)
-        except Exception as e:
+        except Exception:
             await ctx.message.add_reaction("❌")
-            await ctx.send(e)
+            log.exception("Error unloading extension")
         else:
             await ctx.message.add_reaction("✅")
 
@@ -57,20 +61,23 @@ class Owner(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     @commands.bot_has_permissions(add_reactions=True)
-    async def reload(self, ctx, *, cog: str):
+    async def reload(self, ctx: commands.Context, *, cog: str) -> None:
         try:
             await self.bot.unload_extension(cog)
             await self.bot.load_extension(cog)
-        except Exception as e:
+        except Exception:
             await ctx.message.add_reaction("❌")
-            await ctx.send(e)
+            log.exception("Error reloading extension")
         else:
             await ctx.message.add_reaction("✅")
 
     # Manually syncs commands to the guild, or globally if followed by global
     @commands.command()
     @commands.is_owner()
-    async def sync(self, ctx, *, globe: str | None = None):
+    async def sync(self, ctx: commands.Context, *, globe: str | None = None) -> None:
+        if ctx.guild is None:
+            return
+
         guild = discord.Object(id=ctx.guild.id)
         self.bot.tree.copy_global_to(guild=guild)
 
@@ -84,7 +91,10 @@ class Owner(commands.Cog):
     # Manually unsyncs all commands from the guild, or globally if followed by global
     @commands.command()
     @commands.is_owner()
-    async def unsync(self, ctx, *, globe: str | None = None):
+    async def unsync(self, ctx: commands.Context, *, globe: str | None = None) -> None:
+        if ctx.guild is None:
+            return
+
         guild = discord.Object(id=ctx.guild.id)
         self.bot.tree.clear_commands(guild=guild)
         if globe == "global":
@@ -99,9 +109,9 @@ class Owner(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     @commands.bot_has_permissions(add_reactions=True)
-    async def shutdown(self, ctx):
+    async def shutdown(self, ctx: commands.Context) -> None:
         # Make confirmation message based on bots username to prevent myself from shutting wrong bot down.
-        def check(message):
+        def check(message: discord.Message) -> bool:
             return message.author.id == self.bot.config.owner_id
 
         try:
@@ -111,9 +121,9 @@ class Owner(commands.Cog):
             await self.bot.db.close()
             await self.bot.close()
 
-        except asyncio.TimeoutError:
+        except TimeoutError:
             pass
 
 
-async def setup(bot):
+async def setup(bot: FlandersBOT) -> None:
     await bot.add_cog(Owner(bot))

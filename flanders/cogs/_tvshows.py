@@ -2,12 +2,13 @@ import compuglobal
 import discord
 from discord.ext import commands
 
+from flanders.bot import FlandersBOT
 from flanders.components import BuilderView
 from flanders.models import TVReferenceState
 
 
 class TVShowCog(commands.Cog):
-    def __init__(self, bot, api: compuglobal.AsyncCompuGlobalAPI):
+    def __init__(self, bot: FlandersBOT, api: compuglobal.AsyncCompuGlobalAPI) -> None:
         self.bot = bot
         self.api = api
         self.api_cache: dict[str, compuglobal.EpisodeSummary] = {}
@@ -15,7 +16,7 @@ class TVShowCog(commands.Cog):
         self.api_title = type(self.api).__name__.lower()
 
     # Load the api cache for this show
-    async def cog_load(self):
+    async def cog_load(self) -> None:
         if "masterofallscience" not in self.api_title and (self.api_cache is None or len(self.api_cache.keys()) == 0):
             self.api_cache = await self.build_cache()
 
@@ -25,11 +26,11 @@ class TVShowCog(commands.Cog):
 
     # Format error to not embed links on page status error
     @staticmethod
-    def format_error(error):
+    def format_error(error: Exception) -> str:
         return str(error).replace("http", "<http").replace(".com/", ".com/>")
 
     @staticmethod
-    def get_unique_results(search_results: list[compuglobal.FrameResult]):
+    def get_unique_results(search_results: list[compuglobal.FrameResult]) -> list[compuglobal.FrameResult]:
         timestamp_diff_required = 50000
         unique = {}
 
@@ -44,7 +45,7 @@ class TVShowCog(commands.Cog):
 
         return unique_results
 
-    async def build_gif(self, interaction: discord.Interaction, search: str):
+    async def build_gif(self, interaction: discord.Interaction, search: str) -> None:
         await interaction.response.defer(ephemeral=True)
         try:
             search_results = await self.api.search(search)
@@ -53,7 +54,11 @@ class TVShowCog(commands.Cog):
             channel_id = interaction.channel.id if interaction.channel is not None else None
 
             state = TVReferenceState(
-                bot=self.bot, frames=unique_results[:25], api=self.api, api_cache=self.api_cache, channel=channel_id
+                bot=self.bot,
+                frames=unique_results[:25],
+                api=self.api,
+                api_cache=self.api_cache,
+                channel=channel_id,
             )
 
             # Create the view containing our dropdown and preview

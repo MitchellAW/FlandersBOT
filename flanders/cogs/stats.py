@@ -8,9 +8,11 @@ from discord import app_commands
 from discord.ext import commands, tasks
 from discord.ext.commands.cooldowns import BucketType
 
+from flanders.bot import FlandersBOT
+
 
 class Stats(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: FlandersBOT) -> None:
         self.bot = bot
 
         # Track command count
@@ -24,28 +26,28 @@ class Stats(commands.Cog):
         self.batch_insert_loop.start()
 
     # Get the uptime of the bot. In a short description format by default.
-    def get_uptime(self, full=False):
+    def get_uptime(self) -> str:
         current_time = datetime.datetime.now(datetime.UTC)
         delta = current_time - self.bot.uptime
         hours, remainder = divmod(int(delta.total_seconds()), 3600)
         minutes, seconds = divmod(remainder, 60)
         days, hours = divmod(hours, 24)
 
-        if full:
-            return f"{days} days, {hours} hours, {minutes} minutes, and {seconds} seconds"
-
-        else:
-            return f"{days}d {hours}h {minutes}m {seconds}s"
+        return f"{days}d {hours}h {minutes}m {seconds}s"
 
     # Update the cached successful command count
-    async def count_commands(self):
+    async def count_commands(self) -> None:
         query = """SELECT COUNT(*) FROM command_history
                    WHERE failed = false
                 """
         self.command_count = await self.bot.db.fetchval(query)
 
     @commands.Cog.listener()
-    async def on_app_command_completion(self, interaction: discord.Interaction, command: discord.app_commands.Command):
+    async def on_app_command_completion(
+        self,
+        interaction: discord.Interaction,
+        command: discord.app_commands.Command,
+    ) -> None:
         # Ensure command is recorded
         if command is None:
             return
@@ -58,7 +60,7 @@ class Stats(commands.Cog):
                 "guild_id": interaction.guild_id,
                 "used_at": interaction.created_at.isoformat(),
                 "failed": interaction.command_failed,
-            }
+            },
         )
 
         # Update command count
@@ -67,7 +69,7 @@ class Stats(commands.Cog):
 
     # On each command, add attributes of command to batch to be logged by task loop
     @commands.Cog.listener()
-    async def on_command_completion(self, ctx):
+    async def on_command_completion(self, ctx: commands.Context) -> None:
         # Ensure command recorded
         if ctx.command is None:
             return
@@ -85,7 +87,7 @@ class Stats(commands.Cog):
                 "guild_id": guild_id,
                 "used_at": ctx.message.created_at.isoformat(),
                 "failed": ctx.command_failed,
-            }
+            },
         )
 
         # Update command count
@@ -93,12 +95,12 @@ class Stats(commands.Cog):
             self.command_count += 1
 
     # Ensure loop ends if cog is unloaded
-    async def cog_unload(self):
+    async def cog_unload(self) -> None:
         self.batch_insert_loop.stop()
 
     # Loops each 10 seconds, inserts all batched command stats into command history table
     @tasks.loop(seconds=10)
-    async def batch_insert_loop(self):
+    async def batch_insert_loop(self) -> None:
         async with self._batch_lock:
             query = """INSERT INTO command_history (command, prefix, guild_id, used_at, failed)
                        SELECT x.command, x.prefix, x.guild_id, x.used_at, x.failed
@@ -111,7 +113,7 @@ class Stats(commands.Cog):
 
     @app_commands.command(name="epinfo", description="See more details of the last episode posted in this channel.")
     @app_commands.checks.cooldown(1, 3.0, key=lambda i: (i.guild_id, i.user.id))
-    async def share_episode_details(self, interaction: discord.Interaction):
+    async def share_episode_details(self, interaction: discord.Interaction) -> None:
         channel_id = interaction.channel.id if interaction.channel is not None else None
         if channel_id in self.bot.cached_screencaps:
             screencap, api_url = self.bot.cached_screencaps[channel_id]
@@ -147,22 +149,24 @@ class Stats(commands.Cog):
     @commands.command(aliases=["statistics"])
     @commands.cooldown(1, 3, BucketType.channel)
     @commands.bot_has_permissions(embed_links=True)
-    async def stats(self, ctx):
+    async def stats(self, ctx: commands.Context) -> None:
         # Count users online in guilds and user average
         total_members = 0
         for guild in self.bot.guilds:
-            total_members += guild.member_count
+            if guild.member_count is not None:
+                total_members += guild.member_count
 
         guild_count = len(self.bot.guilds)
 
         # Embed statistics output
         embed = discord.Embed(colour=discord.Colour(0x44981E))
-        embed.set_thumbnail(url=self.bot.user.avatar)
-        embed.set_author(
-            name=f"{self.bot.user.name} Statistics",
-            url="https://github.com/FlandersBOT",
-            icon_url=self.bot.user.avatar,
-        )
+        if self.bot.user is not None:
+            embed.set_thumbnail(url=self.bot.user.avatar)
+            embed.set_author(
+                name=f"{self.bot.user.name} Statistics",
+                url="https://github.com/FlandersBOT",
+                icon_url=self.bot.user.avatar,
+            )
 
         # Round latency to 2 decimal places and get milliseconds
         latency = round(self.bot.latency * 1000, 2)
@@ -177,5 +181,5 @@ class Stats(commands.Cog):
         await ctx.send(embed=embed)
 
 
-async def setup(bot):
+async def setup(bot: FlandersBOT) -> None:
     await bot.add_cog(Stats(bot))

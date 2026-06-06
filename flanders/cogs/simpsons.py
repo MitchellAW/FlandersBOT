@@ -4,23 +4,24 @@ import discord
 from compuglobal.aio import Frinkiac
 from discord import app_commands
 
+from flanders.bot import FlandersBOT
 from flanders.cogs._tvshows import TVShowCog
 
 
 class Simpsons(TVShowCog):
-    def __init__(self, bot):
+    def __init__(self, bot: FlandersBOT) -> None:
         super().__init__(bot, Frinkiac(session=bot.session))
         self.frinkiac = Frinkiac(session=self.bot.session)
 
     @app_commands.command(name="simpsons", description="Posts a matching gif from The Simpsons using Frinkiac.")
     @app_commands.describe(search="Search by quote (e.g. nothing at all)")
     @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
-    async def build_simpsons_gif(self, interaction: discord.Interaction, search: str):
+    async def build_simpsons_gif(self, interaction: discord.Interaction, search: str) -> None:
         await self.build_gif(interaction, search)
 
     @app_commands.command(name="steamedhams", description="Posts a random gif from the iconic steamed hams skit.")
     @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
-    async def post_steamed_hams(self, interaction: discord.Interaction):
+    async def post_steamed_hams(self, interaction: discord.Interaction) -> None:
         # Steamed hams episode key
         steamed_hams_key = "S07E21"
 
@@ -48,5 +49,5 @@ class Simpsons(TVShowCog):
                 await interaction.edit_original_response(content=generated_url)
 
 
-async def setup(bot):
+async def setup(bot: FlandersBOT) -> None:
     await bot.add_cog(Simpsons(bot))
