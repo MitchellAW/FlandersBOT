@@ -39,7 +39,7 @@ class Simpsons(TVShowCog):
 
         # Check frames are returned
         if len(frames) > 0:
-            steamed_ham = random.choice(frames)
+            steamed_ham = random.choice(frames)  # noqa: S311 - Not cryptographic
             screencap = await self.frinkiac.get_screencap(steamed_hams_key, steamed_ham.timestamp)
 
             # Ensure valid screencap
