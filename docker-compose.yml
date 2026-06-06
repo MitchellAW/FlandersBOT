@@ -26,6 +26,7 @@ services:
       - .env
     environment:
       - POSTGRES_HOST=flandersdb
+      - LOG_LEVEL=INFO
     restart: on-failure
 
 volumes:

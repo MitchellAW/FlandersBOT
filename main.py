@@ -10,18 +10,18 @@ import discord
 from flanders.bot import FlandersBOT
 from flanders.settings.config import FlandersConfig
 
-# Use default logging configuration
-discord.utils.setup_logging()
 log = logging.getLogger(__name__)
 
 
 async def run_bot() -> None:
+    # Load config from .env
+    config = FlandersConfig()
+
+    # Use default logging configuration
+    discord.utils.setup_logging(level=config.log_level_int)
 
     # Requires members intents for leaderboard username display
     intents = discord.Intents.default()
-
-    # Load config from .env
-    config = FlandersConfig()
 
     # Initialise bot with db pool
     try:

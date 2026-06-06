@@ -1,3 +1,6 @@
+import logging
+from typing import Literal
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -9,6 +12,7 @@ class FlandersConfig(BaseSettings, frozen=True):
     bot_token: str
     owner_id: int
     debug_mode: bool = True
+    log_level: Literal["DEBUG", "INFO", "WARNING", "WARN", "ERROR", "CRITICAL", "FATAL"] = "INFO"
 
     # Database configuration
     postgres_host: str
@@ -23,3 +27,8 @@ class FlandersConfig(BaseSettings, frozen=True):
             f"postgres://{self.postgres_user}:{self.postgres_password}"
             f"@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
         )
+
+    @property
+    def log_level_int(self) -> int:
+        levels = logging.getLevelNamesMapping()
+        return levels.get(self.log_level, 20)
