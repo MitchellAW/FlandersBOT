@@ -36,7 +36,9 @@ class GenerateButton(discord.ui.Button):
         )
 
         summary = f"Sorry neighborino, I can't share {self.content_type}s here."
-        if interaction.channel is not None and isinstance(interaction.channel, discord.TextChannel):
+        if interaction.channel is not None and isinstance(
+            interaction.channel, (discord.TextChannel, discord.Thread, discord.DMChannel)
+        ):
             await interaction.channel.send(view=content_view, allowed_mentions=discord.AllowedMentions.none())
             summary = f"Generated {self.content_type}."
 
