@@ -1,7 +1,6 @@
 import asyncio
 import datetime
 import logging
-import os
 import signal
 
 import aiofiles
@@ -14,6 +13,17 @@ from flanders.settings.config import FlandersConfig
 
 log = logging.getLogger(__name__)
 
+STARTUP_EXTENSIONS = [
+    "flanders.cogs.events",
+    "flanders.cogs.futurama",
+    "flanders.cogs.general",
+    "flanders.cogs.owner",
+    "flanders.cogs.rickandmorty",
+    "flanders.cogs.simpsons",
+    "flanders.cogs.stats",
+    "flanders.cogs.trivia",
+]
+
 
 class FlandersBOT(commands.AutoShardedBot):
     def __init__(
@@ -22,7 +32,7 @@ class FlandersBOT(commands.AutoShardedBot):
         session: aiohttp.ClientSession,
         db: asyncpg.Pool,
         intents: discord.Intents,
-    ):
+    ) -> None:
         super().__init__(command_prefix=commands.when_mentioned, case_insensitive=True, intents=intents)
 
         self.config = config
@@ -37,7 +47,7 @@ class FlandersBOT(commands.AutoShardedBot):
         self.reminders = []
         self.uptime = datetime.datetime.now(datetime.UTC)
 
-    async def setup_hook(self):
+    async def setup_hook(self) -> None:
         # Handle sigterm from Docker
         self.loop.add_signal_handler(signal.SIGTERM, lambda: asyncio.create_task(self.close()))
 
@@ -45,22 +55,14 @@ class FlandersBOT(commands.AutoShardedBot):
         await self.init_db()
 
         # Load all bot extensions from cogs folder
-        for file in os.listdir("flanders/cogs"):
-            if file.endswith(".py") and not file.startswith("_"):
-                extension = file[:-3]
+        for extension in STARTUP_EXTENSIONS:
+            try:
+                await self.load_extension(extension)
 
-                try:
-                    await self.load_extension(f"flanders.cogs.{extension}")
+            except Exception:
+                log.exception("Failed to load extension")
 
-                except Exception as e:
-                    exc = f"{type(e).__name__}: {e}"
-                    log.error(f"Failed to load extension {extension}\n{exc}")
-
-    async def db_failure(self, error_msg: str) -> None:
-        log.error(f"Could not initialise the database. Closing...\n{error_msg}")
-        await self.close()
-
-    async def init_db(self):
+    async def init_db(self) -> None:
         log.info("Initialising database...")
 
         async with aiofiles.open("bot.sql") as schema_file:
@@ -68,18 +70,17 @@ class FlandersBOT(commands.AutoShardedBot):
 
         if self.db is not None:
             try:
-                async with self.db.acquire() as conn:
-                    async with conn.transaction():
-                        await conn.execute(schema)
+                async with self.db.acquire() as conn, conn.transaction():
+                    await conn.execute(schema)
                 log.info("Database initialised.")
 
-            except Exception as e:
-                await self.db_failure(f"{type(e).__name__}: {e}")
+            except Exception:
+                log.exception("Failed to acquire database")
 
         else:
-            await self.db_failure("DB pool was not created.")
+            log.error("DB pool was not created")
 
-    async def close(self):
+    async def close(self) -> None:
         # Close db connection
         if self.db is not None:
             await self.db.close()
