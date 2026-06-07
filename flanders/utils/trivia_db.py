@@ -177,7 +177,7 @@ class TriviaDB:
             if row[field] is not None
         ]
 
-    async def get_scoreboard(self, match_id: int) -> TriviaScoreboard | None:
+    async def get_scoreboard(self, match_id: int) -> TriviaScoreboard:
         query = """
             WITH match_answers AS (
                 SELECT a.user_id, a.is_correct, a.answer_time, a.round_id
@@ -206,7 +206,7 @@ class TriviaDB:
         """
         rows = await self.db.fetch(query, match_id)
         if not rows:
-            return None
+            return TriviaScoreboard()
 
         top_scorers = self.get_scoreboard_entries(rows, "correct", reverse=True)
         highest_accuracy = self.get_scoreboard_entries(rows, "accuracy", reverse=True)
