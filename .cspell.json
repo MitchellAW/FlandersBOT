@@ -1,7 +1,11 @@
 {
     "ignorePaths": [
         "**/.cspell.json",
-        "**/cspell.json"
+        "**/cspell.json",
+        ".gitignore",
+        ".dockerignore",
+        "pyproject.toml",
+        "**/scripts/*"
     ],
     "overrides": [
         {
@@ -110,6 +114,7 @@
                 "Rebash",
                 "Saxing",
                 "Sexaphone",
+                "Shary",
                 "Shiba",
                 "Shutup",
                 "skiiing",
