@@ -1,17 +1,20 @@
 from __future__ import annotations
 
+import logging
+from abc import abstractmethod
 from typing import TYPE_CHECKING
 
+import compuglobal
 import discord
 
-from flanders.components.caption_button import CustomiseCaptionButton, ToggleTimingButton
-from flanders.components.generate_button import GenerateComicButton, GenerateGifButton
-from flanders.components.search_dropdown import SearchResult, SearchResultDropdown, TimingDropdown, TimingOption
+from flanders.components.content_view import TVContentView
 
 if TYPE_CHECKING:
-    import compuglobal
+    from collections.abc import Generator
 
     from flanders.models import TVReferenceState
+
+log = logging.getLogger(__name__)
 
 
 class BuilderView(discord.ui.LayoutView):
@@ -123,3 +126,275 @@ class BuilderView(discord.ui.LayoutView):
         self.button_row.add_item(component)
 
         self.add_item(self.button_row)
+
+
+class CustomiseCaptionButton(discord.ui.Button):
+    def __init__(self, state: TVReferenceState) -> None:
+        self.state = state
+        emoji = "<:edit:1512642373597794344>"
+        super().__init__(emoji=emoji, style=discord.ButtonStyle.secondary)
+
+    async def callback(self, interaction: discord.Interaction) -> None:
+        if self.view is None:
+            msg = "Button must be added to a view before its callback can be invoked"
+            raise ValueError(msg)
+
+        subtitles = await self.state.get_subtitles()
+        duration = await self.state.get_total_duration()
+        modal = CustomiseCaptionModal(total_duration=duration, state=self.state, view=self.view, subtitles=subtitles)
+
+        try:
+            await interaction.response.send_modal(modal)
+
+        except Exception:
+            log.exception("Button could not send caption modal")
+
+
+class ToggleTimingButton(discord.ui.Button):
+    def __init__(self) -> None:
+        emoji = "<:advanced:1512642321621979246"
+        super().__init__(emoji=emoji, style=discord.ButtonStyle.secondary)
+
+    async def callback(self, interaction: discord.Interaction) -> None:
+        if self.view is None:
+            msg = "Button must be added to a view before its callback can be invoked"
+            raise ValueError(msg)
+
+        await interaction.response.defer(ephemeral=True)
+        self.view.toggle_timing_dropdown()
+        await interaction.edit_original_response(view=self.view)
+
+
+class GenerateButton(discord.ui.Button):
+    def __init__(self, label: str, style: discord.ButtonStyle, content_type: str, state: TVReferenceState) -> None:
+        self.state = state
+        self.content_type = content_type
+        super().__init__(label=label, style=style)
+
+    async def callback(self, interaction: discord.Interaction) -> None:
+        if self.view is None:
+            msg = "Button must be added to a view before its callback can be invoked"
+            raise ValueError(msg)
+
+        await interaction.response.defer(ephemeral=True)
+        self.view.show_summary(summary=f"Generating {self.content_type}...", component=self)
+        await interaction.edit_original_response(view=self.view)
+
+        # Cache screencap
+        screencap = await self.state.get_screencap()
+        await self.state.cache_screencap()
+
+        content_url = await self.get_content_url()
+        content_view = TVContentView(
+            content_url=content_url,
+            episode_title=screencap.episode.title,
+            episode_url=f"{self.state.api.BASE_URL}/episode/{screencap.frame.key}/{screencap.frame.timestamp}",
+            episode_details=f"{screencap.frame.key} - {screencap.get_real_timestamp()}",
+            author=interaction.user.mention,
+        )
+
+        summary = (
+            "Sorry neighborino, I'm noodly-not allowed to talk here.\n"
+            "But ding-dong-diddily don't worry, you can check it out with the button below!"
+        )
+
+        try:
+            if interaction.channel is not None and isinstance(
+                interaction.channel,
+                (discord.TextChannel, discord.Thread, discord.DMChannel),
+            ):
+                await interaction.channel.send(view=content_view, allowed_mentions=discord.AllowedMentions.none())
+                summary = f"Generated {self.content_type}."
+
+        except discord.Forbidden:
+            try:
+                await interaction.followup.send(view=content_view, allowed_mentions=discord.AllowedMentions.none())
+                summary = f"Generated {self.content_type}."
+            except discord.Forbidden:
+                pass
+
+        self.view.show_summary(summary=summary, content_url=content_url, component=self)
+        await interaction.edit_original_response(view=self.view)
+
+    @abstractmethod
+    async def get_content_url(self) -> str:
+        pass
+
+
+class GenerateComicButton(GenerateButton):
+    def __init__(self, state: TVReferenceState) -> None:
+        super().__init__(label="Send Comic", style=discord.ButtonStyle.secondary, content_type="comic", state=state)
+
+    async def get_content_url(self) -> str:
+        return await self.state.get_comic_strip_url()
+
+
+class GenerateGifButton(GenerateButton):
+    def __init__(self, state: TVReferenceState) -> None:
+        super().__init__(label="Send Gif", style=discord.ButtonStyle.primary, content_type="gif", state=state)
+
+    async def get_content_url(self) -> str:
+        return await self.state.get_gif_url()
+
+
+class SearchResult(discord.SelectOption):
+    def __init__(self, frame: compuglobal.Frame, index: int, state: TVReferenceState) -> None:
+        self.frame = frame
+        summary = state.api_cache.get(frame.key)
+        title = summary.title if summary is not None else "Unknown Title"
+        super().__init__(label=f"{index}. {title}", description=f"{frame.key} - {frame.get_real_timestamp()}")
+
+
+class SearchResultDropdown(discord.ui.Select):
+    def __init__(self, options: list[SearchResult], state: TVReferenceState) -> None:
+        self.search_options = options
+        self.state = state
+        super().__init__(placeholder="Choose the best match...", min_values=1, max_values=1, options=list(options))
+
+    async def callback(self, interaction: discord.Interaction) -> None:
+        if self.view is None:
+            msg = "Dropdown must be added to a view before its callback can be invoked"
+            raise ValueError(msg)
+
+        await interaction.response.defer(ephemeral=True)
+        chosen_frame = self.search_options[0].frame
+        for search_option, option in zip(self.search_options, self.options, strict=True):
+            if option.value == self.values[0]:
+                chosen_frame = search_option.frame
+                option.default = True
+            else:
+                option.default = False
+
+        # Update selected frame state
+        self.state.set_frame(chosen_frame.key, chosen_frame.timestamp)
+        self.view.update_image(await self.state.get_comic_strip_url())
+        await self.view.update_timestamp_dropdown()
+        await interaction.edit_original_response(view=self.view)
+
+
+class TimingOption(discord.SelectOption):
+    def __init__(self, subtitle: compuglobal.Subtitle) -> None:
+        self.subtitle = subtitle
+        self.MAX_CHARS = 100
+
+        real_timestamp = compuglobal.Timestamp.get_real_timestamp(subtitle.representative_timestamp)
+        description = self.shorten_text(real_timestamp)
+        label = self.shorten_text(subtitle.content)
+        super().__init__(label=label, description=description)
+
+    def shorten_text(self, text: str) -> str:
+        return f"{text[: self.MAX_CHARS - 3]}..." if len(text) >= self.MAX_CHARS else text[: self.MAX_CHARS]
+
+
+class TimingDropdown(discord.ui.Select):
+    def __init__(self, options: list[TimingOption], state: TVReferenceState) -> None:
+        self.state = state
+
+        options = self.shorten_options(options)
+        self.search_options = options
+
+        super().__init__(placeholder="Choose the best match...", min_values=1, max_values=1, options=list(options))
+
+    # Find subtitle matching selected timestamp, and return items in a radius either side of it (default: 3)
+    def shorten_options(self, options: list[TimingOption], radius: int = 4) -> list[TimingOption]:
+        chosen_index = next(
+            i
+            for i in range(len(options))
+            if options[i].subtitle.start_timestamp <= self.state.frame_timestamp <= options[i].subtitle.end_timestamp
+        )
+
+        size = radius * 2 + 1
+        start = max(0, min(chosen_index - radius, len(options) - size))
+
+        return options[start : start + size]
+
+    async def callback(self, interaction: discord.Interaction) -> None:
+        if self.view is None:
+            msg = "Dropdown must be added to a view before its callback can be invoked"
+            raise ValueError(msg)
+
+        await interaction.response.defer(ephemeral=True)
+        chosen_subtitle = self.search_options[0].subtitle
+        for search_option, option in zip(self.search_options, self.options, strict=True):
+            if option.value == self.values[0]:
+                chosen_subtitle = search_option.subtitle
+                option.default = True
+            else:
+                option.default = False
+
+        # Update selected frame state
+        self.state.set_frame(chosen_subtitle.key, timestamp=chosen_subtitle.representative_timestamp)
+        self.view.update_image(await self.state.get_comic_strip_url())
+        await interaction.edit_original_response(view=self.view)
+
+
+class CustomiseCaptionModal(discord.ui.Modal, title="Customise caption:"):
+    def __init__(
+        self,
+        total_duration: int,
+        state: TVReferenceState,
+        view: BuilderView,
+        subtitles: list[compuglobal.Subtitle],
+    ) -> None:
+        super().__init__()
+        self.state = state
+        self.view = view
+
+        labels = ["first", "second", "third", "fourth", "fifth"]
+
+        for i, subtitle in enumerate(subtitles):
+            duration = subtitle.end_timestamp - subtitle.start_timestamp
+            seconds = duration / 1000
+            custom_caption = discord.ui.TextInput(
+                label=f"Customise {labels[i]} caption ({seconds:.1f} sec):",
+                default=subtitle.content,
+                style=discord.TextStyle.short,
+                placeholder="Enter your caption...",
+                required=False,
+                max_length=150,
+            )
+            self.add_item(custom_caption)
+
+        self.merge_caption_checkbox = discord.ui.Checkbox(default=False)
+        merge_caption = discord.ui.Label(
+            text=f"Combine above captions ({total_duration / 1000:.1f} sec)",
+            component=self.merge_caption_checkbox,
+        )
+        self.add_item(merge_caption)
+
+    def get_captions(self) -> Generator[str]:
+        for child in self.children:
+            if isinstance(child, discord.ui.TextInput):
+                yield child.value
+
+    async def get_subtitles(self) -> list[compuglobal.Subtitle]:
+        screencap = await self.state.get_screencap()
+        return [
+            subtitle.model_copy(update={"content": new_content})
+            for subtitle, new_content in zip(screencap.subtitles, self.get_captions(), strict=True)
+        ]
+
+    async def get_merged_subtitles(self) -> list[compuglobal.Subtitle]:
+        subtitles = await self.get_subtitles()
+
+        content = " ".join(subtitle.content for subtitle in subtitles)
+        start_timestamp = min(subtitle.start_timestamp for subtitle in subtitles)
+        end_timestamp = max(subtitle.end_timestamp for subtitle in subtitles)
+
+        return [
+            subtitle.model_copy(
+                update={"content": content, "start_timestamp": start_timestamp, "end_timestamp": end_timestamp},
+            )
+            for subtitle in subtitles
+        ]
+
+    async def on_submit(self, interaction: discord.Interaction) -> None:
+        await interaction.response.defer(ephemeral=True)
+
+        self.state.custom_subtitles = (
+            await self.get_merged_subtitles() if self.merge_caption_checkbox.value else await self.get_subtitles()
+        )
+
+        # Update image/comic preview
+        self.view.update_image(await self.state.get_comic_strip_url())
+        await interaction.edit_original_response(view=self.view)
