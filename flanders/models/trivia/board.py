@@ -3,12 +3,18 @@ from enum import StrEnum
 
 
 @dataclass
+class TriviaScoreboardEntry:
+    user_id: int
+    value: int | float
+
+
+@dataclass
 class TriviaScoreboard:
     participant_count: int
     question_count: int
-    top_scorers: list[tuple[str, int]]
-    highest_accuracy: list[tuple[str, float]]
-    fastest_answers: list[tuple[str, int]]
+    top_scorers: list[TriviaScoreboardEntry]
+    highest_accuracy: list[TriviaScoreboardEntry]
+    fastest_answers: list[TriviaScoreboardEntry]
 
 
 class TriviaLeaderboardType(StrEnum):

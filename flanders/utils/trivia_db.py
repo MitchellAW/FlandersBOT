@@ -1,6 +1,6 @@
 import asyncpg
 
-from flanders.models import TriviaAnswer, TriviaCategory, TriviaLeaderboardType, TriviaScoreboard
+from flanders.models import TriviaAnswer, TriviaCategory, TriviaLeaderboardType, TriviaScoreboard, TriviaScoreboardEntry
 
 LEADERBOARD_SORT_ORDERS: dict[TriviaLeaderboardType, str] = {
     TriviaLeaderboardType.FASTEST_ANSWER: "ASC",
@@ -146,10 +146,17 @@ class TriviaDB:
         row = await self.db.fetchrow(query, user_id)
         return dict(row) if row else None
 
+    def get_scoreboard_entries(self, rows: list, field: str, reverse: bool = True) -> list[TriviaScoreboardEntry]:  # noqa: FBT001, FBT002
+        return [
+            TriviaScoreboardEntry(row["user_id"], row[field])
+            for row in sorted(rows, key=lambda row: row[field], reverse=reverse)
+            if row[field] is not None
+        ]
+
     async def get_scoreboard(self, match_id: int) -> TriviaScoreboard | None:
         query = """
             WITH match_answers AS (
-                SELECT a.user_id, a.is_correct, a.answer_time
+                SELECT a.user_id, a.is_correct, a.answer_time, a.round_id
                 FROM answers a
                 INNER JOIN rounds r ON a.round_id = r.round_id
                 WHERE r.match_id = $1
@@ -166,32 +173,24 @@ class TriviaDB:
             )
             SELECT
                 (SELECT COUNT(DISTINCT user_id) FROM match_answers) AS participant_count,
-                (SELECT COUNT(DISTINCT round_id) FROM rounds
-                    WHERE match_id = $1 AND round_id IN (
-                        SELECT DISTINCT round_id FROM answers
-                    )
-                ) AS question_count,
+                (SELECT COUNT(DISTINCT round_id) FROM match_answers) AS question_count,
                 user_id,
                 correct,
                 accuracy,
                 fastest_time
             FROM player_stats
-            ORDER BY correct DESC, accuracy DESC, fastest_time ASC
         """
         rows = await self.db.fetch(query, match_id)
         if not rows:
             return None
 
+        top_scorers = self.get_scoreboard_entries(rows, "correct", reverse=True)
+        highest_accuracy = self.get_scoreboard_entries(rows, "accuracy", reverse=True)
+        fastest_answers = self.get_scoreboard_entries(rows, "fastest_time", reverse=False)
         return TriviaScoreboard(
             participant_count=rows[0]["participant_count"],
             question_count=rows[0]["question_count"],
-            top_scorers=[(r["user_id"], r["correct"]) for r in sorted(rows, key=lambda r: r["correct"], reverse=True)],
-            highest_accuracy=[
-                (r["user_id"], r["accuracy"]) for r in sorted(rows, key=lambda r: r["accuracy"], reverse=True)
-            ],
-            fastest_answers=[
-                (r["user_id"], r["fastest_time"])
-                for r in sorted(rows, key=lambda r: r["fastest_time"])
-                if r["fastest_time"] is not None
-            ],
+            top_scorers=top_scorers,
+            highest_accuracy=highest_accuracy,
+            fastest_answers=fastest_answers,
         )
