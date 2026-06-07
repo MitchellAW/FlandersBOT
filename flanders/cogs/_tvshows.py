@@ -24,11 +24,6 @@ class TVShowCog(commands.Cog):
         episodes: list[compuglobal.EpisodeSummary] = await self.api.navigator()
         return {episode.key: episode for episode in episodes}
 
-    # Format error to not embed links on page status error
-    @staticmethod
-    def format_error(error: Exception) -> str:
-        return str(error).replace("http", "<http").replace(".com/", ".com/>")
-
     @staticmethod
     def get_unique_results(search_results: list[compuglobal.FrameResult]) -> list[compuglobal.FrameResult]:
         timestamp_diff_required = 50000
