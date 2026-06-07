@@ -1,12 +1,12 @@
 import discord
 
-from flanders.models import TriviaLeaderboardType
+from flanders.models import TriviaLeaderboardEntry, TriviaLeaderboardType
 
 
 class TriviaLeaderboardView(discord.ui.LayoutView):
     def __init__(
         self,
-        leaderboard: dict[TriviaLeaderboardType, list[tuple[str, int]]],
+        leaderboard: dict[TriviaLeaderboardType, list[TriviaLeaderboardEntry]],
         thumbnail_url: str | None,
         footer: str,
     ) -> None:
@@ -30,18 +30,18 @@ class TriviaLeaderboardView(discord.ui.LayoutView):
         container = discord.ui.Container()
 
         stats = {
-            TriviaLeaderboardType.SCORE: ":trophy: High Scores",
-            TriviaLeaderboardType.WINS: ":first_place: Wins",
-            TriviaLeaderboardType.CORRECT_ANSWERS: ":white_check_mark:  Correct Answers",
-            TriviaLeaderboardType.FASTEST_ANSWER: ":point_up: Fastest Answers",
-            TriviaLeaderboardType.LONGEST_STREAK: ":four_leaf_clover: Longest Streak",
+            TriviaLeaderboardType.SCORE: "🏆 High Scores",
+            TriviaLeaderboardType.WINS: "🥇 Wins",
+            TriviaLeaderboardType.CORRECT_ANSWERS: "✅  Correct Answers",
+            TriviaLeaderboardType.FASTEST_ANSWER: "☝️ Fastest Answers",
+            TriviaLeaderboardType.LONGEST_STREAK: "🍀 Longest Streak",
         }
         board = f"## {stats.get(category)}\n\n"
         scorers = self.leaderboard.get(category, [])
 
         board += "\n".join(
-            f"{i}. **{scorer}**: {score if isinstance(score, str) else f'{score:,}'}"
-            for i, (scorer, score) in enumerate(scorers)
+            f"{i}. **{entry.username}**: {entry.value if isinstance(entry.value, str) else f'{entry.value:,}'}"
+            for i, entry in enumerate(scorers)
         )
 
         category_content = discord.ui.TextDisplay(content=f"{board}\n\n-# {self.footer}")

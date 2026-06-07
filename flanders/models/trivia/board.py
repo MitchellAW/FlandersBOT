@@ -23,3 +23,9 @@ class TriviaLeaderboardType(StrEnum):
     CORRECT_ANSWERS = "correct_answers"
     FASTEST_ANSWER = "fastest_answer"
     LONGEST_STREAK = "longest_streak"
+
+
+@dataclass
+class TriviaLeaderboardEntry:
+    username: str
+    value: int | float

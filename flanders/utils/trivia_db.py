@@ -1,6 +1,13 @@
 import asyncpg
 
-from flanders.models import TriviaAnswer, TriviaCategory, TriviaLeaderboardType, TriviaScoreboard, TriviaScoreboardEntry
+from flanders.models import (
+    TriviaAnswer,
+    TriviaCategory,
+    TriviaLeaderboardEntry,
+    TriviaLeaderboardType,
+    TriviaScoreboard,
+    TriviaScoreboardEntry,
+)
 
 LEADERBOARD_SORT_ORDERS: dict[TriviaLeaderboardType, str] = {
     TriviaLeaderboardType.FASTEST_ANSWER: "ASC",
@@ -101,7 +108,7 @@ class TriviaDB:
         self,
         leaderboard_type: TriviaLeaderboardType,
         limit: int = 5,
-    ) -> list[tuple[str, int]]:
+    ) -> list[TriviaLeaderboardEntry]:
         order = LEADERBOARD_SORT_ORDERS.get(leaderboard_type, "DESC")
         column = LEADERBOARD_EXPRESSIONS.get(leaderboard_type, leaderboard_type)
 
@@ -112,7 +119,7 @@ class TriviaDB:
         """  # noqa: S608 - Only injecting columns and sorting methods
 
         results = await self.db.fetch(query, limit)
-        return [(result["username"], result["result"]) for result in results]
+        return [TriviaLeaderboardEntry(result["username"], result["result"]) for result in results]
 
     async def get_latest_match_details(self, guild_id: int) -> tuple[int, str] | None:
         query = """SELECT match_id, trivia_category FROM matches

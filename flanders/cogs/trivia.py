@@ -10,6 +10,7 @@ from flanders.bot import FlandersBOT
 from flanders.models import (
     FuturamaTrivia,
     SimpsonsTrivia,
+    TriviaLeaderboardEntry,
     TriviaLeaderboardType,
     TriviaMatch,
 )
@@ -199,7 +200,7 @@ class Trivia(commands.GroupCog, name="trivia", description="All commands related
         avatar = self.bot.user.avatar if self.bot.user is not None else None
         avatar_url = avatar.url if avatar is not None else None
 
-        scorers: dict[TriviaLeaderboardType, list[tuple[str, int]]] = {}
+        scorers: dict[TriviaLeaderboardType, list[TriviaLeaderboardEntry]] = {}
         if leader_count >= 1:
             for stat in stats:
                 scorers.update({stat: await self.trivia_db.get_leaderboard_results(stat, limit=10)})
