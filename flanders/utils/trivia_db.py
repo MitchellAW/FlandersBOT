@@ -7,6 +7,8 @@ from flanders.models import (
     TriviaLeaderboardType,
     TriviaScoreboard,
     TriviaScoreboardEntry,
+    TriviaUserStat,
+    TriviaUserStats,
 )
 
 LEADERBOARD_SORT_ORDERS: dict[TriviaLeaderboardType, str] = {
@@ -135,7 +137,7 @@ class TriviaDB:
 
         return match["match_id"], match["trivia_category"]
 
-    async def get_user_stats(self, user_id: int) -> dict[str, int] | None:
+    async def get_user_stats(self, user_id: int) -> TriviaUserStats | None:
         query = """
         SELECT
             score, (SELECT get_rank($1, 'score')) AS score_rank,
@@ -149,9 +151,24 @@ class TriviaDB:
         FROM leaderboard
         WHERE user_id = $1
         """
-
         row = await self.db.fetchrow(query, user_id)
-        return dict(row) if row else None
+        if row is None:
+            return None
+
+        fields = [
+            "score",
+            "wins",
+            "losses",
+            "correct_answers",
+            "incorrect_answers",
+            "fastest_answer",
+            "current_streak",
+            "longest_streak",
+        ]
+
+        return TriviaUserStats(
+            **{field: TriviaUserStat(rank=row[f"{field}_rank"], value=row[field]) for field in fields},
+        )
 
     def get_scoreboard_entries(self, rows: list, field: str, reverse: bool = True) -> list[TriviaScoreboardEntry]:  # noqa: FBT001, FBT002
         return [

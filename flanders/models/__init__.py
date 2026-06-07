@@ -11,6 +11,7 @@ from flanders.models.trivia.category import FuturamaTrivia, RickAndMortyTrivia, 
 from flanders.models.trivia.match import TriviaMatch
 from flanders.models.trivia.question import TriviaAnswer, TriviaQuestion
 from flanders.models.trivia.round import TriviaRound
+from flanders.models.trivia.user_stats import TriviaUserStat, TriviaUserStats
 
 __all__ = [
     "FuturamaTrivia",
@@ -26,4 +27,6 @@ __all__ = [
     "TriviaRound",
     "TriviaScoreboard",
     "TriviaScoreboardEntry",
+    "TriviaUserStat",
+    "TriviaUserStats",
 ]
