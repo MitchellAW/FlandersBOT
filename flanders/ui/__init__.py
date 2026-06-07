@@ -6,9 +6,9 @@ from flanders.ui.leaderboard_view import TriviaLeaderboardView
 from flanders.ui.privacy_view import TriviaPrivacyView
 from flanders.ui.scoreboard_view import TriviaScoreboardView
 from flanders.ui.trivia_view import (
-    TriviaUserStatsView,
     TriviaView,
 )
+from flanders.ui.user_stats_view import TriviaUserStatsView
 
 __all__ = [
     "BuilderView",
