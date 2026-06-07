@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 import compuglobal
 import discord
 
-from flanders.components.content_view import TVContentView
+from flanders.ui.content_view import TVContentView
 
 if TYPE_CHECKING:
     from collections.abc import Generator

@@ -7,18 +7,18 @@ from discord import app_commands
 from discord.ext import commands
 
 from flanders.bot import FlandersBOT
-from flanders.components import (
-    TriviaLeaderboardView,
-    TriviaPrivacyView,
-    TriviaScoreboardView,
-    TriviaUserStatsView,
-    TriviaView,
-)
 from flanders.models import (
     FuturamaTrivia,
     SimpsonsTrivia,
     TriviaLeaderboardType,
     TriviaMatch,
+)
+from flanders.ui import (
+    TriviaLeaderboardView,
+    TriviaPrivacyView,
+    TriviaScoreboardView,
+    TriviaUserStatsView,
+    TriviaView,
 )
 from flanders.utils import TriviaDB
 

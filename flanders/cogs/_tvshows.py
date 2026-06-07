@@ -3,8 +3,8 @@ import discord
 from discord.ext import commands
 
 from flanders.bot import FlandersBOT
-from flanders.components import BuilderView
 from flanders.models import TVReferenceState
+from flanders.ui import BuilderView
 
 
 class TVShowCog(commands.Cog):
