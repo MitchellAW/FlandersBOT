@@ -27,13 +27,19 @@ STARTUP_EXTENSIONS = [
 
 class FlandersCommandTree(discord.app_commands.CommandTree):
     async def on_error(self, interaction: discord.Interaction, error: discord.app_commands.AppCommandError) -> None:
-        if isinstance(error, discord.app_commands.CommandOnCooldown):
+        command = interaction.command
+        if command is None:
+            log.error("Ignoring exception in command tree", exc_info=error)
+
+        elif isinstance(error, discord.app_commands.CommandOnCooldown):
             await interaction.response.send_message(
                 content=f"⌛ Sorry, command on cooldown. Please slow diddly-ding-dong down. ({error.retry_after:.2f}s)",
                 ephemeral=True,
             )
+            log.warning("Command cooldown exceeded for %s", command.qualified_name)
+
         else:
-            log.error("Ignoring exception in command %s", interaction.command, exc_info=error)
+            log.error("Ignoring exception in command %s", command.qualified_name, exc_info=error)
 
 
 class FlandersBOT(commands.AutoShardedBot):
@@ -102,6 +108,7 @@ class FlandersBOT(commands.AutoShardedBot):
                 content=f"⌛ Sorry, command on cooldown. Please slow diddly-ding-dong down. ({error.retry_after:.2f}s)",
                 ephemeral=True,
             )
+            log.warning("Command cooldown exceeded for %s", ctx.command)
         else:
             log.error("Ignoring exception in command %s", ctx.command, exc_info=error)
 
