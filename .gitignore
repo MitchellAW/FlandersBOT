@@ -6,7 +6,5 @@ flanders/cogs/cache/
 venv/
 .venv/
 flanders/settings/config.json
-flanders/cogs/data/guildlist.csv
-node_modules/
-*.min.js
 backups/
+logs/
