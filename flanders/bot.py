@@ -25,6 +25,17 @@ STARTUP_EXTENSIONS = [
 ]
 
 
+class FlandersCommandTree(discord.app_commands.CommandTree):
+    async def on_error(self, interaction: discord.Interaction, error: discord.app_commands.AppCommandError) -> None:
+        if isinstance(error, discord.app_commands.CommandOnCooldown):
+            await interaction.response.send_message(
+                content=f"⌛ Sorry, command on cooldown. Please slow diddly-ding-dong down. ({error.retry_after:.2f}s)",
+                ephemeral=True,
+            )
+        else:
+            log.error("Ignoring exception in command %s", interaction.command, exc_info=error)
+
+
 class FlandersBOT(commands.AutoShardedBot):
     def __init__(
         self,
@@ -33,7 +44,12 @@ class FlandersBOT(commands.AutoShardedBot):
         db: asyncpg.Pool,
         intents: discord.Intents,
     ) -> None:
-        super().__init__(command_prefix=commands.when_mentioned, case_insensitive=True, intents=intents)
+        super().__init__(
+            command_prefix=commands.when_mentioned,
+            case_insensitive=True,
+            intents=intents,
+            tree_cls=FlandersCommandTree,
+        )
 
         self.config = config
         self.session = session
@@ -79,6 +95,15 @@ class FlandersBOT(commands.AutoShardedBot):
 
         else:
             log.error("DB pool was not created")
+
+    async def on_command_error(self, ctx: commands.Context, error: Exception) -> None:
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(
+                content=f"⌛ Sorry, command on cooldown. Please slow diddly-ding-dong down. ({error.retry_after:.2f}s)",
+                ephemeral=True,
+            )
+        else:
+            log.error("Ignoring exception in command %s", ctx.command, exc_info=error)
 
     async def close(self) -> None:
         # Close db connection
