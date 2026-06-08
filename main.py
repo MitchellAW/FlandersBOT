@@ -27,7 +27,7 @@ async def run_bot() -> None:
 
     # Setup a rotating log file handler with similar formatting
     rotation_handler = RotatingFileHandler(
-        filename="flanders.log",
+        filename=config.log_dir / "flanders.log",
         encoding="utf-8",
         maxBytes=32 * 1024 * 1024,  # 32 MiB
         backupCount=5,

@@ -1,6 +1,8 @@
 import logging
+from pathlib import Path
 from typing import Literal
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -13,6 +15,7 @@ class FlandersConfig(BaseSettings, frozen=True):
     owner_id: int
     debug_mode: bool = True
     log_level: Literal["DEBUG", "INFO", "WARNING", "WARN", "ERROR", "CRITICAL", "FATAL"] = "INFO"
+    log_dir: Path = Path("logs")
 
     # Database configuration
     postgres_host: str
@@ -32,3 +35,12 @@ class FlandersConfig(BaseSettings, frozen=True):
     def log_level_int(self) -> int:
         levels = logging.getLevelNamesMapping()
         return levels.get(self.log_level, 20)
+
+    @field_validator("log_dir", mode="after")
+    @classmethod
+    def create_log_dir(cls, v: Path) -> Path:
+        if v.exists() and not v.is_dir():
+            msg = f"Log path '{v}' exists but is not a directory"
+            raise ValueError(msg)
+        v.mkdir(parents=True, exist_ok=True)
+        return v
