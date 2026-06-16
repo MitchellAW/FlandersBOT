@@ -2,7 +2,6 @@
 import asyncio
 import logging
 import sys
-from logging.handlers import RotatingFileHandler
 
 import aiohttp
 import asyncpg
@@ -10,9 +9,9 @@ import discord
 
 from flanders.bot import FlandersBOT
 from flanders.settings.config import FlandersConfig
+from flanders.utils import setup_logging
 
 log = logging.getLogger(__name__)
-
 
 async def run_bot() -> None:
     # Load config from .env
@@ -25,20 +24,8 @@ async def run_bot() -> None:
     # Setup default discord.py logging
     discord.utils.setup_logging(level=config.log_level_int)
 
-    # Setup a rotating log file handler with similar formatting
-    rotation_handler = RotatingFileHandler(
-        filename=config.log_dir / "flanders.log",
-        encoding="utf-8",
-        maxBytes=32 * 1024 * 1024,  # 32 MiB
-        backupCount=5,
-    )
-    rotation_handler.setFormatter(
-        logging.Formatter(fmt="%(asctime)s %(levelname)-8s %(name)s %(message)s", datefmt="%Y-%m-%d %H:%M:%S"),
-    )
-
-    # Add rotating log file handler
-    root_logger = logging.getLogger()
-    root_logger.addHandler(rotation_handler)
+    # Setup logging with given config
+    setup_logging(config)
 
     # Requires members intents for leaderboard username display
     intents = discord.Intents.default()
