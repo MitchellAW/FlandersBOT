@@ -1,15 +1,21 @@
+from __future__ import annotations
+
 import asyncio
 import datetime
 import logging
 import signal
+from typing import TYPE_CHECKING
 
 import aiofiles
-import aiohttp
-import asyncpg
 import discord
 from discord.ext import commands
 
-from flanders.settings.config import FlandersConfig
+if TYPE_CHECKING:
+    import aiohttp
+    import asyncpg
+    from compuglobal import Screencap
+
+    from flanders.settings.config import FlandersConfig
 
 log = logging.getLogger(__name__)
 
@@ -65,7 +71,7 @@ class FlandersBOT(commands.AutoShardedBot):
         self.remove_command("help")
 
         # Default configuration with cache
-        self.cached_screencaps = {}
+        self.cached_screencaps: dict[int, tuple[Screencap, str]] = {}
         self.reminders = []
         self.uptime = datetime.datetime.now(datetime.UTC)
 
