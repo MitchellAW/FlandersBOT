@@ -124,16 +124,16 @@ class Stats(commands.Cog):
                 colour=discord.Colour(0x44981E),
                 url=screencap.episode.wiki_link,
             )
-            image_url = f"{api_url}/img/{screencap.frame.key}/{screencap.frame.timestamp}.jpg"
-            episode_url = f"{api_url}/episode/{screencap.frame.key}/{screencap.frame.timestamp}"
-            similar_url = f"{api_url}/similar/{screencap.frame.key}/{screencap.frame.timestamp}"
+            image_url = f"{api_url}/img/{screencap.key}/{screencap.timestamp}.jpg"
+            episode_url = f"{api_url}/episode/{screencap.key}/{screencap.timestamp}"
+            similar_url = f"{api_url}/similar/{screencap.key}/{screencap.timestamp}"
 
             links = f"[Browse Episode]({episode_url})\n[Find Similar]({similar_url})"
 
             # Add episode information
-            embed.add_field(name="Episode", value=screencap.frame.key, inline=True)
+            embed.add_field(name="Episode", value=screencap.key, inline=True)
             embed.add_field(name="Air Date", value=screencap.episode.original_air_date, inline=True)
-            embed.add_field(name="Timestamp", value=screencap.get_real_timestamp(), inline=True)
+            embed.add_field(name="Timestamp", value=screencap.timecode, inline=True)
             embed.add_field(name="Director(s)", value=screencap.episode.director)
             embed.add_field(name="Writer(s)", value=screencap.episode.writer)
             embed.add_field(name="More Links", value=links)

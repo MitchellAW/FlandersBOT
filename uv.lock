@@ -233,15 +233,15 @@ wheels = [
 
 [[package]]
 name = "compuglobal"
-version = "0.3.8"
+version = "0.4.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "pydantic" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c8/eb/39b991e0061d0867e4b3583bb682fe490d591509c9fc9a5bf04fb020b6a0/compuglobal-0.3.8.tar.gz", hash = "sha256:541cfc8337748bcc8ac6b24a8cc42ef19291d6f4d8099258137a13196b02d884", size = 17142, upload-time = "2026-06-05T04:17:29.467Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/55/c5/ffdf1fa18f64694f2be5415f6b9a73bf73720c261231977ba1cdae6839ea/compuglobal-0.4.1.tar.gz", hash = "sha256:1e74079b2c49bc4b9d66da0e93ae9e16b227f8bc7bbc23e2a6ba7010550cc570", size = 20627, upload-time = "2026-06-16T05:45:21.693Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/1d/1c/0507c8d27ea8557345f88b04b741df7582bddc5dbba4954073acd9628a4b/compuglobal-0.3.8-py3-none-any.whl", hash = "sha256:04d5dbc5dea4bd52f04329e4797031d59d0f59a0fb999fa55c88a0b75dd247d4", size = 22371, upload-time = "2026-06-05T04:17:30.346Z" },
+    { url = "https://files.pythonhosted.org/packages/e9/20/876aa1380e9c486255bce577c217e5a9c9899e78e706a3287723fea4aad2/compuglobal-0.4.1-py3-none-any.whl", hash = "sha256:7ab9a62616830f94a2dea8d9831723f26e55fe29b9cca6260b1907fcf12cbc75", size = 27035, upload-time = "2026-06-16T05:45:20.604Z" },
 ]
 
 [[package]]
@@ -287,7 +287,7 @@ requires-dist = [
     { name = "aiohttp", specifier = ">=3.14.0" },
     { name = "anyio", specifier = ">=4.13.0" },
     { name = "asyncpg", specifier = ">=0.31.0" },
-    { name = "compuglobal", specifier = ">=0.3.8" },
+    { name = "compuglobal", specifier = ">=0.4.1" },
     { name = "discord-py", specifier = ">=2.7.1" },
     { name = "pydantic", specifier = ">=2.13.4" },
     { name = "pydantic-settings", specifier = ">=2.14.1" },

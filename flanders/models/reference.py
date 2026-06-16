@@ -38,7 +38,7 @@ class TVReferenceState:
 
     async def populate(self) -> None:
         for frame in self.frames:
-            screencap = await self.api.get_screencap(frame.key, frame.timestamp)
+            screencap = await self.api.get_screencap(episode=frame.key, timestamp=frame.timestamp)
             self.screencaps.update({(frame.key, frame.timestamp): screencap})
 
             transcript = await self.api.get_transcript(frame.key, frame.timestamp)

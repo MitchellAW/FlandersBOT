@@ -4,13 +4,14 @@ import logging
 from abc import abstractmethod
 from typing import TYPE_CHECKING
 
-import compuglobal
 import discord
 
 from flanders.ui.content_view import TVContentView
 
 if TYPE_CHECKING:
     from collections.abc import Generator
+
+    import compuglobal
 
     from flanders.models import TVReferenceState
 
@@ -188,8 +189,8 @@ class GenerateButton(discord.ui.Button):
         content_view = TVContentView(
             content_url=content_url,
             episode_title=screencap.episode.title,
-            episode_url=f"{self.state.api.BASE_URL}/episode/{screencap.frame.key}/{screencap.frame.timestamp}",
-            episode_details=f"{screencap.frame.key} - {screencap.get_real_timestamp()}",
+            episode_url=f"{self.state.api.BASE_URL}/episode/{screencap.key}/{screencap.timestamp}",
+            episode_details=f"{screencap.key} - {screencap.timecode}",
             author=interaction.user.mention,
         )
 
@@ -242,7 +243,7 @@ class SearchResult(discord.SelectOption):
         self.frame = frame
         summary = state.api_cache.get(frame.key)
         title = summary.title if summary is not None else "Unknown Title"
-        super().__init__(label=f"{index}. {title}", description=f"{frame.key} - {frame.get_real_timestamp()}")
+        super().__init__(label=f"{index}. {title}", description=f"{frame.key} - {frame.timecode}")
 
 
 class SearchResultDropdown(discord.ui.Select):
@@ -277,8 +278,7 @@ class TimingOption(discord.SelectOption):
         self.subtitle = subtitle
         self.MAX_CHARS = 100
 
-        real_timestamp = compuglobal.Timestamp.get_real_timestamp(subtitle.representative_timestamp)
-        description = self.shorten_text(real_timestamp)
+        description = self.shorten_text(subtitle.timecode)
         label = self.shorten_text(subtitle.content)
         super().__init__(label=label, description=description)
 
@@ -343,8 +343,7 @@ class CustomiseCaptionModal(discord.ui.Modal, title="Customise caption:"):
         labels = ["first", "second", "third", "fourth", "fifth"]
 
         for i, subtitle in enumerate(subtitles):
-            duration = subtitle.end_timestamp - subtitle.start_timestamp
-            seconds = duration / 1000
+            seconds = subtitle.duration / 1000
             custom_caption = discord.ui.TextInput(
                 label=f"Customise {labels[i]} caption ({seconds:.1f} sec):",
                 default=subtitle.content,
