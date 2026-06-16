@@ -36,19 +36,12 @@ class TVReferenceState:
         if self.channel is not None:
             self.bot.cached_screencaps.update({self.channel: (screencap, self.api.BASE_URL)})
 
-    async def populate(self) -> None:
-        for frame in self.frames:
-            screencap = await self.api.get_screencap(episode=frame.key, timestamp=frame.timestamp)
-            self.screencaps.update({(frame.key, frame.timestamp): screencap})
-
-            transcript = await self.api.get_transcript(frame.key, frame.timestamp)
-            self.transcripts.update({(frame.key, frame.timestamp): transcript})
-
     async def get_screencap(self) -> compuglobal.Screencap:
         screencap = self.screencaps.get((self.frame_key, self.frame_timestamp))
 
         if screencap is None:
             screencap = await self.api.get_screencap(episode=self.frame_key, timestamp=self.frame_timestamp)
+            self.screencaps.update({(screencap.key, screencap.timestamp): screencap})
 
         return screencap
 
@@ -57,6 +50,7 @@ class TVReferenceState:
 
         if transcript is None:
             transcript = await self.api.get_transcript(episode=self.frame_key, timestamp=self.frame_timestamp)
+            self.transcripts.update({(self.frame_key, self.frame_timestamp): transcript})
 
         return transcript
 

@@ -57,15 +57,11 @@ class TVShowCog(commands.Cog):
             )
 
             # Create the view containing our dropdown and preview
-            top_result = unique_results[0]
-            transcript = await self.api.get_transcript(episode=top_result.key, timestamp=top_result.timestamp)
+            transcript = await state.get_transcript()
             gif_builder_view = BuilderView(unique_results, transcript, state, await state.get_comic_strip_url())
 
             # Sending a message containing our gif builder view
             await interaction.edit_original_response(content=None, view=gif_builder_view)
-
-            # Pre-cache desired screencaps from search results
-            await state.populate()
 
         except compuglobal.NoSearchResultsFoundError:
             await interaction.edit_original_response(content="⚠️ No search results found.")
