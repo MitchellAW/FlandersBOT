@@ -27,12 +27,7 @@ class TriviaPrivacyView(discord.ui.LayoutView):
 
     async def toggle_privacy_setting(self, user_id: int) -> None:
         self.change_count += 1
-
-        if self.privacy_setting == 1:
-            self.privacy_setting = 0
-
-        else:
-            self.privacy_setting = 1
+        self.privacy_setting = 0 if self.privacy_setting else 1
 
         await self.trivia_db.set_user_privacy_setting(user_id=user_id, privacy_setting=self.privacy_setting)
 
