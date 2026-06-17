@@ -21,13 +21,11 @@ log = logging.getLogger(__name__)
 
 STARTUP_EXTENSIONS = [
     "flanders.cogs.events",
-    "flanders.cogs.futurama",
     "flanders.cogs.general",
     "flanders.cogs.owner",
-    "flanders.cogs.rickandmorty",
-    "flanders.cogs.simpsons",
     "flanders.cogs.stats",
     "flanders.cogs.trivia",
+    "flanders.cogs._tvshows",
 ]
 
 
