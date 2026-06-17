@@ -73,6 +73,16 @@ CREATE TABLE IF NOT EXISTS command_history (
     failed boolean NOT NULL
 );
 
+-- Create table for
+CREATE TABLE IF NOT EXISTS user_preferences (
+	user_id bigint,
+	tv_show text CHECK (tv_show IN ('The Simpsons', 'Futurama', 'Rick and Morty', 'West Wing')),
+	overlay_preferences jsonb NOT NULL,
+	search_preferences jsonb NOT NULL,
+	advanced_mode boolean DEFAULT false NOT NULL,
+	PRIMARY KEY (user_id, tv_show)
+);
+
 -- Check if user has voted in the last 24 hours
 CREATE OR REPLACE FUNCTION has_voted_today(p_user_id bigint)
 RETURNS boolean AS $$
