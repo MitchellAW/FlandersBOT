@@ -11,7 +11,7 @@ from flanders.models import TVReferenceState
 from flanders.ui import BuilderView
 
 
-class TVShowCog(commands.Cog):
+class TV(commands.Cog):
     def __init__(self, bot: FlandersBOT) -> None:
         self.bot = bot
         self.api_cache: dict[str, dict[str, compuglobal.EpisodeSummary]] = {}
@@ -135,4 +135,4 @@ class TVShowCog(commands.Cog):
 
 
 async def setup(bot: FlandersBOT) -> None:
-    await bot.add_cog(TVShowCog(bot))
+    await bot.add_cog(TV(bot))

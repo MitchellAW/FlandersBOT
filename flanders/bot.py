@@ -25,7 +25,7 @@ STARTUP_EXTENSIONS = [
     "flanders.cogs.owner",
     "flanders.cogs.stats",
     "flanders.cogs.trivia",
-    "flanders.cogs._tvshows",
+    "flanders.cogs.tv",
 ]
 
 
