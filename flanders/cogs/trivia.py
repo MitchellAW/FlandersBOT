@@ -1,5 +1,4 @@
 import asyncio
-from datetime import UTC, datetime, timedelta
 from typing import Literal
 
 import discord
@@ -92,8 +91,7 @@ class Trivia(commands.GroupCog, name="trivia", description="All commands related
             if trivia_round is None:
                 return
 
-            end_time = datetime.now(tz=UTC) + timedelta(seconds=trivia_category.TIMER_DURATION)
-            question_view = TriviaView(trivia_category=trivia_category, trivia_match=trivia_match, end_time=end_time)
+            question_view = TriviaView(trivia_match=trivia_match)
             await interaction.edit_original_response(
                 content=None,
                 view=question_view,
@@ -118,7 +116,7 @@ class Trivia(commands.GroupCog, name="trivia", description="All commands related
             for answer in answers:
                 await self.trivia_db.insert_answer(round_id, answer)
 
-            answer_view = TriviaView(trivia_category=trivia_category, trivia_match=trivia_match, end_time=end_time)
+            answer_view = TriviaView(trivia_match=trivia_match)
             await interaction.edit_original_response(
                 content=None,
                 view=answer_view,
