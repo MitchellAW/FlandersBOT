@@ -144,24 +144,33 @@ class TV(commands.Cog):
         season_max = search_prefs.season_max
         using_filters = season_min is not None or season_max is not None
 
+        search_header = "### 🔍 Search Progress\n"
+        search_failed = "### ⚠️ Search Failed\n"
+
+        # Show search progress
+        progress = f'- Searching for "{search}"'
+        progress += f" in seasons {season_min}-{season_max}...\n" if using_filters else "...\n"
+
         # Try first with season filters
+        await interaction.edit_original_response(content=f"{search_header}{progress}")
         try:
             return await api.search(search, season_minimum=season_min, season_maximum=season_max)
         except compuglobal.NoSearchResultsFoundError:
             # No filters given so exit
             if not using_filters:
-                await interaction.edit_original_response(content="⚠️ No search results found.")
+                progress += "- No search results found."
+                await interaction.edit_original_response(content=f"{search_failed}{progress}")
                 return None
 
-            await interaction.edit_original_response(
-                content=f"⚠️ No search results found with these filters (Seasons {season_min}-{season_max}).",
-            )
+            progress += f"- No search results found in seasons {season_min}-{season_max}. Expanding search..."
+            await interaction.edit_original_response(content=f"{search_header}{progress}")
 
         # Retry again without season filters
         try:
             return await api.search(search)
         except compuglobal.NoSearchResultsFoundError:
-            await interaction.edit_original_response(content="⚠️ No search results found.")
+            progress += "\n- No search results found across all seasons."
+            await interaction.edit_original_response(content=f"{search_failed}{progress}")
             return None
 
     async def build_gif(self, interaction: discord.Interaction, api: AsyncCompuGlobalAPI, search: str) -> None:
@@ -176,9 +185,6 @@ class TV(commands.Cog):
             return
 
         unique_results = self.get_unique_results(search_results)
-
-        channel_id = interaction.channel.id if interaction.channel is not None else None
-
         cache = await self.get_cache(api)
 
         state = TVReferenceState(
@@ -187,7 +193,7 @@ class TV(commands.Cog):
             api=api,
             api_cache=cache,
             user_prefs=user_prefs,
-            channel=channel_id,
+            channel=interaction.channel_id,
         )
 
         # Create the view containing our dropdown and preview
