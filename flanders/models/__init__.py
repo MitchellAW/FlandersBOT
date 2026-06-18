@@ -1,5 +1,6 @@
 """All models used by FlandersBOT."""
 
+from flanders.models.preferences import AVAILABLE_COLORS, UserPreferences, UserPreferenceState, UserSearchPreferences
 from flanders.models.reference import TVReferenceState
 from flanders.models.trivia.board import (
     TriviaLeaderboardEntry,
@@ -14,6 +15,7 @@ from flanders.models.trivia.round import TriviaRound
 from flanders.models.trivia.user_stats import TriviaUserStat, TriviaUserStats
 
 __all__ = [
+    "AVAILABLE_COLORS",
     "FuturamaTrivia",
     "RickAndMortyTrivia",
     "SimpsonsTrivia",
@@ -29,4 +31,7 @@ __all__ = [
     "TriviaScoreboardEntry",
     "TriviaUserStat",
     "TriviaUserStats",
+    "UserPreferenceState",
+    "UserPreferences",
+    "UserSearchPreferences",
 ]
