@@ -1,4 +1,5 @@
 import random
+from typing import Literal
 
 import compuglobal
 import discord
@@ -7,14 +8,16 @@ from discord import app_commands
 from discord.ext import commands
 
 from flanders.bot import FlandersBOT
-from flanders.models import TVReferenceState
-from flanders.ui import BuilderView
+from flanders.models import TVReferenceState, UserPreferenceState, UserSearchPreferences
+from flanders.ui import BuilderView, PreferencesView
+from flanders.utils import PreferencesDB
 
 
 class TV(commands.Cog):
     def __init__(self, bot: FlandersBOT) -> None:
         self.bot = bot
         self.api_cache: dict[str, dict[str, compuglobal.EpisodeSummary]] = {}
+        self.prefs_db = PreferencesDB(db=self.bot.db)
 
     # Load the api cache for this show
     async def cog_load(self) -> None:
@@ -90,6 +93,30 @@ class TV(commands.Cog):
         down_message = "Sorry, <https://masterofallscience.com> is down at the moment."
         await interaction.response.send_message(down_message, ephemeral=True)
 
+    @app_commands.command(name="preferences", description="Update your default subtitle preferences for a TV show.")
+    @app_commands.describe(show="The TV show to set the subtitle preferences for.")
+    @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
+    async def update_preferences(
+        self,
+        interaction: discord.Interaction,
+        show: Literal["The Simpsons", "Futurama"],
+    ) -> None:
+        await interaction.response.defer(ephemeral=True)
+        apis = {"The Simpsons": Frinkiac(session=self.bot.session), "Futurama": Morbotron(session=self.bot.session)}
+        api = apis.get(show, Frinkiac(session=self.bot.session))
+        cache = await self.get_cache(api)
+
+        prefs = await self.prefs_db.get_user_preferences(user_id=interaction.user.id, tv_show=show, api=api)
+
+        screencap = await api.get_random_screencap()
+        state = UserPreferenceState(api=api, cache=cache, screencap=screencap, prefs_db=self.prefs_db, prefs=prefs)
+
+        overlay_format = prefs.overlay_preferences if prefs is not None else api.config.default_format
+        image_url = await api.get_comic_panel_url(screencap, overlay_format=overlay_format)
+
+        view = PreferencesView(state=state, image_url=image_url)
+        await interaction.edit_original_response(view=view)
+
     def get_unique_results(self, search_results: list[compuglobal.FrameResult]) -> list[compuglobal.FrameResult]:
         timestamp_diff_required = 50000
         unique = {}
@@ -105,33 +132,70 @@ class TV(commands.Cog):
 
         return unique_results
 
-    async def build_gif(self, interaction: discord.Interaction, api: AsyncCompuGlobalAPI, search: str) -> None:
-        await interaction.response.defer(ephemeral=True)
+    async def search(
+        self,
+        interaction: discord.Interaction,
+        api: AsyncCompuGlobalAPI,
+        search: str,
+        search_prefs: UserSearchPreferences,
+    ) -> list[compuglobal.FrameResult] | None:
+
+        season_min = search_prefs.season_min
+        season_max = search_prefs.season_max
+        using_filters = season_min is not None or season_max is not None
+
+        # Try first with season filters
         try:
-            search_results = await api.search(search)
-            unique_results = self.get_unique_results(search_results)
+            return await api.search(search, season_minimum=season_min, season_maximum=season_max)
+        except compuglobal.NoSearchResultsFoundError:
+            # No filters given so exit
+            if not using_filters:
+                await interaction.edit_original_response(content="⚠️ No search results found.")
+                return None
 
-            channel_id = interaction.channel.id if interaction.channel is not None else None
-
-            cache = await self.get_cache(api)
-
-            state = TVReferenceState(
-                bot=self.bot,
-                frames=unique_results[:25],
-                api=api,
-                api_cache=cache,
-                channel=channel_id,
+            await interaction.edit_original_response(
+                content=f"⚠️ No search results found with these filters (Seasons {season_min}-{season_max}).",
             )
 
-            # Create the view containing our dropdown and preview
-            transcript = await state.get_transcript()
-            gif_builder_view = BuilderView(unique_results, transcript, state, await state.get_comic_strip_url())
-
-            # Sending a message containing our gif builder view
-            await interaction.edit_original_response(content=None, view=gif_builder_view)
-
+        # Retry again without season filters
+        try:
+            return await api.search(search)
         except compuglobal.NoSearchResultsFoundError:
             await interaction.edit_original_response(content="⚠️ No search results found.")
+            return None
+
+    async def build_gif(self, interaction: discord.Interaction, api: AsyncCompuGlobalAPI, search: str) -> None:
+        await interaction.response.defer(ephemeral=True)
+
+        show = "The Simpsons" if api.TITLE == "Simpsons" else api.TITLE
+
+        user_prefs = await self.prefs_db.get_user_preferences(user_id=interaction.user.id, tv_show=show, api=api)
+
+        search_results = await self.search(interaction, api, search, search_prefs=user_prefs.search_preferences)
+        if search_results is None:
+            return
+
+        unique_results = self.get_unique_results(search_results)
+
+        channel_id = interaction.channel.id if interaction.channel is not None else None
+
+        cache = await self.get_cache(api)
+
+        state = TVReferenceState(
+            bot=self.bot,
+            frames=unique_results[:25],
+            api=api,
+            api_cache=cache,
+            user_prefs=user_prefs,
+            channel=channel_id,
+        )
+
+        # Create the view containing our dropdown and preview
+        transcript = await state.get_transcript()
+        gif_builder_view = BuilderView(unique_results, transcript, state, await state.get_comic_strip_url())
+
+        # Sending a message containing our gif builder view
+        await interaction.edit_original_response(content=None, view=gif_builder_view)
 
 
 async def setup(bot: FlandersBOT) -> None:

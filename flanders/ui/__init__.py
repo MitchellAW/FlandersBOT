@@ -3,6 +3,7 @@
 from flanders.ui.builder_view import BuilderView
 from flanders.ui.content_view import TVContentView
 from flanders.ui.leaderboard_view import TriviaLeaderboardView
+from flanders.ui.preferences_view import PreferencesView
 from flanders.ui.privacy_view import TriviaPrivacyView
 from flanders.ui.scoreboard_view import TriviaScoreboardView
 from flanders.ui.trivia_view import (
@@ -12,6 +13,7 @@ from flanders.ui.user_stats_view import TriviaUserStatsView
 
 __all__ = [
     "BuilderView",
+    "PreferencesView",
     "TVContentView",
     "TriviaLeaderboardView",
     "TriviaPrivacyView",

@@ -64,6 +64,9 @@ class BuilderView(discord.ui.LayoutView):
         self.button_row.add_item(self.toggle_timing_button)
         self.add_item(self.button_row)
 
+        if self.state.user_prefs.advanced_mode:
+            self.toggle_timing_dropdown()
+
     def build_search_dropdown(self, unique_results: list[compuglobal.FrameResult]) -> SearchResultDropdown:
         # Get top 10 results
         options = [
@@ -85,8 +88,8 @@ class BuilderView(discord.ui.LayoutView):
 
         return TimingDropdown(options, self.state)
 
-    def update_image(self, image_url: str) -> None:
-        self.image_url = image_url
+    async def update_image(self) -> None:
+        self.image_url = await self.state.get_comic_strip_url()
         self.gallery.clear_items()
         self.gallery.add_item(media=self.image_url)
 
@@ -268,7 +271,7 @@ class SearchResultDropdown(discord.ui.Select):
 
         # Update selected frame state
         self.state.set_frame(chosen_frame.key, chosen_frame.timestamp)
-        self.view.update_image(await self.state.get_comic_strip_url())
+        await self.view.update_image()
         await self.view.update_timestamp_dropdown()
         await interaction.edit_original_response(view=self.view)
 
@@ -324,7 +327,7 @@ class TimingDropdown(discord.ui.Select):
 
         # Update selected frame state
         self.state.set_frame(chosen_subtitle.key, timestamp=chosen_subtitle.representative_timestamp)
-        self.view.update_image(await self.state.get_comic_strip_url())
+        await self.view.update_image()
         await interaction.edit_original_response(view=self.view)
 
 
@@ -395,5 +398,5 @@ class CustomiseCaptionModal(discord.ui.Modal, title="Customise caption:"):
         )
 
         # Update image/comic preview
-        self.view.update_image(await self.state.get_comic_strip_url())
+        await self.view.update_image()
         await interaction.edit_original_response(view=self.view)
