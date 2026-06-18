@@ -123,13 +123,18 @@ class BuilderView(discord.ui.LayoutView):
 
         self.button_row.clear_items()
 
-        if content_url is not None:
+        max_url_size = 512
+        if content_url is not None and len(content_url) < max_url_size:
             self.button_row.add_item(discord.ui.Button(label="View Content", url=content_url))
 
         component.disabled = True
         self.button_row.add_item(component)
 
         self.add_item(self.button_row)
+
+        if content_url is not None and len(content_url) >= max_url_size:
+            new_summary = f"{summary}\n[View Content Here]({content_url})"
+            self.show_summary(summary=new_summary, component=component, content_url=None)
 
 
 class CustomiseCaptionButton(discord.ui.Button):
@@ -199,7 +204,7 @@ class GenerateButton(discord.ui.Button):
 
         summary = (
             "Sorry neighborino, I'm noodly-not allowed to talk here.\n"
-            "But ding-dong-diddily don't worry, you can check it out with the button below!"
+            "But ding-dong-diddily don't worry, you can check it out below!"
         )
 
         try:
