@@ -244,7 +244,7 @@ class FontSizeDropdown(PreferenceDropdown):
 class SeasonDropdown(PreferenceDropdown):
     def __init__(self, state: UserPreferenceState) -> None:
         self.state = state
-        seasons = self.state.evenly_spaced_seasons()
+        seasons = self.state.evenly_spaced_seasons()[:25]
         chosen_seasons = (self.state.search_prefs.season_min, self.state.search_prefs.season_max)
         season_options = [
             discord.SelectOption(
