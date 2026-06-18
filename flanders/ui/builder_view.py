@@ -203,10 +203,8 @@ class GenerateButton(discord.ui.Button):
         )
 
         try:
-            if interaction.channel is not None and isinstance(
-                interaction.channel,
-                (discord.TextChannel, discord.Thread, discord.DMChannel),
-            ):
+            supported_channels = (discord.TextChannel, discord.Thread, discord.DMChannel)
+            if interaction.channel is not None and isinstance(interaction.channel, supported_channels):
                 await interaction.channel.send(view=content_view, allowed_mentions=discord.AllowedMentions.none())
                 summary = f"Generated {self.content_type}."
 
