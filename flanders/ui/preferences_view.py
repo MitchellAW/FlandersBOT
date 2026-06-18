@@ -32,7 +32,11 @@ class PreferencesView(discord.ui.LayoutView):
         self.add_item(discord.ui.TextDisplay(content="-# Font:"))
         allowed_fonts = self.state.api.config.allowed_fonts.copy()
         font_options = [
-            FontFamilyOption(font_family=font, default=font == self.state.overlay_prefs.font_family)
+            FontFamilyOption(
+                font_family=font,
+                default=font == self.state.overlay_prefs.font_family,
+                description="Default" if font == self.state.overlay_prefs.font_family else None,
+            )
             for font in allowed_fonts
         ]
         font_family_row = discord.ui.ActionRow()
@@ -54,6 +58,7 @@ class PreferencesView(discord.ui.LayoutView):
                 color_name=color_name,
                 font_color=font_color,
                 default=font_color == self.state.overlay_prefs.font_color,
+                description="Default" if font_color == self.state.overlay_prefs.font_color else None,
             )
             for color_name, font_color in AVAILABLE_COLORS.items()
         ]
@@ -118,10 +123,10 @@ class PreferenceDropdown(discord.ui.Select):
 
 
 class FontColorOption(discord.SelectOption):
-    def __init__(self, color_name: str, font_color: compuglobal.FontColor, default: bool = False) -> None:  # noqa: FBT001, FBT002
+    def __init__(self, color_name: str, font_color: compuglobal.FontColor, **kwargs) -> None:  # noqa: ANN003
         self.font_color = font_color
 
-        super().__init__(label=color_name, default=default)
+        super().__init__(label=color_name, **kwargs)
 
 
 class FontColorDropdown(PreferenceDropdown):
@@ -157,7 +162,7 @@ class FontColorDropdown(PreferenceDropdown):
 
 
 class FontFamilyOption(discord.SelectOption):
-    def __init__(self, font_family: compuglobal.FontFamily, default: bool = False) -> None:  # noqa: FBT001, FBT002
+    def __init__(self, font_family: compuglobal.FontFamily, **kwargs) -> None:  # noqa: ANN003
         self.font_family = font_family
 
         font_family_names: dict[compuglobal.FontFamily, str] = {
@@ -169,7 +174,7 @@ class FontFamilyOption(discord.SelectOption):
             compuglobal.FontFamily.JOST: "Jost",
         }
 
-        super().__init__(label=f"{font_family_names.get(font_family, 'Unknown Font')}", default=default)
+        super().__init__(label=f"{font_family_names.get(font_family, 'Unknown Font')}", **kwargs)
 
 
 class FontFamilyDropdown(PreferenceDropdown):
@@ -212,8 +217,9 @@ class FontSizeDropdown(PreferenceDropdown):
         allowed_font_sizes = [self.default_font_size, *list(range(32, 121, 8))]
         size_options = [
             discord.SelectOption(
-                label=str(font_size) if font_size != 0 else f"{font_size} - Auto",
+                label=str(font_size) if font_size != 0 else "Auto",
                 value=str(font_size),
+                description="Default" if font_size == self.state.overlay_prefs.font_size else None,
                 default=font_size == self.state.overlay_prefs.font_size,
             )
             for font_size in allowed_font_sizes
