@@ -73,7 +73,7 @@ class UserPreferenceState:
 
         return season_min, season_max
 
-    def evenly_spaced_seasons(self, count: int = 10) -> list[int]:
+    def evenly_spaced_seasons(self, count: int = 25) -> list[int]:
         season_min, season_max = self.get_season_range()
         if count <= 1 or season_max <= season_min:
             return [season_min]
