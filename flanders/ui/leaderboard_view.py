@@ -98,8 +98,8 @@ class TriviaDropdown(discord.ui.Select):
         super().__init__(placeholder="Choose a category...", min_values=1, max_values=1, options=options)
 
     async def callback(self, interaction: discord.Interaction) -> None:
-        if self.view is None:
-            msg = "Dropdown must be added to a view before its callback can be invoked"
+        if self.view is None or not isinstance(self.view, TriviaLeaderboardView):
+            msg = "Dropdown must be added to a TriviaLeaderboardView before its callback can be invoked"
             raise ValueError(msg)
 
         await interaction.response.defer(ephemeral=True)

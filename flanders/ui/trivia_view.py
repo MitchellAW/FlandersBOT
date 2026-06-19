@@ -131,7 +131,6 @@ class TriviaAnswerContainer(TriviaContainer):
 
 class TriviaButton(discord.ui.Button):
     def __init__(self, key: str, index: int, trivia_round: TriviaRound) -> None:
-        self.view: TriviaView
         self.key = key
         self.index = index
         self.trivia_round = trivia_round

@@ -75,8 +75,8 @@ class TriviaPrivacyToggleButton(discord.ui.Button):
         super().__init__(label="Toggle Privacy", style=discord.ButtonStyle.secondary)
 
     async def callback(self, interaction: discord.Interaction) -> None:
-        if self.view is None:
-            msg = "Button must be added to a view before its callback can be invoked"
+        if self.view is None or not isinstance(self.view, TriviaPrivacyView):
+            msg = "Button must be added to a TriviaPrivacyView before its callback can be invoked"
             raise ValueError(msg)
 
         await interaction.response.defer()
@@ -94,8 +94,8 @@ class TriviaPrivacyDeleteButton(discord.ui.Button):
         super().__init__(label="Delete My Data", style=discord.ButtonStyle.danger)
 
     async def callback(self, interaction: discord.Interaction) -> None:
-        if self.view is None:
-            msg = "Button must be added to a view before its callback can be invoked"
+        if self.view is None or not isinstance(self.view, TriviaPrivacyView):
+            msg = "Button must be added to a TriviaPrivacyView before its callback can be invoked"
             raise ValueError(msg)
 
         modal = TriviaDataDeletionModal(view=self.view)

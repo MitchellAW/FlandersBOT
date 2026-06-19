@@ -144,8 +144,8 @@ class CustomiseCaptionButton(discord.ui.Button):
         super().__init__(emoji=emoji, style=discord.ButtonStyle.secondary)
 
     async def callback(self, interaction: discord.Interaction) -> None:
-        if self.view is None:
-            msg = "Button must be added to a view before its callback can be invoked"
+        if self.view is None or not isinstance(self.view, BuilderView):
+            msg = "Button must be added to a BuilderView before its callback can be invoked"
             raise ValueError(msg)
 
         subtitles = await self.state.get_subtitles()
@@ -165,8 +165,8 @@ class ToggleTimingButton(discord.ui.Button):
         super().__init__(emoji=emoji, style=discord.ButtonStyle.secondary)
 
     async def callback(self, interaction: discord.Interaction) -> None:
-        if self.view is None:
-            msg = "Button must be added to a view before its callback can be invoked"
+        if self.view is None or not isinstance(self.view, BuilderView):
+            msg = "Button must be added to a BuilderView before its callback can be invoked"
             raise ValueError(msg)
 
         await interaction.response.defer(ephemeral=True)
@@ -181,8 +181,8 @@ class GenerateButton(discord.ui.Button):
         super().__init__(label=label, style=style)
 
     async def callback(self, interaction: discord.Interaction) -> None:
-        if self.view is None:
-            msg = "Button must be added to a view before its callback can be invoked"
+        if self.view is None or not isinstance(self.view, BuilderView):
+            msg = "Button must be added to a BuilderView before its callback can be invoked"
             raise ValueError(msg)
 
         await interaction.response.defer(ephemeral=True)
@@ -259,8 +259,8 @@ class SearchResultDropdown(discord.ui.Select):
         super().__init__(placeholder="Choose the best match...", min_values=1, max_values=1, options=list(options))
 
     async def callback(self, interaction: discord.Interaction) -> None:
-        if self.view is None:
-            msg = "Dropdown must be added to a view before its callback can be invoked"
+        if self.view is None or not isinstance(self.view, BuilderView):
+            msg = "Dropdown must be added to a BuilderView before its callback can be invoked"
             raise ValueError(msg)
 
         await interaction.response.defer(ephemeral=True)
@@ -315,8 +315,8 @@ class TimingDropdown(discord.ui.Select):
         return options[start : start + size]
 
     async def callback(self, interaction: discord.Interaction) -> None:
-        if self.view is None:
-            msg = "Dropdown must be added to a view before its callback can be invoked"
+        if self.view is None or not isinstance(self.view, BuilderView):
+            msg = "Dropdown must be added to a BuilderView before its callback can be invoked"
             raise ValueError(msg)
 
         await interaction.response.defer(ephemeral=True)
