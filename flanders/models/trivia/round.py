@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 
@@ -10,7 +11,7 @@ from flanders.models.trivia.question import TriviaAnswer, TriviaQuestion
 class TriviaRound:
     question: TriviaQuestion
     started_at: datetime = field(default_factory=lambda: datetime.now(UTC))
-    _answers: dict[int, TriviaAnswer] = field(default_factory=dict, repr=False)
+    _answers: OrderedDict[int, TriviaAnswer] = field(default_factory=OrderedDict)
     ended_at: datetime | None = None
 
     @property
@@ -28,6 +29,7 @@ class TriviaRound:
             answer_time=self.elapsed_milliseconds,
         )
         self._answers[user.id] = answer
+        self._answers.move_to_end(user.id)
 
     def end_round(self) -> None:
         self.ended_at = datetime.now(UTC)
@@ -39,6 +41,9 @@ class TriviaRound:
     @property
     def answers(self) -> list[TriviaAnswer]:
         return list(self._answers.values())
+
+    def latest_answers(self, count: int = 3) -> list[TriviaAnswer]:
+        return list(self._answers.values())[-count:][::-1]
 
     @property
     def correct_answers(self) -> list[TriviaAnswer]:

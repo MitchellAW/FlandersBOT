@@ -1,8 +1,11 @@
+import logging
 from datetime import UTC, datetime, timedelta
 
 import discord
 
 from flanders.models import TriviaMatch, TriviaRound
+
+log = logging.getLogger(__name__)
 
 
 class TriviaView(discord.ui.LayoutView):
@@ -10,15 +13,19 @@ class TriviaView(discord.ui.LayoutView):
         super().__init__()
 
         if trivia_match.rounds_played() >= 1:
-            answer_container = TriviaAnswerContainer(trivia_match)
-            if answer_container is not None:
-                self.add_item(answer_container)
+            self.answer_container = TriviaAnswerContainer(trivia_match)
+            if self.answer_container is not None:
+                self.add_item(self.answer_container)
 
         if not trivia_match.is_finished and trivia_match.current_round is not None:
             current_round = trivia_match.current_round
             if current_round is not None:
-                question_container = TriviaQuestionContainer(trivia_match, current_round)
-                self.add_item(question_container)
+                self.question_container = TriviaQuestionContainer(trivia_match, current_round)
+                self.add_item(self.question_container)
+
+    def refresh_question_footer(self) -> None:
+        if self.question_container is not None:
+            self.question_container.refresh_footer()
 
 
 class TriviaContainer(discord.ui.Container):
@@ -33,7 +40,10 @@ class TriviaQuestionContainer(TriviaContainer):
     ) -> None:
         super().__init__()
 
-        summary = self.summary(trivia_match, trivia_round)
+        self.trivia_match = trivia_match
+        self.trivia_round = trivia_round
+
+        summary = self.summary()
         summary_text = discord.ui.TextDisplay(content=summary)
 
         thumb = discord.ui.Thumbnail(media=trivia_match.category.thumbnail_url)
@@ -49,13 +59,29 @@ class TriviaQuestionContainer(TriviaContainer):
         self.add_item(row)
 
         end_time = datetime.now(tz=UTC) + timedelta(seconds=trivia_match.category.TIMER_DURATION)
-        time_remaining = discord.utils.format_dt(end_time, style="R")
-        content = discord.ui.TextDisplay(content=f"-# Round will end {time_remaining}")
-        self.add_item(content)
+        self.time_remaining = discord.utils.format_dt(end_time, style="R")
+        self.footer_display = discord.ui.TextDisplay(content=self.footer())
+        self.add_item(self.footer_display)
 
-    def summary(self, trivia_match: TriviaMatch, trivia_round: TriviaRound) -> str:
-        current_question = trivia_round.question
-        summary = f"### #{trivia_match.rounds_played() + 1}: {current_question.question}\n"
+    def refresh_footer(self) -> None:
+        self.footer_display.content = self.footer()
+
+    def footer(self) -> str:
+        footer = f"\n-# Round will end {self.time_remaining}"
+        max_users = 3
+        if self.trivia_round.total_answers > 0:
+            footer += " | Answered: " + (
+                ",".join(f"{answer.mention}" for answer in self.trivia_round.latest_answers(max_users))
+            )
+
+        if self.trivia_round.total_answers > max_users:
+            footer += f" +{self.trivia_round.total_answers - max_users} more"
+
+        return footer
+
+    def summary(self) -> str:
+        current_question = self.trivia_round.question
+        summary = f"### #{self.trivia_match.rounds_played() + 1}: {current_question.question}\n"
         summary += "".join(
             f"**{key}**: {question}\n"
             for key, question in zip(self.ANSWER_KEY, current_question.shuffled_answers, strict=True)
@@ -139,5 +165,12 @@ class TriviaButton(discord.ui.Button):
 
     async def callback(self, interaction: discord.Interaction) -> None:
         await interaction.response.defer(ephemeral=True)
+
+        if self.view is None or not isinstance(self.view, TriviaView):
+            msg = "TriviaButton must be in TriviaView before it can be invoked"
+            raise ValueError(msg)
+
         if not self.trivia_round.is_completed:
             self.trivia_round.log_answer(interaction.user, self.index)
+            self.view.refresh_question_footer()
+            await interaction.edit_original_response(view=self.view, allowed_mentions=discord.AllowedMentions.none())
