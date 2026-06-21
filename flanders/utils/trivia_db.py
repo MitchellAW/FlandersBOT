@@ -171,10 +171,10 @@ class TriviaDB:
         )
 
     def get_scoreboard_entries(self, rows: list, field: str, reverse: bool = True) -> list[TriviaScoreboardEntry]:  # noqa: FBT001, FBT002
+        eligible_rows = [row for row in rows if row[field] is not None]
         return [
             TriviaScoreboardEntry(row["user_id"], row[field])
-            for row in sorted(rows, key=lambda row: row[field], reverse=reverse)
-            if row[field] is not None
+            for row in sorted(eligible_rows, key=lambda row: row[field], reverse=reverse)
         ]
 
     async def get_scoreboard(self, match_id: int) -> TriviaScoreboard:
