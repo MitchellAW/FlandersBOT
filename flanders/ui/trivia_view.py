@@ -4,6 +4,7 @@ from datetime import UTC, datetime, timedelta
 import discord
 
 from flanders.models import TriviaMatch, TriviaRound
+from flanders.utils import get_view_as
 
 log = logging.getLogger(__name__)
 
@@ -165,12 +166,9 @@ class TriviaButton(discord.ui.Button):
 
     async def callback(self, interaction: discord.Interaction) -> None:
         await interaction.response.defer(ephemeral=True)
-
-        if self.view is None or not isinstance(self.view, TriviaView):
-            msg = "TriviaButton must be in TriviaView before it can be invoked"
-            raise ValueError(msg)
+        view = get_view_as(self.view, TriviaView)
 
         if not self.trivia_round.is_completed:
             self.trivia_round.log_answer(interaction.user, self.index)
-            self.view.refresh_question_footer()
-            await interaction.edit_original_response(view=self.view, allowed_mentions=discord.AllowedMentions.none())
+            view.refresh_question_footer()
+            await interaction.edit_original_response(view=view, allowed_mentions=discord.AllowedMentions.none())

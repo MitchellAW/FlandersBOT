@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 import discord
 
 from flanders.ui.content_view import TVContentView
+from flanders.utils import get_view_as
 
 if TYPE_CHECKING:
     from collections.abc import Generator
@@ -104,13 +105,11 @@ class CustomiseCaptionButton(discord.ui.Button):
         super().__init__(emoji=emoji, style=discord.ButtonStyle.secondary)
 
     async def callback(self, interaction: discord.Interaction) -> None:
-        if self.view is None or not isinstance(self.view, BuilderView):
-            msg = "Button must be added to a BuilderView before its callback can be invoked"
-            raise ValueError(msg)
+        view = get_view_as(self.view, BuilderView)
 
         subtitles = await self.state.get_subtitles()
         duration = await self.state.get_total_duration()
-        modal = CustomiseCaptionModal(total_duration=duration, state=self.state, view=self.view, subtitles=subtitles)
+        modal = CustomiseCaptionModal(total_duration=duration, state=self.state, view=view, subtitles=subtitles)
 
         try:
             await interaction.response.send_modal(modal)
@@ -126,16 +125,14 @@ class ToggleTimingButton(discord.ui.Button):
         self.is_toggled = False
 
     async def callback(self, interaction: discord.Interaction) -> None:
-        if self.view is None or not isinstance(self.view, BuilderView):
-            msg = "Button must be added to a BuilderView before its callback can be invoked"
-            raise ValueError(msg)
+        view = get_view_as(self.view, BuilderView)
 
         self.is_toggled = not self.is_toggled
         self.style = discord.ButtonStyle.success if self.is_toggled else discord.ButtonStyle.secondary
 
         await interaction.response.defer(ephemeral=True)
-        self.view.toggle_timing_dropdown()
-        await interaction.edit_original_response(view=self.view)
+        view.toggle_timing_dropdown()
+        await interaction.edit_original_response(view=view)
 
 
 class GenerateButton(discord.ui.Button):
@@ -145,12 +142,10 @@ class GenerateButton(discord.ui.Button):
         super().__init__(label=label, style=style)
 
     async def callback(self, interaction: discord.Interaction) -> None:
-        if self.view is None or not isinstance(self.view, BuilderView):
-            msg = "Button must be added to a BuilderView before its callback can be invoked"
-            raise ValueError(msg)
+        view = get_view_as(self.view, BuilderView)
 
         await interaction.response.defer(ephemeral=True)
-        await self.view.show_summary(interaction, summary=f"Generating {self.content_type}...")
+        await view.show_summary(interaction, summary=f"Generating {self.content_type}...")
 
         # Cache screencap
         screencap = await self.state.get_screencap()
@@ -183,7 +178,7 @@ class GenerateButton(discord.ui.Button):
             except discord.Forbidden:
                 pass
 
-        await self.view.show_summary(interaction, summary=summary, content_url=content_url)
+        await view.show_summary(interaction, summary=summary, content_url=content_url)
 
     @abstractmethod
     async def get_content_url(self) -> str:
@@ -225,9 +220,7 @@ class SearchResultDropdown(discord.ui.Select):
         super().__init__(placeholder="Choose the best match...", min_values=1, max_values=1, options=list(options))
 
     async def callback(self, interaction: discord.Interaction) -> None:
-        if self.view is None or not isinstance(self.view, BuilderView):
-            msg = "Dropdown must be added to a BuilderView before its callback can be invoked"
-            raise ValueError(msg)
+        view = get_view_as(self.view, BuilderView)
 
         await interaction.response.defer(ephemeral=True)
         chosen_frame = self.search_options[0].frame
@@ -240,9 +233,9 @@ class SearchResultDropdown(discord.ui.Select):
 
         # Update selected frame state
         self.state.set_frame(chosen_frame.key, chosen_frame.timestamp)
-        await self.view.update_image()
-        await self.view.update_timestamp_dropdown()
-        await interaction.edit_original_response(view=self.view)
+        await view.update_image()
+        await view.update_timestamp_dropdown()
+        await interaction.edit_original_response(view=view)
 
 
 class TimingOption(discord.SelectOption):
@@ -288,9 +281,7 @@ class TimingDropdown(discord.ui.Select):
         return options[start : start + size]
 
     async def callback(self, interaction: discord.Interaction) -> None:
-        if self.view is None or not isinstance(self.view, BuilderView):
-            msg = "Dropdown must be added to a BuilderView before its callback can be invoked"
-            raise ValueError(msg)
+        view = get_view_as(self.view, BuilderView)
 
         await interaction.response.defer(ephemeral=True)
         chosen_subtitle = self.search_options[0].subtitle
@@ -303,8 +294,8 @@ class TimingDropdown(discord.ui.Select):
 
         # Update selected frame state
         self.state.set_frame(chosen_subtitle.key, timestamp=chosen_subtitle.representative_timestamp)
-        await self.view.update_image()
-        await interaction.edit_original_response(view=self.view)
+        await view.update_image()
+        await interaction.edit_original_response(view=view)
 
 
 class CustomiseCaptionModal(discord.ui.Modal, title="Customise caption:"):

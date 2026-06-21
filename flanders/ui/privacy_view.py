@@ -1,6 +1,6 @@
 import discord
 
-from flanders.utils import TriviaDB
+from flanders.utils import TriviaDB, get_view_as
 
 
 class TriviaPrivacyView(discord.ui.LayoutView):
@@ -75,18 +75,16 @@ class TriviaPrivacyToggleButton(discord.ui.Button):
         super().__init__(label="Toggle Privacy", style=discord.ButtonStyle.secondary)
 
     async def callback(self, interaction: discord.Interaction) -> None:
-        if self.view is None or not isinstance(self.view, TriviaPrivacyView):
-            msg = "Button must be added to a TriviaPrivacyView before its callback can be invoked"
-            raise ValueError(msg)
+        view = get_view_as(self.view, TriviaPrivacyView)
 
         await interaction.response.defer()
-        if self.view.change_count < self.view.ALLOWED_CHANGES:
-            await self.view.toggle_privacy_setting(user_id=interaction.user.id)
+        if view.change_count < view.ALLOWED_CHANGES:
+            await view.toggle_privacy_setting(user_id=interaction.user.id)
 
         else:
-            self.view.disable_buttons()
+            view.disable_buttons()
 
-        await interaction.edit_original_response(view=self.view)
+        await interaction.edit_original_response(view=view)
 
 
 class TriviaPrivacyDeleteButton(discord.ui.Button):
@@ -94,11 +92,8 @@ class TriviaPrivacyDeleteButton(discord.ui.Button):
         super().__init__(label="Delete My Data", style=discord.ButtonStyle.danger)
 
     async def callback(self, interaction: discord.Interaction) -> None:
-        if self.view is None or not isinstance(self.view, TriviaPrivacyView):
-            msg = "Button must be added to a TriviaPrivacyView before its callback can be invoked"
-            raise ValueError(msg)
-
-        modal = TriviaDataDeletionModal(view=self.view)
+        view = get_view_as(self.view, TriviaPrivacyView)
+        modal = TriviaDataDeletionModal(view=view)
         await interaction.response.send_modal(modal)
 
 

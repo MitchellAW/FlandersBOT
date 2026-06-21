@@ -4,6 +4,7 @@ import compuglobal
 import discord
 
 from flanders.models import AVAILABLE_COLORS, UserPreferenceState, UserSearchPreferences
+from flanders.utils import get_view_as
 
 
 class PreferencesView(discord.ui.LayoutView):
@@ -112,9 +113,7 @@ class FontColorDropdown(PreferenceDropdown):
 
     async def callback(self, interaction: discord.Interaction) -> None:
         await interaction.response.defer(ephemeral=True)
-        if self.view is None or not isinstance(self.view, PreferencesView):
-            msg = "Dropdown must be added to a PreferencesView before its callback can be invoked"
-            raise ValueError(msg)
+        view = get_view_as(self.view, PreferencesView)
 
         chosen_color = self.color_options[0]
         for color_option, option in zip(self.color_options, self.options, strict=True):
@@ -127,9 +126,9 @@ class FontColorDropdown(PreferenceDropdown):
                 update={"font_color": chosen_color},
             )
 
-        await self.view.update_image()
+        await view.update_image()
 
-        await interaction.edit_original_response(view=self.view)
+        await interaction.edit_original_response(view=view)
 
     def restore_defaults(self) -> None:
         for color_option, option in zip(self.color_options, self.options, strict=True):
@@ -160,9 +159,7 @@ class FontFamilyDropdown(PreferenceDropdown):
 
     async def callback(self, interaction: discord.Interaction) -> None:
         await interaction.response.defer(ephemeral=True)
-        if self.view is None or not isinstance(self.view, PreferencesView):
-            msg = "Dropdown must be added to a PreferencesView before its callback can be invoked"
-            raise ValueError(msg)
+        view = get_view_as(self.view, PreferencesView)
 
         chosen_font = self.font_options[0]
         for font_option, option in zip(self.font_options, self.options, strict=True):
@@ -175,9 +172,9 @@ class FontFamilyDropdown(PreferenceDropdown):
                 update={"font_family": chosen_font},
             )
 
-        await self.view.update_image()
+        await view.update_image()
 
-        await interaction.edit_original_response(view=self.view)
+        await interaction.edit_original_response(view=view)
 
     def restore_defaults(self) -> None:
         for font_option, option in zip(self.font_options, self.options, strict=True):
@@ -203,9 +200,7 @@ class FontSizeDropdown(PreferenceDropdown):
 
     async def callback(self, interaction: discord.Interaction) -> None:
         await interaction.response.defer(ephemeral=True)
-        if self.view is None or not isinstance(self.view, PreferencesView):
-            msg = "Dropdown must be added to a PreferencesView before its callback can be invoked"
-            raise ValueError(msg)
+        view = get_view_as(self.view, PreferencesView)
 
         for option in self.options:
             option.default = option.value in self.values
@@ -214,8 +209,8 @@ class FontSizeDropdown(PreferenceDropdown):
             self.state.overlay_prefs = self.state.overlay_prefs.model_copy(
                 update={"font_size": int(self.values[0])},
             )
-        await self.view.update_image()
-        await interaction.edit_original_response(view=self.view)
+        await view.update_image()
+        await interaction.edit_original_response(view=view)
 
     def restore_defaults(self) -> None:
         for option in self.options:
@@ -240,9 +235,7 @@ class SeasonDropdown(PreferenceDropdown):
 
     async def callback(self, interaction: discord.Interaction) -> None:
         await interaction.response.defer(ephemeral=True)
-        if self.view is None or not isinstance(self.view, PreferencesView):
-            msg = "Dropdown must be added to a PreferencesView before its callback can be invoked"
-            raise ValueError(msg)
+        view = get_view_as(self.view, PreferencesView)
 
         for option in self.options:
             option.default = option.value in self.values
@@ -252,8 +245,8 @@ class SeasonDropdown(PreferenceDropdown):
             season_min, season_max = int(sorted_values[0]), int(sorted_values[1])
             self.state.search_prefs = UserSearchPreferences(season_min=season_min, season_max=season_max)
 
-        await self.view.update_image()
-        await interaction.edit_original_response(view=self.view)
+        await view.update_image()
+        await interaction.edit_original_response(view=view)
 
     def restore_defaults(self) -> None:
         for option in self.options:
@@ -266,13 +259,11 @@ class SavePreferencesButton(discord.ui.Button):
 
     async def callback(self, interaction: discord.Interaction) -> None:
         await interaction.response.defer(ephemeral=True)
-        if self.view is None or not isinstance(self.view, PreferencesView):
-            msg = "Button must be added to a PreferencesView before its callback can be invoked"
-            raise ValueError(msg)
+        view = get_view_as(self.view, PreferencesView)
 
-        self.view.disable_all()
-        await interaction.edit_original_response(view=self.view)
-        await self.view.state.update_user_preferences()
+        view.disable_all()
+        await interaction.edit_original_response(view=view)
+        await view.state.update_user_preferences()
 
 
 class RestoreDefaultPreferencesButton(discord.ui.Button):
@@ -281,12 +272,10 @@ class RestoreDefaultPreferencesButton(discord.ui.Button):
 
     async def callback(self, interaction: discord.Interaction) -> None:
         await interaction.response.defer(ephemeral=True)
-        if self.view is None or not isinstance(self.view, PreferencesView):
-            msg = "Button must be added to a PreferencesView before its callback can be invoked"
-            raise ValueError(msg)
+        view = get_view_as(self.view, PreferencesView)
 
-        await self.view.restore_defaults()
-        await interaction.edit_original_response(view=self.view)
+        await view.restore_defaults()
+        await interaction.edit_original_response(view=view)
 
 
 class ToggleButton(discord.ui.Button):
@@ -306,13 +295,11 @@ class ToggleButton(discord.ui.Button):
 
     async def callback(self, interaction: discord.Interaction) -> None:
         await interaction.response.defer(ephemeral=True)
-        if self.view is None or not isinstance(self.view, PreferencesView):
-            msg = "Button must be added to a PreferencesView before its callback can be invoked"
-            raise ValueError(msg)
+        view = get_view_as(self.view, PreferencesView)
 
         self.toggle_state()
         self.style = self.get_style()
-        await self.view.update_image()
+        await view.update_image()
         await interaction.edit_original_response(view=self.view)
 
 

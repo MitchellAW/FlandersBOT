@@ -1,6 +1,7 @@
 import discord
 
 from flanders.models import TriviaLeaderboardEntry, TriviaLeaderboardType
+from flanders.utils import get_view_as
 
 
 class TriviaLeaderboardView(discord.ui.LayoutView):
@@ -55,7 +56,6 @@ class TriviaLeaderboardView(discord.ui.LayoutView):
 
 class TriviaDropdown(discord.ui.Select):
     def __init__(self) -> None:
-        self.view: TriviaLeaderboardView
         options = [
             discord.SelectOption(
                 label="Score",
@@ -93,14 +93,12 @@ class TriviaDropdown(discord.ui.Select):
         super().__init__(placeholder="Choose a category...", min_values=1, max_values=1, options=options)
 
     async def callback(self, interaction: discord.Interaction) -> None:
-        if self.view is None or not isinstance(self.view, TriviaLeaderboardView):
-            msg = "Dropdown must be added to a TriviaLeaderboardView before its callback can be invoked"
-            raise ValueError(msg)
+        view = get_view_as(self.view, TriviaLeaderboardView)
 
         await interaction.response.defer(ephemeral=True)
         category = TriviaLeaderboardType(self.values[0])
         for option in self.options:
             option.default = option.value in self.values
 
-        self.view.change_category(category=category)
-        await interaction.edit_original_response(view=self.view)
+        view.change_category(category=category)
+        await interaction.edit_original_response(view=view)
