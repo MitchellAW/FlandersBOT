@@ -16,12 +16,10 @@ class PreferencesView(discord.ui.LayoutView):
         self.state = state
         self.image_url = image_url
 
-        self.preview = discord.ui.MediaGallery()
-
-        # Action rows
+        self.add_item(discord.ui.TextDisplay(content="## Your Preferences\n### Preview:"))
 
         # Add preview image
-        self.add_item(discord.ui.TextDisplay(content="## Your Preferences\n### Preview:"))
+        self.preview = discord.ui.MediaGallery()
         self.preview.add_item(media=image_url)
         self.add_item(self.preview)
 
@@ -30,26 +28,19 @@ class PreferencesView(discord.ui.LayoutView):
 
         # Add Font family select
         self.add_item(discord.ui.TextDisplay(content="-# Font:"))
-        allowed_fonts = self.state.api.config.allowed_fonts.copy()
         font_options = [
             FontFamilyOption(
                 font_family=font,
                 default=font == self.state.overlay_prefs.font_family,
                 description="Default" if font == self.state.overlay_prefs.font_family else None,
             )
-            for font in allowed_fonts
+            for font in self.state.api.config.allowed_fonts.copy()
         ]
-        font_family_row = discord.ui.ActionRow()
-        font_family_select = FontFamilyDropdown(font_options=font_options, state=self.state)
-        font_family_row.add_item(font_family_select)
-        self.add_item(font_family_row)
+        self.add_item(discord.ui.ActionRow(FontFamilyDropdown(font_options=font_options, state=self.state)))
 
         # Add font size select
         self.add_item(discord.ui.TextDisplay(content="-# Font size:"))
-        font_size_row = discord.ui.ActionRow()
-        font_size_select = FontSizeDropdown(state=self.state)
-        font_size_row.add_item(font_size_select)
-        self.add_item(font_size_row)
+        self.add_item(discord.ui.ActionRow(FontSizeDropdown(state=self.state)))
 
         # Add font color select
         self.add_item(discord.ui.TextDisplay(content="-# Font color:"))
@@ -63,39 +54,23 @@ class PreferencesView(discord.ui.LayoutView):
             for color_name, font_color in AVAILABLE_COLORS.items()
         ]
         font_color_select = FontColorDropdown(color_options=color_options, state=self.state)
-        font_color_row = discord.ui.ActionRow()
-        font_color_row.add_item(font_color_select)
-        self.add_item(font_color_row)
+        self.add_item(discord.ui.ActionRow(font_color_select))
 
         # Add toggle button row
-        toggle_button_row = discord.ui.ActionRow()
-        toggle_uppercase = ToggleUppercaseModeButton(state=self.state)
-        toggle_advanced = ToggleAdvancedModeButton(state=self.state)
-        toggle_button_row.add_item(toggle_uppercase)
-        toggle_button_row.add_item(toggle_advanced)
-        self.add_item(toggle_button_row)
-
-        # Search preferences
         self.add_item(
-            discord.ui.TextDisplay(
-                content="### Search preferences:\n-# Select a minimum and a maximum season to filter by:",
+            discord.ui.ActionRow(
+                ToggleUppercaseModeButton(state=self.state),
+                ToggleAdvancedModeButton(state=self.state),
             ),
         )
 
-        season_row = discord.ui.ActionRow()
-        season_dropdown = SeasonDropdown(state=self.state)
-        season_row.add_item(season_dropdown)
-        self.add_item(season_row)
+        # Search preferences
+        season_pref = "### Search preferences:\n-# Select a minimum and a maximum season to filter by:"
+        self.add_item(discord.ui.TextDisplay(content=season_pref))
+        self.add_item(discord.ui.ActionRow(SeasonDropdown(state=self.state)))
 
-        # Add save button
-        primary_button_row = discord.ui.ActionRow()
-        save_button = SavePreferencesButton()
-        primary_button_row.add_item(save_button)
-
-        # Add restore defaults button
-        restore_button = RestoreDefaultPreferencesButton()
-        primary_button_row.add_item(restore_button)
-        self.add_item(primary_button_row)
+        # Add save preferences and restore defaults button
+        self.add_item(discord.ui.ActionRow(SavePreferencesButton(), RestoreDefaultPreferencesButton()))
 
     async def restore_defaults(self) -> None:
         self.state.restore_defaults()
