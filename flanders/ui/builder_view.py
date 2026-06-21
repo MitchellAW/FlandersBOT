@@ -34,57 +34,28 @@ class BuilderView(discord.ui.LayoutView):
 
         self.show_timing = False
 
-        self.search_row = discord.ui.ActionRow()
-
-        self.gallery = discord.ui.MediaGallery()
-
-        self.timestamp_row = discord.ui.ActionRow()
-        self.button_row = discord.ui.ActionRow()
-
         # Add the search results dropdown
-        dropdown = self.build_search_dropdown(self.unique_results)
-        self.search_row.add_item(dropdown)
-        self.add_item(self.search_row)
+        self.add_item(discord.ui.ActionRow(SearchResultDropdown(self.unique_results, state=self.state)))
 
         # Add the preview image
+        self.gallery = discord.ui.MediaGallery()
         self.gallery.add_item(media=self.image_url)
         self.add_item(self.gallery)
 
         # Add customisable subtitle timing dropdown
-        timestamp_dropdown = self.build_timestamp_dropdown(self.transcript)
-        self.timestamp_row.add_item(timestamp_dropdown)
+        self.timestamp_row = discord.ui.ActionRow(TimingDropdown(self.transcript, state=self.state))
 
         # Add the customisation and post content buttons
-        self.toggle_timing_button = ToggleTimingButton()
-        self.button_row.add_item(GenerateGifButton(self.state))
-        self.button_row.add_item(GenerateComicButton(self.state))
-        self.button_row.add_item(CustomiseCaptionButton(self.state))
-        self.button_row.add_item(self.toggle_timing_button)
+        self.button_row = discord.ui.ActionRow(
+            GenerateGifButton(self.state),
+            GenerateComicButton(self.state),
+            CustomiseCaptionButton(self.state),
+            ToggleTimingButton(),
+        )
         self.add_item(self.button_row)
 
         if self.state.user_prefs.advanced_mode:
             self.toggle_timing_dropdown()
-
-    def build_search_dropdown(self, unique_results: list[compuglobal.FrameResult]) -> SearchResultDropdown:
-        # Get top 10 results
-        options = [
-            SearchResult(unique_result, i + 1, self.state) for i, unique_result in enumerate(unique_results[:10])
-        ]
-        options[0].default = True
-
-        return SearchResultDropdown(options, self.state)
-
-    def build_timestamp_dropdown(self, transcript: list[compuglobal.Subtitle]) -> TimingDropdown:
-        options = []
-
-        for i in range(len(transcript)):
-            option = TimingOption(transcript[i])
-
-            if transcript[i].start_timestamp <= self.state.frame_timestamp <= transcript[i].end_timestamp:
-                option.default = True
-            options.append(option)
-
-        return TimingDropdown(options, self.state)
 
     async def update_image(self) -> None:
         self.image_url = await self.state.get_comic_strip_url()
@@ -92,10 +63,9 @@ class BuilderView(discord.ui.LayoutView):
         self.gallery.add_item(media=self.image_url)
 
     async def update_timestamp_dropdown(self) -> None:
-        self.timestamp_row.clear_items()
         transcript = await self.state.get_transcript()
-        dropdown = self.build_timestamp_dropdown(transcript)
-        self.timestamp_row.add_item(dropdown)
+        self.timestamp_row.clear_items()
+        self.timestamp_row.add_item(TimingDropdown(transcript=transcript, state=self.state))
 
     def toggle_timing_dropdown(self) -> None:
         self.show_timing = not self.show_timing
@@ -103,10 +73,8 @@ class BuilderView(discord.ui.LayoutView):
             self.remove_item(self.button_row)
             self.add_item(self.timestamp_row)
             self.add_item(self.button_row)
-            self.toggle_timing_button.style = discord.ButtonStyle.success
 
         else:
-            self.toggle_timing_button.style = discord.ButtonStyle.secondary
             self.remove_item(self.timestamp_row)
 
     async def show_summary(
@@ -155,11 +123,15 @@ class ToggleTimingButton(discord.ui.Button):
     def __init__(self) -> None:
         emoji = "<:advanced:1512642321621979246"
         super().__init__(emoji=emoji, style=discord.ButtonStyle.secondary)
+        self.is_toggled = False
 
     async def callback(self, interaction: discord.Interaction) -> None:
         if self.view is None or not isinstance(self.view, BuilderView):
             msg = "Button must be added to a BuilderView before its callback can be invoked"
             raise ValueError(msg)
+
+        self.is_toggled = not self.is_toggled
+        self.style = discord.ButtonStyle.success if self.is_toggled else discord.ButtonStyle.secondary
 
         await interaction.response.defer(ephemeral=True)
         self.view.toggle_timing_dropdown()
@@ -235,17 +207,21 @@ class GenerateGifButton(GenerateButton):
 
 
 class SearchResult(discord.SelectOption):
-    def __init__(self, frame: compuglobal.Frame, index: int, state: TVReferenceState) -> None:
+    def __init__(self, frame: compuglobal.Frame, index: int, state: TVReferenceState, **kwargs) -> None:  # noqa: ANN003
         self.frame = frame
         summary = state.api_cache.get(frame.key)
         title = summary.title if summary is not None else "Unknown Title"
-        super().__init__(label=f"{index}. {title}", description=f"{frame.key} - {frame.timecode}")
+        super().__init__(label=f"{index}. {title}", description=f"{frame.key} - {frame.timecode}", **kwargs)
 
 
 class SearchResultDropdown(discord.ui.Select):
-    def __init__(self, options: list[SearchResult], state: TVReferenceState) -> None:
-        self.search_options = options
+    def __init__(self, unique_results: list[compuglobal.FrameResult], state: TVReferenceState) -> None:
         self.state = state
+        options = [
+            SearchResult(unique_result, i + 1, self.state, default=i == 0)
+            for i, unique_result in enumerate(unique_results[:10])
+        ]
+        self.search_options = options
         super().__init__(placeholder="Choose the best match...", min_values=1, max_values=1, options=list(options))
 
     async def callback(self, interaction: discord.Interaction) -> None:
@@ -270,21 +246,28 @@ class SearchResultDropdown(discord.ui.Select):
 
 
 class TimingOption(discord.SelectOption):
-    def __init__(self, subtitle: compuglobal.Subtitle) -> None:
+    def __init__(self, subtitle: compuglobal.Subtitle, **kwargs) -> None:  # noqa: ANN003
         self.subtitle = subtitle
         self.MAX_CHARS = 100
 
         description = self.shorten_text(subtitle.timecode)
         label = self.shorten_text(subtitle.content)
-        super().__init__(label=label, description=description)
+        super().__init__(label=label, description=description, **kwargs)
 
     def shorten_text(self, text: str) -> str:
         return f"{text[: self.MAX_CHARS - 3]}..." if len(text) >= self.MAX_CHARS else text[: self.MAX_CHARS]
 
 
 class TimingDropdown(discord.ui.Select):
-    def __init__(self, options: list[TimingOption], state: TVReferenceState) -> None:
+    def __init__(self, transcript: list[compuglobal.Subtitle], state: TVReferenceState) -> None:
         self.state = state
+        options = [
+            TimingOption(
+                subtitle,
+                default=subtitle.start_timestamp <= self.state.frame_timestamp <= subtitle.end_timestamp,
+            )
+            for subtitle in transcript
+        ]
 
         options = self.shorten_options(options)
         self.search_options = options
