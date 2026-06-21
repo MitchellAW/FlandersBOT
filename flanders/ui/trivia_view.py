@@ -72,7 +72,10 @@ class TriviaQuestionContainer(TriviaContainer):
         max_users = 3
         if self.trivia_round.total_answers > 0:
             footer += " | Answered: " + (
-                ",".join(f"{answer.mention}" for answer in self.trivia_round.latest_answers(max_users))
+                ",".join(
+                    f"{answer.mention} ({answer.answer_time / 1000:.1f}s)"
+                    for answer in self.trivia_round.latest_answers(max_users)
+                )
             )
 
         if self.trivia_round.total_answers > max_users:
