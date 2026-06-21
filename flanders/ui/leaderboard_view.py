@@ -7,7 +7,7 @@ class TriviaLeaderboardView(discord.ui.LayoutView):
     def __init__(
         self,
         leaderboard: dict[TriviaLeaderboardType, list[TriviaLeaderboardEntry]],
-        thumbnail_url: str | None,
+        thumbnail_url: str,
         footer: str,
     ) -> None:
         super().__init__()
@@ -21,14 +21,17 @@ class TriviaLeaderboardView(discord.ui.LayoutView):
         self.action_row.add_item(self.dropdown)
         self.add_item(self.action_row)
 
-        self.change_category(category=TriviaLeaderboardType.SCORE)
-
-    def change_category(self, category: TriviaLeaderboardType) -> None:
-        self.clear_items()
-        self.add_item(self.action_row)
-
         container = discord.ui.Container()
 
+        self.display = discord.ui.TextDisplay(content=self.category_content(TriviaLeaderboardType.SCORE))
+
+        thumbnail = discord.ui.Thumbnail(media=self.thumbnail_url)
+        section = discord.ui.Section(accessory=thumbnail)
+        section.add_item(self.display)
+        container.add_item(section)
+        self.add_item(container)
+
+    def category_content(self, category: TriviaLeaderboardType) -> str:
         stats = {
             TriviaLeaderboardType.SCORE: "🏆 High Scores",
             TriviaLeaderboardType.WINS: "🥇 Wins",
@@ -44,18 +47,10 @@ class TriviaLeaderboardView(discord.ui.LayoutView):
             for i, entry in enumerate(scorers)
         )
 
-        category_content = discord.ui.TextDisplay(content=f"{board}\n\n-# {self.footer}")
+        return f"{board}\n\n-# {self.footer}"
 
-        if self.thumbnail_url is not None:
-            thumbnail = discord.ui.Thumbnail(media=self.thumbnail_url)
-            section = discord.ui.Section(accessory=thumbnail)
-            section.add_item(category_content)
-            container.add_item(section)
-
-        else:
-            container.add_item(category_content)
-
-        self.add_item(container)
+    def change_category(self, category: TriviaLeaderboardType) -> None:
+        self.display.content = self.category_content(category)
 
 
 class TriviaDropdown(discord.ui.Select):
@@ -103,14 +98,9 @@ class TriviaDropdown(discord.ui.Select):
             raise ValueError(msg)
 
         await interaction.response.defer(ephemeral=True)
-        category = TriviaLeaderboardType.SCORE
+        category = TriviaLeaderboardType(self.values[0])
         for option in self.options:
-            if option.value == self.values[0]:
-                category = TriviaLeaderboardType(option.value)
-                option.default = True
-
-            else:
-                option.default = False
+            option.default = option.value in self.values
 
         self.view.change_category(category=category)
         await interaction.edit_original_response(view=self.view)

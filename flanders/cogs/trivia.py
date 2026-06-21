@@ -195,9 +195,6 @@ class Trivia(commands.GroupCog, name="trivia", description="All commands related
 
         stats = list(TriviaLeaderboardType)
 
-        avatar = self.bot.user.avatar if self.bot.user is not None else None
-        avatar_url = avatar.url if avatar is not None else None
-
         scorers: dict[TriviaLeaderboardType, list[TriviaLeaderboardEntry]] = {}
         if leader_count >= 1:
             for stat in stats:
@@ -205,6 +202,7 @@ class Trivia(commands.GroupCog, name="trivia", description="All commands related
 
         footer = f"{leader_count:,} participants, {round_count:,} questions answered, across {match_count:,} matches."
 
+        avatar_url = "https://raw.githubusercontent.com/MitchellAW/MitchellAW.github.io/refs/heads/main/images/flanders-clouds.png"
         view = TriviaLeaderboardView(leaderboard=scorers, footer=footer, thumbnail_url=avatar_url)
         await interaction.edit_original_response(view=view)
 
