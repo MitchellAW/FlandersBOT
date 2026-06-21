@@ -34,8 +34,6 @@ class BuilderView(discord.ui.LayoutView):
 
         self.show_timing = False
 
-        self.summary = discord.ui.TextDisplay(content="")
-
         self.search_row = discord.ui.ActionRow()
 
         self.gallery = discord.ui.MediaGallery()
@@ -111,30 +109,24 @@ class BuilderView(discord.ui.LayoutView):
             self.toggle_timing_button.style = discord.ButtonStyle.secondary
             self.remove_item(self.timestamp_row)
 
-    def show_summary(self, summary: str, component: discord.ui.Button, content_url: str | None = None) -> None:
-        self.remove_item(self.summary)
-        self.summary.content = summary
-        self.add_item(self.summary)
+    async def show_summary(
+        self,
+        interaction: discord.Interaction,
+        summary: str,
+        content_url: str | None = None,
+    ) -> None:
+        self.clear_items()
+        summary += f"\n[View Content Here]({content_url})" if content_url is not None else ""
+        self.add_item(discord.ui.TextDisplay(content=f"{summary}"))
 
-        self.remove_item(self.button_row)
-        self.remove_item(self.search_row)
-        self.remove_item(self.timestamp_row)
-        self.remove_item(self.gallery)
+        # Keep the buttons as they will need to edit response again
+        if content_url is None:
+            for button in self.button_row.walk_children():
+                if isinstance(button, discord.ui.Button):
+                    button.disabled = True
+            self.add_item(self.button_row)
 
-        self.button_row.clear_items()
-
-        max_url_size = 512
-        if content_url is not None and len(content_url) < max_url_size:
-            self.button_row.add_item(discord.ui.Button(label="View Content", url=content_url))
-
-        component.disabled = True
-        self.button_row.add_item(component)
-
-        self.add_item(self.button_row)
-
-        if content_url is not None and len(content_url) >= max_url_size:
-            new_summary = f"{summary}\n[View Content Here]({content_url})"
-            self.show_summary(summary=new_summary, component=component, content_url=None)
+        await interaction.edit_original_response(view=self)
 
 
 class CustomiseCaptionButton(discord.ui.Button):
@@ -186,8 +178,7 @@ class GenerateButton(discord.ui.Button):
             raise ValueError(msg)
 
         await interaction.response.defer(ephemeral=True)
-        self.view.show_summary(summary=f"Generating {self.content_type}...", component=self)
-        await interaction.edit_original_response(view=self.view)
+        await self.view.show_summary(interaction, summary=f"Generating {self.content_type}...")
 
         # Cache screencap
         screencap = await self.state.get_screencap()
@@ -220,8 +211,7 @@ class GenerateButton(discord.ui.Button):
             except discord.Forbidden:
                 pass
 
-        self.view.show_summary(summary=summary, content_url=content_url, component=self)
-        await interaction.edit_original_response(view=self.view)
+        await self.view.show_summary(interaction, summary=summary, content_url=content_url)
 
     @abstractmethod
     async def get_content_url(self) -> str:
