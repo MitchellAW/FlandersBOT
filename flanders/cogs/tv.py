@@ -42,13 +42,13 @@ class TV(commands.Cog):
     @app_commands.describe(search="Search by quote (e.g. nothing at all)")
     @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
     async def build_simpsons_gif(self, interaction: discord.Interaction, search: str) -> None:
-        frinkiac = Frinkiac(session=self.bot.session)
+        frinkiac = Frinkiac(session=self.bot.session, max_retries=1)
         await self.build_gif(interaction, frinkiac, search)
 
     @app_commands.command(name="steamedhams", description="Posts a random gif from the iconic steamed hams skit.")
     @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
     async def post_steamed_hams(self, interaction: discord.Interaction) -> None:
-        frinkiac = Frinkiac(session=self.bot.session)
+        frinkiac = Frinkiac(session=self.bot.session, max_retries=1)
 
         # Steamed hams episode key
         steamed_hams_key = "S07E21"
@@ -80,7 +80,7 @@ class TV(commands.Cog):
     @app_commands.describe(search="Search by quote (e.g. shut up and take my money)")
     @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
     async def build_futurama_gif(self, interaction: discord.Interaction, search: str) -> None:
-        morbotron = Morbotron(session=self.bot.session)
+        morbotron = Morbotron(session=self.bot.session, max_retries=1)
         await self.build_gif(interaction, morbotron, search)
 
     @app_commands.command(
